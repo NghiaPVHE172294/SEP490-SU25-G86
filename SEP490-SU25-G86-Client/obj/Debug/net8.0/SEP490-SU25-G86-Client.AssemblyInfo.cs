@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SEP490-SU25-G86-Client")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1aa301e0cb98bca56645e1a0de65a308a545c363")]
 [assembly: System.Reflection.AssemblyProductAttribute("SEP490-SU25-G86-Client")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SEP490-SU25-G86-Client")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

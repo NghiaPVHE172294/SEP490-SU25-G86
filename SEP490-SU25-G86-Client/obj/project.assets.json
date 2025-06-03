@@ -8,19 +8,24 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Ryo\\.nuget\\packages\\": {}
+    "C:\\Users\\nkc14\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
+      "projectUniqueName": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
       "projectName": "SEP490-SU25-G86-Client",
-      "projectPath": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
-      "packagesPath": "C:\\Users\\Ryo\\.nuget\\packages\\",
-      "outputPath": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\obj\\",
+      "projectPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
+      "packagesPath": "C:\\Users\\nkc14\\.nuget\\packages\\",
+      "outputPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Ryo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\nkc14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -45,7 +50,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -69,7 +75,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

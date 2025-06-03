@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SEP490-SU25-G86-API.props" />
+</Project>
