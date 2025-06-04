@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SEP490_SU25_G86_API.vn.edu.fpt.IRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.IServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 {
@@ -8,21 +9,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductService _service;
 
-        public ProductController(IProductRepository repository)
+        public ProductController(IProductService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
-            => Ok(await _repository.GetAllAsync());
+            => Ok(await _service.GetAllProductsAsync());
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var product = await _service.GetProductByIdAsync(id);
             if (product == null) return NotFound();
             return Ok(product);
         }
@@ -30,7 +31,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Product product)
         {
-            await _repository.AddAsync(product);
+            await _service.AddProductAsync(product);
             return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
         }
 
@@ -38,14 +39,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
         public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             if (id != product.Id) return BadRequest();
-            await _repository.UpdateAsync(product);
+            await _service.UpdateProductAsync(product);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _repository.DeleteAsync(id);
+            await _service.DeleteProductAsync(id);
             return NoContent();
         }
     }
