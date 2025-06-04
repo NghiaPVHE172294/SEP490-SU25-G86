@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj": {}
+    "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj": {}
   },
   "projects": {
-    "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj": {
+    "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj",
+        "projectUniqueName": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj",
         "projectName": "SEP490-SU25-G86-API",
-        "projectPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj",
-        "packagesPath": "C:\\Users\\nkc14\\.nuget\\packages\\",
-        "outputPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\obj\\",
+        "projectPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj",
+        "packagesPath": "C:\\Users\\huyth\\.nuget\\packages\\",
+        "outputPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\nkc14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\huyth\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

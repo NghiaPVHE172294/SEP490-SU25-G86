@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\SEP490-SU25-G86-Client.props" />
+</Project>

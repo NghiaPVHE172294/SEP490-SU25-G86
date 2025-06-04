@@ -8,23 +8,23 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\nkc14\\.nuget\\packages\\": {},
+    "C:\\Users\\huyth\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
+      "projectUniqueName": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
       "projectName": "SEP490-SU25-G86-Client",
-      "projectPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
-      "packagesPath": "C:\\Users\\nkc14\\.nuget\\packages\\",
-      "outputPath": "D:\\FPTU\\SEP490_SUMMER25_G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\obj\\",
+      "projectPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj",
+      "packagesPath": "C:\\Users\\huyth\\.nuget\\packages\\",
+      "outputPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\nkc14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\huyth\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
