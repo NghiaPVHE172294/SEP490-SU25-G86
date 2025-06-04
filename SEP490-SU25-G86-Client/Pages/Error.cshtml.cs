@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace SEP490_SU25_G86_Client.Pages
 {
+    //Test push va merge git
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
