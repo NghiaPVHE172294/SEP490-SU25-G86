@@ -9,8 +9,10 @@ out/
 *.userosscache
 *.sln.docstates
 
-# VS-specific folders
+# VS-specific files and folders
 .vs/
+*.vsidx
+*.bin
 
 # Rider
 .idea/
