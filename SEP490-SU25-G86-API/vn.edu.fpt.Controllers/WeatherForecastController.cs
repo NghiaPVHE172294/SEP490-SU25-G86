@@ -18,6 +18,8 @@ namespace SEP490_SU25_G86_API.Controllers
             _logger = logger;
         }
 
+        //comment test merge
+
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
