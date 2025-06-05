@@ -11,6 +11,7 @@ out/
 
 # VS-specific files and folders
 .vs/
+.vs\
 *.vsidx
 *.bin
 
