@@ -1,0 +1,439 @@
+﻿/* styles.css */
+
+/* Biến CSS */
+:root {
+    --primary-color: #309689; /* Xanh lá đậm */
+    --gradient-bg: linear-gradient(180deg, #A3C99E 0%, #309689 48%, #32692D 100%);
+    --text-dark: #212121;
+    --text-gray: #424242;
+    --text-light-gray: #757575;
+    --white: #FFFFFF;
+    --border-color: #E0E0E0;
+}
+
+/* Reset và font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #F5F5F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container chính */
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 700px;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Phần trái */
+.left-section {
+    flex: 0 0 40%;
+    background: var(--gradient-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    color: var(--white);
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.handshake {
+    width: 200px;
+    height: auto;
+}
+
+.message {
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Phần phải */
+.right-section {
+    flex: 0 0 60%;
+    padding: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.homepage-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--text-gray);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.chevron-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.register-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--text-gray);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+    .register-link span {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-left: 5px;
+        text-decoration: underline;
+    }
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.title {
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--text-gray);
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: var(--text-light-gray);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    color: var(--text-gray);
+    font-size: 12px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Khoảng cách giữa chữ và icon */
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--primary-color);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+    .login-button:hover {
+        background: #277a6e;
+    }
+
+.arrow-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.divider {
+    color: var(--text-gray);
+    font-size: 12px;
+    margin: 20px 0;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--text-dark);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+    .social-button img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .social-button:hover {
+        border-color: var(--primary-color);
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .left-section {
+        flex: none;
+        width: 100%;
+        min-height: 300px;
+        padding: 20px;
+    }
+
+    .logo, .handshake {
+        width: 120px;
+    }
+
+    .message {
+        font-size: 18px;
+    }
+
+    .right-section {
+        flex: none;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .homepage-link, .register-link {
+        position: static;
+        margin-bottom: 15px;
+    }
+
+    .form-container {
+        max-width: 100%;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+    }
+}
+
+/* Container chính */
+.register-container {
+    width: 100%;
+    max-width: 800px;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px 80px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.homepage-link {
+    color: var(--text-gray);
+    font-size: 12.8px;
+    line-height: 22.53px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.chevron-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.login-link {
+    color: var(--text-gray);
+    font-size: 12.8px;
+    line-height: 22.53px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+    .login-link span {
+        color: var(--primary-color);
+        font-weight: 900;
+        text-decoration: underline;
+    }
+
+/* Form container */
+.form-container {
+    text-align: center;
+}
+
+.title {
+    color: var(--text-dark);
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 44px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--text-gray);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28.16px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-row {
+    display: flex;
+    gap: 20px;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 28.16px;
+    color: var(--text-dark);
+    font-weight: 400;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: var(--text-light-gray);
+    font-size: 10.24px;
+    line-height: 22.53px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 12.8px;
+    line-height: 22.53px;
+    color: var(--text-gray);
+    font-weight: 400;
+}
+
+    .checkbox-group input {
+        width: 16px;
+        height: 16px;
+    }
+
+    .checkbox-group a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+.register-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Khoảng cách giữa chữ và icon */
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--primary-color);
+    color: var(--white);
+    font-size: 16px;
+    line-height: 28.16px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+}

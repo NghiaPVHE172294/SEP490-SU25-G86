@@ -7,4 +7,8 @@
     <RootNamespace>SEP490_SU25_G86_Client</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\images\" />
+  </ItemGroup>
+
 </Project>
