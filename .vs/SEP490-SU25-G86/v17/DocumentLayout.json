@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "E:\\GithubProject_SEP490\\CodeClone\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\commonscreen\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\commonscreen\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\commonscreen\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\commonscreen\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\homepage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\homepage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\codeclone\\sep490-su25-g86-client\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -147,53 +147,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Program.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Program.cs",
-              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Program.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Program.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAgwB8AAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-06T08:37:09.329Z",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-06T16:37:45.483Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "style.css",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAWwLsAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-06-06T08:32:21.644Z",
+              "Title": "register.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAB8AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-06T16:29:03.61Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "register.cshtml",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAuwBcAAAAmAAAAAAAAAA==",
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAuwBoAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-06T08:31:55.669Z",
+              "WhenOpened": "2025-06-06T16:28:12.647Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABMAAABMAAAAAAAAAA==",
+              "Title": "Homepage.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\CodeClone\\SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-06T08:15:43.406Z",
+              "WhenOpened": "2025-06-06T16:27:44.902Z",
               "EditorCaption": ""
             }
           ]

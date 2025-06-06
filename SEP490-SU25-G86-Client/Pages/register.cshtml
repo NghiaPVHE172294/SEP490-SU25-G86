@@ -1,0 +1,91 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.registerModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - CVMatcher</title>
+    <link rel="stylesheet" href="~/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Phần trái -->
+        <div class="left-section">
+            <img src="~/assets/images/LogoCVM.png" alt="CVMatcher" class="logo">
+            <img src="~/assets/images/battay.png" alt="Handshake Illustration" class="handshake">
+            <p class="message"></p>
+        </div>
+
+        <!-- Phần phải -->
+        <div class="right-section">
+            <div class="form-container">
+              
+
+                <a href="/Homepage" class="homepage-link">
+                    <img src="~/assets/images/left-svg-hd-removebg-preview.png" alt="Chevron Left" class="chevron-icon">
+                    Homepage
+                </a>
+                <a href="/Login" class="register-link">Bạn đã có tài khoản? <span>ĐĂNG NHẬP</span></a>
+                <br />
+                <div class="form-container">
+                    <h2 class="title">Chào mừng bạn đến với CVMatcher</h2>
+                    <p class="subtitle">Cùng khám phá những cơ hội việc làm phù hợp nhất dành cho bạn</p>
+
+                    <form class="register-form">
+                        <div class="input-row">
+                            <input type="text" placeholder="Full Name" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Password" id="password" required>
+                            <span class="toggle-password">SHOW</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Confirm Password" id="confirm-password" required>
+                            <span class="toggle-password">SHOW</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">Tôi đồng ý với <a href="?">Điều khoản dịch vụ</a></label>
+                        </div>
+                        <button type="submit" class="register-button">
+                            Create account
+                           
+                        </button>
+                    </form>
+
+                    <div class="divider">Hoặc đăng nhập bằng</div>
+                    <div class="social-buttons">
+                        <button class="social-button">
+                            <img src="~/assets/images/google-icon-logo.svg" alt="Google Icon">
+                        </button>
+                        <button class="social-button">
+                            <img src="~/assets/images/2023_Facebook_icon.svg.webp" alt="Facebook Icon">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <script>
+        // Toggle hiển thị mật khẩu
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const passwordInput = this.previousElementSibling;
+                this.textContent = this.textContent === 'SHOW' ? 'HIDE' : 'SHOW';
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            });
+        });
+    </script>
+</body>
+</html>
