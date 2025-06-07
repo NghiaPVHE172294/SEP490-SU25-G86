@@ -8,6 +8,7 @@ namespace SEP490_SU25_G86_Client
 
             // Add services to the container.  
             builder.Services.AddRazorPages();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
@@ -26,10 +27,12 @@ namespace SEP490_SU25_G86_Client
 
             app.UseAuthorization();
 
+            app.UseSession();
+
             // Map default route to Login.cshtml  
             app.MapGet("/", context =>
             {
-                context.Response.Redirect("/CommonScreen/Login");
+                context.Response.Redirect("/Login");
                 return Task.CompletedTask;
             });
 

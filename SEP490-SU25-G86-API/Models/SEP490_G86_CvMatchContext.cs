@@ -1,0 +1,499 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace SEP490_SU25_G86_API.Models
+{
+    public partial class SEP490_G86_CvMatchContext : DbContext
+    {
+        public SEP490_G86_CvMatchContext()
+        {
+        }
+
+        public SEP490_G86_CvMatchContext(DbContextOptions<SEP490_G86_CvMatchContext> options)
+            : base(options)
+        {
+        }
+
+        public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<AuditLog> AuditLogs { get; set; } = null!;
+        public virtual DbSet<Company> Companies { get; set; } = null!;
+        public virtual DbSet<CompanyFollower> CompanyFollowers { get; set; } = null!;
+        public virtual DbSet<Cv> Cvs { get; set; } = null!;
+        public virtual DbSet<Cvlabel> Cvlabels { get; set; } = null!;
+        public virtual DbSet<CvparsedDatum> CvparsedData { get; set; } = null!;
+        public virtual DbSet<Cvsubmission> Cvsubmissions { get; set; } = null!;
+        public virtual DbSet<EmploymentType> EmploymentTypes { get; set; } = null!;
+        public virtual DbSet<ExperienceLevel> ExperienceLevels { get; set; } = null!;
+        public virtual DbSet<Industry> Industries { get; set; } = null!;
+        public virtual DbSet<JobCriterion> JobCriteria { get; set; } = null!;
+        public virtual DbSet<JobLevel> JobLevels { get; set; } = null!;
+        public virtual DbSet<JobPosition> JobPositions { get; set; } = null!;
+        public virtual DbSet<JobPost> JobPosts { get; set; } = null!;
+        public virtual DbSet<JobPostView> JobPostViews { get; set; } = null!;
+        public virtual DbSet<Notification> Notifications { get; set; } = null!;
+        public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
+        public virtual DbSet<Province> Provinces { get; set; } = null!;
+        public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<SalaryRange> SalaryRanges { get; set; } = null!;
+        public virtual DbSet<SavedJob> SavedJobs { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.HasIndex(e => e.Email, "Email")
+                    .IsUnique();
+
+                entity.Property(e => e.AccountId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Email).HasMaxLength(100);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Password).HasMaxLength(255);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK_Accounts_Roles");
+            });
+
+            modelBuilder.Entity<AuditLog>(entity =>
+            {
+                entity.HasKey(e => e.LogId);
+
+                entity.Property(e => e.Action).HasMaxLength(200);
+
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
+
+                entity.Property(e => e.TargetTable).HasMaxLength(100);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AuditLogs)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AuditLogs_Users");
+            });
+
+            modelBuilder.Entity<Company>(entity =>
+            {
+                entity.Property(e => e.Address).HasMaxLength(255);
+
+                entity.Property(e => e.CompanyName).HasMaxLength(255);
+
+                entity.Property(e => e.CompanySize).HasMaxLength(50);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.LogoUrl).HasMaxLength(500);
+
+                entity.Property(e => e.Phone).HasMaxLength(20);
+
+                entity.Property(e => e.TaxCode).HasMaxLength(50);
+
+                entity.Property(e => e.Website).HasMaxLength(255);
+
+                entity.HasOne(d => d.Industry)
+                    .WithMany(p => p.Companies)
+                    .HasForeignKey(d => d.IndustryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Companies_Industries");
+            });
+
+            modelBuilder.Entity<CompanyFollower>(entity =>
+            {
+                entity.HasKey(e => e.FollowId);
+
+                entity.Property(e => e.FlowedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.CompanyFollowers)
+                    .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CompanyFollowers_Companies");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CompanyFollowers)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CompanyFollowers_Users");
+            });
+
+            modelBuilder.Entity<Cv>(entity =>
+            {
+                entity.ToTable("CVs");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.SaveStatus).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UploadSource).HasMaxLength(50);
+
+                entity.HasOne(d => d.Candidate)
+                    .WithMany(p => p.Cvs)
+                    .HasForeignKey(d => d.CandidateId)
+                    .HasConstraintName("FK_CVs_Users");
+            });
+
+            modelBuilder.Entity<Cvlabel>(entity =>
+            {
+                entity.HasKey(e => e.LabelId);
+
+                entity.ToTable("CVLabels");
+
+                entity.Property(e => e.ColorCode)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LabelName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<CvparsedDatum>(entity =>
+            {
+                entity.HasKey(e => e.CvparsedDataId);
+
+                entity.ToTable("CVParsedData");
+
+                entity.Property(e => e.CvparsedDataId).HasColumnName("CVParsedDataId");
+
+                entity.Property(e => e.EducationLevel).HasMaxLength(100);
+
+                entity.Property(e => e.Email).HasMaxLength(200);
+
+                entity.Property(e => e.FullName)
+                    .HasMaxLength(200)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Languages).HasMaxLength(200);
+
+                entity.Property(e => e.ParsedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Phone).HasMaxLength(30);
+
+                entity.HasOne(d => d.Cv)
+                    .WithMany(p => p.CvparsedData)
+                    .HasForeignKey(d => d.CvId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVParsedData_CVs");
+
+                entity.HasOne(d => d.MatchedJobCriteria)
+                    .WithMany(p => p.CvparsedData)
+                    .HasForeignKey(d => d.MatchedJobCriteriaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CVParsedData_JobCriteria");
+            });
+
+            modelBuilder.Entity<Cvsubmission>(entity =>
+            {
+                entity.HasKey(e => e.SubmissionId);
+
+                entity.ToTable("CVSubmissions");
+
+                entity.Property(e => e.IsShortlisted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.LabelSource).HasMaxLength(20);
+
+                entity.Property(e => e.SourceType).HasMaxLength(50);
+
+                entity.Property(e => e.SubmissionDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Cv)
+                    .WithMany(p => p.Cvsubmissions)
+                    .HasForeignKey(d => d.CvId)
+                    .HasConstraintName("FK_CVSubmissions_CVs");
+
+                entity.HasOne(d => d.JobPost)
+                    .WithMany(p => p.Cvsubmissions)
+                    .HasForeignKey(d => d.JobPostId)
+                    .HasConstraintName("FK_CVSubmissions_JobPosts");
+
+                entity.HasOne(d => d.Label)
+                    .WithMany(p => p.Cvsubmissions)
+                    .HasForeignKey(d => d.LabelId)
+                    .HasConstraintName("FK_CVSubmissions_CVLabels");
+
+                entity.HasOne(d => d.SubmittedByUser)
+                    .WithMany(p => p.Cvsubmissions)
+                    .HasForeignKey(d => d.SubmittedByUserId)
+                    .HasConstraintName("FK_CVSubmissions_Users");
+            });
+
+            modelBuilder.Entity<EmploymentType>(entity =>
+            {
+                entity.Property(e => e.EmploymentTypeName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ExperienceLevel>(entity =>
+            {
+                entity.Property(e => e.ExperienceLevelName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Industry>(entity =>
+            {
+                entity.Property(e => e.IndustryName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<JobCriterion>(entity =>
+            {
+                entity.HasKey(e => e.JobCriteriaId);
+
+                entity.HasIndex(e => e.JobPostId, "UQ_JobCriteria_JobPost")
+                    .IsUnique();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.EducationLevel).HasMaxLength(100);
+
+                entity.Property(e => e.PreferredLanguages).HasMaxLength(200);
+
+                entity.HasOne(d => d.CreatedByUser)
+                    .WithMany(p => p.JobCriteria)
+                    .HasForeignKey(d => d.CreatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JobCriteria_Users");
+            });
+
+            modelBuilder.Entity<JobLevel>(entity =>
+            {
+                entity.Property(e => e.JobLevelName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<JobPosition>(entity =>
+            {
+                entity.HasKey(e => e.PositionId);
+
+                entity.Property(e => e.PostitionName).HasMaxLength(100);
+
+                entity.HasOne(d => d.Industry)
+                    .WithMany(p => p.JobPositions)
+                    .HasForeignKey(d => d.IndustryId)
+                    .HasConstraintName("FK_JobPositions_Industries");
+            });
+
+            modelBuilder.Entity<JobPost>(entity =>
+            {
+                entity.Property(e => e.JobPostId).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsAienabled).HasColumnName("IsAIEnabled");
+
+                entity.Property(e => e.Status).HasMaxLength(50);
+
+                entity.Property(e => e.Title).HasMaxLength(255);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.WorkLocation).HasMaxLength(255);
+
+                entity.HasOne(d => d.Employer)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.EmployerId)
+                    .HasConstraintName("FK_JobPosts_Users");
+
+                entity.HasOne(d => d.EmploymentType)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.EmploymentTypeId)
+                    .HasConstraintName("FK_JobPosts_EmploymentTypes");
+
+                entity.HasOne(d => d.ExperienceLevel)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.ExperienceLevelId)
+                    .HasConstraintName("FK_JobPosts_ExperienceLevels");
+
+                entity.HasOne(d => d.Industry)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.IndustryId)
+                    .HasConstraintName("FK_JobPosts_Industries");
+
+                entity.HasOne(d => d.JobLevel)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.JobLevelId)
+                    .HasConstraintName("FK_JobPosts_JobLevels");
+
+                entity.HasOne(d => d.JobPosition)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.JobPositionId)
+                    .HasConstraintName("FK_JobPosts_JobPositions");
+
+                entity.HasOne(d => d.Province)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.ProvinceId)
+                    .HasConstraintName("FK_JobPosts_Provinces");
+
+                entity.HasOne(d => d.SalaryRange)
+                    .WithMany(p => p.JobPosts)
+                    .HasForeignKey(d => d.SalaryRangeId)
+                    .HasConstraintName("FK_JobPosts_SalaryRanges");
+            });
+
+            modelBuilder.Entity<JobPostView>(entity =>
+            {
+                entity.HasKey(e => e.ViewId);
+
+                entity.Property(e => e.ViewAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.JobPost)
+                    .WithMany(p => p.JobPostViews)
+                    .HasForeignKey(d => d.JobPostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JobPostViews_JobPosts");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.JobPostViews)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JobPostViews_Users");
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.Property(e => e.CreateAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsRead).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_Users");
+            });
+
+            modelBuilder.Entity<PasswordResetToken>(entity =>
+            {
+                entity.HasKey(e => e.TokenId);
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.IsUsed).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Token).HasMaxLength(100);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.PasswordResetTokens)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PasswordResetTokens_Accounts");
+            });
+
+            modelBuilder.Entity<Province>(entity =>
+            {
+                entity.Property(e => e.ProvinceName).HasMaxLength(100);
+
+                entity.Property(e => e.Region).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(e => e.RoleName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<SalaryRange>(entity =>
+            {
+                entity.Property(e => e.Currency)
+                    .HasMaxLength(10)
+                    .HasDefaultValueSql("(N'VND')");
+            });
+
+            modelBuilder.Entity<SavedJob>(entity =>
+            {
+                entity.HasKey(e => e.SaveJobId);
+
+                entity.Property(e => e.SaveAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.JobPost)
+                    .WithMany(p => p.SavedJobs)
+                    .HasForeignKey(d => d.JobPostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SavedJobs_JobPosts");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.SavedJobs)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SavedJobs_Users");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.AccountId, "UQ_Users_Accounts")
+                    .IsUnique();
+
+                entity.Property(e => e.Address).HasMaxLength(30);
+
+                entity.Property(e => e.Avatar).HasMaxLength(30);
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Dob)
+                    .HasColumnType("date")
+                    .HasColumnName("DOB");
+
+                entity.Property(e => e.Facebook).HasMaxLength(30);
+
+                entity.Property(e => e.FullName).HasMaxLength(30);
+
+                entity.Property(e => e.Gender).HasMaxLength(10);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LinkedIn).HasMaxLength(30);
+
+                entity.Property(e => e.Phone).HasMaxLength(10);
+
+                entity.HasOne(d => d.Account)
+                    .WithOne(p => p.User)
+                    .HasForeignKey<User>(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Users_Accounts");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    }
+}
