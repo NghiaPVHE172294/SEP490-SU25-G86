@@ -1,0 +1,22 @@
+@page "/employer-dashboard"
+@model EmployerDashboardModel
+@{
+    ViewData["Title"] = "Employer Dashboard";
+}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="text-success">Chào mừng nhà tuyển dụng!</h2>
+            <p>Bạn đã đăng nhập với vai trò <b>Employer</b>.</p>
+            <hr />
+            <h4>Chức năng nổi bật:</h4>
+            <ul>
+                <li>Đăng tin tuyển dụng mới</li>
+                <li>Quản lý tin tuyển dụng</li>
+                <li>Xem danh sách ứng viên</li>
+                <li>Thống kê hiệu quả tuyển dụng</li>
+            </ul>
+            <a href="/post-job" class="btn btn-primary">Đăng tin tuyển dụng</a>
+        </div>
+    </div>
+</div> 

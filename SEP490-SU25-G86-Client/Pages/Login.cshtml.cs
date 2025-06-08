@@ -45,6 +45,7 @@ namespace SEP490_SU25_G86_Client.Pages
                     HttpContext.Session.SetString("user_role", role);
                     // Chuyển hướng theo role
                     if (role == "ADMIN") return RedirectToPage("/AdminDashboard");
+                    if (role == "EMPLOYER") return RedirectToPage("/EmployerDashboard");
                     // Candidate và Employer đều về Homepage
                     return RedirectToPage("/Homepage");
                 }

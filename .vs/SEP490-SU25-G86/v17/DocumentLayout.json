@@ -1,80 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.models\\company.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.models\\company.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.models\\sep490_g86_cvmatchcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.models\\sep490_g86_cvmatchcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\job\\listjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\job\\listjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\notfound.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\notfound.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\homepage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\homepage.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\commonscreen\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\commonscreen\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\commonscreen\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\commonscreen\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    }
-  ],
+  "WorkspaceRootPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -82,297 +9,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Company.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Company.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Company.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Company.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Company.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:43:18.545Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Account.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Account.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Account.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Account.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\Account.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:43:06.717Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\ProductController.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\ProductController.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\ProductController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:41:59.267Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\appsettings.json",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\appsettings.json",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\appsettings.json",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-08T06:41:09.733Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AuthController.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AuthController.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AuthController.cs",
-              "ViewState": "AQIAAF4AAAAAAAAAAAAcwCgAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:36:51.057Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "SEP490_G86_CvMatchContext.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "ViewState": "AQIAAB0AAAAAAAAAAAA6wAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:35:32.314Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\Program.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\Program.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAuwHQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T06:35:15.66Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAADAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:29:31.783Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Index.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:29:27.375Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "NotFound.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\NotFound.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\NotFound.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\NotFound.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\NotFound.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:53.248Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Homepage.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Homepage.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:43.21Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AdminDashboard.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\AdminDashboard.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\AdminDashboard.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\AdminDashboard.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\AdminDashboard.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:37.954Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "register.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\register.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:30.926Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\CommonScreen\\Login.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:18.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ListJob.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T06:28:15.699Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
-              "ViewState": "AQIAAD8AAAAAAAAAAAAYwFoAAABUAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-08T05:56:23.593Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "style.css",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\wwwroot\\css\\style.css",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-06-08T06:11:46.514Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "site.css",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\wwwroot\\css\\site.css",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "SEP490-SU25-G86-Client\\wwwroot\\css\\site.css",
-              "ViewState": "AQIAADkAAAAAAAAAAAAAAGEAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-06-08T06:07:34.343Z",
-              "EditorCaption": ""
-            },
-            {
               "$type": "Bookmark",
-              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
@@ -401,6 +46,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:12:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Bookmark",
@@ -437,6 +86,46 @@
             {
               "$type": "Bookmark",
               "Name": "ST:25:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Bookmark",
