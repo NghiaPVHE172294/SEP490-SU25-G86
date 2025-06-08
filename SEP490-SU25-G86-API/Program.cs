@@ -7,76 +7,110 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.OpenApi.Models;
 
 namespace SEP490_SU25_G86_API
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+			// Add services to the container.
+			builder.Services.AddControllers();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+			// Swagger with JWT Bearer support
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen(c =>
+			{
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Description = "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
+					Name = "Authorization",
+					In = ParameterLocation.Header,
+					Type = SecuritySchemeType.Http,
+					Scheme = "bearer"
+				});
 
-            builder.Services.AddDbContext<SEP490_G86_CvMatchContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								Type = ReferenceType.SecurityScheme,
+								Id = "Bearer"
+							},
+							Scheme = "oauth2",
+							Name = "Bearer",
+							In = ParameterLocation.Header,
+						},
+						new List<string>()
+					}
+				});
+			});
 
-            var jwtSettings = builder.Configuration.GetSection("Jwt");
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-                };
-            });
+			// DbContext
+			builder.Services.AddDbContext<SEP490_G86_CvMatchContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped<AccountRepository>();
-            builder.Services.AddScoped<AccountService>();
+			// JWT Authentication
+			var jwtSettings = builder.Configuration.GetSection("Jwt");
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+					ValidIssuer = jwtSettings["Issuer"],
+					ValidAudience = jwtSettings["Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+				};
+			});
 
-            // Trong Main, trước app.Build()
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
+			// Dependency Injection
+			builder.Services.AddScoped<AccountRepository>();
+			builder.Services.AddScoped<AccountService>();
 
-            var app = builder.Build();
+			// CORS
+			builder.Services.AddCors(options =>
+			{
+				options.AddDefaultPolicy(policy =>
+				{
+					policy.AllowAnyOrigin()
+						  .AllowAnyHeader()
+						  .AllowAnyMethod();
+				});
+			});
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+			var app = builder.Build();
 
-            app.UseHttpsRedirection();
-app.UseCors();
-            app.UseAuthentication();
-            app.UseAuthorization();
+			// Configure the HTTP request pipeline.
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			}
 
-            app.MapControllers();
+			app.UseHttpsRedirection();
 
-            app.Run();
-        }
-    }
+			app.UseCors();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			app.MapControllers();
+
+			app.Run();
+		}
+	}
 }

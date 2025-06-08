@@ -1,22 +1,117 @@
+
+  /*LAYOUT daefaut*/
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+
+
+  /* HEADER CUSTOM*/
+
+.header-container {
+    background: linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%);
+    height: 100px;
+}
+
+    .header-container a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .header-container .logo .fa-solid {
+        font-size: 46px;
+        color: white;
+        width: 50px;
+    }
+
+    .header-container .logo {
+        padding-left: 10%;
+    }
+
+        .header-container .logo p {
+            padding-top: 3%;
+            font-size: 30px;
+            color: white;
+            margin: 0.2em 0 0 0.5em;
+        }
+
+    .header-container .nav-about a,
+    .header-container .nav-login a {
+        position: relative;
+        margin: 15px;
+    }
+
+    .header-container .vertical-line {
+        width: 1px;
+        height: 100px;
+        background-color: white;
+    }
+
+    .header-container .vertical-line1 {
+        background-color: white;
+        width: 100%;
+        height: 1px;
+    }
+
+    .header-container .nav-login .vertical-line {
+        margin: 0px 10px;
+        height: 30px;
+    }
+
+    .header-container .dropdown-menu {
+        background-color: #4f4f4f;
+    }
+
+        .header-container .dropdown-menu .dropdown-item {
+            color: white;
+        }
+
+            .header-container .dropdown-menu .dropdown-item:hover {
+                background-color: #6f6f6f;
+            }
+
+
+/*FOOTER*/
+
+.footer-container {
+    background: rgb(238, 238, 238);
+    color: black;
+}
+
+    .footer-container .items h3,
+    .footer-container .items a {
+        color: black;
+        text-decoration: none;
+    }
+
+        .footer-container .items a:hover {
+            text-decoration: underline;
+        }
+
+    .footer-container .text-light {
+        color: black !important;
+    }

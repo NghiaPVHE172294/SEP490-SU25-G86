@@ -10,37 +10,99 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">SEP490_SU25_G86_Client</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <div class="container-fluid header-container">
+            <div class="header row">
+                <div class="logo col-6 align-self-center d-flex">
+                    <i class="fa-solid fa-car fa-2x my-3"></i>
+                    <p>CVMatcher!</p>
+                </div>
+                <div class="nav col-6 row d-flex align-items-center justify-content-evenly">
+                    <div class="col-4 nav-about d-flex">
+                        <a asp-page="/About">ABOUT US</a>
+                    </div>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        var userName = User.Identity.Name ?? "User";
+                        var isAdmin = User.IsInRole("admin");
+                        var isCarOwner = User.IsInRole("carOwner");
+                        var isCustomer = User.IsInRole("customer");
+                        <div class="col-3 dropdown nav-login d-flex align-items-center justify-content-evenly">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Welcome, @userName
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (isAdmin)
+                                {
+                                    <li><a class="dropdown-item" asp-page="/Admin/User">User Management Panel</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Car">Car Management Panel</a></li>
+                                }
+                                @if (isCustomer || isCarOwner)
+                                {
+                                    <li><a class="dropdown-item" asp-page="/Profile">My Profile</a></li>
+                                }
+                                @if (isCustomer)
+                                {
+                                    <li><a class="dropdown-item" asp-page="/Booking/My">My Booking</a></li>
+                                }
+                                @if (isCarOwner)
+                                {
+                                    <li><a class="dropdown-item" asp-page="/MyCars">My Cars</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Reports">My Feedback</a></li>
+                                }
+                                @if (isCustomer || isCarOwner)
+                                {
+                                    <li><a class="dropdown-item" asp-page="/Wallet">My Wallet</a></li>
+                                }
+                                <li><a class="dropdown-item" asp-page="/Logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-3 nav-login d-flex align-items-center justify-content-evenly">
+                            <a class="btn btn-primary" asp-page="/Login">Login</a>
+                        </div>
+                    }
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - SEP490_SU25_G86_Client - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    </footer>
+    <div class="container-fluid footer-container">
+        <div class="container-fluid">
+            <div class="footerc d-flex justify-content-evenly">
+                <div class="items">
+                    <h3>CV</h3>
+                    <ul class="list-unstyled">
+                        <li><a asp-page="/......." class="text-light">..........</a></li>
+                    </ul>
+                </div>
+                <div class="items">
+                    <h3>Customer Access</h3>
+                    <ul class="list-unstyled">
+                        <li><a asp-page="/......" class="text-light">......</a></li>
+                        <li><a asp-page="/......" class="text-light">......</a></li>
+                        <li><a asp-page="/......" class="text-light">......</a></li>
+                    </ul>
+                </div>
+                <div class="items">
+                    <h3>Join Us</h3>
+                    <ul class="list-unstyled">
+                        <li><a asp-page="/....." class="text-light">.......</a></li>
+                        <li><a asp-page="/....." class="text-light">.......</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
