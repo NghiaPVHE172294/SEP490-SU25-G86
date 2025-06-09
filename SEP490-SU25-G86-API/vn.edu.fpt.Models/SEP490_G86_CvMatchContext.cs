@@ -42,11 +42,10 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=SEP490_G86_CvMatch;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
             }
         }
 
@@ -56,8 +55,6 @@ namespace SEP490_SU25_G86_API.Models
             {
                 entity.HasIndex(e => e.Email, "Email")
                     .IsUnique();
-
-                entity.Property(e => e.AccountId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -489,6 +486,11 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey<User>(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Users_Accounts");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_Users_Companies");
             });
 
             OnModelCreatingPartial(modelBuilder);
