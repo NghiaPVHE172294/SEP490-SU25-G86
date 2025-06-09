@@ -296,8 +296,6 @@ namespace SEP490_SU25_G86_API.Models
 
             modelBuilder.Entity<JobPost>(entity =>
             {
-                entity.Property(e => e.JobPostId).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
