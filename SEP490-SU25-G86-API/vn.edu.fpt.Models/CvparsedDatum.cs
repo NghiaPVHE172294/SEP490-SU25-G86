@@ -5,6 +5,11 @@ namespace SEP490_SU25_G86_API.Models
 {
     public partial class CvparsedDatum
     {
+        public CvparsedDatum()
+        {
+            MatchedCvandJobPosts = new HashSet<MatchedCvandJobPost>();
+        }
+
         public int CvparsedDataId { get; set; }
         public int CvId { get; set; }
         public string? FullName { get; set; }
@@ -17,10 +22,8 @@ namespace SEP490_SU25_G86_API.Models
         public string? Languages { get; set; }
         public string? Certifications { get; set; }
         public DateTime ParsedAt { get; set; }
-        public int MatchedJobCriteriaId { get; set; }
-        public double? MatchingScore { get; set; }
 
         public virtual Cv Cv { get; set; } = null!;
-        public virtual JobCriterion MatchedJobCriteria { get; set; } = null!;
+        public virtual ICollection<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; }
     }
 }
