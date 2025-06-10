@@ -18,4 +18,8 @@
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
+  </ItemGroup>
+
 </Project>
