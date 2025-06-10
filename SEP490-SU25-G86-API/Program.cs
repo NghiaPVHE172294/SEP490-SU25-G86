@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -80,9 +82,12 @@ namespace SEP490_SU25_G86_API
 			// Dependency Injection
 			builder.Services.AddScoped<AccountRepository>();
 			builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
+            builder.Services.AddScoped<IJobPostService, JobPostService>();
 
-			// CORS
-			builder.Services.AddCors(options =>
+
+            // CORS
+            builder.Services.AddCors(options =>
 			{
 				options.AddDefaultPolicy(policy =>
 				{

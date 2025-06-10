@@ -1,21 +1,69 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\",
+  "WorkspaceRootPath": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.controllers\\jobcontroller\\jobpostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.controllers\\jobcontroller\\jobpostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\jobpostservice\\jobpostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\jobpostservice\\jobpostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\jobpostrepositories\\jobpostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\jobpostrepositories\\jobpostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\jobpostrepositories\\ijobpostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\jobpostrepositories\\ijobpostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.dto\\jobpostdto\\jobpostdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.dto\\jobpostdto\\jobpostdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\wwwroot\\css\\listjob.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\wwwroot\\css\\listjob.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\job\\listjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\job\\listjob.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\jobpostservice\\ijobpostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\jobpostservice\\ijobpostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.dto\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.dto\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\sep490-su25-g86-client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\sep490-su25-g86-api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
@@ -26,15 +74,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 33,
+          "SelectedChildIndex": 38,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
@@ -63,10 +159,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:12:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Bookmark",
@@ -106,55 +198,171 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:24:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB0AAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-10T14:56:15.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "listjob.css",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\listjob.css",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\wwwroot\\css\\listjob.css",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\wwwroot\\css\\listjob.css",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\wwwroot\\css\\listjob.css",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAAEsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-06-10T14:55:55.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "JobPostDTO.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\JobPostDTO\\JobPostDTO.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\JobPostDTO\\JobPostDTO.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\JobPostDTO\\JobPostDTO.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\JobPostDTO\\JobPostDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:50:25.537Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IJobPostRepository.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\IJobPostRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\IJobPostRepository.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\IJobPostRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\IJobPostRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAQAAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:51:31.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AccountRepository.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AccountRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AccountRepository.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AccountRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AccountRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:49:05.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "JobPostRepository.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\JobPostRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\JobPostRepository.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\JobPostRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\JobPostRepositories\\JobPostRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:52:06.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "JobPostService.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\JobPostService.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\JobPostService.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\JobPostService.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\JobPostService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:53:03.052Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "JobPostsController.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\JobController\\JobPostsController.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\JobController\\JobPostsController.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\JobController\\JobPostsController.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\JobController\\JobPostsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:54:07.553Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ListJob.cshtml",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Job\\ListJob.cshtml",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAACwAAAA7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-10T14:54:38.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\Program.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\Program.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAAgwFsAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:54:22.013Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IJobPostService.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\IJobPostService.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\IJobPostService.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\IJobPostService.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\JobPostService\\IJobPostService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:52:49.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "LoginRequest.cs",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\LoginRequest.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\LoginRequest.cs",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\LoginRequest.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.DTO\\LoginRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T14:28:17.66Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "launchSettings.json",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
-              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
               "RelativeToolTip": "SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -162,11 +370,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 14,
               "Title": "launchSettings.json",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\Properties\\launchSettings.json",
-              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
               "RelativeToolTip": "SEP490-SU25-G86-API\\Properties\\launchSettings.json",
               "ViewState": "AgIAABUAAAAAAAAAAAAAABoAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -174,11 +382,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 15,
               "Title": "register.cshtml",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
               "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
-              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
               "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
               "ViewState": "AgIAADYAAAAAAAAAAAAAAEwAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -186,13 +394,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 12,
               "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
               "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
               "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
-              "ViewState": "AgIAADMAAAAAAAAAAAAswEAAAAA2AAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-06-10T06:35:50.923Z",
               "EditorCaption": ""
