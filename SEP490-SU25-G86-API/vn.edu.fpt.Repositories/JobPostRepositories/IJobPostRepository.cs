@@ -1,0 +1,9 @@
+﻿using SEP490_SU25_G86_API.Models;
+
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
+{
+    public interface IJobPostRepository
+    {
+        Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null);
+    }
+}
