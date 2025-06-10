@@ -1,0 +1,72 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Job.ListJobModel
+@{
+    ViewData["Title"] = "List Job by Employer";
+    var employerId = Request.Query["employerId"];
+}
+
+
+<div class="container py-5">
+    <header class="text-center mb-5">
+        <h1 class="fw-bold border-bottom pb-3">Danh sách tin tuyển dụng</h1>
+    </header>
+
+    <div class="search-filter mb-4">
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo địa điểm hoặc trạng thái">
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <select class="form-select" id="locationFilter">
+                    <option value="">Chọn địa điểm</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <select class="form-select" id="statusFilter">
+                    <option value="">Trạng thái</option>
+                    <option value="OPEN">OPEN</option>
+                    <option value="CLOSED">CLOSED</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="jobListContainer">
+        <!-- Jobs sẽ được render vào đây -->
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const employerId = '@employerId';
+
+        if (!employerId || employerId === '') {
+            alert('Thiếu employerId!');
+        }
+
+
+        const apiUrl = `https://localhost:7004/api/JobPosts/employer/${employerId}`;
+        let allJobs = [];
+
+        async function loadJobs() {
+            try {
+                const res = await fetch(apiUrl);
+                const jobs = await res.json();
+                allJobs = jobs;
+                renderJobs(jobs);
+            } catch (error) {
+                console.error('Lỗi khi gọi API:', error);
+            }
+        }
+
+        // ... giữ nguyên renderJobs, formatDate, applyFilters ...
+    </script>
+}
+
+

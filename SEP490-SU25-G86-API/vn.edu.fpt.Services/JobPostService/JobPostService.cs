@@ -25,6 +25,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 EndDate = post.EndDate
             });
         }
+
+        public async Task<IEnumerable<JobPostDTO>> GetByEmployerIdAsync(int employerId)
+        {
+            var posts = await _jobPostRepo.GetByEmployerIdAsync(employerId);
+            return posts.Select(post => new JobPostDTO
+            {
+                JobPostId = post.JobPostId,
+                Title = post.Title,
+                WorkLocation = post.WorkLocation,
+                Status = post.Status,
+                CreatedDate = post.CreatedDate,
+                EndDate = post.EndDate
+            });
+        }
+
     }
 
 }

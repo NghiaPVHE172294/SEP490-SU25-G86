@@ -18,6 +18,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<JobPost>> GetByEmployerIdAsync(int employerId)
+        {
+            return await _context.JobPosts
+                .Where(j => j.EmployerId == employerId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
     }
 
 }
