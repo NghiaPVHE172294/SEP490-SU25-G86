@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Cryptography;
 
 namespace SEP490_SU25_G86_Client.Pages
 {
@@ -58,9 +57,8 @@ namespace SEP490_SU25_G86_Client.Pages
                     return Page();
                 }
             }
-            // Mã hóa password bằng MD5
-            string hashedPassword = GetMd5Hash(Password);
-            var registerData = new { FullName, Email, Password = hashedPassword, RoleName };
+            // Không mã hóa password ở frontend nữa
+            var registerData = new { FullName, Email, Password, RoleName };
             var content = new StringContent(JsonSerializer.Serialize(registerData), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("https://localhost:7004/api/Auth/register", content);
             if (response.IsSuccessStatusCode)
@@ -80,15 +78,6 @@ namespace SEP490_SU25_G86_Client.Pages
         {
             // Có ít nhất 1 chữ hoa, 1 chữ thường, 1 số, tối thiểu 6 ký tự
             return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$");
-        }
-        private string GetMd5Hash(string input)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var inputBytes = Encoding.UTF8.GetBytes(input);
-                var hashBytes = md5.ComputeHash(inputBytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-            }
         }
     }
 }
