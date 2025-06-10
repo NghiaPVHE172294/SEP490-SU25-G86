@@ -1,14 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\",
+  "WorkspaceRootPath": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\fulearning\\sum2025\\sep490\\sep490-su25-g86\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.models\\sep490_g86_cvmatchcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.models\\sep490_g86_cvmatchcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\sep490-su25-g86-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|e:\\githubproject_sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,63 +26,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 31,
+          "SelectedChildIndex": 33,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
@@ -103,6 +63,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:12:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Bookmark",
@@ -142,32 +106,95 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:24:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SEP490_G86_CvMatchContext.cs",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Models\\SEP490_G86_CvMatchContext.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-10T03:42:02.179Z",
-              "EditorCaption": ""
+              "DocumentIndex": 1,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T06:59:53.005Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\appsettings.json",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\appsettings.json",
-              "ToolTip": "E:\\FULearning\\Sum2025\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\appsettings.json",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAgAAAA",
+              "DocumentIndex": 2,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAABoAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-09T15:52:44.71Z",
+              "WhenOpened": "2025-06-10T06:54:19.686Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "register.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\register.cshtml",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAEwAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-10T06:36:10.308Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "ToolTip": "E:\\GithubProject_SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Login.cshtml",
+              "ViewState": "AgIAADMAAAAAAAAAAAAswEAAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-10T06:35:50.923Z",
               "EditorCaption": ""
             }
           ]
