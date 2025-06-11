@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -84,6 +86,8 @@ namespace SEP490_SU25_G86_API
 			builder.Services.AddScoped<AccountService>();
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
+            builder.Services.AddScoped<ISavedJobService, SavedJobService>();
+            builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 
 
             // CORS
