@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-// Thêm namespace c?a DTO t? API
+// Thï¿½m namespace c?a DTO t? API
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +21,12 @@ namespace SEP490_SU25_G86_Client.Pages.Job
 
         public async Task<IActionResult> OnGetAsync(int? employerId)
         {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "EMPLOYER")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
             if (!employerId.HasValue)
             {
                 Jobs = new List<JobPostDTO>();

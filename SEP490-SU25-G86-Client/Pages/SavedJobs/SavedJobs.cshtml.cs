@@ -19,6 +19,12 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "CANDIDATE")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
             // DEMO: Bỏ qua kiểm tra đăng nhập và token
             int userId = 1;
 
