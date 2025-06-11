@@ -1,17 +1,19 @@
 
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using SEP490_SU25_G86_API.Models;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using System.Text;
 
 namespace SEP490_SU25_G86_API
 {
@@ -88,8 +90,8 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IJobPostService, JobPostService>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
-
-
+            builder.Services.AddScoped<IAccountListService, AccountListService>();
+            builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
             // CORS
             builder.Services.AddCors(options =>
 			{
@@ -101,7 +103,9 @@ namespace SEP490_SU25_G86_API
 				});
 			});
 
-			var app = builder.Build();
+            
+
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
