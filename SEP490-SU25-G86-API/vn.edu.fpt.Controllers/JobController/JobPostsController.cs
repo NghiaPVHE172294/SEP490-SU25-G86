@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Mvc;
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
@@ -14,6 +15,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         public JobPostsController(IJobPostService jobPostService)
         {
             _jobPostService = jobPostService;
+        }
+
+        [HttpGet("homepage")]
+        public async Task<IActionResult> GetHomeJobs(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 9,
+        [FromQuery] string? region = null) // ← thêm region filter
+        {
+            var jobs = await _jobPostService.GetPagedJobPostsAsync(page, pageSize, region);
+
+            return Ok(new
+            {
+                TotalItems = jobs.Item2,
+                Jobs = jobs.Item1
+            });
         }
 
         [HttpGet]

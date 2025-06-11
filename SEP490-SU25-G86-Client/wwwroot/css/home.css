@@ -1,0 +1,45 @@
+﻿:root {
+    --primary-color: #309689; /* Xanh lá đậm */
+    --gradient-bg: linear-gradient(180deg, #A3C99E 0%, #309689 48%, #32692D 100%);
+    --text-dark: #212121;
+    --text-gray: #424242;
+    --text-light-gray: #757575;
+    --white: #FFFFFF;
+    --border-color: #E0E0E0;
+}
+.btn-custom {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+    .btn-custom:hover {
+        background-color: #267c71;
+    }
+
+.text-custom {
+    color: var(--primary-color) !important;
+}
+
+.border-custom {
+    border-color: var(--primary-color) !important;
+}
+
+.bg-custom {
+    background-color: var(--primary-color) !important;
+}
+
+/* === Pagination Styles === */
+.pagination .page-link {
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+}
+
+.pagination .disabled .page-link {
+    opacity: 0.6;
+}
+
+.pagination .page-item span.page-link {
+    cursor: default;
+}
