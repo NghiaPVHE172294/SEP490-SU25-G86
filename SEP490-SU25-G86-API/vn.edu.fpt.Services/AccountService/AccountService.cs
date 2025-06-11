@@ -2,13 +2,14 @@ using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using System.Security.Cryptography;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
-        private readonly AccountRepository _accountRepository;
-        public AccountService(AccountRepository accountRepository)
+        private readonly IAccountRepository _accountRepository;
+        public AccountService(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
         }

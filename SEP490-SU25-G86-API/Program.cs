@@ -81,8 +81,8 @@ namespace SEP490_SU25_G86_API
 			});
 
 			// Dependency Injection
-			builder.Services.AddScoped<AccountRepository>();
-			builder.Services.AddScoped<AccountService>();
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+			builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();

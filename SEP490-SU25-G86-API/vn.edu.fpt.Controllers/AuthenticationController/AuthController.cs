@@ -17,11 +17,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly IConfiguration _configuration;
         private readonly SEP490_G86_CvMatchContext _context;
 
-        public AuthController(AccountService accountService, IConfiguration configuration, SEP490_G86_CvMatchContext context)
+        public AuthController(IAccountService accountService, IConfiguration configuration, SEP490_G86_CvMatchContext context)
         {
             _accountService = accountService;
             _configuration = configuration;
@@ -39,7 +39,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 
             var roleName = account.Role.RoleName;
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email });
+            return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
         }
 
         private string GenerateJwtToken(Account account, string roleName)
@@ -151,7 +151,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             }
             var roleName = account.Role?.RoleName ?? "CANDIDATE";
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email });
+            return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
         }
     }
 }

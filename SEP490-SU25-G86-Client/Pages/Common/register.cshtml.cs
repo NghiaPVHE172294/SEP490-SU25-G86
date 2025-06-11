@@ -64,7 +64,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             if (response.IsSuccessStatusCode)
             {
                 // Đăng ký thành công, chuyển về Login
-                return RedirectToPage("/Login");
+                return RedirectToPage("/Common/Login");
             }
             else
             {
