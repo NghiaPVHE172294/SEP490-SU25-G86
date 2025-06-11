@@ -31,7 +31,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
                 Jobs = jobs.Item1
             });
         }
-    }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetAllJobPosts()
         {
