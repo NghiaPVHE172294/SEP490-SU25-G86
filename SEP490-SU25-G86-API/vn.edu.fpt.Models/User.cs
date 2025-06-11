@@ -34,6 +34,7 @@ namespace SEP490_SU25_G86_API.Models
         public int AccountId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
+        public virtual Company? Company { get; set; }
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
         public virtual ICollection<CompanyFollower> CompanyFollowers { get; set; }
         public virtual ICollection<Cv> Cvs { get; set; }

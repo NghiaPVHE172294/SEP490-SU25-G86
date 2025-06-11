@@ -85,6 +85,7 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
 
+
             // CORS
             builder.Services.AddCors(options =>
 			{

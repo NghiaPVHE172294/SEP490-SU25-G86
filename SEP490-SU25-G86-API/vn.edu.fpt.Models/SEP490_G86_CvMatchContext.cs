@@ -32,6 +32,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<JobPosition> JobPositions { get; set; } = null!;
         public virtual DbSet<JobPost> JobPosts { get; set; } = null!;
         public virtual DbSet<JobPostView> JobPostViews { get; set; } = null!;
+        public virtual DbSet<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; } = null!;
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
@@ -42,11 +43,10 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=SEP490_G86_CvMatch;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
             }
         }
 
@@ -56,8 +56,6 @@ namespace SEP490_SU25_G86_API.Models
             {
                 entity.HasIndex(e => e.Email, "Email")
                     .IsUnique();
-
-                entity.Property(e => e.AccountId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -104,9 +102,7 @@ namespace SEP490_SU25_G86_API.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Email).HasMaxLength(100);
 
                 entity.Property(e => e.LogoUrl).HasMaxLength(500);
 
@@ -200,12 +196,6 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey(d => d.CvId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CVParsedData_CVs");
-
-                entity.HasOne(d => d.MatchedJobCriteria)
-                    .WithMany(p => p.CvparsedData)
-                    .HasForeignKey(d => d.MatchedJobCriteriaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CVParsedData_JobCriteria");
             });
 
             modelBuilder.Entity<Cvsubmission>(entity =>
@@ -299,8 +289,6 @@ namespace SEP490_SU25_G86_API.Models
 
             modelBuilder.Entity<JobPost>(entity =>
             {
-                entity.Property(e => e.JobPostId).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
@@ -375,6 +363,27 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_JobPostViews_Users");
+            });
+
+            modelBuilder.Entity<MatchedCvandJobPost>(entity =>
+            {
+                entity.ToTable("MatchedCVandJobPost");
+
+                entity.Property(e => e.MatchedCvandJobPostId).HasColumnName("MatchedCVandJobPostId");
+
+                entity.Property(e => e.CvparsedDataId).HasColumnName("CVParsedDataId");
+
+                entity.HasOne(d => d.CvparsedData)
+                    .WithMany(p => p.MatchedCvandJobPosts)
+                    .HasForeignKey(d => d.CvparsedDataId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MatchedCVandJobPost_CVParsedData");
+
+                entity.HasOne(d => d.JobPostCriteria)
+                    .WithMany(p => p.MatchedCvandJobPosts)
+                    .HasForeignKey(d => d.JobPostCriteriaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MatchedCVandJobPost_JobCriteria");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -489,6 +498,11 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey<User>(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Users_Accounts");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_Users_Companies");
             });
 
             OnModelCreatingPartial(modelBuilder);

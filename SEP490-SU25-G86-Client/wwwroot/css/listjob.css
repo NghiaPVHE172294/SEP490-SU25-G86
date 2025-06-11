@@ -1,0 +1,75 @@
+﻿:root {
+    --primary: #28a745;
+    --primary-foreground: #ffffff;
+    --secondary: #6c757d;
+    --secondary-foreground: #ffffff;
+    --background: #E6F3E6;
+    --foreground: #333333;
+    --card: #ffffff;
+    --card-foreground: #333333;
+    --border: #dee2e6;
+    --input: #ffffff;
+    --radius: 0.5rem;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.card.job-card {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--border);
+}
+
+    .card.job-card:hover {
+        transform: translateY(-4px);
+        cursor: pointer;
+    }
+
+.card-title {
+    color: var(--primary);
+}
+
+.location {
+    color: var(--secondary);
+}
+
+.form-control, .form-select {
+    border-radius: var(--radius);
+    border-color: var(--border);
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 1em;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+}

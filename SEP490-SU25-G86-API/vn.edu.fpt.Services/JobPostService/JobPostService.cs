@@ -7,10 +7,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
     public class JobPostService : IJobPostService
     {
         private readonly IJobPostRepository _jobPostRepo;
+
         public JobPostService(IJobPostRepository jobPostRepo)
         {
             _jobPostRepo = jobPostRepo;
         }
+        
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region);
@@ -28,5 +30,35 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 
             return (result, totalItems);
         }
+
+        public async Task<IEnumerable<JobPostDTO>> GetAllJobPostsAsync()
+        {
+            var posts = await _jobPostRepo.GetAllAsync();
+            return posts.Select(post => new JobPostDTO
+            {
+                JobPostId = post.JobPostId,
+                Title = post.Title,
+                WorkLocation = post.WorkLocation,
+                Status = post.Status,
+                CreatedDate = post.CreatedDate,
+                EndDate = post.EndDate
+            });
+        }
+
+        public async Task<IEnumerable<JobPostDTO>> GetByEmployerIdAsync(int employerId)
+        {
+            var posts = await _jobPostRepo.GetByEmployerIdAsync(employerId);
+            return posts.Select(post => new JobPostDTO
+            {
+                JobPostId = post.JobPostId,
+                Title = post.Title,
+                WorkLocation = post.WorkLocation,
+                Status = post.Status,
+                CreatedDate = post.CreatedDate,
+                EndDate = post.EndDate
+            });
+        }
+
     }
+
 }

@@ -5,7 +5,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Employer")]
+    [Authorize(Roles = "EMPLOYER")]
     public class EmployerController : ControllerBase
     {
         [HttpGet("dashboard")]

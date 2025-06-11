@@ -8,6 +8,7 @@ namespace SEP490_SU25_G86_API.Models
         public Company()
         {
             CompanyFollowers = new HashSet<CompanyFollower>();
+            Users = new HashSet<User>();
         }
 
         public int CompanyId { get; set; }
@@ -26,5 +27,6 @@ namespace SEP490_SU25_G86_API.Models
 
         public virtual Industry Industry { get; set; } = null!;
         public virtual ICollection<CompanyFollower> CompanyFollowers { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

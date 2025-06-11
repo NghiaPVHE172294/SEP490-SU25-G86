@@ -34,6 +34,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services
             }
         }
 
+        public static string GetMd5HashStatic(string input)
+        {
+            using (var md5 = System.Security.Cryptography.MD5.Create())
+            {
+                var inputBytes = Encoding.UTF8.GetBytes(input);
+                var hashBytes = md5.ComputeHash(inputBytes);
+                // Chuyển sang chuỗi hex
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
         public Account? GetByEmail(string email)
         {
             return _accountRepository.GetByEmail(email);

@@ -8,6 +8,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO;
+using Google.Apis.Auth;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 {
@@ -81,10 +83,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             // Lấy role theo RoleName client gửi lên
             var role = _context.Roles.FirstOrDefault(r => r.RoleName == request.RoleName);
             if (role == null) return BadRequest($"Không tìm thấy role {request.RoleName}.");
+            // Mã hóa password bằng MD5 ở backend
+            string hashedPassword = SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService.GetMd5HashStatic(request.Password);
             var account = new Account
             {
                 Email = request.Email,
-                Password = request.Password, // Đã mã hóa MD5 từ client
+                Password = hashedPassword, // Đã mã hóa MD5 ở backend
                 RoleId = role.RoleId,
                 IsActive = true,
                 CreatedDate = DateTime.Now
@@ -104,18 +108,50 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             return Ok();
         }
 
-        public class LoginRequest
+        [HttpPost("external-login/google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] ExternalLoginRequest request)
         {
-            public string Email { get; set; }
-            public string Password { get; set; }
-        }
-
-        public class RegisterRequest
-        {
-            public string FullName { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public string RoleName { get; set; }
+            if (request.Provider != "Google" || string.IsNullOrEmpty(request.IdToken))
+                return BadRequest("Invalid request");
+            GoogleJsonWebSignature.Payload payload;
+            try
+            {
+                payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken);
+            }
+            catch
+            {
+                return Unauthorized("Invalid Google token");
+            }
+            string googleEmail = payload.Email;
+            string fullName = payload.Name ?? "Google User";
+            var account = _accountService.GetByEmail(googleEmail);
+            if (account == null)
+            {
+                // Tạo tài khoản mới cho user Google
+                var role = _context.Roles.FirstOrDefault(r => r.RoleName == "CANDIDATE");
+                account = new Account
+                {
+                    Email = googleEmail,
+                    Password = "", // Không có password
+                    RoleId = role?.RoleId ?? 2,
+                    IsActive = true,
+                    CreatedDate = DateTime.Now
+                };
+                _context.Accounts.Add(account);
+                _context.SaveChanges();
+                var user = new User
+                {
+                    FullName = fullName,
+                    AccountId = account.AccountId,
+                    IsActive = true,
+                    CreatedDate = DateTime.Now
+                };
+                _context.Users.Add(user);
+                _context.SaveChanges();
+            }
+            var roleName = account.Role?.RoleName ?? "CANDIDATE";
+            var token = GenerateJwtToken(account, roleName);
+            return Ok(new { token, role = roleName, email = account.Email });
         }
     }
 } 

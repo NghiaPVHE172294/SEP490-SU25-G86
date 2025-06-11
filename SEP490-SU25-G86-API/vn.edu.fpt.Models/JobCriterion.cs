@@ -7,7 +7,7 @@ namespace SEP490_SU25_G86_API.Models
     {
         public JobCriterion()
         {
-            CvparsedData = new HashSet<CvparsedDatum>();
+            MatchedCvandJobPosts = new HashSet<MatchedCvandJobPost>();
         }
 
         public int JobCriteriaId { get; set; }
@@ -22,6 +22,6 @@ namespace SEP490_SU25_G86_API.Models
         public int CreatedByUserId { get; set; }
 
         public virtual User CreatedByUser { get; set; } = null!;
-        public virtual ICollection<CvparsedDatum> CvparsedData { get; set; }
+        public virtual ICollection<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; }
     }
 }
