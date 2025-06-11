@@ -4,14 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTO;
 using Google.Apis.Auth;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 
-namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -84,7 +84,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             var role = _context.Roles.FirstOrDefault(r => r.RoleName == request.RoleName);
             if (role == null) return BadRequest($"Không tìm thấy role {request.RoleName}.");
             // Mã hóa password bằng MD5 ở backend
-            string hashedPassword = SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService.GetMd5HashStatic(request.Password);
+            string hashedPassword = AccountService.GetMd5HashStatic(request.Password);
             var account = new Account
             {
                 Email = request.Email,
@@ -154,4 +154,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             return Ok(new { token, role = roleName, email = account.Email });
         }
     }
-} 
+}

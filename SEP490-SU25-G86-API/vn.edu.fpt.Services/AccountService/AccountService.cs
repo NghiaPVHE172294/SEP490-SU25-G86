@@ -1,9 +1,9 @@
 using SEP490_SU25_G86_API.Models;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SEP490_SU25_G86_API.vn.edu.fpt.Services
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService
 {
     public class AccountService
     {
@@ -25,7 +25,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services
 
         private string GetMd5Hash(string input)
         {
-            using (var md5 = System.Security.Cryptography.MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 var inputBytes = Encoding.UTF8.GetBytes(input);
                 var hashBytes = md5.ComputeHash(inputBytes);
@@ -36,7 +36,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services
 
         public static string GetMd5HashStatic(string input)
         {
-            using (var md5 = System.Security.Cryptography.MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 var inputBytes = Encoding.UTF8.GetBytes(input);
                 var hashBytes = md5.ComputeHash(inputBytes);
@@ -50,4 +50,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services
             return _accountRepository.GetByEmail(email);
         }
     }
-} 
+}

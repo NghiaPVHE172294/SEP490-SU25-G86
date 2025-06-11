@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository
 {
     public class AccountRepository
     {
@@ -18,4 +18,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories
             return _context.Accounts.Include(a => a.Role).FirstOrDefault(a => a.Email == email);
         }
     }
-} 
+}

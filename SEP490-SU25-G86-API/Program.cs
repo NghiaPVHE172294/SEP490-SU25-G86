@@ -1,6 +1,3 @@
-
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -12,10 +9,12 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 
 namespace SEP490_SU25_G86_API
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
