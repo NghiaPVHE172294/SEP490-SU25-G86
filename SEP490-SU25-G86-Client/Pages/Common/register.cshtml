@@ -121,9 +121,8 @@
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    sessionStorage.setItem('jwt_token', data.token);
-                    sessionStorage.setItem('user_role', data.role);
-                      window.location.href = '/Common/Homepage';
+                    // Chuyển hướng sang endpoint để lưu session server-side
+                    window.location.href = `/Common/GoogleLoginCallback?token=${encodeURIComponent(data.token)}&role=${encodeURIComponent(data.role)}&userId=${encodeURIComponent(data.userId)}`;
                 } else {
                     alert('Đăng nhập Google thất bại!');
                 }

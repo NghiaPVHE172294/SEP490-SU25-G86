@@ -139,3 +139,22 @@ body {
 .footer-container .text-center {
     text-align: center;
 }
+
+/* Dropdown submenu cho Bootstrap 5 */
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    right: 100%;
+    left: auto;
+    margin-top: -6px;
+    display: none;
+    min-width: 200px;
+    position: absolute;
+    z-index: 1051;
+}
+.dropdown-submenu:hover > .dropdown-menu,
+.dropdown-submenu:focus-within > .dropdown-menu {
+    display: block;
+}

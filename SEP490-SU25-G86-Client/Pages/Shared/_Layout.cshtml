@@ -49,6 +49,29 @@
                         </ul>
                     </div>
                 }
+                else if (isLoggedIn && userRole == "EMPLOYER")
+                {
+                    <div class="dropdown user-dropdown">
+                        <a href="#" class="d-flex align-items-center" id="employerDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="employerDropdown">
+                            <li><a class="dropdown-item" asp-page="/Employer/Campaigns">Chiến dịch tuyển dụng</a></li>
+                            <li><a class="dropdown-item" asp-page="/Job/ListJobByEmployer">Danh sách bài đăng tuyển dụng</a></li>
+                            <li><a class="dropdown-item" asp-page="/Employer/CVManagement">Quản lý CV</a></li>
+                            <li class="dropdown-submenu position-relative">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="accountSettingDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cài đặt tài khoản</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountSettingDropdown" style="left:auto; right:100%; top:0; min-width:200px;">
+                                    <li><a class="dropdown-item" asp-page="/Employer/Profile">Cài đặt thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Employer/ChangePassword">Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Employer/CompanyInfo">Thông tin công ty</a></li>
+                                </ul>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-page="/Common/Logout">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                }
                 else
                 {
                     <a asp-page="/Common/register" class="btn btn-outline-light ms-3">Đăng ký</a>
