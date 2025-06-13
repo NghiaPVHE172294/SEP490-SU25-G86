@@ -23,11 +23,13 @@ namespace SEP490_SU25_G86_Client
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
+
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseSession();
+            
 
             // Map default route to Login.cshtml  
             app.MapGet("/", context =>

@@ -40,9 +40,11 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                     var json = JsonDocument.Parse(responseBody).RootElement;
                     var token = json.GetProperty("token").GetString();
                     var role = json.GetProperty("role").GetString();
+                    var userId = json.GetProperty("userId").GetInt32();
                     // Lưu token vào session
                     HttpContext.Session.SetString("jwt_token", token);
                     HttpContext.Session.SetString("user_role", role);
+                    HttpContext.Session.SetString("userId", userId.ToString());
                     // Chuyển hướng theo role
                     if (role == "ADMIN") return RedirectToPage("/AdminDashboard");
                     //if (role == "EMPLOYER") return RedirectToPage("/EmployerDashboard");

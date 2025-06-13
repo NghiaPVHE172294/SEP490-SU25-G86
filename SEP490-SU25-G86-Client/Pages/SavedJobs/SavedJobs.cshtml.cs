@@ -25,11 +25,15 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
                 return RedirectToPage("/NotFound");
             }
 
-            // DEMO: Bỏ qua kiểm tra đăng nhập và token
-            int userId = 1;
+            var userIdStr = HttpContext.Session.GetString("userId");
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+            {
+                return RedirectToPage("/Common/Login");
+            }
 
-            // Không cần gán Authorization nếu không dùng JWT
-            // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync($"api/SavedJobs/user/{userId}");
 

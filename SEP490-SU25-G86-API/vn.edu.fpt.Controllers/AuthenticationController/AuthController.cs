@@ -39,7 +39,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 
             var roleName = account.Role.RoleName;
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
+            var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+            return Ok(new { token, role = roleName, email = account.Email, userId = user?.UserId });
         }
 
         private string GenerateJwtToken(Account account, string roleName)
