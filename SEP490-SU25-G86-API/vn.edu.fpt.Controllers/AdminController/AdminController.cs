@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
 {
     [ApiController]
     [Route("api/[controller]")]
