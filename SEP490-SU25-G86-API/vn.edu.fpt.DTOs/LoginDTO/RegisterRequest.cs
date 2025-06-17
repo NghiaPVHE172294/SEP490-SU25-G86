@@ -1,4 +1,4 @@
-namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO
+namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO
 {
     public class RegisterRequest
     {
@@ -7,4 +7,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO
         public string Password { get; set; }
         public string RoleName { get; set; }
     }
-} 
+}

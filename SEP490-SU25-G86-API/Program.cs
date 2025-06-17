@@ -1,4 +1,6 @@
 
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +15,13 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using System.Text;
 
 namespace SEP490_SU25_G86_API
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -84,8 +88,8 @@ namespace SEP490_SU25_G86_API
 			});
 
 			// Dependency Injection
-			builder.Services.AddScoped<AccountRepository>();
-			builder.Services.AddScoped<AccountService>();
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+			builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();

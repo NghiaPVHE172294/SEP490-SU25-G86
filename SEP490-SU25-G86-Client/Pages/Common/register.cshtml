@@ -1,5 +1,5 @@
 ﻿@page
-@model SEP490_SU25_G86_Client.Pages.registerModel
+@model SEP490_SU25_G86_Client.Pages.Common.registerModel
 @{
     Layout = null;
 }
@@ -26,11 +26,11 @@
             <div class="form-container">
               
 
-                <a href="/Homepage" class="homepage-link">
+                <a href="/Common/Homepage" class="homepage-link">
                     <img src="~/assets/images/left-svg-hd-removebg-preview.png" alt="Chevron Left" class="chevron-icon">
                     Homepage
                 </a>
-                <a href="/Login" class="register-link">Bạn đã có tài khoản? <span>ĐĂNG NHẬP</span></a>
+                <a href="/Common/Login" class="register-link">Bạn đã có tài khoản? <span>ĐĂNG NHẬP</span></a>
                 <br />
                 <div class="form-container">
                     <h2 class="title">Chào mừng bạn đến với CVMatcher</h2>
@@ -62,7 +62,7 @@
                             <label for="terms">Tôi đồng ý với <a href="?">Điều khoản dịch vụ</a></label>
                         </div>
                         <button type="submit" class="register-button">
-                            Create account
+                            Tạo tài khoản
                         </button>
                         @if (!string.IsNullOrEmpty(Model.ErrorMessage))
                         {
@@ -71,21 +71,31 @@
                     </form>
 
                     <div class="divider">Hoặc đăng nhập bằng</div>
+
                     <div class="social-buttons">
-                        <button class="social-button">
-                            <img src="~/assets/images/google-icon-logo.svg" alt="Google Icon">
-                        </button>
-                        <button class="social-button">
+                        <div id="g_id_onload"
+                             data-client_id="29046688225-8qm2dol9cks9d77gs667pb6783n8cmqt.apps.googleusercontent.com"
+                             data-context="signin"
+                             data-ux_mode="popup"
+                             data-callback="onGoogleSignIn"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                             data-shape="rectangular"
+                             data-theme="outline"
+                             data-size="large"
+                             data-logo_alignment="center">
+                        </div>
+
+                        <button class="social-button" disabled>
                             <img src="~/assets/images/2023_Facebook_icon.svg.webp" alt="Facebook Icon">
                         </button>
                     </div>
                 </div>
             </div>
-            
         </div>
-    </div>
 
-
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         // Toggle hiển thị mật khẩu
         document.querySelectorAll('.toggle-password').forEach(toggle => {
@@ -95,6 +105,31 @@
                 passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
             });
         });
+
+          // Google Sign-In callback
+        async function onGoogleSignIn(response) {
+            const idToken = response.credential;
+            const payload = {
+                provider: 'Google',
+                idToken: idToken
+            };
+            try {
+                 const res = await fetch('https://localhost:7004/api/Auth/external-login/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    // Chuyển hướng sang endpoint để lưu session server-side
+                    window.location.href = `/Common/GoogleLoginCallback?token=${encodeURIComponent(data.token)}&role=${encodeURIComponent(data.role)}&userId=${encodeURIComponent(data.userId)}`;
+                } else {
+                    alert('Đăng nhập Google thất bại!');
+                }
+            } catch (e) {
+                alert('Lỗi kết nối máy chủ!');
+            }
+        }
     </script>
 </body>
 </html>
