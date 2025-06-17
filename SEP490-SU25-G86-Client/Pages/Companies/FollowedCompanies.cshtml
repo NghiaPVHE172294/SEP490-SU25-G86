@@ -1,0 +1,32 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Companies.FollowedCompaniesModel
+@{
+    ViewData["Title"] = "Businesses You Are Following";
+}
+
+<div class="container py-5">
+    <h2 class="text-2xl font-bold mb-5">Doanh nghiệp bạn đang theo dõi</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var company in Model.Companies)
+        {
+            <div class="border rounded p-4 shadow bg-white">
+                <div class="flex items-center mb-2">
+                    <img src="@company.LogoUrl" alt="Logo" class="w-12 h-12 object-cover rounded mr-3" />
+                    <div>
+                        <h3 class="font-semibold text-lg">@company.CompanyName</h3>
+                        <p class="text-sm text-gray-500">@company.IndustryName</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600">@company.Description?.Substring(0, Math.Min(100, company.Description.Length))...</p>
+                <a href="@company.Website" class="text-blue-600 text-sm hover:underline block mt-2" target="_blank">@company.Website</a>
+                <p class="text-xs text-gray-400 mt-2">Theo dõi từ: @company.FlowedAt.ToString("dd/MM/yyyy")</p>
+            </div>
+        }
+        @if (!Model.Companies.Any())
+        {
+            <div class="col-span-3 text-center text-gray-400">
+                <p>Bạn chưa theo dõi công ty nào.</p>
+            </div>
+        }
+    </div>
+</div>
