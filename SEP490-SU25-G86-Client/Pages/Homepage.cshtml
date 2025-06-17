@@ -62,10 +62,10 @@
                     <option>Kinh nghiệm</option>
                 </select>
 
-                <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-primary" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
-                <a class="btn @(selectedRegion == "Bắc" ? "btn-primary" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
-                <a class="btn @(selectedRegion == "Trung" ? "btn-primary" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
-                <a class="btn @(selectedRegion == "Nam" ? "btn-primary" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
+                <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
+                <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
+                <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
+                <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
             </div>
 
             @if (!Model.JobPosts.Any())
