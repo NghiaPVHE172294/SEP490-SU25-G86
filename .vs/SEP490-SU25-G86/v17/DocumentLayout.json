@@ -3,28 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\admin\\admindashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\admin\\admindashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\accountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\accountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\admin\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\admin\\admindashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-client\\pages\\admin\\manageaccount.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}|SEP490-SU25-G86-Client\\SEP490-SU25-G86-Client.csproj|solutionrelative:sep490-su25-g86-client\\pages\\admin\\manageaccount.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.controllers\\admincontroller\\adminaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.controllers\\admincontroller\\adminaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\adminaccountrepository\\iaccountlistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\adminaccountrepository\\iaccountlistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.controllers\\admincontroller\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.controllers\\admincontroller\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\admindashboardservices\\admindashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\admindashboardservices\\admindashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\admindashboardservices\\iadmindashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\admindashboardservices\\iadmindashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\accountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\accountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\adminaccountrepository\\accountlistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\adminaccountrepository\\accountlistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\iaccountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.services\\adminaccoutservices\\iaccountlistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\admindashboardrepository\\admindashboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\admindashboardrepository\\admindashboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|c:\\users\\admin\\desktop\\sep490\\sep490-su25-g86\\sep490-su25-g86-api\\vn.edu.fpt.repositories\\admindashboardrepository\\iadmindashboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3F136D0-9A50-4E2B-B82B-1651FAA6662D}|SEP490-SU25-G86-API\\SEP490-SU25-G86-API.csproj|solutionrelative:sep490-su25-g86-api\\vn.edu.fpt.repositories\\admindashboardrepository\\iadmindashboardrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,84 +54,149 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ManageAccount.cshtml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\ManageAccount.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Admin\\ManageAccount.cshtml",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\ManageAccount.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Admin\\ManageAccount.cshtml",
+              "ViewState": "AgIAAHYAAAAAAAAAAAAqwH4AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-17T15:53:10.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\Program.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\Program.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\Program.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAQwFsAAABSAAAAAAAAAA==",
+              "Title": "AdminDashboard.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:42:24.757Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IAccountListRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\IAccountListRepository.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\IAccountListRepository.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\IAccountListRepository.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\IAccountListRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:40:33.325Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AccountListRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:39:49.677Z",
+              "WhenOpened": "2025-06-17T15:46:24.295Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AccountListService.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAA5AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:38:18.623Z",
+              "Title": "AdminDashboard.cshtml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml",
+              "RelativeToolTip": "SEP490-SU25-G86-Client\\Pages\\Admin\\AdminDashboard.cshtml",
+              "ViewState": "AgIAACkAAAAAAAAAAAAqwFcAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-17T15:45:51.568Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "IAccountListService.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\IAccountListService.cs",
-              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\IAccountListService.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\IAccountListService.cs",
-              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\IAccountListService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:36:04.65Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AdminAccountController.cs",
               "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminAccountController.cs",
               "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminAccountController.cs",
               "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminAccountController.cs",
               "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminAccountController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T03:34:55.7Z",
+              "WhenOpened": "2025-06-17T15:39:15.471Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminController.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminController.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminController.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Controllers\\AdminController\\AdminController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:39:12.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AccountListService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminAccoutServices\\AccountListService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:31:29.679Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AdminDashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\AdminDashboardService.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\AdminDashboardService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\AdminDashboardService.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\AdminDashboardService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:31:02.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IAdminDashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\IAdminDashboardService.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\IAdminDashboardService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\IAdminDashboardService.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Services\\AdminDashboardServices\\IAdminDashboardService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:29:28.466Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AccountListRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminAccountRepository\\AccountListRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:26:35.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AdminDashboardRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\AdminDashboardRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\AdminDashboardRepository.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\AdminDashboardRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\AdminDashboardRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:22:04.124Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IAdminDashboardRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\IAdminDashboardRepository.cs",
+              "RelativeDocumentMoniker": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\IAdminDashboardRepository.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\SEP490\\SEP490-SU25-G86\\SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\IAdminDashboardRepository.cs",
+              "RelativeToolTip": "SEP490-SU25-G86-API\\vn.edu.fpt.Repositories\\AdminDashboardRepository\\IAdminDashboardRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T15:21:43.933Z",
               "EditorCaption": ""
             }
           ]
