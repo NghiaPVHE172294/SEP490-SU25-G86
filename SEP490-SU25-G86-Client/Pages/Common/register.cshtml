@@ -1,0 +1,135 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Common.registerModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - CVMatcher</title>
+    <link rel="stylesheet" href="~/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Phần trái -->
+        <div class="left-section">
+            <img src="~/assets/images/LogoCVM.png" alt="CVMatcher" class="logo">
+            <img src="~/assets/images/battay.png" alt="Handshake Illustration" class="handshake">
+            <p class="message"></p>
+        </div>
+
+        <!-- Phần phải -->
+        <div class="right-section">
+            <div class="form-container">
+              
+
+                <a href="/Common/Homepage" class="homepage-link">
+                    <img src="~/assets/images/left-svg-hd-removebg-preview.png" alt="Chevron Left" class="chevron-icon">
+                    Homepage
+                </a>
+                <a href="/Common/Login" class="register-link">Bạn đã có tài khoản? <span>ĐĂNG NHẬP</span></a>
+                <br />
+                <div class="form-container">
+                    <h2 class="title">Chào mừng bạn đến với CVMatcher</h2>
+                    <p class="subtitle">Cùng khám phá những cơ hội việc làm phù hợp nhất dành cho bạn</p>
+
+                    <form method="post" class="register-form">
+                        <div class="input-row">
+                            <input asp-for="FullName" type="text" placeholder="Full Name" required>
+                        </div>
+                        <div class="input-group">
+                            <input asp-for="Email" type="email" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <input asp-for="Password" type="password" placeholder="Password" id="password" required>
+                            <span class="toggle-password">SHOW</span>
+                        </div>
+                        <div class="input-group">
+                            <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" id="confirm-password" required>
+                            <span class="toggle-password">SHOW</span>
+                        </div>
+                        <div class="input-group">
+                            <select asp-for="RoleName" required class="form-select">
+                                <option value="CANDIDATE">Ứng viên</option>
+                                <option value="EMPLOYER">Nhà tuyển dụng</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input asp-for="AcceptTerms" type="checkbox" id="terms" required>
+                            <label for="terms">Tôi đồng ý với <a href="?">Điều khoản dịch vụ</a></label>
+                        </div>
+                        <button type="submit" class="register-button">
+                            Tạo tài khoản
+                        </button>
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="text-danger" style="margin-top:10px">@Model.ErrorMessage</div>
+                        }
+                    </form>
+
+                    <div class="divider">Hoặc đăng nhập bằng</div>
+
+                    <div class="social-buttons">
+                        <div id="g_id_onload"
+                             data-client_id="29046688225-8qm2dol9cks9d77gs667pb6783n8cmqt.apps.googleusercontent.com"
+                             data-context="signin"
+                             data-ux_mode="popup"
+                             data-callback="onGoogleSignIn"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                             data-shape="rectangular"
+                             data-theme="outline"
+                             data-size="large"
+                             data-logo_alignment="center">
+                        </div>
+
+                        <button class="social-button" disabled>
+                            <img src="~/assets/images/2023_Facebook_icon.svg.webp" alt="Facebook Icon">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // Toggle hiển thị mật khẩu
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const passwordInput = this.previousElementSibling;
+                this.textContent = this.textContent === 'SHOW' ? 'HIDE' : 'SHOW';
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            });
+        });
+
+          // Google Sign-In callback
+        async function onGoogleSignIn(response) {
+            const idToken = response.credential;
+            const payload = {
+                provider: 'Google',
+                idToken: idToken
+            };
+            try {
+                 const res = await fetch('https://localhost:7004/api/Auth/external-login/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    // Chuyển hướng sang endpoint để lưu session server-side
+                    window.location.href = `/Common/GoogleLoginCallback?token=${encodeURIComponent(data.token)}&role=${encodeURIComponent(data.role)}&userId=${encodeURIComponent(data.userId)}`;
+                } else {
+                    alert('Đăng nhập Google thất bại!');
+                }
+            } catch (e) {
+                alert('Lỗi kết nối máy chủ!');
+            }
+        }
+    </script>
+</body>
+</html>
