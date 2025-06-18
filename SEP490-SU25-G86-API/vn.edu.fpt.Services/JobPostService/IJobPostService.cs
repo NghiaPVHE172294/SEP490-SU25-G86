@@ -1,4 +1,5 @@
 ﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 {
@@ -10,7 +11,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         Task<IEnumerable<JobPostDTO>> GetAllJobPostsAsync();
 
         Task<IEnumerable<JobPostDTO>> GetByEmployerIdAsync(int employerId);
-
+        Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetFilteredJobPostsAsync(
+            int page, int pageSize,
+            int? provinceId = null,
+            int? industryId = null,
+            List<int>? employmentTypeIds = null,
+            List<int>? experienceLevelIds = null,
+            int? jobLevelId = null,
+            int? minSalary = null,
+            int? maxSalary = null,
+            List<int>? datePostedRanges = null
+        );
     }
 
 }

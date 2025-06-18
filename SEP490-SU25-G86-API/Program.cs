@@ -1,6 +1,4 @@
 
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -8,15 +6,21 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using System.Text;
 
 namespace SEP490_SU25_G86_API
@@ -96,6 +100,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<IAccountListService, AccountListService>();
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
+            builder.Services.AddScoped<IProvinceRepository, ProvinceRepository>();
+            builder.Services.AddScoped<IProvinceService, ProvinceService>();
+            builder.Services.AddScoped<IIndustryRepository, IndustryRepository>();
+            builder.Services.AddScoped<IIndustryService, IndustryService>();
             // CORS
             builder.Services.AddCors(options =>
 			{
