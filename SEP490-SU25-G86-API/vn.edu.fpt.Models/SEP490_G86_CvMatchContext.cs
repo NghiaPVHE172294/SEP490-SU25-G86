@@ -35,6 +35,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; } = null!;
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
+        public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SalaryRange> SalaryRanges { get; set; } = null!;
@@ -424,6 +425,15 @@ namespace SEP490_SU25_G86_API.Models
                     .HasConstraintName("FK_PasswordResetTokens_Accounts");
             });
 
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.Property(e => e.Endpoint).HasMaxLength(200);
+
+                entity.Property(e => e.Method).HasMaxLength(10);
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<Province>(entity =>
             {
                 entity.Property(e => e.ProvinceName).HasMaxLength(100);
@@ -434,6 +444,19 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.RoleName).HasMaxLength(50);
+
+                entity.HasMany(d => d.Permissions)
+                    .WithMany(p => p.Roles)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "RolePermission",
+                        l => l.HasOne<Permission>().WithMany().HasForeignKey("PermissionId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__RolePermi__Permi__2FCF1A8A"),
+                        r => r.HasOne<Role>().WithMany().HasForeignKey("RoleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__RolePermi__RoleI__2EDAF651"),
+                        j =>
+                        {
+                            j.HasKey("RoleId", "PermissionId").HasName("PK__RolePerm__6400A1A8E1EB58E5");
+
+                            j.ToTable("RolePermissions");
+                        });
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>
