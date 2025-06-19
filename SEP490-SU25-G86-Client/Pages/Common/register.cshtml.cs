@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SEP490_SU25_G86_Client.Pages
+namespace SEP490_SU25_G86_Client.Pages.Common
 {
     public class registerModel : PageModel
     {
@@ -64,7 +64,7 @@ namespace SEP490_SU25_G86_Client.Pages
             if (response.IsSuccessStatusCode)
             {
                 // Đăng ký thành công, chuyển về Login
-                return RedirectToPage("/Login");
+                return RedirectToPage("/Common/Login");
             }
             else
             {

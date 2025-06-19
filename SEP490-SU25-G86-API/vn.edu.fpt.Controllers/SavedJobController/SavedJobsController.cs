@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.SavedJobDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.SavedJobController
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "CANDIDATE")]
     public class SavedJobsController : ControllerBase
     {
         private readonly ISavedJobService _savedJobService;

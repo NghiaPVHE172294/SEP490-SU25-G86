@@ -4,24 +4,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTO;
 using Google.Apis.Auth;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 
-namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly AccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly IConfiguration _configuration;
         private readonly SEP490_G86_CvMatchContext _context;
 
-        public AuthController(AccountService accountService, IConfiguration configuration, SEP490_G86_CvMatchContext context)
+        public AuthController(IAccountService accountService, IConfiguration configuration, SEP490_G86_CvMatchContext context)
         {
             _accountService = accountService;
             _configuration = configuration;
@@ -39,7 +40,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 
             var roleName = account.Role.RoleName;
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email });
+            var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+            return Ok(new { token, role = roleName, email = account.Email, userId = user?.UserId });
         }
 
         private string GenerateJwtToken(Account account, string roleName)
@@ -84,7 +86,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             var role = _context.Roles.FirstOrDefault(r => r.RoleName == request.RoleName);
             if (role == null) return BadRequest($"Không tìm thấy role {request.RoleName}.");
             // Mã hóa password bằng MD5 ở backend
-            string hashedPassword = SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService.GetMd5HashStatic(request.Password);
+            string hashedPassword = AccountService.GetMd5HashStatic(request.Password);
             var account = new Account
             {
                 Email = request.Email,
@@ -151,7 +153,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             }
             var roleName = account.Role?.RoleName ?? "CANDIDATE";
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email });
+            return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
         }
     }
-} 
+}

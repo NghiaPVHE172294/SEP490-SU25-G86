@@ -1,4 +1,6 @@
 
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +17,17 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
+using System.Reflection;
 
 namespace SEP490_SU25_G86_API
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -32,7 +40,11 @@ namespace SEP490_SU25_G86_API
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(c =>
 			{
-				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 				{
 					Description = "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
 					Name = "Authorization",
@@ -86,8 +98,8 @@ namespace SEP490_SU25_G86_API
 			});
 
 			// Dependency Injection
-			builder.Services.AddScoped<AccountRepository>();
-			builder.Services.AddScoped<AccountService>();
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+			builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();
@@ -96,6 +108,9 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
             builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+            builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            builder.Services.AddScoped<IPermissionService, PermissionService>();
+
             // CORS
             builder.Services.AddCors(options =>
 			{
@@ -124,10 +139,17 @@ namespace SEP490_SU25_G86_API
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
-			app.MapControllers();
-
-			app.Run();
+            app.UseMiddleware<PermissionMiddleware>();
+            app.MapControllers();
+            app.Lifetime.ApplicationStarted.Register(async () =>
+            {
+                using var scope = app.Services.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<SEP490_G86_CvMatchContext>();
+                var endpoints = scope.ServiceProvider.GetRequiredService<IEnumerable<EndpointDataSource>>();
+                var seeder = new PermissionSeeder(context, endpoints);
+                await seeder.SeedPermissionsAsync();
+            });
+            app.Run();
 		}
 	}
 }
