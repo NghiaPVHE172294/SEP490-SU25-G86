@@ -138,8 +138,8 @@ namespace SEP490_SU25_G86_API
 			app.UseCors();
 
 			app.UseAuthentication();
-			app.UseAuthorization();
             app.UseMiddleware<PermissionMiddleware>();
+            app.UseAuthorization();
             app.MapControllers();
             app.Lifetime.ApplicationStarted.Register(async () =>
             {
