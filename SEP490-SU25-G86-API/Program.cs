@@ -21,6 +21,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
 using System.Reflection;
+using System.Security.Claims;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 
@@ -92,8 +93,11 @@ namespace SEP490_SU25_G86_API
 					ValidateIssuerSigningKey = true,
 					ValidIssuer = jwtSettings["Issuer"],
 					ValidAudience = jwtSettings["Audience"],
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-				};
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    RoleClaimType = ClaimTypes.Role
+
+                };
 			});
 
 			// Dependency Injection
