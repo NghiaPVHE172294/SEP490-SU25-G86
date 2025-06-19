@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
             _adminDashboardService = adminDashboardService;
         }
 
-        [HttpGet("statistics/monthly-jobposts")]
+        [HttpGet("Dashboard/JobPostPerMonth")]
         public IActionResult GetMonthlyJobPostStats()
         {
             var stats = _adminDashboardService.GetMonthlyJobPostStatistics();

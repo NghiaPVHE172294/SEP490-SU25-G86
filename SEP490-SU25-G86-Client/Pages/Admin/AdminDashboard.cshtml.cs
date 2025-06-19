@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_Client.Pages
 
         public async Task OnGetAsync()
         {
-            //var response = await _httpClient.GetFromJsonAsync<List<JobPostMonthlyStatisticDTO>>("https://localhost:7004/api/Admin/statistics/monthly-jobposts");
+            //var response = await _httpClient.GetFromJsonAsync<List<JobPostMonthlyStatisticDTO>>("https://localhost:7004/api/Admin/Dashboard/JobPostPerMonth");
             //MonthlyStats = response ?? new List<JobPostMonthlyStatisticDTO>();
 
 
