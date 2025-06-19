@@ -1,4 +1,3 @@
-
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,6 +95,8 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<IAccountListService, AccountListService>();
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
+            builder.Services.AddScoped<vn.edu.fpt.Repositories.AppliedJobRepository.IAppliedJobRepository, vn.edu.fpt.Repositories.AppliedJobRepository.AppliedJobRepository>();
+            builder.Services.AddScoped<vn.edu.fpt.Services.AppliedJobServices.IAppliedJobService, vn.edu.fpt.Services.AppliedJobServices.AppliedJobService>();
             // CORS
             builder.Services.AddCors(options =>
 			{

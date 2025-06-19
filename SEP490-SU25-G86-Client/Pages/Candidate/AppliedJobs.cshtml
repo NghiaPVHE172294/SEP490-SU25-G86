@@ -1,0 +1,81 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.AppliedJobs.AppliedJobsModel
+@{
+    ViewData["Title"] = "Applied Jobs";
+}
+
+<section class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Danh sách việc làm đã ứng tuyển</h2>
+                    <select class="form-select w-auto">
+                        <option>Trạng thái</option>
+                        <option>Đã ứng tuyển</option>
+                        <option>NTD xem hồ sơ</option>
+                        <option>Hồ sơ phù hợp</option>
+                        <option>Hồ sơ không phù hợp</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    @if (Model.AppliedJobs.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var job in Model.AppliedJobs)
+                            {
+                                <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="mb-0">@job.Title</h5>
+                                        <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
+                                    </div>
+                                    <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
+                                    <p class="mb-2 text-muted"><strong>Ngày ứng tuyển:</strong> @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                                    <a href="/job/details/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <p>Bạn chưa ứng tuyển công việc nào !</p>
+                            <a href="/jobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Placeholder job card -->
+                    <div class="mb-3 p-2 border rounded d-flex align-items-center">
+                        <div class="bg-light p-2 rounded me-3">
+                            <span class="text-success fw-bold">Tới 30 triệu</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Lập trình viên Server</div>
+                            <div class="text-muted small">Công ty TNHH Viettaland</div>
+                        </div>
+                        <span class="ms-auto text-muted small">Hà Nội</span>
+                    </div>
+                    <div class="mb-3 p-2 border rounded d-flex align-items-center">
+                        <div class="bg-light p-2 rounded me-3">
+                            <span class="text-success fw-bold">Tới 30 triệu</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Lập trình viên Backend</div>
+                            <div class="text-muted small">Công ty CP TechViet</div>
+                        </div>
+                        <span class="ms-auto text-muted small">TP.HCM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 

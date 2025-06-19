@@ -37,7 +37,7 @@
                             <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" asp-page="/SavedJobs/SavedJobs">Việc làm đã lưu</a></li>
+                            <li><a class="dropdown-item" asp-page="/Candidate/SavedJobs">Việc làm đã lưu</a></li>
                             <li><a class="dropdown-item" asp-page="/Candidate/AppliedJobs">Việc làm đã ứng tuyển</a></li>
                             <li><a class="dropdown-item" asp-page="/Candidate/CV">CV của tôi</a></li>
                             <li><a class="dropdown-item" asp-page="/Candidate/FollowingCompanies">Doanh nghiệp đang theo dõi</a></li>
@@ -58,7 +58,8 @@
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="employerDropdown">
                             <li><a class="dropdown-item" asp-page="/Employer/Campaigns">Chiến dịch tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Job/ListJobByEmployer">Danh sách bài đăng tuyển dụng</a></li>
-                            <li><a class="dropdown-item" asp-page="/Employer/CVManagement">Quản lý CV</a></li>
+                            <li><a class="dropdown-item" asp-page="/Employer/ManageSubmittedCVsofJobPost">Quản lý CV đã nộp của bài đăng tuyển dụng</a></li>
+                            <li><a class="dropdown-item" asp-page="/Employer/CVManagement">Quản lý CV đăng tải</a></li>
                             <li class="dropdown-submenu position-relative">
                                 <a class="dropdown-item dropdown-toggle" href="#" id="accountSettingDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cài đặt tài khoản</a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountSettingDropdown" style="left:auto; right:100%; top:0; min-width:200px;">
