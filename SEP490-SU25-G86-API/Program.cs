@@ -21,6 +21,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
 using System.Reflection;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 
 namespace SEP490_SU25_G86_API
 {
@@ -106,8 +108,8 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IPermissionService, PermissionService>();
 
-            builder.Services.AddScoped<vn.edu.fpt.Repositories.AppliedJobRepository.IAppliedJobRepository, vn.edu.fpt.Repositories.AppliedJobRepository.AppliedJobRepository>();
-            builder.Services.AddScoped<vn.edu.fpt.Services.AppliedJobServices.IAppliedJobService, vn.edu.fpt.Services.AppliedJobServices.AppliedJobService>();
+            builder.Services.AddScoped<IAppliedJobRepository, AppliedJobRepository>();
+            builder.Services.AddScoped<IAppliedJobService, AppliedJobService>();
             // CORS
             builder.Services.AddCors(options =>
 			{
