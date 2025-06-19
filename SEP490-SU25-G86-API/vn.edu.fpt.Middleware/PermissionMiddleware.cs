@@ -14,9 +14,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
 
         public async Task InvokeAsync(HttpContext context, IPermissionService permissionService)
         {
-            // Lấy AccountId từ JWT token (ClaimTypes.NameIdentifier)
-            var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+            var endpointMeta = context.GetEndpoint();
+            if (endpointMeta?.Metadata?.GetMetadata<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>() != null)
+            {
+                await _next(context);
+                return;
+            }
+            foreach (var claim in context.User.Claims)
+            {
+                Console.WriteLine($"Claim Type: {claim.Type} | Value: {claim.Value}");
+            }
 
+            // Lấy AccountId từ JWT token
+            var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int accountId))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -27,9 +37,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
             var endpoint = context.Request.Path.Value ?? "";
             var method = context.Request.Method;
 
-            // Gọi service để kiểm tra quyền
+            // Kiểm tra quyền
             var hasPermission = await permissionService.CheckAccessAsync(accountId, endpoint, method);
-
             if (!hasPermission)
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -37,8 +46,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
                 return;
             }
 
-            // Cho request đi tiếp nếu hợp lệ
             await _next(context);
         }
+
     }
 }
