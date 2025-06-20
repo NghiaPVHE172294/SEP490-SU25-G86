@@ -9,7 +9,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "CANDIDATE")]
+    [Authorize]
     public class AppliedJobsController : ControllerBase
     {
         private readonly IAppliedJobService _appliedJobService;
