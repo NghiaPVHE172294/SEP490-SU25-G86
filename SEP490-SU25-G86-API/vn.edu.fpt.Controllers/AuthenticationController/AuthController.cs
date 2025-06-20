@@ -10,6 +10,8 @@ using System.Text;
 using Google.Apis.Auth;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
+using System.Net.Mail;
+using System.Net;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
@@ -154,6 +156,70 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             var roleName = account.Role?.RoleName ?? "CANDIDATE";
             var token = GenerateJwtToken(account, roleName);
             return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
+        }
+
+        [HttpPost("forgot-password")]
+        public IActionResult ForgotPassword([FromBody] string email)
+        {
+            var account = _accountService.GetByEmail(email);
+            if (account == null)
+                return NotFound("Email không tồn tại.");
+            // Tạo token reset
+            var token = Guid.NewGuid().ToString();
+            var expire = DateTime.Now.AddMinutes(30);
+            var resetToken = new PasswordResetToken
+            {
+                AccountId = account.AccountId,
+                Token = token,
+                ExpireAt = expire,
+                IsUsed = false,
+                CreateAt = DateTime.Now
+            };
+            _context.PasswordResetTokens.Add(resetToken);
+            _context.SaveChanges();
+            // Gửi email thật
+            var resetLink = $"https://localhost:7283/Common/ResetPassword?token={token}";
+            var emailSettings = _configuration.GetSection("EmailSettings");
+            var smtpServer = emailSettings["SmtpServer"];
+            var smtpPort = int.Parse(emailSettings["SmtpPort"]);
+            var smtpUser = emailSettings["SmtpUser"];
+            var smtpPass = emailSettings["SmtpPass"];
+            var senderEmail = emailSettings["SenderEmail"];
+            var senderName = emailSettings["SenderName"];
+            var mail = new MailMessage();
+            mail.From = new MailAddress(senderEmail, senderName);
+            mail.To.Add(email);
+            mail.Subject = "Đặt lại mật khẩu CVMatcher";
+            mail.Body = $"Nhấn vào link sau để đặt lại mật khẩu: {resetLink}";
+            mail.IsBodyHtml = false;
+            using (var smtp = new SmtpClient(smtpServer, smtpPort))
+            {
+                smtp.Credentials = new NetworkCredential(smtpUser, smtpPass);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+            return Ok("Đã gửi email đặt lại mật khẩu (nếu email tồn tại trong hệ thống).");
+        }
+
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordRequest req)
+        {
+            var tokenEntity = _context.PasswordResetTokens.FirstOrDefault(t => t.Token == req.Token && t.ExpireAt > DateTime.Now && (t.IsUsed == false || t.IsUsed == null));
+            if (tokenEntity == null)
+                return BadRequest("Token không hợp lệ hoặc đã hết hạn.");
+            var account = _context.Accounts.FirstOrDefault(a => a.AccountId == tokenEntity.AccountId);
+            if (account == null)
+                return BadRequest("Tài khoản không tồn tại.");
+            account.Password = AccountService.GetMd5HashStatic(req.NewPassword);
+            tokenEntity.IsUsed = true;
+            _context.SaveChanges();
+            return Ok("Đặt lại mật khẩu thành công.");
+        }
+
+        public class ResetPasswordRequest
+        {
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
         }
     }
 }
