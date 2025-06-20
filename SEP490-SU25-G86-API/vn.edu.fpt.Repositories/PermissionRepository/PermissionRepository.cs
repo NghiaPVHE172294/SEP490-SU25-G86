@@ -12,6 +12,25 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository
             _context = context;
         }
 
+        private bool MatchEndpoint(string pattern, string actual)
+        {
+            var patternSegments = pattern.Trim('/').Split('/');
+            var actualSegments = actual.Trim('/').Split('/');
+
+            if (patternSegments.Length != actualSegments.Length)
+                return false;
+
+            for (int i = 0; i < patternSegments.Length; i++)
+            {
+                if (patternSegments[i].StartsWith("{") && patternSegments[i].EndsWith("}"))
+                    continue; // Skip dynamic segments
+                if (!string.Equals(patternSegments[i], actualSegments[i], StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> HasPermissionAsync(int accountId, string endpoint, string method)
         {
             var account = await _context.Accounts
@@ -23,9 +42,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository
                 return false;
 
             return account.Role.Permissions.Any(p =>
-                p.Endpoint.ToLower() == endpoint.ToLower() &&
+                MatchEndpoint(p.Endpoint, endpoint) &&
                 p.Method.ToUpper() == method.ToUpper());
-
         }
     }
 }

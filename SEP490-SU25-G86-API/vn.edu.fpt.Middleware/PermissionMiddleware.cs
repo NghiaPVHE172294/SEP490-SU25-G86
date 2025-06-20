@@ -1,5 +1,6 @@
 ﻿using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Routing;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
 {
@@ -14,15 +15,24 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
 
         public async Task InvokeAsync(HttpContext context, IPermissionService permissionService)
         {
+            Console.WriteLine("========= [DEBUG] JWT CLAIMS =========");
+            if (!context.User.Identity?.IsAuthenticated ?? true)
+            {
+                Console.WriteLine("❌ User.Identity is NOT authenticated");
+            }
+            else
+            {
+                foreach (var claim in context.User.Claims)
+                {
+                    Console.WriteLine($"✔️ Claim Type: {claim.Type} | Value: {claim.Value}");
+                }
+            }
+
             var endpointMeta = context.GetEndpoint();
             if (endpointMeta?.Metadata?.GetMetadata<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>() != null)
             {
                 await _next(context);
                 return;
-            }
-            foreach (var claim in context.User.Claims)
-            {
-                Console.WriteLine($"Claim Type: {claim.Type} | Value: {claim.Value}");
             }
 
             // Lấy AccountId từ JWT token
@@ -34,11 +44,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
                 return;
             }
 
-            var endpoint = context.Request.Path.Value ?? "";
+            // ✅ Lấy route template thay vì path thật
+            var routePattern = (endpointMeta as RouteEndpoint)?.RoutePattern?.RawText?.ToLower() ?? "";
             var method = context.Request.Method;
 
+            Console.WriteLine($"🔍 Checking access for AccountId: {accountId}, Endpoint: {routePattern}, Method: {method}");
+
             // Kiểm tra quyền
-            var hasPermission = await permissionService.CheckAccessAsync(accountId, endpoint, method);
+            var hasPermission = await permissionService.CheckAccessAsync(accountId, routePattern, method);
             if (!hasPermission)
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -48,6 +61,5 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
 
             await _next(context);
         }
-
     }
 }
