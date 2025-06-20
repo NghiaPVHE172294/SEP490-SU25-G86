@@ -52,27 +52,26 @@
                     <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Placeholder job card -->
-                    <div class="mb-3 p-2 border rounded d-flex align-items-center">
-                        <div class="bg-light p-2 rounded me-3">
-                            <span class="text-success fw-bold">Tới 30 triệu</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">Lập trình viên Server</div>
-                            <div class="text-muted small">Công ty TNHH Viettaland</div>
-                        </div>
-                        <span class="ms-auto text-muted small">Hà Nội</span>
-                    </div>
-                    <div class="mb-3 p-2 border rounded d-flex align-items-center">
-                        <div class="bg-light p-2 rounded me-3">
-                            <span class="text-success fw-bold">Tới 30 triệu</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">Lập trình viên Backend</div>
-                            <div class="text-muted small">Công ty CP TechViet</div>
-                        </div>
-                        <span class="ms-auto text-muted small">TP.HCM</span>
-                    </div>
+                    @if (Model.SuggestedJobs.Any())
+                    {
+                        @foreach (var job in Model.SuggestedJobs)
+                        {
+                            <div class="mb-3 p-2 border rounded d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3">
+                                    <span class="text-success fw-bold">@job.Salary</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@job.Title</div>
+                                    <div class="text-muted small">@job.CompanyName</div>
+                                </div>
+                                <span class="ms-auto text-muted small">@job.Location</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
+                    }
                 </div>
             </div>
         </div>

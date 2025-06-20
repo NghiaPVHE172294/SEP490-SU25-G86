@@ -23,5 +23,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.SavedJobController
             var result = await _savedJobService.GetSavedJobsByUserIdAsync(userId);
             return Ok(result);
         }
+
+        [HttpDelete("{saveJobId}")]
+        public async Task<IActionResult> DeleteSavedJob(int saveJobId)
+        {
+            var result = await _savedJobService.DeleteSavedJobAsync(saveJobId);
+            if (!result)
+                return NotFound();
+            return NoContent();
+        }
     }
 }

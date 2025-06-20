@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.AppliedJobDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 
 namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
 {
@@ -10,6 +11,7 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
     {
         private readonly HttpClient _httpClient;
         public List<AppliedJobDTO> AppliedJobs { get; set; } = new();
+        public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
         public AppliedJobsModel(IHttpClientFactory httpClientFactory)
         {
@@ -47,7 +49,25 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
                 AppliedJobs = new List<AppliedJobDTO>();
             }
 
+            // Lấy 10 job mới nhất cho gợi ý
+            var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
+            if (suggestResponse.IsSuccessStatusCode)
+            {
+                var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
+                var suggestResult = JsonSerializer.Deserialize<SuggestedJobApiResponse>(suggestContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                SuggestedJobs = suggestResult?.Jobs ?? new List<JobPostHomeDto>();
+            }
+            else
+            {
+                SuggestedJobs = new List<JobPostHomeDto>();
+            }
+
             return Page();
+        }
+
+        private class SuggestedJobApiResponse
+        {
+            public List<JobPostHomeDto> Jobs { get; set; } = new();
         }
     }
 } 
