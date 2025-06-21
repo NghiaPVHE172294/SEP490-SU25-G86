@@ -7,7 +7,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = "EMPLOYER")]
     public class JobPostsController : ControllerBase
     {
         private readonly IJobPostService _jobPostService;
@@ -27,6 +26,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         /// <response code="200">Trả về danh sách bài tuyển dụng</response>
         /// <response code="500">Lỗi server trong quá trình xử lý</response>
         [HttpGet("homepage")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetHomeJobs(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 9,
