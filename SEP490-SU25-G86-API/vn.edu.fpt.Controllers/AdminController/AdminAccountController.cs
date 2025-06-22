@@ -6,7 +6,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 {   
     [ApiController]
     [Route("api/[controller]")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AdminAccountController : Controller
     {
         private readonly IAccountListService _accountService;

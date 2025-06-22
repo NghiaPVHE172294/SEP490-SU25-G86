@@ -1,4 +1,4 @@
-@SEP490_SU25_G86_API_HostAddress = http://localhost:5175
+@SEP490_SU25_G86_API_HostAddress = http://localhost:7004
 
 GET {{SEP490_SU25_G86_API_HostAddress}}/weatherforecast/
 Accept: application/json

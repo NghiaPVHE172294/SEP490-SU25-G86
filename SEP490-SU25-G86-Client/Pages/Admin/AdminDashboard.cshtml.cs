@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AdminDashboardDTO;
 
@@ -17,9 +17,24 @@ namespace SEP490_SU25_G86_Client.Pages
 
         public async Task OnGetAsync()
         {
-            //var response = await _httpClient.GetFromJsonAsync<List<JobPostMonthlyStatisticDTO>>("https://localhost:7004/api/Admin/Dashboard/JobPostPerMonth");
-            //MonthlyStats = response ?? new List<JobPostMonthlyStatisticDTO>();
 
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return;
+            }
+
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            //try
+            //{
+            //    var response = await _httpClient.GetFromJsonAsync<List<JobPostMonthlyStatisticDTO>>("https://localhost:7004/api/Admin/Dashboard/JobPostPerMonth");
+            //    MonthlyStats = response ?? new List<JobPostMonthlyStatisticDTO>();
+            //}
+            //catch (HttpRequestException ex)
+            //{
+            //    MonthlyStats = new List<JobPostMonthlyStatisticDTO>();
+            //}
 
             MonthlyStats = new List<JobPostMonthlyStatisticDTO>
             {
