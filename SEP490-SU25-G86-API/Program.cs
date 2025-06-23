@@ -1,4 +1,6 @@
 
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 
 namespace SEP490_SU25_G86_API
 {
@@ -127,6 +131,8 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
             builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 
+            builder.Services.AddScoped<IAppliedJobRepository, AppliedJobRepository>();
+            builder.Services.AddScoped<IAppliedJobService, AppliedJobService>();
             // CORS
             builder.Services.AddCors(options =>
 			{

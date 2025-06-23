@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.SavedJobDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 
 namespace SEP490_SU25_G86_Client.Pages.SavedJobs
 {
@@ -10,6 +11,7 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
     {
         private readonly HttpClient _httpClient;
         public List<SavedJobDTO> SavedJobs { get; set; } = new();
+        public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
         public SavedJobsModel(IHttpClientFactory httpClientFactory)
         {
@@ -47,7 +49,35 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
                 SavedJobs = new List<SavedJobDTO>();
             }
 
+            // Lấy 10 job mới nhất cho gợi ý
+            var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
+            if (suggestResponse.IsSuccessStatusCode)
+            {
+                var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
+                var suggestResult = JsonSerializer.Deserialize<SuggestedJobApiResponse>(suggestContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                SuggestedJobs = suggestResult?.Jobs ?? new List<JobPostHomeDto>();
+            }
+            else
+            {
+                SuggestedJobs = new List<JobPostHomeDto>();
+            }
+
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int saveJobId)
+        {
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.DeleteAsync($"api/SavedJobs/{saveJobId}");
+            // Sau khi xóa, reload lại trang
+            return RedirectToPage();
+        }
+
+        private class SuggestedJobApiResponse
+        {
+            public List<JobPostHomeDto> Jobs { get; set; } = new();
         }
     }
 }
