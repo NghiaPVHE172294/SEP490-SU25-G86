@@ -20,14 +20,20 @@
                 </a>
 
             </div>
-            <div class="nav">
-                <a asp-page="/Index">Trang chủ</a>
-                <a asp-page="/About">Tìm việc làm</a>
-                <a asp-page="/Contact">Liên hệ</a>
-            </div>
+            @{
+                var userRole = Context.Session.GetString("user_role");
+            }
+
+            @if (userRole != "ADMIN")
+            {
+                <div class="nav">
+                    <a asp-page="/Index">Trang chủ</a>
+                    <a asp-page="/About">Tìm việc làm</a>
+                    <a asp-page="/Contact">Liên hệ</a>
+                </div>
+            }
             <div class="header-actions">
                 @{
-                    var userRole = Context.Session.GetString("user_role");
                     var isLoggedIn = !string.IsNullOrEmpty(userRole);
                 }
                 @if (isLoggedIn && userRole == "CANDIDATE")
@@ -70,6 +76,12 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" asp-page="/Common/Logout">Đăng xuất</a></li>
                         </ul>
+                    </div>
+                }
+                else if (isLoggedIn && userRole == "ADMIN")
+                {
+                    <div>
+                        <a class="btn btn-outline-danger ms-3" asp-page="/Common/Logout">Đăng xuất</a>
                     </div>
                 }
                 else

@@ -1,17 +1,27 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AdminController : ControllerBase
     {
-        [HttpGet("dashboard")]
-        public IActionResult GetDashboard()
+        private readonly IAdminDashboardService _adminDashboardService;
+
+        public AdminController(IAdminDashboardService adminDashboardService)
         {
-            return Ok(new { message = "Chào mừng Admin! Đây là dashboard dành cho Admin." });
+            _adminDashboardService = adminDashboardService;
+        }
+
+        [HttpGet("Dashboard/JobPostPerMonth")]
+        public IActionResult GetMonthlyJobPostStats()
+        {
+            var stats = _adminDashboardService.GetMonthlyJobPostStatistics();
+            return Ok(stats);
         }
     }
 } 

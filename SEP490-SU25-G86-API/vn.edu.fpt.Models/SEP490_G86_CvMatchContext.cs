@@ -35,18 +35,21 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; } = null!;
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
+        public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<RolePermission> RolePermissions { get; set; } = null!;
         public virtual DbSet<SalaryRange> SalaryRanges { get; set; } = null!;
         public virtual DbSet<SavedJob> SavedJobs { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=SEP490_G86_CvMatch;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -424,6 +427,15 @@ namespace SEP490_SU25_G86_API.Models
                     .HasConstraintName("FK_PasswordResetTokens_Accounts");
             });
 
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.Property(e => e.Endpoint).HasMaxLength(200);
+
+                entity.Property(e => e.Method).HasMaxLength(10);
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<Province>(entity =>
             {
                 entity.Property(e => e.ProvinceName).HasMaxLength(100);
@@ -434,6 +446,26 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.RoleName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<RolePermission>(entity =>
+            {
+                entity.HasKey(e => new { e.RoleId, e.PermissionId })
+                    .HasName("PK__RolePerm__6400A1A86F17C150");
+
+                entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.Permission)
+                    .WithMany(p => p.RolePermissions)
+                    .HasForeignKey(d => d.PermissionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__RolePermi__Permi__2739D489");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.RolePermissions)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__RolePermi__RoleI__282DF8C2");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>

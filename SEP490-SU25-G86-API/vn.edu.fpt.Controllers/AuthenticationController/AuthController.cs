@@ -15,6 +15,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -52,7 +53,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, account.Email),
+                //new Claim(JwtRegisteredClaimNames.Sub, account.Email),
                 new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
                 new Claim(ClaimTypes.Role, roleName)
             };

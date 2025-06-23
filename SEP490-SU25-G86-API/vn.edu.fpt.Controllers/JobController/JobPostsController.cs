@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 
@@ -8,7 +7,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = "EMPLOYER")]
     public class JobPostsController : ControllerBase
     {
         private readonly IJobPostService _jobPostService;
@@ -18,11 +16,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             _jobPostService = jobPostService;
         }
 
+        /// <summary>
+        /// Lấy danh sách bài tuyển dụng hiển thị trên trang chủ (có phân trang và lọc theo vùng).
+        /// </summary>
+        /// <param name="page">Số trang (mặc định là 1)</param>
+        /// <param name="pageSize">Số lượng bài tuyển dụng trên mỗi trang (mặc định là 9)</param>
+        /// <param name="region">Vùng lọc (nếu có)</param>
+        /// <returns>Danh sách bài tuyển dụng và tổng số bài</returns>
+        /// <response code="200">Trả về danh sách bài tuyển dụng</response>
+        /// <response code="500">Lỗi server trong quá trình xử lý</response>
         [HttpGet("homepage")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetHomeJobs(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 9,
-        [FromQuery] string? region = null) // ← thêm region filter
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 9,
+            [FromQuery] string? region = null)
         {
             var jobs = await _jobPostService.GetPagedJobPostsAsync(page, pageSize, region);
 
@@ -33,6 +41,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             });
         }
 
+        /// <summary>
+        /// Lấy tất cả bài tuyển dụng trong hệ thống.
+        /// </summary>
+        /// <returns>Danh sách tất cả bài tuyển dụng</returns>
+        /// <response code="200">Thành công, trả về danh sách bài tuyển dụng</response>
+        /// <response code="500">Lỗi server khi truy vấn dữ liệu</response>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetAllJobPosts()
         {
@@ -40,6 +54,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             return Ok(result);
         }
 
+        /// <summary>
+        /// Lấy danh sách bài tuyển dụng theo employer (nhà tuyển dụng).
+        /// </summary>
+        /// <param name="employerId">ID của employer</param>
+        /// <returns>Danh sách bài tuyển dụng theo employer</returns>
+        /// <response code="200">Thành công, trả về danh sách</response>
+        /// <response code="404">Không tìm thấy employer hoặc không có bài nào</response>
+        /// <response code="500">Lỗi server</response>
         [HttpGet("employer/{employerId}")]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetByEmployerId(int employerId)
         {
@@ -48,6 +70,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         }
 
         [HttpGet("viewall")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPagedJobPosts(
             int page = 1,
             int pageSize = 10,
@@ -66,5 +89,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             return Ok(new { posts, totalItems });
         }
     }
-
 }

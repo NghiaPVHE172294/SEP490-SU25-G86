@@ -5,22 +5,31 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 
 namespace SEP490_SU25_G86_API
@@ -38,7 +47,11 @@ namespace SEP490_SU25_G86_API
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(c =>
 			{
-				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 				{
 					Description = "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
 					Name = "Authorization",
@@ -87,8 +100,11 @@ namespace SEP490_SU25_G86_API
 					ValidateIssuerSigningKey = true,
 					ValidIssuer = jwtSettings["Issuer"],
 					ValidAudience = jwtSettings["Audience"],
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-				};
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    RoleClaimType = ClaimTypes.Role
+
+                };
 			});
 
 			// Dependency Injection
@@ -104,6 +120,13 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IProvinceService, ProvinceService>();
             builder.Services.AddScoped<IIndustryRepository, IndustryRepository>();
             builder.Services.AddScoped<IIndustryService, IndustryService>();
+            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+            builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+            builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            builder.Services.AddScoped<IPermissionService, PermissionService>();
+            builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+            builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+
             // CORS
             builder.Services.AddCors(options =>
 			{
@@ -119,8 +142,10 @@ namespace SEP490_SU25_G86_API
 
             var app = builder.Build();
 
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
+            app.UseCors();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
@@ -128,14 +153,20 @@ namespace SEP490_SU25_G86_API
 
 			app.UseHttpsRedirection();
 
-			app.UseCors();
-
+			
 			app.UseAuthentication();
-			app.UseAuthorization();
-
-			app.MapControllers();
-
-			app.Run();
+            app.UseMiddleware<PermissionMiddleware>();
+            app.UseAuthorization();
+            app.MapControllers();
+            app.Lifetime.ApplicationStarted.Register(async () =>
+            {
+                using var scope = app.Services.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<SEP490_G86_CvMatchContext>();
+                var endpoints = scope.ServiceProvider.GetRequiredService<IEnumerable<EndpointDataSource>>();
+                var seeder = new PermissionSeeder(context, endpoints);
+                await seeder.SeedPermissionsAsync();
+            });
+            app.Run();
 		}
 	}
 }
