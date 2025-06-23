@@ -7,7 +7,7 @@ namespace SEP490_SU25_G86_API.Models
     {
         public Permission()
         {
-            Roles = new HashSet<Role>();
+            RolePermissions = new HashSet<RolePermission>();
         }
 
         public int Id { get; set; }
@@ -15,6 +15,6 @@ namespace SEP490_SU25_G86_API.Models
         public string Method { get; set; } = null!;
         public string Endpoint { get; set; } = null!;
 
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; }
     }
 }

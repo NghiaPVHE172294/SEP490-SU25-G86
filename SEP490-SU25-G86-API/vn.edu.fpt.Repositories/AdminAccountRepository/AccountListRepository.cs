@@ -17,6 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
             var accounts = from a in _context.Accounts
                            join r in _context.Roles on a.RoleId equals r.RoleId
                            join u in _context.Users on a.AccountId equals u.AccountId
+                           where a.RoleId == 2 || a.RoleId == 3
                            select new AccountDTOForList
                            {
                                AccountId = a.AccountId,
@@ -37,7 +38,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
             var accounts = from a in _context.Accounts
                            join r in _context.Roles on a.RoleId equals r.RoleId
                            join u in _context.Users on a.AccountId equals u.AccountId
-                           where r.RoleName == roleName
+                           where r.RoleName == roleName && (a.RoleId == 2 || a.RoleId == 3)
                            select new AccountDTOForList
                            {
                                AccountId = a.AccountId,
