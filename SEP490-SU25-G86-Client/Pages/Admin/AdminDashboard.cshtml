@@ -23,14 +23,14 @@
             padding-top: 20px;
         }
 
-            .sidebar .btn {
-                background-color: #309689;
-                color: white;
-            }
+        .sidebar .btn {
+            background-color: #309689;
+            color: white;
+        }
 
-                .sidebar .btn.active-btn {
-                    background-color: #963330 !important;
-                }
+        .sidebar .btn.active-btn {
+            background-color: #963330 !important;
+        }
     </style>
 </head>
 <body>
@@ -50,39 +50,79 @@
             <div class="col-md-10 p-4">
                 <h3 class="mb-4">Biểu đồ Thống Kê Bài Tuyển Dụng</h3>
                 <canvas id="jobPostChart" width="800" height="400"></canvas>
+
+                <hr />
+
+                <h3 class="mb-3">Thống Kê CV Submission Theo Công Ty</h3>
+
+                <form method="get" class="d-flex mb-3">
+                    <select name="companyId" class="form-select w-25 me-3" onchange="this.form.submit()">
+                        <option value="">Chọn Công Ty</option>
+                        @foreach (var c in Model.Companies)
+                        {
+                            <option value="@c.CompanyId" selected="@(c.CompanyId == Model.SelectedCompanyId ? "selected" : null)">@c.CompanyName</option>
+                        }
+                    </select>
+
+                    <input type="hidden" name="mode" value="@Model.CurrentMode" id="modeInput" />
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "month" ? "active" : "")" onclick="setMode('month')">Theo Tháng</button>
+                        <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "year" ? "active" : "")" onclick="setMode('year')">Theo Năm</button>
+                    </div>
+                </form>
+
+                <canvas id="cvChart" width="800" height="400"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- JS -->
     <script>
-        // Dữ liệu từ model
-        const data = @Html.Raw(Json.Serialize(Model.MonthlyStats));
+        // Biểu đồ Job Post
+        const jobData = @Html.Raw(Json.Serialize(Model.MonthlyStats));
+        const jobLabels = jobData.map(d => `${d.month}/${d.year}`);
+        const jobCounts = jobData.map(d => d.count);
 
-        const labels = data.map(d => `${d.month}/${d.year}`);
-        const counts = data.map(d => d.count);
-
-        const ctx = document.getElementById('jobPostChart').getContext('2d');
-        new Chart(ctx, {
+        const ctx1 = document.getElementById('jobPostChart').getContext('2d');
+        new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: jobLabels,
                 datasets: [{
-                    label: 'Job Posts per Month',
-                    data: counts,
+                    label: 'Số lượng Job Posts trên tháng',
+                    data: jobCounts,
                     backgroundColor: 'rgba(54, 162, 235, 0.6)'
                 }]
             }
         });
 
-        function activateButton(clickedBtn) {
-            document.querySelectorAll('.sidebar .btn').forEach(btn => {
-                btn.classList.remove('active-btn');
+        // Biểu đồ CV Submission
+        const cvData = @Html.Raw(Json.Serialize(Model.CVStats));
+        const currentMode = '@Model.CurrentMode';
+
+        if (cvData.length > 0) {
+            const cvLabels = cvData.map(d => currentMode === 'month' ? `${d.month}/${d.year}` : d.year);
+            const cvCounts = cvData.map(d => d.count);
+
+            const ctx2 = document.getElementById('cvChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: cvLabels,
+                    datasets: [{
+                        label: 'Số lượng CV nộp',
+                        data: cvCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }]
+                }
             });
-            clickedBtn.classList.add('active-btn');
+        }
+
+        function setMode(mode) {
+            document.getElementById('modeInput').value = mode;
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
