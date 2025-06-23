@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 
@@ -16,6 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Industry>>> GetIndustries()
         {
             var industries = await _industryService.GetAllIndustriesAsync();

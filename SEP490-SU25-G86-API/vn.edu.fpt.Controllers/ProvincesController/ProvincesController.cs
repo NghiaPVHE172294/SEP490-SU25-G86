@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.ProvincesController
@@ -15,6 +16,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.ProvincesController
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var provinces = await _provinceService.GetAllAsync();
