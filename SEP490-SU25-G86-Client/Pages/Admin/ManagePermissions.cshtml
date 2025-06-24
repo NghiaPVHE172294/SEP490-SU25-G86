@@ -1,0 +1,55 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Admin.ManagePermissionsModel
+@{
+    ViewData["Title"] = "Quản lý phân quyền";
+}
+<div class="container py-4">
+    <h2 class="mb-4">Quản lý phân quyền cho Role</h2>
+    <form method="get" class="mb-3">
+        <label for="roleSelect" class="form-label">Chọn vai trò:</label>
+       <select id="roleSelect" name="SelectedRoleId" class="form-select" onchange="this.form.submit()">
+            @foreach (var role in Model.Roles)
+            {
+           <option value="@role.RoleId" selected="@(role.RoleId == Model.SelectedRoleId ? "selected" : null)">
+    @role.RoleName
+</option>     
+            }
+        </select>
+    </form>
+    <form method="post">
+        <input type="hidden" name="SelectedRoleId" value="@Model.SelectedRoleId" />
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Chọn</th>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Tên quyền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var perm in Model.Permissions)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="SelectedPermissionIds" value="@perm.Id"
+                                   @(Model.RolePermissionIds.Contains(perm.Id) ? "checked" : "") />
+                        </td>
+                        <td>@perm.Method</td>
+                        <td>@perm.Endpoint</td>
+                        <td>@perm.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="alert alert-success mt-3">@Model.Message</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+        }
+    </form>
+</div> 
