@@ -1,0 +1,69 @@
+@page "{id:int}"
+@model SEP490_SU25_G86_Client.Pages.Job.DetailJobPostModel
+@{
+    ViewData["Title"] = "Chi tiết tin tuyển dụng";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<div class="container py-5">
+    <div class="row">
+        <!-- Left: Main content -->
+        <div class="col-lg-8 mb-4">
+            <div class="d-flex align-items-center mb-4">
+                <img src="~/assets/images/default-avatar.png" alt="Logo" style="width:48px;height:48px;object-fit:cover;" class="me-3" />
+                <div>
+                    <h2 class="mb-0">@Model.JobPostDetail?.CompanyName</h2>
+                    <small class="text-muted">Tên công ty</small>
+                </div>
+            </div>
+            <h5 class="fw-bold">Job Description</h5>
+            <p>@Model.JobPostDetail?.Description</p>
+            <h5 class="fw-bold">Key Responsibilities</h5>
+            <p>@Model.JobPostDetail?.CandidaterRequirements</p>
+            <h5 class="fw-bold">Professional Skills</h5>
+            <p>@Model.JobPostDetail?.Interest</p>
+            <h5 class="fw-bold">Tags:</h5>
+            <div class="mb-3">
+                @* Nếu có trường tags, hiển thị ở đây dạng badge *@
+                <span class="badge bg-light text-dark me-1">C#</span>
+                <span class="badge bg-light text-dark me-1">.NET</span>
+                <span class="badge bg-light text-dark me-1">SQL</span>
+                <span class="badge bg-light text-dark me-1">Teamwork</span>
+            </div>
+            <div class="mb-3">
+                <span>Share Job:</span>
+                <a href="#" class="ms-2"><i class="bi bi-facebook fs-4"></i></a>
+                <a href="#" class="ms-2"><i class="bi bi-x fs-4"></i></a>
+                <a href="#" class="ms-2"><i class="bi bi-linkedin fs-4"></i></a>
+            </div>
+            <button class="btn btn-success px-5">Save</button>
+        </div>
+        <!-- Right: Job Overview & Contact -->
+        <div class="col-lg-4">
+            <div class="card p-3 mb-4">
+                <h5 class="fw-bold mb-3">Job Overview</h5>
+                <ul class="list-unstyled mb-3">
+                    <li class="mb-2"><i class="bi bi-briefcase me-2"></i> <b>Job Title:</b> @Model.JobPostDetail?.Title</li>
+                    <li class="mb-2"><i class="bi bi-clipboard me-2"></i> <b>Job Type:</b> @Model.JobPostDetail?.EmploymentTypeName</li>
+                    <li class="mb-2"><i class="bi bi-tags me-2"></i> <b>Category:</b> @Model.JobPostDetail?.IndustryName</li>
+                    <li class="mb-2"><i class="bi bi-person me-2"></i> <b>Experience:</b> @Model.JobPostDetail?.ExperienceLevelName</li>
+                    <li class="mb-2"><i class="bi bi-mortarboard me-2"></i> <b>Degree:</b> @Model.JobPostDetail?.JobLevelName</li>
+                    <li class="mb-2"><i class="bi bi-cash me-2"></i> <b>Offered Salary:</b> @Model.JobPostDetail?.SalaryRangeName</li>
+                    <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> <b>Location:</b> @Model.JobPostDetail?.ProvinceName</li>
+                </ul>
+                <div class="mb-2">
+                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=Hanoi,Vietnam&zoom=13&size=300x150&key=YOUR_API_KEY" alt="Map" class="img-fluid rounded" />
+                </div>
+            </div>
+            <div class="card p-3">
+                <h5 class="fw-bold mb-3">Send Us Message</h5>
+                <form>
+                    <input class="form-control mb-2" placeholder="Full name" />
+                    <input class="form-control mb-2" placeholder="Email Address" />
+                    <input class="form-control mb-2" placeholder="Phone Number" />
+                    <textarea class="form-control mb-2" placeholder="Your Message"></textarea>
+                    <button class="btn btn-success w-100">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

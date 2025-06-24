@@ -54,6 +54,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .ToListAsync();
         }
 
+        public async Task<JobPost?> GetJobPostByIdAsync(int jobPostId)
+        {
+            return await _context.JobPosts
+                .Include(j => j.Employer)
+                .ThenInclude(u => u.Company)
+                .Include(j => j.Industry)
+                .Include(j => j.JobPosition)
+                .Include(j => j.SalaryRange)
+                .Include(j => j.Province)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobLevel)
+                .Include(j => j.EmploymentType)
+                .FirstOrDefaultAsync(j => j.JobPostId == jobPostId);
+        }
+
     }
 
 }

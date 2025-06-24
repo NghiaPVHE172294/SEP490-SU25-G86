@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using SEP490_SU25_G86_API.Models;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
@@ -10,10 +13,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
     public class JobPostsController : ControllerBase
     {
         private readonly IJobPostService _jobPostService;
+        private readonly SEP490_G86_CvMatchContext _context;
 
-        public JobPostsController(IJobPostService jobPostService)
+        public JobPostsController(IJobPostService jobPostService, SEP490_G86_CvMatchContext context)
         {
             _jobPostService = jobPostService;
+            _context = context;
         }
 
         /// <summary>
@@ -63,10 +68,47 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         /// <response code="404">Không tìm thấy employer hoặc không có bài nào</response>
         /// <response code="500">Lỗi server</response>
         [HttpGet("employer/{employerId}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetByEmployerId(int employerId)
         {
+            var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+            {
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+            }
+
+            if (user.UserId != employerId)
+            {
+                return StatusCode(403, "Bạn không có quyền truy cập vào dữ liệu của employer khác.");
+                // hoặc: return Forbid();
+            }
+
             var result = await _jobPostService.GetByEmployerIdAsync(employerId);
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Lấy chi tiết một bài tuyển dụng theo id
+        /// </summary>
+        /// <param name="id">Id của JobPost</param>
+        /// <returns>Chi tiết JobPost</returns>
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetJobPostDetail(int id)
+        {
+            try
+            {
+                var detail = await _jobPostService.GetJobPostDetailByIdAsync(id);
+                if (detail == null) return NotFound();
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                // Để middleware xử lý exception chung
+                throw;
+            }
         }
     }
 }

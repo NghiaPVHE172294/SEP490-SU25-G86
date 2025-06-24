@@ -1,4 +1,3 @@
-
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -139,6 +138,7 @@ namespace SEP490_SU25_G86_API
 
 			app.UseAuthentication();
             app.UseMiddleware<PermissionMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();
             app.MapControllers();
             app.Lifetime.ApplicationStarted.Register(async () =>
