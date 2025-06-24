@@ -19,7 +19,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
-        public async Task<IActionResult> OnGetAsync(int? employerId)
+        public async Task<IActionResult> OnGetAsync()
         {
             var role = HttpContext.Session.GetString("user_role");
             if (role != "EMPLOYER")
@@ -27,11 +27,16 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 return RedirectToPage("/NotFound");
             }
 
-            if (!employerId.HasValue)
+            var userIdStr = HttpContext.Session.GetString("userId");
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int employerId))
             {
                 Jobs = new List<JobPostDTO>();
-                return Page();
+                return RedirectToPage("/Common/Login");
             }
+
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync($"api/JobPosts/employer/{employerId}");
 

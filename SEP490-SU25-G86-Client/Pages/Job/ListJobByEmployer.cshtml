@@ -7,30 +7,38 @@
 <div class="container py-5">
     <header class="text-center mb-5">
         <h1 class="fw-bold border-bottom pb-3">Danh sách tin tuyển dụng</h1>
+        <a href="/Employer/AddJobPost" class="btn btn-success mt-3">+ Tạo tin tuyển dụng</a>
     </header>
 
     <div class="row g-4" id="jobListContainer">
-        @foreach (var job in Model.Jobs)
+        @if (Model.Jobs == null || !Model.Jobs.Any())
         {
-            <div class="col-12 col-md-6">
-                <div class="card job-card h-100">
-                    <div class="card-body position-relative">
-                        <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger") position-absolute top-0 end-0 mt-3 me-3">@job.Status</span>
-                        <h5 class="card-title fw-bold mb-3">@job.Title</h5>
-                        <p class="card-text location mb-2">
-                            <i class="bi bi-geo-alt me-2"></i>@job.WorkLocation
-                        </p>
-                        <div class="dates mb-3">
-                            <small class="text-muted">Created: @(job.CreatedDate?.ToString("dd/MM/yyyy") ?? "N/A")</small><br>
-                            <small class="text-muted">End Date: @(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</small>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="/job/details/@job.JobPostId" class="btn btn-outline-primary">View Details</a>
-                            <a href="/job/edit/@job.JobPostId" class="btn btn-outline-secondary">Edit</a>
+            <div class="alert alert-info text-center w-100">Bạn chưa có tin tuyển dụng nào.</div>
+        }
+        else
+        {
+            foreach (var job in Model.Jobs)
+            {
+                <div class="col-12 col-md-6">
+                    <div class="card job-card h-100">
+                        <div class="card-body position-relative">
+                            <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger") position-absolute top-0 end-0 mt-3 me-3">@job.Status</span>
+                            <h5 class="card-title fw-bold mb-3">@job.Title</h5>
+                            <p class="card-text location mb-2">
+                                <i class="bi bi-geo-alt me-2"></i>@job.WorkLocation
+                            </p>
+                            <div class="dates mb-3">
+                                <small class="text-muted">Created: @(job.CreatedDate?.ToString("dd/MM/yyyy") ?? "N/A")</small><br>
+                                <small class="text-muted">End Date: @(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="/job/details/@job.JobPostId" class="btn btn-outline-primary">View Details</a>
+                                <a href="/job/edit/@job.JobPostId" class="btn btn-outline-secondary">Edit</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>

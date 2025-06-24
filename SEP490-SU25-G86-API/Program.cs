@@ -1,4 +1,5 @@
-
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +9,11 @@ using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
@@ -30,6 +30,22 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
+using AutoMapper;
+using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
+
 
 namespace SEP490_SU25_G86_API
 {
@@ -107,28 +123,74 @@ namespace SEP490_SU25_G86_API
             });
 
             // Dependency Injection
+            // Account
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+
+            // JobPost
             builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
             builder.Services.AddScoped<IJobPostService, JobPostService>();
-            builder.Services.AddScoped<ISavedJobService, SavedJobService>();
+
+            // SavedJob
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
-            builder.Services.AddScoped<IAccountListService, AccountListService>();
+            builder.Services.AddScoped<ISavedJobService, SavedJobService>();
+
+            // AccountList
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
+            builder.Services.AddScoped<IAccountListService, AccountListService>();
+
+            // Province
             builder.Services.AddScoped<IProvinceRepository, ProvinceRepository>();
             builder.Services.AddScoped<IProvinceService, ProvinceService>();
+
+            // Industry
             builder.Services.AddScoped<IIndustryRepository, IndustryRepository>();
             builder.Services.AddScoped<IIndustryService, IndustryService>();
-            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+
+            // AdminDashboard
             builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
+            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+
+            // Permission
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IPermissionService, PermissionService>();
+
+            // RolePermission
             builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
             builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
-            builder.Services.AddScoped<ISynonymService, SynonymService>();
 
+            // JobPosition
+            builder.Services.AddScoped<IJobPositionRepository, JobPositionRepository>();
+            builder.Services.AddScoped<IJobPositionService, JobPositionService>();
+
+            // AppliedJob
             builder.Services.AddScoped<IAppliedJobRepository, AppliedJobRepository>();
             builder.Services.AddScoped<IAppliedJobService, AppliedJobService>();
+
+            // CompanyFollowing
+            builder.Services.AddScoped<ICompanyFollowingRepository, CompanyFollowingRepository>();
+            builder.Services.AddScoped<ICompanyFollowingService, CompanyFollowingService>();
+
+            // JobLevel
+            builder.Services.AddScoped<IJobLevelRepository, JobLevelRepository>();
+            builder.Services.AddScoped<IJobLevelService, JobLevelService>();
+
+            // ExperienceLevel
+            builder.Services.AddScoped<IExperienceLevelRepository, ExperienceLevelRepository>();
+            builder.Services.AddScoped<IExperienceLevelService, ExperienceLevelService>();
+
+            // EmploymentType
+            builder.Services.AddScoped<IEmploymentTypeRepository, EmploymentTypeRepository>();
+            builder.Services.AddScoped<IEmploymentTypeService, EmploymentTypeService>();
+
+            // Đăng ký AutoMapper
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            // Đăng ký UserDetailOfAdmin
+			builder.Services.AddScoped<IUserDetailOfAdminService, UserDetailOfAdminService>();
+			builder.Services.AddScoped<IUserDetailOfAdminRepository, UserDetailOfAdminRepository>();
+            // Synonym
+            builder.Services.AddScoped<ISynonymService, SynonymService>();
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -158,6 +220,7 @@ namespace SEP490_SU25_G86_API
 
             app.UseAuthentication();
             app.UseMiddleware<PermissionMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();
             app.MapControllers();
             app.Lifetime.ApplicationStarted.Register(async () =>

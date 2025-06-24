@@ -16,5 +16,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository
         {
             return await _context.Industries.ToListAsync();
         }
+
+        public void Add(Industry entity)
+        {
+            _context.Industries.Add(entity);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
     }
 }

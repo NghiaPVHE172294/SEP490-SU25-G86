@@ -23,5 +23,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
             var stats = _adminDashboardService.GetMonthlyJobPostStatistics();
             return Ok(stats);
         }
+
+        [HttpGet("Companies")]
+        public async Task<IActionResult> GetCompanies()
+        {
+            var result = await _adminDashboardService.GetAllCompaniesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("Dashboard/CVSubmissionStats")]
+        public async Task<IActionResult> GetCVSubmissionStats(int companyId, string mode = "month")
+        {
+            var result = await _adminDashboardService.GetCVSubmissionStatsAsync(companyId, mode);
+            return Ok(result);
+        }
     }
 } 
