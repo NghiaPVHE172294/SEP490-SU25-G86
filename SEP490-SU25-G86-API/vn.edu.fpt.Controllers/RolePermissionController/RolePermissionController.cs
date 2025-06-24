@@ -3,11 +3,13 @@ using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.RolePermissionDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.RolePermissionController
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RolePermissionController : Controller
     {
         private readonly IRolePermissionService _service;

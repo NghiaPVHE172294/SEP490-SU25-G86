@@ -24,11 +24,20 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
         public string Message { get; set; }
         public string ErrorMessage { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             var client = _httpClientFactory.CreateClient();
             await LoadData(client);
+
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
