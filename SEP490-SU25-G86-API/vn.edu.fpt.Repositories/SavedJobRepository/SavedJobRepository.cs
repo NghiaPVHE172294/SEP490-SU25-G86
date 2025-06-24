@@ -20,5 +20,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<bool> DeleteAsync(int saveJobId)
+        {
+            var entity = await _context.SavedJobs.FindAsync(saveJobId);
+            if (entity == null)
+                return false;
+            _context.SavedJobs.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -1,0 +1,81 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.SavedJobs.SavedJobsModel
+@{
+    ViewData["Title"] = "Saved Jobs";
+}
+
+<section class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Danh sách việc làm đã lưu</h2>
+                    <select class="form-select w-auto">
+                        <option>Trạng thái</option>
+                        <option>Đang mở</option>
+                        <option>Hết hiệu lực</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    @if (Model.SavedJobs.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var job in Model.SavedJobs)
+                            {
+                                <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="mb-0">@job.Title</h5>
+                                        <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
+                                    </div>
+                                    <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
+                                    <p class="mb-2 text-muted"><strong>Saved At:</strong> @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                                    <a href="/job/details/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                    <form method="post" asp-page-handler="Delete" asp-route-saveJobId="@job.SaveJobId" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bạn có chắc muốn bỏ lưu công việc này?')">Bỏ lưu</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <p>Bạn chưa lưu công việc nào !</p>
+                            <a href="/jobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.SuggestedJobs.Any())
+                    {
+                        @foreach (var job in Model.SuggestedJobs)
+                        {
+                            <div class="mb-3 p-2 border rounded d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3">
+                                    <span class="text-success fw-bold">@job.Salary</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@job.Title</div>
+                                    <div class="text-muted small">@job.CompanyName</div>
+                                </div>
+                                <span class="ms-auto text-muted small">@job.Location</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
