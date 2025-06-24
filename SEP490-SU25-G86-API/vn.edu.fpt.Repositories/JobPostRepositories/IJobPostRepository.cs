@@ -22,5 +22,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             List<int>? datePostedRanges = null
         );
 
+        Task<JobPost> AddJobPostAsync(JobPost jobPost);
+        Task<Industry> AddIndustryIfNotExistsAsync(string industryName);
+        Task<JobPosition> AddJobPositionIfNotExistsAsync(string jobPositionName, int? industryId = null);
+        Task<SalaryRange> AddSalaryRangeIfNotExistsAsync(int minSalary, int maxSalary, string currency);
+        Task<Province> AddProvinceIfNotExistsAsync(string provinceName);
+        Task<ExperienceLevel> AddExperienceLevelIfNotExistsAsync(string experienceLevelName);
+        Task<JobLevel> AddJobLevelIfNotExistsAsync(string jobLevelName);
+        Task<EmploymentType> AddEmploymentTypeIfNotExistsAsync(string employmentTypeName);
     }
 }

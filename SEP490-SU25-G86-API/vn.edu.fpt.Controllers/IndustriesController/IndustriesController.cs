@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.IndustryDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
@@ -25,6 +26,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
                 i.IndustryId,
                 i.IndustryName
             }));
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Add([FromBody] AddIndustryDTO dto)
+        {
+            var id = await _industryService.AddAsync(dto);
+            return Ok(id);
         }
     }
 }

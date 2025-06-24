@@ -1,5 +1,7 @@
-﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.ProvinceDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepositories;
+﻿using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.ProvinceDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.ProvinceDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices
 {
@@ -22,6 +24,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices
                 ProvinceName = p.ProvinceName,
                 Region = p.Region
             });
+        }
+        public async Task<int> AddAsync(AddProvinceDTO dto)
+        {
+            var entity = new Province { ProvinceName = dto.ProvinceName };
+            _repository.Add(entity);
+            await _repository.SaveChangesAsync();
+            return entity.ProvinceId;
         }
     }
 }

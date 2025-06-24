@@ -28,6 +28,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             List<int>? datePostedRanges = null
         );
 
+        Task<ViewDetailJobPostDTO> AddJobPostAsync(AddJobPostDTO dto, int employerId);
+
     }
 
 }

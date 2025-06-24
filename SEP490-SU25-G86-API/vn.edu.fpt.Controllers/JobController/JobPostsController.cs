@@ -131,5 +131,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             return Ok(new { posts, totalItems });
 
         }
+
+        /// <summary>
+        /// Tạo mới một bài tuyển dụng
+        /// </summary>
+        /// <param name="dto">Thông tin job post cần tạo</param>
+        /// <returns>Chi tiết job post vừa tạo</returns>
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddJobPost([FromBody] AddJobPostDTO dto)
+        {
+            var employerId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var result = await _jobPostService.AddJobPostAsync(dto, employerId);
+            return Ok(result);
+        }
     }
 }
