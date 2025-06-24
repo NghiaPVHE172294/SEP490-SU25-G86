@@ -20,6 +20,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public List<int> SelectedDateRanges { get; set; } = new();
         public int? MinSalaryInput { get; set; }
         public int? MaxSalaryInput { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? Keyword { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
@@ -30,9 +32,10 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             [FromQuery] List<int>? employmentTypeIds = null,
             [FromQuery] List<int>? experienceLevelIds = null,
             [FromQuery] List<int>? datePostedRanges = null,
-            [FromQuery] List<int>? salary_min = null,
-            [FromQuery] List<int>? salary_max = null)
+            [FromQuery] List<string>? salary_range = null,
+            [FromQuery] string? keyword = null)
         {
+            Keyword = keyword;
             ProvinceId = provinceId;
             IndustryId = industryId;
             SelectedEmploymentTypeIds = employmentTypeIds ?? new();
@@ -41,10 +44,24 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             int? minSalary = null;
             int? maxSalary = null;
 
-            if (salary_min != null && salary_min.Any())
-                minSalary = salary_min.Min();
-            if (salary_max != null && salary_max.Any())
-                maxSalary = salary_max.Max();
+            if (salary_range != null && salary_range.Any())
+            {
+                var mins = new List<int>();
+                var maxs = new List<int>();
+
+                foreach (var r in salary_range)
+                {
+                    var parts = r.Split('-');
+                    if (parts.Length == 2 && int.TryParse(parts[0], out var min) && int.TryParse(parts[1], out var max))
+                    {
+                        mins.Add(min);
+                        maxs.Add(max);
+                    }
+                }
+
+                if (mins.Any()) minSalary = mins.Min();
+                if (maxs.Any()) maxSalary = maxs.Max();
+            }
 
             int pageSize = 5;
             CurrentPage = page < 1 ? 1 : page;
@@ -52,6 +69,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             using var client = new HttpClient();
             var url = $"https://localhost:7004/api/jobposts/viewall?page={page}&pageSize={pageSize}";
             //Add thêm filter nếu có
+            if (!string.IsNullOrWhiteSpace(Keyword))
+                url += $"&keyword={Uri.EscapeDataString(Keyword)}";
             if (provinceId.HasValue)
                 url += $"&provinceId={provinceId.Value}";
             if (industryId.HasValue)
@@ -77,8 +96,6 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                 url += $"&minSalary={minSalary.Value}";
             if (maxSalary.HasValue)
                 url += $"&maxSalary={maxSalary.Value}";
-            MinSalaryInput = salary_min?.Min();
-            MaxSalaryInput = salary_max?.Max();
             try
             {
                 var response = await client.GetFromJsonAsync<JobPostApiResponse>(url, new JsonSerializerOptions

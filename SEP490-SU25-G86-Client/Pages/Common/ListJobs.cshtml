@@ -16,7 +16,7 @@
                 <form method="get" class="mb-4">
                 <!-- Search-->
                 <h5 class="mb-3">Search by Job Title</h5>
-                <input type="text" class="form-control mb-3" placeholder="Job title or company" />
+                        <input type="text" name="keyword" class="form-control mb-3" placeholder="Job title or company" value="@Model.Keyword" />
                 <!-- Location-->
                 <h6 class="mt-4">Location</h6>
                 <select class="form-select mb-3" name="provinceId">
@@ -106,44 +106,30 @@
                 <!-- Salary -->
                 <h6 class="fw-bold">Salary</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_min" value="">
-                        <input class="form-check-input" type="checkbox" name="salary_max" value="">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value="0-0">
                         <label class="form-check-label">Tất cả</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_min" value="5">
-                        <input class="form-check-input" type="checkbox" name="salary_max" value="10">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value="5-10">
                         <label class="form-check-label">5–10 triệu VND</label>
                     </div>
-
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_min" value="10">
-                        <input class="form-check-input" type="checkbox" name="salary_max" value="15">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value="10-15">
                         <label class="form-check-label">10–15 triệu VND</label>
                     </div>
-
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_min" value="15">
-                        <input class="form-check-input" type="checkbox" name="salary_max" value="20">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value="15-20">
                         <label class="form-check-label">15–20 triệu VND</label>
                     </div>
-
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_min" value="20">
-                        <input class="form-check-input" type="checkbox" name="salary_max" value="30">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value="20-30">
                         <label class="form-check-label">20–30 triệu VND</label>
                     </div>
+                       <!--Input salary -->
                     <div class="d-flex align-items-center mb-2">
-                        <input type="number" class="form-control form-control-sm me-2"
-                               placeholder="Từ" name="salary_min" style="width: 80px;"
-                               value="@Model.MinSalaryInput" />
-
+                        <input type="number" class="form-control form-control-sm me-2" placeholder="Từ" name="salary_min" style="width: 80px;" value="@Model.MinSalaryInput" />
                         <span class="me-2">-</span>
-
-                        <input type="number" class="form-control form-control-sm me-2"
-                               placeholder="Đến" name="salary_max" style="width: 80px;"
-                               value="@Model.MaxSalaryInput" />
-
+                        <input type="number" class="form-control form-control-sm me-2" placeholder="Đến" name="salary_max" style="width: 80px;" value="@Model.MaxSalaryInput" />
                         <span>Triệu</span>
                     </div>
                 <button class="btn btn-success btn-sm">Apply</button>
@@ -219,6 +205,11 @@
     string BuildQuery(int page)
     {
         var query = $"?page={page}";
+        if (!string.IsNullOrWhiteSpace(Request.Query["keyword"]))
+        {
+            var keyword = Request.Query["keyword"].ToString();
+            query += $"&keyword={Uri.EscapeDataString(keyword)}";
+        }
         if (Model.ProvinceId != null)
             query += $"&provinceId={Model.ProvinceId}";
         if (Model.IndustryId != null)
@@ -242,6 +233,13 @@
             foreach (var id in Request.Query["datePostedRange"])
             {
                 query += $"&datePostedRange={id}";
+            }
+        }
+        if (Request.Query["salary_range"].Count > 0)
+        {
+            foreach (var range in Request.Query["salary_range"])
+            {
+                query += $"&salary_range={range}";
             }
         }
         if (Request.Query["salary_min"].Count > 0)
