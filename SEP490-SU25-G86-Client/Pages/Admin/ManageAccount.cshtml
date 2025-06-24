@@ -65,9 +65,9 @@
             <!-- Sidebar -->
             <div class="col-md-2 sidebar">
                 <div class="d-grid gap-2 px-3">
-                    <button class="btn active-btn" onclick="activateButton(this)">Account</button>
-                    <button class="btn" onclick="activateButton(this)">Dashboard</button>
-                    <button class="btn" onclick="activateButton(this)">Notification Management</button>
+                    <button class="btn" onclick="location.href='/Admin/AdminDashboard'">Thống Kê</button>
+                    <button class="btn active-btn" onclick="activateButton(this)">Quản Lý Tài Khoản</button>
+                    <button class="btn" onclick="activateButton(this)">Quản Lý Yêu Cầu</button>
                 </div>
             </div>
 
@@ -77,11 +77,11 @@
                 <!-- Search -->
                 <form method="get" class="row mb-3 align-items-end">
                     <div class="col-md-8">
-                        <label class="form-label search-label">Search by Account Name</label>
+                        <label class="form-label search-label">Tìm bằng tên tài khoản</label>
                         <div class="input-group">
-                            <input type="text" name="accountName" class="form-control" placeholder="Enter account name..."
+                            <input type="text" name="accountName" class="form-control" placeholder="Nhập tên tài khoản..."
                                    value="@(Request.Query["accountName"])">
-                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                            <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
                         </div>
                     </div>
                 </form>
@@ -90,15 +90,15 @@
                 <form method="get" id="roleFilterForm" class="d-flex gap-3">
                     <input type="radio" class="btn-check" name="role" id="role-all" value="ALL"
                            onchange="submitRole()" @(Request.Query["role"] == "" || Request.Query["role"] == "ALL" ? "checked" : "")>
-                    <label class="btn btn-outline-dark" for="role-all">All</label>
+                    <label class="btn btn-outline-dark" for="role-all">Tất Cả</label>
 
                     <input type="radio" class="btn-check" name="role" id="role-employer" value="EMPLOYER"
                            onchange="submitRole()" @(Request.Query["role"] == "EMPLOYER" ? "checked" : "")>
-                    <label class="btn btn-outline-primary" for="role-employer">Employer</label>
+                    <label class="btn btn-outline-primary" for="role-employer">Nhà Tuyển Dụng</label>
 
                     <input type="radio" class="btn-check" name="role" id="role-candidate" value="CANDIDATE"
                            onchange="submitRole()" @(Request.Query["role"] == "CANDIDATE" ? "checked" : "")>
-                    <label class="btn btn-outline-success" for="role-candidate">Candidate</label>
+                    <label class="btn btn-outline-success" for="role-candidate">Ứng Viên</label>
                 </form>
 
 
@@ -108,17 +108,17 @@
                     <div class="account-card">
                         <div class="d-flex justify-content-between">
                             <small>@acc.CreatedDate</small>
-                            <button class="btn btn-sm btn-outline-secondary">View</button>
+                            <button class="btn btn-sm btn-outline-secondary">Chi tiết</button>
                         </div>
                         <h5 class="mt-2 mb-1">
                             @acc.FullName
                             @if (acc.RoleName == "EMPLOYER")
                             {
-                                <span class="badge bg-info text-dark role-badge">Employer</span>
+                                <span class="badge bg-info text-dark role-badge">Nhà Tuyển Dụng</span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary role-badge">Candidate</span>
+                                <span class="badge bg-secondary role-badge">Ứng Viên</span>
                             }
                         </h5>
                         <p class="mb-1">@acc.Email</p>

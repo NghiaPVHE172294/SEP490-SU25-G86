@@ -6,22 +6,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
-using System.Text;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -107,9 +121,21 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<IAccountListService, AccountListService>();
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
+            builder.Services.AddScoped<IProvinceRepository, ProvinceRepository>();
+            builder.Services.AddScoped<IProvinceService, ProvinceService>();
+            builder.Services.AddScoped<IIndustryRepository, IndustryRepository>();
+            builder.Services.AddScoped<IIndustryService, IndustryService>();
+            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+            builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IPermissionService, PermissionService>();
+            builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+            builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 
+            builder.Services.AddScoped<IAppliedJobRepository, AppliedJobRepository>();
+            builder.Services.AddScoped<IAppliedJobService, AppliedJobService>();
+            builder.Services.AddScoped<ICompanyFollowingRepository, CompanyFollowingRepository>();
+            builder.Services.AddScoped<ICompanyFollowingService, CompanyFollowingService>();
             // CORS
             builder.Services.AddCors(options =>
 			{
@@ -125,8 +151,10 @@ namespace SEP490_SU25_G86_API
 
             var app = builder.Build();
 
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
+            app.UseCors();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
@@ -134,8 +162,7 @@ namespace SEP490_SU25_G86_API
 
 			app.UseHttpsRedirection();
 
-			app.UseCors();
-
+			
 			app.UseAuthentication();
             app.UseMiddleware<PermissionMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();

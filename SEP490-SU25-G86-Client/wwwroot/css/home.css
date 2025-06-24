@@ -11,6 +11,10 @@
     background-color: var(--primary-color);
     color: white;
     border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
 }
 
     .btn-custom:hover {
@@ -42,4 +46,9 @@
 
 .pagination .page-item span.page-link {
     cursor: default;
+}
+.btn-custom-selected {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
 }

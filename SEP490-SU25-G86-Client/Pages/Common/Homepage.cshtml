@@ -51,7 +51,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">Việc Làm Mới Nhất</h2>
                 <span>@Model.TotalItems jobs</span>
-                <a href="/jobposts" class="text-custom">View all</a>
+                <a href="/Common/ListJobs" class="text-custom">View all</a>
             </div>
 
             <!-- Filters -->
@@ -62,10 +62,10 @@
                     <option>Kinh nghiệm</option>
                 </select>
 
-                <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-primary" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
-                <a class="btn @(selectedRegion == "Bắc" ? "btn-primary" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
-                <a class="btn @(selectedRegion == "Trung" ? "btn-primary" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
-                <a class="btn @(selectedRegion == "Nam" ? "btn-primary" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
+                <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
+                <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
+                <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
+                <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
             </div>
 
             @if (!Model.JobPosts.Any())
@@ -83,7 +83,7 @@
                                 <p class="text-muted mb-1">@job.CompanyName</p>
                                 <p class="text-muted mb-1">@job.Location</p>
                                 <div class="d-flex align-items-center justify-content-between mt-3">
-                                    <span class="text-custom fw-bold">@job.Salary</span>
+                                    <span class="text-custom fw-bold">@job.Salary Triệu</span>
                                     <a class="btn btn-custom btn-sm" href="/job/detail/@job.JobPostId">Chi tiết</a>
                                 </div>
                             </div>

@@ -26,5 +26,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService
                 SaveAt = s.SaveAt
             });
         }
+
+        public async Task<bool> DeleteSavedJobAsync(int saveJobId)
+        {
+            return await _savedJobRepo.DeleteAsync(saveJobId);
+        }
     }
 }

@@ -35,6 +35,7 @@ namespace SEP490_SU25_G86_Client
             app.MapGet("/", context =>
             {
                 context.Response.Redirect("/Common/Homepage");
+                //context.Response.Redirect("/Common/ForgotPassword");
                 return Task.CompletedTask;
             });
 
