@@ -18,7 +18,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public List<int> SelectedExperienceLevelIds { get; set; } = new();
         public List<ExperienceLevel> ExperienceLevels { get; set; } = new();
         public List<int> SelectedDateRanges { get; set; } = new();
-
+        public int? MinSalaryInput { get; set; }
+        public int? MaxSalaryInput { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
@@ -28,13 +29,22 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             [FromQuery] int? industryId = null,
             [FromQuery] List<int>? employmentTypeIds = null,
             [FromQuery] List<int>? experienceLevelIds = null,
-            [FromQuery] List<int>? datePostedRanges = null)
+            [FromQuery] List<int>? datePostedRanges = null,
+            [FromQuery] List<int>? salary_min = null,
+            [FromQuery] List<int>? salary_max = null)
         {
             ProvinceId = provinceId;
             IndustryId = industryId;
             SelectedEmploymentTypeIds = employmentTypeIds ?? new();
             SelectedExperienceLevelIds = experienceLevelIds ?? new();
             SelectedDateRanges = datePostedRanges ?? new();
+            int? minSalary = null;
+            int? maxSalary = null;
+
+            if (salary_min != null && salary_min.Any())
+                minSalary = salary_min.Min();
+            if (salary_max != null && salary_max.Any())
+                maxSalary = salary_max.Max();
 
             int pageSize = 5;
             CurrentPage = page < 1 ? 1 : page;
@@ -63,6 +73,12 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                 foreach (var d in SelectedDateRanges)
                     url += $"&datePostedRanges={d}";
             }
+            if (minSalary.HasValue)
+                url += $"&minSalary={minSalary.Value}";
+            if (maxSalary.HasValue)
+                url += $"&maxSalary={maxSalary.Value}";
+            MinSalaryInput = salary_min?.Min();
+            MaxSalaryInput = salary_max?.Max();
             try
             {
                 var response = await client.GetFromJsonAsync<JobPostApiResponse>(url, new JsonSerializerOptions
