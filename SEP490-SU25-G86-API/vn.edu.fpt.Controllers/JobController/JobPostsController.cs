@@ -110,20 +110,20 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
                 // Để middleware xử lý exception chung
                 throw;
             }
-
+        }
         [HttpGet("viewall")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPagedJobPosts(
-            int page = 1,
-            int pageSize = 10,
-            int? provinceId = null,
-            int? industryId = null,
-            [FromQuery] List<int>? employmentTypeIds = null,
-            [FromQuery] List<int>? experienceLevelIds = null,
-            int? jobLevelId = null,
-            int? minSalary = null,
-            int? maxSalary = null,
-            [FromQuery] List<int>? datePostedRanges = null)
+                int page = 1,
+                int pageSize = 10,
+                int? provinceId = null,
+                int? industryId = null,
+                [FromQuery] List<int>? employmentTypeIds = null,
+                [FromQuery] List<int>? experienceLevelIds = null,
+                int? jobLevelId = null,
+                int? minSalary = null,
+                int? maxSalary = null,
+                [FromQuery] List<int>? datePostedRanges = null)
         {
             var (posts, totalItems) = await _jobPostService.GetFilteredJobPostsAsync(
                 page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges
