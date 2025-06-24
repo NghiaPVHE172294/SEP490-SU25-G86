@@ -69,10 +69,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null)
+            List<int>? datePostedRanges = null,
+            string? keyword = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetFilteredJobPostsAsync(
-                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges
+                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges,keyword
             );
 
             var result = posts.Select(j => new JobPostListDTO

@@ -81,10 +81,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            [FromQuery] List<int>? datePostedRanges = null)
+            [FromQuery] List<int>? datePostedRanges = null,
+            string? keyword = null)
         {
             var (posts, totalItems) = await _jobPostService.GetFilteredJobPostsAsync(
-                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges
+                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword
             );
             return Ok(new { posts, totalItems });
         }

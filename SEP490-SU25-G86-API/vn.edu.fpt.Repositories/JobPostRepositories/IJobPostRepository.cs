@@ -16,7 +16,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null
+            List<int>? datePostedRanges = null,
+            string? keyword = null
         );
     }
 }
