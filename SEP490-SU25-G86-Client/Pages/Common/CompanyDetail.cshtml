@@ -1,0 +1,81 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Common.CompanyDetailModel
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+<div class="company-header">
+    <div class="d-flex align-items-center">
+        <img src="@Model.Company?.LogoUrl ?? " class="img-fluid rounded me-3" style="width: 70px; height: 70px;" />
+        <div>
+            <h4 class="mb-1">@Model.Company?.CompanyName</h4>
+            <div class="d-flex flex-wrap gap-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Company?.Website))
+                {
+                    <span><i class="bi bi-globe"></i> <a href="@Model.Company.Website" class="text-white text-decoration-underline">@Model.Company.Website</a></span>
+                }
+                <span><i class="bi bi-buildings"></i> @Model.Company?.CompanySize nhân viên</span>
+                <span><i class="bi bi-people"></i> @Model.Company?.FollowersCount người theo dõi</span>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-light text-success fw-bold">+ Theo dõi công ty</button>
+    </div>
+</div>
+
+<!-- Company Info and Location -->
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card p-4 shadow rounded">
+            <h5 class="fw-bold">Giới thiệu công ty</h5>
+            <p>@Model.Company?.Description</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 shadow rounded">
+            <h6 class="fw-bold">Job Overview</h6>
+            <p><strong>Địa chỉ công ty:</strong></p>
+            <p>@Model.Company?.Address</p>
+            @* <img src="https://maps.googleapis.com/maps/api/staticmap?center=@Uri.EscapeDataString(Model.Company?.Address ?? "")&zoom=16&size=600x300&key=YOUR_API_KEY" class="img-fluid rounded" /> *@
+        </div>
+    </div>
+</div>
+
+    <!-- Job Listings -->
+<div class="mt-5">
+    <h4 class="fw-bold mb-3">Tuyển dụng</h4>
+
+    @if (Model.JobPosts.Any())
+    {
+        @foreach (var job in Model.JobPosts)
+        {
+            <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mt-1">@job.Title</h5>
+                    <div class="text-muted">@job.CompanyName</div>
+                    <div class="d-flex flex-wrap mt-2 gap-3">
+                        <span class="text-secondary"><i class="bi bi-building"></i> @job.Industry</span>
+                        <span class="text-secondary"><i class="bi bi-clock"></i> @job.EmploymentType</span>
+                        <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.Salary</span>
+                        <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.ExperienceLevel</span>
+                        <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn btn-custom btn-sm" href="/JobPosts/Details?id=@job.JobPostId">Chi tiết</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-muted">Không có tin tuyển dụng nào.</div>
+    }
+</div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

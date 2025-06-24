@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
         {
             var query = _context.JobPosts
-        .Include(j => j.Employer)
+        .Include(j => j.Employer).ThenInclude(e => e.Company)
         .Include(j => j.SalaryRange)
         .Include(j => j.Province)
         .OrderByDescending(j => j.CreatedDate)
@@ -87,7 +88,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             string? keyword = null)
         {
             var query = _context.JobPosts
-                .Include(j => j.Employer)
+                .Include(j => j.Employer).ThenInclude(e => e.Company)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
@@ -243,6 +244,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 await _context.SaveChangesAsync();
             }
             return et;
+        }
+
+        public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId)
+        {
+            return await _context.JobPosts
+                .Include(j => j.Employer).ThenInclude(e => e.Company)
+                .Include(j => j.Province)
+                .Include(j => j.EmploymentType)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.Industry)
+                .Include(j => j.JobLevel)
+                .Include(j => j.SalaryRange)
+                .Where(j => j.Employer!.CompanyId == companyId)
+                .OrderByDescending(j => j.CreatedDate)
+                .ToListAsync();
         }
     }
 }

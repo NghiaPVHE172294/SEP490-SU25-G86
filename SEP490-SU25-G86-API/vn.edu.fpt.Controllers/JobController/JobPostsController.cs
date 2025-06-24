@@ -146,5 +146,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             var result = await _jobPostService.AddJobPostAsync(dto, employerId);
             return Ok(result);
         }
+
+        [HttpGet("{id}/jobposts")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetJobPostsByCompanyId(int id)
+        {
+            var posts = await _jobPostService.GetJobPostsByCompanyIdAsync(id);
+            return Ok(posts);
+        }
     }
 }

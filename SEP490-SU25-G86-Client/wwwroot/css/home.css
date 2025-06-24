@@ -7,6 +7,8 @@
     --white: #FFFFFF;
     --border-color: #E0E0E0;
 }
+
+/* Nút dùng cho trang công ty */
 .btn-custom {
     background-color: var(--primary-color);
     color: white;
@@ -21,6 +23,13 @@
         background-color: #267c71;
     }
 
+.btn-custom-selected {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+}
+
+/* Text và background custom */
 .text-custom {
     color: var(--primary-color) !important;
 }
@@ -33,7 +42,27 @@
     background-color: var(--primary-color) !important;
 }
 
-/* === Pagination Styles === */
+/* Phần header xanh gradient */
+.company-header {
+    background: linear-gradient(90deg, #003366, #00cc66);
+    color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .company-header a {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .company-header .btn {
+        font-weight: bold;
+    }
+
+/* Pagination */
 .pagination .page-link {
     font-weight: bold;
     font-size: 1.1rem;
@@ -46,9 +75,4 @@
 
 .pagination .page-item span.page-link {
     cursor: default;
-}
-.btn-custom-selected {
-    background-color: var(--primary-color);
-    color: white;
-    border: 1px solid var(--primary-color);
 }
