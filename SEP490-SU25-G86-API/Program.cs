@@ -36,6 +36,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
 
 namespace SEP490_SU25_G86_API
 {
@@ -136,6 +138,8 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IAppliedJobService, AppliedJobService>();
             builder.Services.AddScoped<ICompanyFollowingRepository, CompanyFollowingRepository>();
             builder.Services.AddScoped<ICompanyFollowingService, CompanyFollowingService>();
+			builder.Services.AddScoped<IUserDetailOfAdminService, UserDetailOfAdminService>();
+			builder.Services.AddScoped<IUserDetailOfAdminRepository, UserDetailOfAdminRepository>();
             // CORS
             builder.Services.AddCors(options =>
 			{
