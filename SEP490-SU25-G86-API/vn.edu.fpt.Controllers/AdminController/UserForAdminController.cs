@@ -7,8 +7,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
-    [AllowAnonymous]
+    [Authorize]
     public class UserForAdminController : Controller
     {
         private readonly IUserDetailOfAdminService _service;
