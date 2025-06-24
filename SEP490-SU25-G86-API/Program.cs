@@ -46,6 +46,9 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using AutoMapper;
 using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
+
 
 namespace SEP490_SU25_G86_API
 {
@@ -185,6 +188,10 @@ namespace SEP490_SU25_G86_API
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            // Đăng ký UserDetailOfAdmin
+			builder.Services.AddScoped<IUserDetailOfAdminService, UserDetailOfAdminService>();
+			builder.Services.AddScoped<IUserDetailOfAdminRepository, UserDetailOfAdminRepository>();
 
             // CORS
             builder.Services.AddCors(options =>
