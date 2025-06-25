@@ -2,6 +2,7 @@
 {
     public class CompanyFollowingDTO
     {
+        public int FollowId { get; set; }
         public int CompanyId { get; set; }
         public string CompanyName { get; set; } = string.Empty;
         public string? LogoUrl { get; set; }
