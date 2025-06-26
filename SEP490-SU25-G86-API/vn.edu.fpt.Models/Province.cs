@@ -13,6 +13,7 @@ namespace SEP490_SU25_G86_API.Models
         public int ProvinceId { get; set; }
         public string ProvinceName { get; set; } = null!;
         public string? Region { get; set; }
+        public bool IsDelete { get; set; }
 
         public virtual ICollection<JobPost> JobPosts { get; set; }
     }

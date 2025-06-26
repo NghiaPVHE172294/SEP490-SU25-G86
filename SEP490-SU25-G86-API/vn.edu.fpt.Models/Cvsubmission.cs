@@ -15,6 +15,7 @@ namespace SEP490_SU25_G86_API.Models
         public string? LabelSource { get; set; }
         public bool? IsShortlisted { get; set; }
         public string? RecruiterNote { get; set; }
+        public bool IsDelete { get; set; }
 
         public virtual Cv? Cv { get; set; }
         public virtual JobPost? JobPost { get; set; }

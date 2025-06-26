@@ -8,13 +8,15 @@ namespace SEP490_SU25_G86_API.Models
         public User()
         {
             AuditLogs = new HashSet<AuditLog>();
+            BlockedCompanies = new HashSet<BlockedCompany>();
             CompanyFollowers = new HashSet<CompanyFollower>();
             Cvs = new HashSet<Cv>();
             Cvsubmissions = new HashSet<Cvsubmission>();
             JobCriteria = new HashSet<JobCriterion>();
             JobPostViews = new HashSet<JobPostView>();
             JobPosts = new HashSet<JobPost>();
-            Notifications = new HashSet<Notification>();
+            Reminds = new HashSet<Remind>();
+            RequireOfCompanies = new HashSet<RequireOfCompany>();
             SavedJobs = new HashSet<SavedJob>();
         }
 
@@ -32,17 +34,20 @@ namespace SEP490_SU25_G86_API.Models
         public int? CompanyId { get; set; }
         public bool? IsActive { get; set; }
         public int AccountId { get; set; }
+        public bool IsBan { get; set; }
 
         public virtual Account Account { get; set; } = null!;
         public virtual Company? Company { get; set; }
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
+        public virtual ICollection<BlockedCompany> BlockedCompanies { get; set; }
         public virtual ICollection<CompanyFollower> CompanyFollowers { get; set; }
         public virtual ICollection<Cv> Cvs { get; set; }
         public virtual ICollection<Cvsubmission> Cvsubmissions { get; set; }
         public virtual ICollection<JobCriterion> JobCriteria { get; set; }
         public virtual ICollection<JobPostView> JobPostViews { get; set; }
         public virtual ICollection<JobPost> JobPosts { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
+        public virtual ICollection<Remind> Reminds { get; set; }
+        public virtual ICollection<RequireOfCompany> RequireOfCompanies { get; set; }
         public virtual ICollection<SavedJob> SavedJobs { get; set; }
     }
 }

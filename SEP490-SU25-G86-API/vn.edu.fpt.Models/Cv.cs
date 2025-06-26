@@ -19,6 +19,7 @@ namespace SEP490_SU25_G86_API.Models
         public bool? IsActive { get; set; }
         public string? Notes { get; set; }
         public bool? SaveStatus { get; set; }
+        public bool IsDelete { get; set; }
 
         public virtual User? Candidate { get; set; }
         public virtual ICollection<CvparsedDatum> CvparsedData { get; set; }

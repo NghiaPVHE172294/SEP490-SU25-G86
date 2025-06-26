@@ -18,6 +18,7 @@ namespace SEP490_SU25_G86_API.Models
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<AuditLog> AuditLogs { get; set; } = null!;
+        public virtual DbSet<BlockedCompany> BlockedCompanies { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<CompanyFollower> CompanyFollowers { get; set; } = null!;
         public virtual DbSet<Cv> Cvs { get; set; } = null!;
@@ -33,10 +34,11 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<JobPost> JobPosts { get; set; } = null!;
         public virtual DbSet<JobPostView> JobPostViews { get; set; } = null!;
         public virtual DbSet<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; } = null!;
-        public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
+        public virtual DbSet<Remind> Reminds { get; set; } = null!;
+        public virtual DbSet<RequireOfCompany> RequireOfCompanies { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<RolePermission> RolePermissions { get; set; } = null!;
         public virtual DbSet<SalaryRange> SalaryRanges { get; set; } = null!;
@@ -66,13 +68,20 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.Email).HasMaxLength(100);
 
-                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IsDelete)
+                    .HasColumnName("isDelete")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Password).HasMaxLength(255);
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Accounts_Roles");
             });
 
@@ -93,6 +102,25 @@ namespace SEP490_SU25_G86_API.Models
                     .HasConstraintName("FK_AuditLogs_Users");
             });
 
+            modelBuilder.Entity<BlockedCompany>(entity =>
+            {
+                entity.HasKey(e => e.BlockedCompaniesId);
+
+                entity.Property(e => e.BlockedCompaniesId).HasColumnName("BlockedCompaniesID");
+
+                entity.HasOne(d => d.Candidate)
+                    .WithMany(p => p.BlockedCompanies)
+                    .HasForeignKey(d => d.CandidateId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BlockedCompanies_Users");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.BlockedCompanies)
+                    .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BlockedCompanies_Companies");
+            });
+
             modelBuilder.Entity<Company>(entity =>
             {
                 entity.Property(e => e.Address).HasMaxLength(255);
@@ -106,6 +134,8 @@ namespace SEP490_SU25_G86_API.Models
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Email).HasMaxLength(100);
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.LogoUrl).HasMaxLength(500);
 
@@ -149,6 +179,8 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.SaveStatus).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UploadSource).HasMaxLength(50);
@@ -169,6 +201,8 @@ namespace SEP490_SU25_G86_API.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.LabelName).HasMaxLength(100);
             });
 
@@ -188,6 +222,8 @@ namespace SEP490_SU25_G86_API.Models
                     .HasMaxLength(200)
                     .IsFixedLength();
 
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.Languages).HasMaxLength(200);
 
                 entity.Property(e => e.ParsedAt).HasColumnType("datetime");
@@ -206,6 +242,8 @@ namespace SEP490_SU25_G86_API.Models
                 entity.HasKey(e => e.SubmissionId);
 
                 entity.ToTable("CVSubmissions");
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.IsShortlisted).HasDefaultValueSql("((0))");
 
@@ -241,16 +279,22 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<EmploymentType>(entity =>
             {
                 entity.Property(e => e.EmploymentTypeName).HasMaxLength(100);
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             });
 
             modelBuilder.Entity<ExperienceLevel>(entity =>
             {
                 entity.Property(e => e.ExperienceLevelName).HasMaxLength(50);
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             });
 
             modelBuilder.Entity<Industry>(entity =>
             {
                 entity.Property(e => e.IndustryName).HasMaxLength(100);
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             });
 
             modelBuilder.Entity<JobCriterion>(entity =>
@@ -264,6 +308,8 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.EducationLevel).HasMaxLength(100);
 
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.PreferredLanguages).HasMaxLength(200);
 
                 entity.HasOne(d => d.CreatedByUser)
@@ -275,12 +321,16 @@ namespace SEP490_SU25_G86_API.Models
 
             modelBuilder.Entity<JobLevel>(entity =>
             {
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.JobLevelName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<JobPosition>(entity =>
             {
                 entity.HasKey(e => e.PositionId);
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.PostitionName).HasMaxLength(100);
 
@@ -297,6 +347,8 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.IsAienabled).HasColumnName("IsAIEnabled");
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
@@ -389,23 +441,6 @@ namespace SEP490_SU25_G86_API.Models
                     .HasConstraintName("FK_MatchedCVandJobPost_JobCriteria");
             });
 
-            modelBuilder.Entity<Notification>(entity =>
-            {
-                entity.Property(e => e.CreateAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.IsRead).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.Title).HasMaxLength(200);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Notifications)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notifications_Users");
-            });
-
             modelBuilder.Entity<PasswordResetToken>(entity =>
             {
                 entity.HasKey(e => e.TokenId);
@@ -438,9 +473,46 @@ namespace SEP490_SU25_G86_API.Models
 
             modelBuilder.Entity<Province>(entity =>
             {
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
                 entity.Property(e => e.ProvinceName).HasMaxLength(100);
 
                 entity.Property(e => e.Region).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Remind>(entity =>
+            {
+                entity.ToTable("Remind");
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.HasOne(d => d.Admin)
+                    .WithMany(p => p.Reminds)
+                    .HasForeignKey(d => d.AdminId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_Users");
+            });
+
+            modelBuilder.Entity<RequireOfCompany>(entity =>
+            {
+                entity.ToTable("RequireOfCompany");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.RequireOfCompanies)
+                    .HasForeignKey(d => d.CompanyId)
+                    .HasConstraintName("FK_RequireOfCompany_Companies");
+
+                entity.HasOne(d => d.SendByUser)
+                    .WithMany(p => p.RequireOfCompanies)
+                    .HasForeignKey(d => d.SendByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RequireOfCompany_Users");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -451,7 +523,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A86F17C150");
+                    .HasName("PK__RolePerm__6400A1A807C71F1C");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -459,13 +531,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__2739D489");
+                    .HasConstraintName("FK__RolePermi__Permi__2EDAF651");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__282DF8C2");
+                    .HasConstraintName("FK__RolePermi__RoleI__2FCF1A8A");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>
@@ -473,6 +545,8 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.Currency)
                     .HasMaxLength(10)
                     .HasDefaultValueSql("(N'VND')");
+
+                entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             });
 
             modelBuilder.Entity<SavedJob>(entity =>
@@ -520,6 +594,8 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.Gender).HasMaxLength(10);
 
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IsBan).HasColumnName("isBan");
 
                 entity.Property(e => e.LinkedIn).HasMaxLength(30);
 
