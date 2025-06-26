@@ -31,6 +31,7 @@ namespace SEP490_SU25_G86_API.Models
         public string? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public bool IsDelete { get; set; }
 
         public virtual User? Employer { get; set; }
         public virtual EmploymentType? EmploymentType { get; set; }

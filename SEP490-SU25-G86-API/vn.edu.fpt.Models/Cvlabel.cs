@@ -14,6 +14,7 @@ namespace SEP490_SU25_G86_API.Models
         public string LabelName { get; set; } = null!;
         public string? ColorCode { get; set; }
         public string? Description { get; set; }
+        public bool IsDelete { get; set; }
 
         public virtual ICollection<Cvsubmission> Cvsubmissions { get; set; }
     }

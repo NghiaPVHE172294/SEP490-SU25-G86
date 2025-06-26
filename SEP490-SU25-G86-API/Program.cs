@@ -12,6 +12,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
@@ -30,6 +31,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
@@ -173,6 +175,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ICompanyFollowingRepository, CompanyFollowingRepository>();
             builder.Services.AddScoped<ICompanyFollowingService, CompanyFollowingService>();
 
+            //BlockedCompany
+            builder.Services.AddScoped<IBlockedCompanyRepository, BlockedCompanyRepository>();
+            builder.Services.AddScoped<IBlockedCompanyService, BlockedCompanyService>();
+
             // JobLevel
             builder.Services.AddScoped<IJobLevelRepository, JobLevelRepository>();
             builder.Services.AddScoped<IJobLevelService, JobLevelService>();
@@ -184,6 +190,7 @@ namespace SEP490_SU25_G86_API
             // EmploymentType
             builder.Services.AddScoped<IEmploymentTypeRepository, EmploymentTypeRepository>();
             builder.Services.AddScoped<IEmploymentTypeService, EmploymentTypeService>();
+
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

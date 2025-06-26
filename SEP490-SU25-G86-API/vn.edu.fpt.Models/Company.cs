@@ -7,7 +7,9 @@ namespace SEP490_SU25_G86_API.Models
     {
         public Company()
         {
+            BlockedCompanies = new HashSet<BlockedCompany>();
             CompanyFollowers = new HashSet<CompanyFollower>();
+            RequireOfCompanies = new HashSet<RequireOfCompany>();
             Users = new HashSet<User>();
         }
 
@@ -24,9 +26,13 @@ namespace SEP490_SU25_G86_API.Models
         public string? LogoUrl { get; set; }
         public int CreatedByUserId { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public bool IsDelete { get; set; }
+        public bool Status { get; set; }
 
         public virtual Industry Industry { get; set; } = null!;
+        public virtual ICollection<BlockedCompany> BlockedCompanies { get; set; }
         public virtual ICollection<CompanyFollower> CompanyFollowers { get; set; }
+        public virtual ICollection<RequireOfCompany> RequireOfCompanies { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }
