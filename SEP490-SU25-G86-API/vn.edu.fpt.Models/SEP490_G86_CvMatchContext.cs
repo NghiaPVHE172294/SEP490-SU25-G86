@@ -540,6 +540,7 @@ namespace SEP490_SU25_G86_API.Models
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
                     .HasName("PK__RolePerm__6400A1A816453E52");
+                    .HasName("PK__RolePerm__6400A1A826A2ECA8");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 

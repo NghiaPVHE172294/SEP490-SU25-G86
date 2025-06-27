@@ -30,6 +30,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         public List<ExperienceLevel> ExperienceLevels { get; set; } = new();
         public List<JobLevel> JobLevels { get; set; } = new();
         public List<Industry> Industries { get; set; } = new();
+        public List<SalaryRange> SalaryRanges { get; set; } = new();
 
         public class EmploymentType
         {
@@ -61,6 +62,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             public int IndustryId { get; set; }
             public string IndustryName { get; set; }
         }
+        public class SalaryRange
+        {
+            public int SalaryRangeId { get; set; }
+            public int? MinSalary { get; set; }
+            public int? MaxSalary { get; set; }
+            public string Currency { get; set; }
+        }
 
         public async Task OnGetAsync()
         {
@@ -70,6 +78,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             ExperienceLevels = await _httpClient.GetFromJsonAsync<List<ExperienceLevel>>("api/experiencelevels");
             JobLevels = await _httpClient.GetFromJsonAsync<List<JobLevel>>("api/joblevels");
             Industries = await _httpClient.GetFromJsonAsync<List<Industry>>("api/industries");
+            SalaryRanges = await _httpClient.GetFromJsonAsync<List<SalaryRange>>("api/salaryranges");
         }
 
         public async Task<IActionResult> OnPostAsync()

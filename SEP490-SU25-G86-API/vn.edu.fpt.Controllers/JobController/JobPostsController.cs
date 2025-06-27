@@ -5,6 +5,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
@@ -72,33 +73,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         /// <summary>
         /// Lấy danh sách bài tuyển dụng theo employer (nhà tuyển dụng).
         /// </summary>
-        /// <param name="employerId">ID của employer</param>
         /// <returns>Danh sách bài tuyển dụng theo employer</returns>
         /// <response code="200">Thành công, trả về danh sách</response>
         /// <response code="404">Không tìm thấy employer hoặc không có bài nào</response>
         /// <response code="500">Lỗi server</response>
-        [HttpGet("employer/{employerId}")]
+        [HttpGet("employer")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<JobPostDTO>>> GetByEmployerId(int employerId)
+        public async Task<ActionResult<IEnumerable<JobPostListDTO>>> GetByEmployerId()
         {
-            var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-
+            var accountId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
             if (user == null)
             {
                 return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
             }
-
-            if (user.UserId != employerId)
-            {
-                return StatusCode(403, "Bạn không có quyền truy cập vào dữ liệu của employer khác.");
-                // hoặc: return Forbid();
-            }
-
-            var result = await _jobPostService.GetByEmployerIdAsync(employerId);
+            var result = await _jobPostService.GetByEmployerIdAsync(user.UserId);
             return Ok(result);
         }
-
 
         /// <summary>
         /// Lấy chi tiết một bài tuyển dụng theo id
@@ -124,17 +115,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         [HttpGet("viewall")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPagedJobPosts(
-            int page = 1,
-            int pageSize = 10,
-            int? provinceId = null,
-            int? industryId = null,
-            [FromQuery] List<int>? employmentTypeIds = null,
-            [FromQuery] List<int>? experienceLevelIds = null,
-            int? jobLevelId = null,
-            int? minSalary = null,
-            int? maxSalary = null,
-            [FromQuery] List<int>? datePostedRanges = null,
-            string? keyword = null)
+                int page = 1,
+                int pageSize = 10,
+                int? provinceId = null,
+                int? industryId = null,
+                [FromQuery] List<int>? employmentTypeIds = null,
+                [FromQuery] List<int>? experienceLevelIds = null,
+                int? jobLevelId = null,
+                int? minSalary = null,
+                int? maxSalary = null,
+                [FromQuery] List<int>? datePostedRanges = null)
         {
             int? candidateId = null;
             if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("CANDIDATE"))
@@ -162,8 +152,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         [Authorize]
         public async Task<IActionResult> AddJobPost([FromBody] AddJobPostDTO dto)
         {
-            var employerId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-            var result = await _jobPostService.AddJobPostAsync(dto, employerId);
+            var accountId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+            var result = await _jobPostService.AddJobPostAsync(dto, user.UserId);
             return Ok(result);
         }
 
