@@ -8,7 +8,13 @@ namespace SEP490_SU25_G86_API.Models
         public int MatchedCvandJobPostId { get; set; }
         public int CvparsedDataId { get; set; }
         public int JobPostCriteriaId { get; set; }
-        public double? MatchedScore { get; set; }
+        public double? ExperienceScore { get; set; }
+        public double? SkillsScore { get; set; }
+        public double? EducationLevelScore { get; set; }
+        public double? JobTitlesScore { get; set; }
+        public double? LanguagesScore { get; set; }
+        public double? CertificationsScore { get; set; }
+        public double? TotalScore { get; set; }
 
         public virtual CvparsedDatum CvparsedData { get; set; } = null!;
         public virtual JobCriterion JobPostCriteria { get; set; } = null!;
