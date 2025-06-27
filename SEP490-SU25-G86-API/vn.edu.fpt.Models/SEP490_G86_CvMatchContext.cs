@@ -22,6 +22,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<CompanyFollower> CompanyFollowers { get; set; } = null!;
         public virtual DbSet<Cv> Cvs { get; set; } = null!;
+        public virtual DbSet<CvTemplate> CvTemplates { get; set; } = null!;
         public virtual DbSet<Cvlabel> Cvlabels { get; set; } = null!;
         public virtual DbSet<CvparsedDatum> CvparsedData { get; set; } = null!;
         public virtual DbSet<Cvsubmission> Cvsubmissions { get; set; } = null!;
@@ -47,11 +48,10 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=SEP490_G86_CvMatch;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
             }
         }
 
@@ -177,18 +177,34 @@ namespace SEP490_SU25_G86_API.Models
             {
                 entity.ToTable("CVs");
 
-                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.SaveStatus).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.UploadSource).HasMaxLength(50);
+                entity.Property(e => e.UploadDate).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Candidate)
+                entity.HasOne(d => d.UploadByUser)
                     .WithMany(p => p.Cvs)
-                    .HasForeignKey(d => d.CandidateId)
+                    .HasForeignKey(d => d.UploadByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CVs_Users");
+            });
+
+            modelBuilder.Entity<CvTemplate>(entity =>
+            {
+                entity.Property(e => e.CvTemplateName).HasMaxLength(30);
+
+                entity.Property(e => e.IsDelete)
+                    .HasColumnName("isDelete")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UploadDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Industry)
+                    .WithMany(p => p.CvTemplates)
+                    .HasForeignKey(d => d.IndustryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CvTemplates_Industries");
             });
 
             modelBuilder.Entity<Cvlabel>(entity =>
@@ -523,7 +539,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A807C71F1C");
+                    .HasName("PK__RolePerm__6400A1A826A2ECA8");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -531,13 +547,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__2EDAF651");
+                    .HasConstraintName("FK__RolePermi__Permi__1EA48E88");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__2FCF1A8A");
+                    .HasConstraintName("FK__RolePermi__RoleI__1F98B2C1");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>
