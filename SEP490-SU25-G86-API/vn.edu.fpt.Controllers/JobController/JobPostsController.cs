@@ -37,8 +37,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             [FromQuery] int pageSize = 9,
             [FromQuery] string? region = null)
         {
-            var jobs = await _jobPostService.GetPagedJobPostsAsync(page, pageSize, region);
-
+            int? candidateId = null;
+            if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("CANDIDATE"))
+            {
+                var accountIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(accountIdStr, out int accountId))
+                {
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+                    if (user != null)
+                        candidateId = user.UserId;
+                }
+            }
+            var jobs = await _jobPostService.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
             return Ok(new
             {
                 TotalItems = jobs.Item2,
@@ -126,11 +136,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             [FromQuery] List<int>? datePostedRanges = null,
             string? keyword = null)
         {
+            int? candidateId = null;
+            if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("CANDIDATE"))
+            {
+                var accountIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(accountIdStr, out int accountId))
+                {
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+                    if (user != null)
+                        candidateId = user.UserId;
+                }
+            }
             var (posts, totalItems) = await _jobPostService.GetFilteredJobPostsAsync(
-                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword
+                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword, candidateId
             );
             return Ok(new { posts, totalItems });
-
         }
 
         /// <summary>

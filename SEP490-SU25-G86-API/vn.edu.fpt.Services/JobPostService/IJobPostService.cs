@@ -6,8 +6,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 {
     public interface IJobPostService
     {
-
-        Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null);
+        Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null);
 
         Task<IEnumerable<JobPostDTO>> GetAllJobPostsAsync();
 
@@ -27,7 +26,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             int? minSalary = null,
             int? maxSalary = null,
             List<int>? datePostedRanges = null,
-            string? keyword = null
+            string? keyword = null,
+            int? candidateId = null
         );
 
         Task<ViewDetailJobPostDTO> AddJobPostAsync(AddJobPostDTO dto, int employerId);
