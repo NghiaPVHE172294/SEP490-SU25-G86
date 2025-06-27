@@ -124,7 +124,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
                 int? jobLevelId = null,
                 int? minSalary = null,
                 int? maxSalary = null,
-                [FromQuery] List<int>? datePostedRanges = null)
+                [FromQuery] List<int>? datePostedRanges = null,
+                [FromQuery] string? keyword = null)
         {
             int? candidateId = null;
             if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("CANDIDATE"))

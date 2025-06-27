@@ -89,7 +89,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null)
+            List<int>? datePostedRanges = null,
+            string? keyword = null)
         {
             var query = _context.JobPosts
                 .Include(j => j.Employer)
@@ -130,6 +131,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 var filterDate = maxDays == 0 ? now.Date : now.AddDays(-maxDays);
 
                 query = query.Where(j => j.CreatedDate >= filterDate);
+            }
+
+            // Lọc theo keyword
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
             }
 
             var totalItems = await query.CountAsync();
@@ -231,6 +238,22 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 await _context.SaveChangesAsync();
             }
             return et;
+        }
+
+        public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId)
+        {
+            return await _context.JobPosts
+                .Include(j => j.Employer)
+                .ThenInclude(u => u.Company)
+                .Include(j => j.SalaryRange)
+                .Include(j => j.Province)
+                .Include(j => j.EmploymentType)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.Industry)
+                .Include(j => j.JobLevel)
+                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 

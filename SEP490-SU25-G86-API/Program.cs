@@ -48,6 +48,8 @@ using AutoMapper;
 using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 
 namespace SEP490_SU25_G86_API
 {
