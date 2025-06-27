@@ -74,8 +74,28 @@
     </div>
     <div class="col-md-6">
         <label class="form-label">Mức lương</label>
-        <input asp-for="JobPost.NewSalaryRange" class="form-control mb-2" placeholder="Nhập mới (min-max-currency)" />
-        <input asp-for="JobPost.SalaryRangeId" class="form-control" type="number" placeholder="ID mức lương (nếu có)" />
+        <select id="salaryRangeSelect" name="JobPost.SalaryRangeId" class="form-select" onchange="onSalaryRangeChange()">
+            <option value="">-- Chọn mức lương --</option>
+            @foreach (var s in Model.SalaryRanges)
+            {
+                <option value="@s.SalaryRangeId">@((s.MinSalary.HasValue && s.MaxSalary.HasValue) ? ($"{s.MinSalary:N0} - {s.MaxSalary:N0} {s.Currency}") : "Thỏa thuận")</option>
+            }
+            <option value="other">Khác...</option>
+        </select>
+        <div id="newSalaryRangeGroup" style="display:none;" class="mt-2">
+            <div class="row g-2">
+                <div class="col">
+                    <input id="minSalaryInput" class="form-control" placeholder="Lương tối thiểu" type="number" min="0" />
+                </div>
+                <div class="col">
+                    <input id="maxSalaryInput" class="form-control" placeholder="Lương tối đa" type="number" min="0" />
+                </div>
+                <div class="col">
+                    <input id="currencyInput" class="form-control" placeholder="Tiền tệ (VD: VND)" maxlength="10" />
+                </div>
+            </div>
+            <input type="hidden" id="newSalaryRangeHidden" name="JobPost.NewSalaryRange" />
+        </div>
     </div>
     <div class="col-md-6">
         <label class="form-label">Tỉnh/Thành phố</label>
@@ -154,5 +174,38 @@
         function onExperienceLevelChange() { toggleInput('experienceLevelSelect', 'newExperienceLevelInput'); }
         function onJobLevelChange() { toggleInput('jobLevelSelect', 'newJobLevelInput'); }
         function onEmploymentTypeChange() { toggleInput('employmentTypeSelect', 'newEmploymentTypeInput'); }
+
+        // Lương
+        function onSalaryRangeChange() {
+            var select = document.getElementById('salaryRangeSelect');
+            var group = document.getElementById('newSalaryRangeGroup');
+            var hidden = document.getElementById('newSalaryRangeHidden');
+            if (select.value === 'other') {
+                group.style.display = 'block';
+                hidden.disabled = false;
+            } else {
+                group.style.display = 'none';
+                hidden.value = '';
+                hidden.disabled = true;
+            }
+        }
+        // Gộp min-max-currency vào hidden input khi nhập mới
+        document.addEventListener('DOMContentLoaded', function () {
+            onSalaryRangeChange();
+            document.getElementById('salaryRangeSelect').addEventListener('change', onSalaryRangeChange);
+            var min = document.getElementById('minSalaryInput');
+            var max = document.getElementById('maxSalaryInput');
+            var cur = document.getElementById('currencyInput');
+            var hidden = document.getElementById('newSalaryRangeHidden');
+            [min, max, cur].forEach(function (el) {
+                el.addEventListener('input', function () {
+                    if (min.value && max.value && cur.value) {
+                        hidden.value = min.value + '-' + max.value + '-' + cur.value;
+                    } else {
+                        hidden.value = '';
+                    }
+                });
+            });
+        });
     </script>
 } 

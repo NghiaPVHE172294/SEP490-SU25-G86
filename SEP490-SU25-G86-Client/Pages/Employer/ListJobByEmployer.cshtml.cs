@@ -2,16 +2,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-// Th�m namespace c?a DTO t? API
-using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SEP490_SU25_G86_Client.Pages.Job
+namespace SEP490_SU25_G86_Client.Pages.Employer
 {
     public class ListJobByEmployerModel : PageModel
     {
         private readonly HttpClient _httpClient;
-        public List<JobPostDTO> Jobs { get; set; }
+        public List<JobPostListDTO> Jobs { get; set; }
 
         public ListJobByEmployerModel(IHttpClientFactory httpClientFactory)
         {
@@ -27,27 +26,20 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 return RedirectToPage("/NotFound");
             }
 
-            var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int employerId))
-            {
-                Jobs = new List<JobPostDTO>();
-                return RedirectToPage("/Common/Login");
-            }
-
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.GetAsync($"api/JobPosts/employer/{employerId}");
+            var response = await _httpClient.GetAsync("api/JobPosts/employer");
 
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Jobs = JsonSerializer.Deserialize<List<JobPostDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                Jobs = JsonSerializer.Deserialize<List<JobPostListDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             else
             {
-                Jobs = new List<JobPostDTO>();
+                Jobs = new List<JobPostListDTO>();
             }
 
             return Page();

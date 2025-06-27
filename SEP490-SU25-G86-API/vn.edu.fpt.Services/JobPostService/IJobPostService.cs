@@ -1,5 +1,4 @@
-﻿using SEP490_SU25_G86_API.Models;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
@@ -11,7 +10,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 
         Task<IEnumerable<JobPostDTO>> GetAllJobPostsAsync();
 
-        Task<IEnumerable<JobPostDTO>> GetByEmployerIdAsync(int employerId);
+        Task<IEnumerable<JobPostListDTO>> GetByEmployerIdAsync(int employerId);
 
 
         Task<ViewDetailJobPostDTO?> GetJobPostDetailByIdAsync(int jobPostId);
@@ -26,12 +25,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null,
-            string? keyword = null
+            List<int>? datePostedRanges = null
         );
 
         Task<ViewDetailJobPostDTO> AddJobPostAsync(AddJobPostDTO dto, int employerId);
-        Task<IEnumerable<JobPostListDTO>> GetJobPostsByCompanyIdAsync(int companyId);
+
     }
 
 }

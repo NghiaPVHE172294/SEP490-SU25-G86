@@ -1,5 +1,4 @@
 ﻿using SEP490_SU25_G86_API.Models;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 {
@@ -20,8 +19,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null,
-            string? keyword = null
+            List<int>? datePostedRanges = null
         );
 
         Task<JobPost> AddJobPostAsync(JobPost jobPost);
@@ -32,7 +30,5 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         Task<ExperienceLevel> AddExperienceLevelIfNotExistsAsync(string experienceLevelName);
         Task<JobLevel> AddJobLevelIfNotExistsAsync(string jobLevelName);
         Task<EmploymentType> AddEmploymentTypeIfNotExistsAsync(string employmentTypeName);
-        Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId);
-
     }
 }
