@@ -22,7 +22,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             {
                 JobPostId = j.JobPostId,
                 Title = j.Title,
-                CompanyName = j.Employer?.Company.CompanyName ?? "Không rõ",
+                CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 Salary = j.SalaryRange != null
                          ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                          : "Thỏa thuận",
@@ -225,7 +225,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             {
                 JobPostId = j.JobPostId,
                 Title = j.Title,
-                CompanyName = j.Employer?.Company.CompanyName ?? "Không rõ",
+                CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 Salary = j.SalaryRange != null
                     ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                     : "Thỏa thuận",
