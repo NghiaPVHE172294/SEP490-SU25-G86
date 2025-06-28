@@ -1,4 +1,3 @@
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
@@ -7,8 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
@@ -50,6 +47,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -210,7 +209,9 @@ namespace SEP490_SU25_G86_API
 				});
 			});
 
-            
+            // New DI registrations
+            builder.Services.AddScoped<ICvRepository, CvRepository>();
+            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
 
             var app = builder.Build();
 

@@ -1,0 +1,12 @@
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
+
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
+{
+    public interface ICvService
+    {
+        Task<List<CvDTO>> GetAllByUserAsync(int userId);
+        Task<CvDTO?> GetByIdAsync(int cvId);
+        Task AddAsync(int userId, AddCvDTO dto, string fileUrl);
+        Task DeleteAsync(int userId, int cvId);
+    }
+} 
