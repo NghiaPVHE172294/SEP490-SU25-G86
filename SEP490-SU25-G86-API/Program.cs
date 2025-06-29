@@ -49,6 +49,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -173,6 +175,10 @@ namespace SEP490_SU25_G86_API
             // CompanyFollowing
             builder.Services.AddScoped<ICompanyFollowingRepository, CompanyFollowingRepository>();
             builder.Services.AddScoped<ICompanyFollowingService, CompanyFollowingService>();
+
+            // AddCompany
+            builder.Services.AddScoped<IAddCompanyRepository, AddCompanyRepository>();
+            builder.Services.AddScoped<IAddCompanyService, AddCompanyService>();
 
             //BlockedCompany
             builder.Services.AddScoped<IBlockedCompanyRepository, BlockedCompanyRepository>();
