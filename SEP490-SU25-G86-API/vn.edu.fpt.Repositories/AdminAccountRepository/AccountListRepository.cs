@@ -25,7 +25,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
                                RoleName = r.RoleName,
                                FullName = u.FullName,
                                Address = u.Address,
-                               CreatedDate = a.CreatedDate.HasValue ? a.CreatedDate.Value.ToString("yyyy-MM-dd") : "N/A",
+                               CreatedDate = a.CreatedDate,
                                Status = a.IsActive == true ? "Active" : "Inactive"
 
                            };
@@ -46,7 +46,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
                                RoleName = r.RoleName,
                                FullName = u.FullName,
                                Address = u.Address,
-                               CreatedDate = a.CreatedDate.HasValue ? a.CreatedDate.Value.ToString("yyyy-MM-dd") : "N/A",
+                               CreatedDate = a.CreatedDate,
                                Status = a.IsActive == true ? "Active" : "Inactive"
                            };
 

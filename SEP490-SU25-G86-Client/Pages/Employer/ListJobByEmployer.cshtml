@@ -1,0 +1,42 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Employer.ListJobByEmployerModel
+@{
+    ViewData["Title"] = "List Job";
+}
+
+<div class="container py-5">
+    <header class="text-center mb-5">
+        <h1 class="fw-bold border-bottom pb-3">Danh sách tin tuyển dụng</h1>
+        <a href="/Employer/AddJobPost" class="btn btn-success mt-3">+ Tạo tin tuyển dụng</a>
+    </header>
+
+    <div class="row">
+        @if (Model.Jobs == null || !Model.Jobs.Any())
+        {
+            <div class="alert alert-info text-center w-100">Bạn chưa có tin tuyển dụng nào.</div>
+        }
+        else
+        {
+            foreach (var job in Model.Jobs)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 p-3">
+                        <h5 class="fw-bold">@job.Title</h5>
+                        <p class="text-muted mb-1">@job.CompanyName</p>
+                        <p class="text-muted mb-1">@job.WorkLocation</p>
+                        <div class="d-flex align-items-center justify-content-between mt-3">
+                            <span class="text-custom fw-bold">@job.Salary</span>
+                            <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
+                            <small class="text-muted ms-2">Tạo: @(job.CreatedDate?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+                            <small class="text-muted ms-2">Hết hạn: @(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

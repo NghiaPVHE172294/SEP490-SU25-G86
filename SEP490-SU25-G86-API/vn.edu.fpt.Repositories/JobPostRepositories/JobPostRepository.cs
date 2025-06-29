@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.Linq;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
@@ -9,17 +7,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
     public class JobPostRepository : IJobPostRepository
     {
         private readonly SEP490_G86_CvMatchContext _context;
-        private readonly ISynonymService _synonymService;
-        public JobPostRepository(SEP490_G86_CvMatchContext context, ISynonymService synonymService)
+
+        public JobPostRepository(SEP490_G86_CvMatchContext context)
         {
             _context = context;
-            _synonymService = synonymService;
         }
 
         public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
         {
             var query = _context.JobPosts
-        .Include(j => j.Employer).ThenInclude(e => e.Company)
+        .Include(j => j.Employer)
         .Include(j => j.SalaryRange)
         .Include(j => j.Province)
         .OrderByDescending(j => j.CreatedDate)
@@ -53,6 +50,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         public async Task<IEnumerable<JobPost>> GetByEmployerIdAsync(int employerId)
         {
             return await _context.JobPosts
+                .Include(j => j.Employer)
+                .ThenInclude(u => u.Company)
+                .Include(j => j.SalaryRange)
+                .Include(j => j.Province)
+                .Include(j => j.EmploymentType)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.Industry)
+                .Include(j => j.JobLevel)
                 .Where(j => j.EmployerId == employerId)
                 .AsNoTracking()
                 .ToListAsync();
@@ -88,7 +93,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             string? keyword = null)
         {
             var query = _context.JobPosts
-                .Include(j => j.Employer).ThenInclude(e => e.Company)
+                .Include(j => j.Employer)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
@@ -98,61 +103,50 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .OrderByDescending(j => j.CreatedDate)
                 .AsQueryable();
 
-            // Apply filters
             if (provinceId.HasValue)
                 query = query.Where(j => j.ProvinceId == provinceId.Value);
             if (industryId.HasValue)
                 query = query.Where(j => j.IndustryId == industryId.Value);
-            if (employmentTypeIds?.Any() == true)
+
+            if (employmentTypeIds != null && employmentTypeIds.Any())
                 query = query.Where(j => employmentTypeIds.Contains((int)j.EmploymentTypeId));
-            if (experienceLevelIds?.Any() == true)
+
+            if (experienceLevelIds != null && experienceLevelIds.Any())
                 query = query.Where(j => experienceLevelIds.Contains((int)j.ExperienceLevelId));
+
             if (jobLevelId.HasValue)
                 query = query.Where(j => j.JobLevelId == jobLevelId.Value);
             if (minSalary.HasValue)
                 query = query.Where(j => j.SalaryRange!.MinSalary >= minSalary.Value);
             if (maxSalary.HasValue)
                 query = query.Where(j => j.SalaryRange!.MaxSalary <= maxSalary.Value);
-            if (datePostedRanges?.Any() == true)
+
+            // Lọc theo ngày đăng
+            if (datePostedRanges != null && datePostedRanges.Any())
             {
                 var now = DateTime.UtcNow;
+
                 var maxDays = datePostedRanges.Max();
+
                 var filterDate = maxDays == 0 ? now.Date : now.AddDays(-maxDays);
+
                 query = query.Where(j => j.CreatedDate >= filterDate);
             }
 
-            // Nếu có keyword thì lọc bằng synonym và search
+            // Lọc theo keyword
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                var terms = _synonymService.ExpandKeywords(keyword);
-                var allPosts = await query.ToListAsync();
-
-                var filteredResult = allPosts.Where(j =>
-                    terms.Any(k =>
-                        j.Title != null &&
-                        j.Title.Contains(k, StringComparison.OrdinalIgnoreCase)
-                    )
-                ).ToList();
-
-                var totalItems = filteredResult.Count;
-
-                var paged = filteredResult
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                return (paged, totalItems);
+                query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
             }
 
-            // Nếu không có keyword thì trả như cũ
-            var total = await query.CountAsync();
+            var totalItems = await query.CountAsync();
 
             var posts = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (posts, total);
+            return (posts, totalItems);
         }
 
         public async Task<JobPost> AddJobPostAsync(JobPost jobPost)
@@ -249,16 +243,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId)
         {
             return await _context.JobPosts
-                .Include(j => j.Employer).ThenInclude(e => e.Company)
+                .Include(j => j.Employer)
+                .ThenInclude(u => u.Company)
+                .Include(j => j.SalaryRange)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.Industry)
                 .Include(j => j.JobLevel)
-                .Include(j => j.SalaryRange)
-                .Where(j => j.Employer!.CompanyId == companyId)
-                .OrderByDescending(j => j.CreatedDate)
+                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId)
+                .AsNoTracking()
                 .ToListAsync();
         }
     }
+
 }

@@ -15,5 +15,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO
         public string? Industry { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string? Status { get; set; }
+        public string? WorkLocation { get; set; }
     }
 }

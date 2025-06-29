@@ -12,6 +12,7 @@ namespace SEP490_SU25_G86_API.Models
 
         public int EmploymentTypeId { get; set; }
         public string EmploymentTypeName { get; set; } = null!;
+        public bool IsDelete { get; set; }
 
         public virtual ICollection<JobPost> JobPosts { get; set; }
     }

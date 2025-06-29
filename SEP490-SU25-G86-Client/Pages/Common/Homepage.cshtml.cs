@@ -20,7 +20,10 @@ namespace SEP490_SU25_G86_Client.Pages
             try
             {
                 using var client = new HttpClient();
-
+                // Lấy token từ session nếu có
+                var token = HttpContext.Session.GetString("jwt_token");
+                if (!string.IsNullOrEmpty(token))
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 // Gắn thêm region nếu có vào URL gọi API
                 var url = $"https://localhost:7004/api/jobposts/homepage?page={CurrentPage}&pageSize={pageSize}";
                 if (!string.IsNullOrEmpty(region))
