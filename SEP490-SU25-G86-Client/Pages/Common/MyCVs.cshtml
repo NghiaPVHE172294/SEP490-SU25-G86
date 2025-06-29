@@ -1,0 +1,154 @@
+ @page
+@model SEP490_SU25_G86_Client.Pages.Common.MyCVsModel
+@{
+    ViewData["Title"] = "CV của tôi";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">CV đã tải lên CVMatcher</h4>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="bi bi-upload"></i> Tải CV lên
+            </button>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>TÊN CV</th>
+                        <th>CẬP NHẬT LẦN CUỐI</th>
+                        <th>HÀNH ĐỘNG</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (Model.CVs != null && Model.CVs.Count > 0)
+                {
+                    foreach (var cv in Model.CVs)
+                    {
+                        <tr>
+                            <td>@cv.FileName</td>
+                           <td>
+    @(DateTime.TryParse(cv.UpdatedDate?.ToString(), out var dt) 
+        ? dt.ToString("dd-MM-yyyy HH:mm tt") 
+        : cv.UpdatedDate)
+</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" asp-page="/Common/CvDetail" asp-route-id="@cv.CvId">Chi tiết</a>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-cvid="@cv.CvId" data-filename="@cv.FileName">Sửa tên</button>
+                                <a class="btn btn-secondary btn-sm" href="@cv.FileUrl" target="_blank">Tải CV</a>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-cvid="@cv.CvId">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="3" class="text-center">Chưa có CV nào được tải lên.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Upload -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Tải CV mới lên</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="File" class="form-label">Chọn file CV (PDF)</label>
+                            <input type="file" class="form-control" id="File" name="File" accept="application/pdf" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="FileName" class="form-label">Tên CV</label>
+                            <input type="text" class="form-control" id="FileName" name="FileName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Notes" class="form-label">Ghi chú</label>
+                            <textarea class="form-control" id="Notes" name="Notes"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-success">Tải lên</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-page-handler="Edit">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Chỉnh sửa tên CV Upload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="EditCvId" name="CvId" />
+                        <div class="mb-3">
+                            <label for="EditFileName" class="form-label">Tên CV</label>
+                            <input type="text" class="form-control" id="EditFileName" name="FileName" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-page-handler="Delete">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa CV?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="DeleteCvId" name="CvId" />
+                        <p>Hành động này sẽ xóa vĩnh viễn CV khỏi hệ thống.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+    <script>
+        var editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var cvId = button.getAttribute('data-cvid');
+            var fileName = button.getAttribute('data-filename');
+            document.getElementById('EditCvId').value = cvId;
+            document.getElementById('EditFileName').value = fileName;
+        });
+        var deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var cvId = button.getAttribute('data-cvid');
+            document.getElementById('DeleteCvId').value = cvId;
+        });
+    </script>
+}
