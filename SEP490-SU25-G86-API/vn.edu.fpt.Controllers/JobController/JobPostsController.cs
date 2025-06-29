@@ -163,10 +163,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 
         [HttpGet("{id}/jobposts")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetJobPostsByCompanyId(int id)
+        public async Task<IActionResult> GetJobPostsByCompanyId(int id, [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
-            var posts = await _jobPostService.GetJobPostsByCompanyIdAsync(id);
-            return Ok(posts);
+            var (posts, totalItems) = await _jobPostService.GetJobPostsByCompanyIdAsync(id, page, pageSize);
+            return Ok(new { posts, totalItems });
         }
     }
 }

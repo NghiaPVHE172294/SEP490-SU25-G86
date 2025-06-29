@@ -31,7 +31,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 
         Task<ViewDetailJobPostDTO> AddJobPostAsync(AddJobPostDTO dto, int employerId);
 
-        Task<IEnumerable<JobPostListDTO>> GetJobPostsByCompanyIdAsync(int companyId);
+        Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize);
 
     }
 

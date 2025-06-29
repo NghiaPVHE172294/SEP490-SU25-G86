@@ -1,55 +1,57 @@
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
-using AutoMapper;
-using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -195,6 +197,10 @@ namespace SEP490_SU25_G86_API
             // SalaryRange
             builder.Services.AddScoped<ISalaryRangeRepository, SalaryRangeRepository>();
             builder.Services.AddScoped<ISalaryRangeService, SalaryRangeService>();
+
+            //Company
+            builder.Services.AddScoped<ICompanyService, CompanyService>();
+            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

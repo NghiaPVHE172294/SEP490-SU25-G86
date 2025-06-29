@@ -44,13 +44,13 @@
     </div>
 </div>
 
-    <!-- Job Listings -->
+<!-- Job Listings -->
 <div class="mt-5">
     <h4 class="fw-bold mb-3">Tuyển dụng</h4>
 
     @if (Model.JobPosts.Any())
     {
-        @foreach (var job in Model.JobPosts)
+        foreach (var job in Model.JobPosts)
         {
             <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
                 <div>
@@ -69,12 +69,39 @@
                 </div>
             </div>
         }
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-center mt-4">
+                <nav>
+                    <ul class="pagination">
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="?id=@Model.Company?.CompanyId&page=@(Model.CurrentPage - 1)">←</a>
+                            </li>
+                        }
+
+                        <li class="page-item disabled">
+                            <span class="page-link">@Model.CurrentPage / @Model.TotalPages</span>
+                        </li>
+
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="?id=@Model.Company?.CompanyId&page=@(Model.CurrentPage + 1)">→</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
     }
     else
     {
         <div class="text-muted">Không có tin tuyển dụng nào.</div>
     }
-</div>
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -93,7 +93,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             string? keyword = null)
         {
             var query = _context.JobPosts
-                .Include(j => j.Employer)
+                .Include(j => j.Employer).ThenInclude(e => e.Company)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
@@ -240,11 +240,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             return et;
         }
 
-        public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId)
+        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize)
         {
-            return await _context.JobPosts
-                .Include(j => j.Employer)
-                .ThenInclude(u => u.Company)
+            var query = _context.JobPosts
+                .Include(j => j.Employer).ThenInclude(u => u.Company)
                 .Include(j => j.SalaryRange)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
@@ -253,8 +252,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Include(j => j.JobLevel)
                 .Where(j => j.Employer != null && j.Employer.CompanyId == companyId)
                 .AsNoTracking()
+                .OrderByDescending(j => j.CreatedDate);
+
+            var totalItems = await query.CountAsync();
+
+            var posts = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return (posts, totalItems);
         }
+
     }
 
 }
