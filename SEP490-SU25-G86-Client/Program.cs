@@ -9,7 +9,10 @@ namespace SEP490_SU25_G86_Client
             // Add services to the container.  
             builder.Services.AddRazorPages();
             builder.Services.AddSession();
-            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient("API", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7004/");
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.  
