@@ -23,11 +23,29 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         public AddCompanyDTO Company { get; set; } = new();
 
         public string ErrorMessage { get; set; }
+        public string SuccessMessage { get; set; }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "EMPLOYER")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            // Check for success message from TempData
+            if (TempData["SuccessMessage"] != null)
+            {
+                SuccessMessage = TempData["SuccessMessage"].ToString();
+            }
+
+            return Page();
+        }
 
         public class AddCompanyDTO
         {
             [Required(ErrorMessage = "Tên công ty là bắt buộc.")]
-            public string Name { get; set; }
+            public string CompanyName { get; set; }
 
             public string? Email { get; set; }
             public string? Address { get; set; }
@@ -39,6 +57,12 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "EMPLOYER")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
             if (!ModelState.IsValid)
             {
                 ErrorMessage = "Vui lòng nhập đầy đủ thông tin.";
@@ -54,15 +78,19 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
             try
             {
-                var response = await _httpClient.PostAsync("api/companies", content);
+                var response = await _httpClient.PostAsync("api/AddCompany", content);
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToPage("/Company/Index");
+                    TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
+
+                    //return RedirectToPage("/Employer/CompanyInfo");
                 }
                 else
                 {
-                    //ErrorMessage = $"Lỗi: {response.StatusCode}";
-                    return RedirectToPage("/Companies/CreateCompany");
+                    TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
+                    //var errorContent = await response.Content.ReadAsStringAsync();
+                    //ErrorMessage = $"Lỗi: {response.StatusCode} - {errorContent}";
+                    //return Page();
                 }
             }
             catch (System.Exception ex)

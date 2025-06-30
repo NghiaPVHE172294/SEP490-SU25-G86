@@ -5,6 +5,11 @@
 }
 <h2 class="fw-bold mb-4">Tạo công ty mới</h2>
 
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
@@ -12,9 +17,9 @@
 
 <form method="post" class="row g-3">
     <div class="col-md-6">
-        <label asp-for="Company.Name" class="form-label"></label>
-        <input asp-for="Company.Name" class="form-control" />
-        <span asp-validation-for="Company.Name" class="text-danger"></span>
+        <label asp-for="Company.CompanyName" class="form-label">Tên công ty</label>
+        <input asp-for="Company.CompanyName" class="form-control" />
+        <span asp-validation-for="Company.CompanyName" class="text-danger"></span>
     </div>
 
     <div class="col-md-6">
