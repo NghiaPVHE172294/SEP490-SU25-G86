@@ -82,12 +82,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
-
-                    //return RedirectToPage("/Employer/CompanyInfo");
+                    return RedirectToPage("/Companies/CreateCompany");
                 }
                 else
                 {
+                    
                     TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
+                    return RedirectToPage("/Companies/CreateCompany");
                     //var errorContent = await response.Content.ReadAsStringAsync();
                     //ErrorMessage = $"Lỗi: {response.StatusCode} - {errorContent}";
                     //return Page();
