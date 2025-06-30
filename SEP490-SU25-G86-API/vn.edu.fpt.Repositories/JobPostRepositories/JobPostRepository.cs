@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
@@ -22,6 +23,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         .Include(j => j.Employer)
         .Include(j => j.SalaryRange)
         .Include(j => j.Province)
+        .Where(j => j.Status == "OPEN" &&
+                    (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date))
         .OrderByDescending(j => j.CreatedDate)
         .AsQueryable();
 
@@ -103,6 +106,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Include(j => j.Industry)
                 .Include(j => j.JobLevel)
                 .Include(j => j.SalaryRange)
+                .Where(j =>
+                        j.Status == "OPEN" &&
+                        (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date) &&
+                        !j.IsDelete)
                 .OrderByDescending(j => j.CreatedDate)
                 .AsQueryable();
 
@@ -274,7 +281,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.Industry)
                 .Include(j => j.JobLevel)
-                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId)
+                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId &&
+                            j.Status == "OPEN" &&
+                            (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date))
                 .AsNoTracking()
                 .OrderByDescending(j => j.CreatedDate);
 
