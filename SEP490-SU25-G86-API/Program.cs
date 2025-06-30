@@ -49,6 +49,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -205,6 +206,8 @@ namespace SEP490_SU25_G86_API
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+            //Search Synonym
+            builder.Services.AddScoped<ISynonymService, SynonymService>();
             // CORS
             builder.Services.AddCors(options =>
 			{

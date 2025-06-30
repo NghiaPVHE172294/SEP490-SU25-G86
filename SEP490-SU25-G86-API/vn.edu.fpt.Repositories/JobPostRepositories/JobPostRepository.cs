@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.Linq;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
@@ -7,10 +8,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
     public class JobPostRepository : IJobPostRepository
     {
         private readonly SEP490_G86_CvMatchContext _context;
+        private readonly ISynonymService _synonymService;
 
-        public JobPostRepository(SEP490_G86_CvMatchContext context)
+        public JobPostRepository(SEP490_G86_CvMatchContext context, ISynonymService synonymService)
         {
             _context = context;
+            _synonymService = synonymService;
         }
 
         public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
@@ -136,17 +139,38 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             // Lọc theo keyword
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
+                //query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
+                if (!string.IsNullOrWhiteSpace(keyword))
+                {
+                    var terms = _synonymService.ExpandKeywords(keyword);
+                    var allPosts = await query.ToListAsync();
+
+                    var filteredResult = allPosts.Where(j =>
+                        terms.Any(k =>
+                            j.Title != null &&
+                            j.Title.Contains(k, StringComparison.OrdinalIgnoreCase)
+                        )
+                    ).ToList();
+
+                    var totalItems = filteredResult.Count;
+
+                    var paged = filteredResult
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+                    return (paged, totalItems);
+                }
             }
 
-            var totalItems = await query.CountAsync();
+            var total = await query.CountAsync();
 
             var posts = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (posts, totalItems);
+            return (posts, total);
         }
 
         public async Task<JobPost> AddJobPostAsync(JobPost jobPost)
