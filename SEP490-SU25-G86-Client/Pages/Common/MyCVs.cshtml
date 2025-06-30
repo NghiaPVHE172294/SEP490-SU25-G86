@@ -30,12 +30,13 @@
                         <tr>
                             <td>@cv.FileName</td>
                            <td>
-    @(DateTime.TryParse(cv.UpdatedDate?.ToString(), out var dt) 
-        ? dt.ToString("dd-MM-yyyy HH:mm tt") 
-        : cv.UpdatedDate)
-</td>
+                                    @(DateTime.TryParse(cv.UpdatedDate?.ToString(), out var dt) 
+                                        ? dt.ToString("dd-MM-yyyy HH:mm tt") 
+                                        : cv.UpdatedDate)
+                                </td>
                             <td>
-                                <a class="btn btn-info btn-sm" asp-page="/Common/CvDetail" asp-route-id="@cv.CvId">Chi tiết</a>
+                               
+                                <a class="btn btn-info btn-sm" href="@cv.FileUrl" target="_blank">Chi tiết</a>
                                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-cvid="@cv.CvId" data-filename="@cv.FileName">Sửa tên</button>
                                 <a class="btn btn-secondary btn-sm" href="@cv.FileUrl" target="_blank">Tải CV</a>
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-cvid="@cv.CvId">Xóa</button>

@@ -67,6 +67,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             var cv = new Cv
             {
                 UploadByUserId = userId,
+                CandidateId = userId,
                 FileUrl = fileUrl,
                 Notes = dto.Notes,
                 UploadDate = DateTime.UtcNow,
