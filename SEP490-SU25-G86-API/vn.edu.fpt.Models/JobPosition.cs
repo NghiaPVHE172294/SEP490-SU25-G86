@@ -7,6 +7,7 @@ namespace SEP490_SU25_G86_API.Models
     {
         public JobPosition()
         {
+            CvTemplates = new HashSet<CvTemplate>();
             JobPosts = new HashSet<JobPost>();
         }
 
@@ -16,6 +17,7 @@ namespace SEP490_SU25_G86_API.Models
         public bool IsDelete { get; set; }
 
         public virtual Industry? Industry { get; set; }
+        public virtual ICollection<CvTemplate> CvTemplates { get; set; }
         public virtual ICollection<JobPost> JobPosts { get; set; }
     }
 }
