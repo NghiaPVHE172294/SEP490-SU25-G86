@@ -19,6 +19,7 @@ namespace SEP490_SU25_G86_API.Models
         public bool IsDelete { get; set; }
         public int UploadByUserId { get; set; }
         public DateTime? UploadDate { get; set; }
+        public string? Cvname { get; set; }
 
         public virtual User UploadByUser { get; set; } = null!;
         public virtual ICollection<CvparsedDatum> CvparsedData { get; set; }
