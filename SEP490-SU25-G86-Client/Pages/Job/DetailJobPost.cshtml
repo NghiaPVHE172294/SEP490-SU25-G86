@@ -36,7 +36,7 @@
                 <a href="#" class="ms-2"><i class="bi bi-linkedin fs-4"></i></a>
             </div>
             <button class="btn btn-success px-5">Save</button>
-            <button class="btn btn-success px-5 ms-2" id="btnApplyNow">
+            <button class="btn btn-primary px-5 ms-2" id="btnApplyNow">
                 <i class="bi bi-send"></i> Ứng tuyển ngay
             </button>
         </div>
@@ -69,4 +69,112 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+<!-- Modal ứng tuyển -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ứng tuyển @Model.JobPostDetail?.Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <h6>Chọn CV để ứng tuyển</h6>
+          <div id="cvList">
+            @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
+            {
+                foreach (var cv in Model.MyCvs)
+                {
+                    <div>
+                        <span>@cv.FileName</span>
+                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div>Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
+            }
+          </div>
+        </div>
+        <hr/>
+        <div>
+          <h6>Tải CV lên từ thiết bị</h6>
+          <input type="file" id="uploadCvInput" accept="application/pdf"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnSubmitApplication">Nộp Hồ Sơ Ứng Tuyển</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@section Scripts {
+<script>
+const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
+let selectedCvId = null;
+let candidateId = '@HttpContext.Session.GetString("userId")';
+
+document.getElementById('btnApplyNow').addEventListener('click', function() {
+    if (!candidateId) {
+        window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+        return;
+    }
+    var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+    modal.show();
+});
+
+window.selectCv = function(cvId) {
+    selectedCvId = cvId;
+    // Optionally highlight selected CV
+};
+
+document.getElementById('btnSubmitApplication').addEventListener('click', function() {
+    if (selectedCvId) {
+        // Nộp bằng CV có sẵn
+        fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            body: JSON.stringify({
+                jobPostId: @Model.JobPostDetail?.JobPostId,
+                cvId: selectedCvId,
+                candidateId: candidateId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message || 'Ứng tuyển thành công!');
+            location.reload();
+        })
+        .catch(() => alert('Lỗi khi ứng tuyển!'));
+    } else {
+        // Nộp bằng CV upload mới
+        let file = document.getElementById('uploadCvInput').files[0];
+        if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
+        let formData = new FormData();
+        formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
+        formData.append('candidateId', candidateId);
+        formData.append('file', file);
+        fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message || 'Ứng tuyển thành công!');
+            location.reload();
+        })
+        .catch(() => alert('Lỗi khi ứng tuyển!'));
+    }
+});
+</script>
+} 
