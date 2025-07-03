@@ -18,5 +18,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository
         {
             return _context.Accounts.Include(a => a.Role).FirstOrDefault(a => a.Email == email);
         }
+
+        public async Task<Account?> GetByIdAsync(int accountId)
+        {
+            return await _context.Accounts
+                .FirstOrDefaultAsync(a => a.AccountId == accountId && a.IsDelete != true);
+        }
+
+        public async Task UpdatePasswordAsync(Account account)
+        {
+            _context.Accounts.Update(account);
+            await _context.SaveChangesAsync();
+        }
     }
 }
