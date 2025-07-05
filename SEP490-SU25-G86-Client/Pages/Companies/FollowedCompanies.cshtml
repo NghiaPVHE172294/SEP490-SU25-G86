@@ -4,30 +4,90 @@
     ViewData["Title"] = "Businesses You Are Following";
 }
 
-<div class="container py-5">
-    <h2 class="text-2xl font-bold mb-5">Doanh nghiệp bạn đang theo dõi</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @foreach (var company in Model.Companies)
-        {
-            <div class="border rounded p-4 shadow bg-white">
-                <div class="flex items-center mb-2">
-                    <img src="@company.LogoUrl" alt="Logo" class="w-12 h-12 object-cover rounded mr-3" />
-                    <div>
-                        <h3 class="font-semibold text-lg">@company.CompanyName</h3>
-                        <p class="text-sm text-gray-500">@company.IndustryName</p>
-                    </div>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Danh sách doanh nghiệp đang theo dõi</h2>
                 </div>
-                <p class="text-sm text-gray-600">@company.Description?.Substring(0, Math.Min(100, company.Description.Length))...</p>
-                <a href="@company.Website" class="text-blue-600 text-sm hover:underline block mt-2" target="_blank">@company.Website</a>
-                <p class="text-xs text-gray-400 mt-2">Theo dõi từ: @company.FlowedAt.ToString("dd/MM/yyyy")</p>
+                <div class="card-body">
+                    @if (Model.Companies.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var company in Model.Companies)
+                            {
+                                <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <img src="@company.LogoUrl" alt="Logo" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" />
+                                            <div>
+                                                <h5 class="mb-0">@company.CompanyName</h5>
+                                                <p class="mb-0 text-muted small">@company.IndustryName</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1 text-muted">
+                                        @(string.IsNullOrEmpty(company.Description)
+                                            ? "Không có mô tả"
+                                            : company.Description.Length > 100
+                                            ? company.Description.Substring(0, 100) + "..."
+                                            : company.Description)
+                                    </p>
+                                    <a href="@company.Website" class="btn btn-primary btn-sm" target="_blank">Website</a>
+                                    <p class="text-muted small mt-2">Theo dõi từ: @company.FlowedAt.ToString("dd/MM/yyyy")</p>
+                                    @* <form method="post" asp-page-handler="Unfollow" asp-route-followId="@company.FollowId" class="d-inline"> *@
+                                    @*     <button type="submit" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bạn có chắc muốn hủy theo dõi công ty này?')">Hủy theo dõi</button> *@
+                                    @* </form> *@
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <p>Bạn chưa theo dõi doanh nghiệp nào.</p>
+                            <a href="/companies/list" class="btn btn-success mt-3">Khám phá doanh nghiệp</a>
+                        </div>
+                    }
+                </div>
             </div>
-        }
-        @if (!Model.Companies.Any())
-        {
-            <div class="col-span-3 text-center text-gray-400">
-                <p>Bạn chưa theo dõi công ty nào.</p>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Gợi ý doanh nghiệp phù hợp</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.SuggestedCompanies.Any())
+                    {
+                        @foreach (var suggest in Model.SuggestedCompanies)
+                        {
+                            <div class="mb-3 p-2 border rounded d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3">
+                                    <span class="text-success fw-bold">@suggest.IndustryName</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@suggest.CompanyName</div>
+                                    <div class="text-muted small">
+                                        @(string.IsNullOrEmpty(suggest.Description)
+                                            ? "Không có mô tả"
+                                            : suggest.Description.Length > 50
+                                            ? suggest.Description.Substring(0, 50) + "..."
+                                            : suggest.Description)
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">Không có gợi ý doanh nghiệp phù hợp.</div>
+                    }
+                </div>
             </div>
-        }
+        </div>
     </div>
-</div>
+</section>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
