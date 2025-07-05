@@ -27,9 +27,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="vn.edu.fpt.Repositories\UserRepository\" />
-    <Folder Include="vn.edu.fpt.Services\UserService\" />
-  </ItemGroup>
-
 </Project>
