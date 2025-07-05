@@ -29,7 +29,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.UserController
         }
 
         [HttpPut("profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UserProfileDTO dto)
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDTO dto)
         {
             var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             if (accountId == 0) return Unauthorized();
