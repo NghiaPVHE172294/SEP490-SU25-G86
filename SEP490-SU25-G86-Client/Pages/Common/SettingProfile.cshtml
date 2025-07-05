@@ -1,5 +1,5 @@
 ﻿@page
-@model SEP490_SU25_G86_Client.Pages.Common.UserProfileModel
+@model SEP490_SU25_G86_Client.Pages.Common.SettingProfileModel
 @{
     Layout = "_Layout";
 }
@@ -86,21 +86,28 @@
                 <div class="card-body">
                     <h5 class="fw-bold mb-3">Quản lý mật khẩu</h5>
 
-                    <form>
+                    <form method="post">
                         <div class="mb-3">
                             <label>Mật khẩu hiện tại</label>
-                            <input type="password" class="form-control" />
+                            <input asp-for="ChangePassword.CurrentPassword" type="password" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label>Mật khẩu mới</label>
-                            <input type="password" class="form-control" />
+                            <input asp-for="ChangePassword.NewPassword" type="password" class="form-control" />
+                            <small class="form-text text-muted">
+                                Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa, 1 chữ thường và 1 số.
+                            </small>
                         </div>
                         <div class="mb-3">
                             <label>Nhập lại mật khẩu mới</label>
-                            <input type="password" class="form-control" />
+                            <input asp-for="ChangePassword.ConfirmNewPassword" type="password" class="form-control" />
                         </div>
                         <button type="submit" class="btn btn-success px-4">Thay đổi</button>
                     </form>
+                    @if (!string.IsNullOrEmpty(Model.ResultMessage))
+                    {
+                        <div class="alert alert-info mt-3">@Model.ResultMessage</div>
+                    }
                 </div>
             </div>
         </div>

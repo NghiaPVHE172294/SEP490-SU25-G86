@@ -217,7 +217,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             return Ok("Đặt lại mật khẩu thành công.");
         }
 
-        [Authorize] // Bắt buộc user phải đăng nhập
+        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
         {

@@ -4,6 +4,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService
 {
@@ -65,10 +66,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService
             if (dto.NewPassword != dto.ConfirmNewPassword)
                 throw new Exception("Mật khẩu mới không khớp.");
 
+            if (!IsStrongPassword(dto.NewPassword))
+                throw new Exception("Mật khẩu mới phải có ít nhất 1 chữ hoa, 1 chữ thường, 1 số và tối thiểu 6 ký tự.");
+            
             account.Password = GetMd5HashStatic(dto.NewPassword);
             await _accountRepository.UpdatePasswordAsync(account);
 
             return true;
+        }
+        private bool IsStrongPassword(string password)
+        {
+            var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$");
+            return regex.IsMatch(password);
         }
     }
 }
