@@ -23,6 +23,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RemindRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
@@ -46,6 +47,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.RemindService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
@@ -157,6 +159,10 @@ namespace SEP490_SU25_G86_API
             // AdminDashboard
             builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
             builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+
+            // AdminSendRemind
+            builder.Services.AddScoped<IRemindService, RemindService>();
+            builder.Services.AddScoped<IRemindRepository, RemindRepository>();
 
             //GetUserByAccountIdFrAdmin
             builder.Services.AddScoped<IUserDetailOfAdminRepository, UserDetailOfAdminRepository>();
