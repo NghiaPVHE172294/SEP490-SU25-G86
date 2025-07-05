@@ -21,5 +21,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CompanyFollowingController
             var companies = await _service.GetFollowedCompaniesAsync(userId);
             return Ok(companies);
         }
+
+        [HttpGet("suggest/{userId}")]
+        public async Task<ActionResult<IEnumerable<CompanyFollowingDTO>>> GetSuggestedCompanies(int userId, int page = 1, int pageSize = 5)
+        {
+            var suggested = await _service.GetSuggestedCompaniesAsync(userId, page, pageSize);
+            return Ok(new { Companies = suggested });
+        }
     }
 }

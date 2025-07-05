@@ -16,5 +16,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService
         {
             return await _repository.GetFollowedCompaniesByUserIdAsync(userId);
         }
+        public async Task<IEnumerable<CompanyFollowingDTO>> GetSuggestedCompaniesAsync(int userId, int page, int pageSize)
+        {
+            return await _repository.GetSuggestedCompaniesAsync(userId, page, pageSize);
+        }
+
     }
 }

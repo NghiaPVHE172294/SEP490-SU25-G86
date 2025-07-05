@@ -1,7 +1,7 @@
 ﻿@page
 @model SEP490_SU25_G86_Client.Pages.Companies.FollowedCompaniesModel
 @{
-    ViewData["Title"] = "Businesses You Are Following";
+    ViewData["Title"] = "Followed Companies";
 }
 
 <section class="container py-5">
@@ -53,10 +53,11 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Gợi ý doanh nghiệp phù hợp</h5>
+                    <h5 class="mb-0">Gợi ý doanh nghiệp</h5>
                 </div>
                 <div class="card-body">
                     @if (Model.SuggestedCompanies.Any())
