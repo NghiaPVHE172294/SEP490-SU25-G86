@@ -26,7 +26,10 @@
                         <p class="text-muted mb-1">@job.WorkLocation</p>
                         <div class="d-flex align-items-center justify-content-between mt-3">
                             <span class="text-custom fw-bold">@job.Salary</span>
-                            <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                            <div>
+                                <a class="btn btn-primary btn-sm me-1" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">Danh sách CV</a>
+                            </div>
                         </div>
                         <div class="mt-2">
                             <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>

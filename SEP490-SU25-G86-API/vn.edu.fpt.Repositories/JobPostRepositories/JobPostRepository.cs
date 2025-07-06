@@ -297,6 +297,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             return (posts, totalItems);
         }
 
+        public async Task<List<Cvsubmission>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
+        {
+            return await _context.Cvsubmissions
+                .Include(s => s.Cv)
+                .Include(s => s.SubmittedByUser)
+                .Where(s => s.JobPostId == jobPostId && !s.IsDelete)
+                .ToListAsync();
+        }
+
     }
 
 }

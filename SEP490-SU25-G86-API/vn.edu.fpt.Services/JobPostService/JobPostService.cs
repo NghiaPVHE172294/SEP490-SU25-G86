@@ -1,4 +1,5 @@
 ﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
@@ -16,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
         }
-
+        
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region);
@@ -300,6 +301,20 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 UpdatedDate = j.UpdatedDate
             });
             return (result, totalItems);
+        }
+
+        public async Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
+        {
+            var submissions = await _jobPostRepo.GetCvSubmissionsByJobPostIdAsync(jobPostId);
+            return submissions.Select(s => new CvSubmissionForJobPostDTO
+            {
+                SubmissionId = s.SubmissionId,
+                SubmissionDate = s.SubmissionDate,
+                CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
+                CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
+                IsShortlisted = s.IsShortlisted,
+                RecruiterNote = s.RecruiterNote
+            }).ToList();
         }
     }
 
