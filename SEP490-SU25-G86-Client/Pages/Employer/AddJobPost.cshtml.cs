@@ -72,13 +72,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
         public async Task OnGetAsync()
         {
-            EmploymentTypes = await _httpClient.GetFromJsonAsync<List<EmploymentType>>("api/employmenttypes");
-            JobPositions = await _httpClient.GetFromJsonAsync<List<JobPosition>>("api/jobpositions");
-            Provinces = await _httpClient.GetFromJsonAsync<List<Province>>("api/provinces");
-            ExperienceLevels = await _httpClient.GetFromJsonAsync<List<ExperienceLevel>>("api/experiencelevels");
-            JobLevels = await _httpClient.GetFromJsonAsync<List<JobLevel>>("api/joblevels");
-            Industries = await _httpClient.GetFromJsonAsync<List<Industry>>("api/industries");
-            SalaryRanges = await _httpClient.GetFromJsonAsync<List<SalaryRange>>("api/salaryranges");
+            await LoadComboboxDataAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -86,6 +80,15 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             if (!ModelState.IsValid)
             {
                 ErrorMessage = "Vui lòng nhập đầy đủ thông tin bắt buộc.";
+                foreach (var key in ModelState.Keys)
+                {
+                    var errors = ModelState[key].Errors;
+                    foreach (var error in errors)
+                    {
+                        ErrorMessage += $" [{key}: {error.ErrorMessage}]";
+                    }
+                }
+                await LoadComboboxDataAsync();
                 return Page();
             }
 
@@ -114,6 +117,17 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 ErrorMessage = $"Lỗi hệ thống: {ex.Message}";
             }
             return Page();
+        }
+
+        private async Task LoadComboboxDataAsync()
+        {
+            EmploymentTypes = await _httpClient.GetFromJsonAsync<List<EmploymentType>>("api/employmenttypes");
+            JobPositions = await _httpClient.GetFromJsonAsync<List<JobPosition>>("api/jobpositions");
+            Provinces = await _httpClient.GetFromJsonAsync<List<Province>>("api/provinces");
+            ExperienceLevels = await _httpClient.GetFromJsonAsync<List<ExperienceLevel>>("api/experiencelevels");
+            JobLevels = await _httpClient.GetFromJsonAsync<List<JobLevel>>("api/joblevels");
+            Industries = await _httpClient.GetFromJsonAsync<List<Industry>>("api/industries");
+            SalaryRanges = await _httpClient.GetFromJsonAsync<List<SalaryRange>>("api/salaryranges");
         }
     }
 } 

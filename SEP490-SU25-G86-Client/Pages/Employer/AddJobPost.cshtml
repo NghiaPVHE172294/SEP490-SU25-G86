@@ -99,15 +99,14 @@
     </div>
     <div class="col-md-6">
         <label class="form-label">Tỉnh/Thành phố</label>
-        <select id="provinceSelect" name="JobPost.ProvinceId" class="form-select" onchange="onProvinceChange()">
+        <select id="provinceSelect" name="JobPost.ProvinceId" class="form-select">
             <option value="">-- Chọn tỉnh/thành --</option>
             @foreach (var province in Model.Provinces)
             {
                 <option value="@province.ProvinceId">@province.ProvinceName</option>
             }
-            <option value="other">Khác...</option>
         </select>
-        <input id="newProvinceInput" name="JobPost.NewProvinceName" class="form-control mt-2" style="display:none;" placeholder="Nhập tỉnh/thành mới" />
+        <span asp-validation-for="JobPost.ProvinceId" class="text-danger"></span>
     </div>
     <div class="col-md-6">
         <label class="form-label">Trình độ kinh nghiệm</label>
@@ -168,12 +167,72 @@
                 input.required = false;
             }
         }
-        function onIndustryChange() { toggleInput('industrySelect', 'newIndustryInput'); }
-        function onJobPositionChange() { toggleInput('jobPositionSelect', 'newJobPositionInput'); }
+        function onIndustryChange() {
+            var select = document.getElementById('industrySelect');
+            var input = document.getElementById('newIndustryInput');
+            if (select.value === 'other') {
+                input.style.display = 'block';
+                input.required = true;
+                select.value = "";
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+                input.required = false;
+            }
+        }
+        function onJobPositionChange() {
+            var select = document.getElementById('jobPositionSelect');
+            var input = document.getElementById('newJobPositionInput');
+            if (select.value === 'other') {
+                input.style.display = 'block';
+                input.required = true;
+                select.value = "";
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+                input.required = false;
+            }
+        }
         function onProvinceChange() { toggleInput('provinceSelect', 'newProvinceInput'); }
-        function onExperienceLevelChange() { toggleInput('experienceLevelSelect', 'newExperienceLevelInput'); }
-        function onJobLevelChange() { toggleInput('jobLevelSelect', 'newJobLevelInput'); }
-        function onEmploymentTypeChange() { toggleInput('employmentTypeSelect', 'newEmploymentTypeInput'); }
+        function onExperienceLevelChange() {
+            var select = document.getElementById('experienceLevelSelect');
+            var input = document.getElementById('newExperienceLevelInput');
+            if (select.value === 'other') {
+                input.style.display = 'block';
+                input.required = true;
+                select.value = "";
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+                input.required = false;
+            }
+        }
+        function onJobLevelChange() {
+            var select = document.getElementById('jobLevelSelect');
+            var input = document.getElementById('newJobLevelInput');
+            if (select.value === 'other') {
+                input.style.display = 'block';
+                input.required = true;
+                select.value = "";
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+                input.required = false;
+            }
+        }
+        function onEmploymentTypeChange() {
+            var select = document.getElementById('employmentTypeSelect');
+            var input = document.getElementById('newEmploymentTypeInput');
+            if (select.value === 'other') {
+                input.style.display = 'block';
+                input.required = true;
+                select.value = "";
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+                input.required = false;
+            }
+        }
 
         // Lương
         function onSalaryRangeChange() {
@@ -183,6 +242,7 @@
             if (select.value === 'other') {
                 group.style.display = 'block';
                 hidden.disabled = false;
+                setTimeout(function() { select.value = ""; }, 0);
             } else {
                 group.style.display = 'none';
                 hidden.value = '';
