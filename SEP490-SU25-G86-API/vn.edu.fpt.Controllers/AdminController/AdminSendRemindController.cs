@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
             _remindService = remindService;
         }
 
-        [HttpPost("send-reminder")]
+        [HttpPost("sendRemind")]
         public async Task<IActionResult> SendReminder([FromBody] ReminderEmailRequestDTO request)
         {
             if (string.IsNullOrWhiteSpace(request.ToEmail) || string.IsNullOrWhiteSpace(request.Message))
