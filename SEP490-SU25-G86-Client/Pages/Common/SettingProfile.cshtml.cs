@@ -12,18 +12,35 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         private readonly IHttpClientFactory _httpClientFactory;
         [BindProperty]
         public ChangePasswordDTO ChangePassword { get; set; } = new();
+        [BindProperty]
+        public UserProfileDTO UserProfile { get; set; } = new();
         public string? ResultMessage { get; set; }
         public SettingProfileModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("jwt_token")))
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
             {
                 Response.Redirect("/Common/Login");
+                return;
             }
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var res = await client.GetAsync("https://localhost:7004/api/user/profile");
+
+            if (res.IsSuccessStatusCode)
+            {
+                var json = await res.Content.ReadAsStringAsync();
+                var profile = JsonSerializer.Deserialize<UserProfileDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (profile != null)
+                    UserProfile = profile;
+            }
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -31,31 +48,28 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var token = HttpContext.Session.GetString("jwt_token");
             if (string.IsNullOrEmpty(token))
             {
-                return RedirectToPage("/Common/Login"); // An toàn thêm
+                return RedirectToPage("/Common/Login");
             }
 
-            var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var content = new StringContent(JsonSerializer.Serialize(ChangePassword), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync("https://localhost:7004/api/auth/change-password", content);
+            var content = new StringContent(JsonSerializer.Serialize(UserProfile), Encoding.UTF8, "application/json");
+            var response = await client.PutAsync("https://localhost:7004/api/user/profile", content);
 
             if (response.IsSuccessStatusCode)
-            {
-                ResultMessage = "✅ Đổi mật khẩu thành công.";
-            }
+                ResultMessage = "✅ Cập nhật thông tin thành công.";
             else
             {
-                var error = await response.Content.ReadAsStringAsync();
+                var msg = await response.Content.ReadAsStringAsync();
                 try
                 {
-                    var json = JsonDocument.Parse(error);
-                    var msg = json.RootElement.GetProperty("message").GetString();
-                    ResultMessage = $"❌ {msg}";
+                    var json = JsonDocument.Parse(msg);
+                    ResultMessage = $"❌ {json.RootElement.GetProperty("message").GetString()}";
                 }
                 catch
                 {
-                    ResultMessage = "❌ Đổi mật khẩu thất bại.";
+                    ResultMessage = "❌ Cập nhật thất bại.";
                 }
             }
 
@@ -67,5 +81,17 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public string CurrentPassword { get; set; } = null!;
         public string NewPassword { get; set; } = null!;
         public string ConfirmNewPassword { get; set; } = null!;
+    }
+    public class UserProfileDTO
+    {
+        public string? Avatar { get; set; }
+        public string FullName { get; set; } = null!;
+        public string? Address { get; set; }
+        public string? Email { get; set; } 
+        public string? Phone { get; set; }
+        public string? Dob { get; set; } 
+        public string? LinkedIn { get; set; }
+        public string? Facebook { get; set; }
+        public string? AboutMe { get; set; }
     }
 }

@@ -38,46 +38,56 @@
                 <div class="card-body">
                     <h5 class="fw-bold mb-3">Thông tin người dùng</h5>
 
-                    <form>
+                    <form method="post">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Tên</label>
-                                <input type="text" class="form-control" value="Nguyễn Thị A" disabled />
+                                <input asp-for="UserProfile.FullName" class="form-control" />
                             </div>
                             <div class="col-md-6">
                                 <label>Địa chỉ</label>
-                                <input type="text" class="form-control" value="Cầu Giấy, Hà Nội" disabled />
+                                <input asp-for="UserProfile.Address" class="form-control" />
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Email</label>
-                                <input type="email" class="form-control" value="abc@gmail.com" disabled />
+                                <input asp-for="UserProfile.Email" class="form-control" disabled />
                             </div>
                             <div class="col-md-6">
                                 <label>Số điện thoại</label>
-                                <input type="text" class="form-control" value="+84 35 478 965" disabled />
+                                <input asp-for="UserProfile.Phone" class="form-control" />
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Ngày sinh</label>
-                                <input type="text" class="form-control" value="23/09/2000" disabled />
+                                <input asp-for="UserProfile.Dob" class="form-control" type="date" />
                             </div>
                             <div class="col-md-6">
                                 <label>LinkedIn</label>
-                                <input type="text" class="form-control" value="linkedin.com/in/ant12" disabled />
+                                <input asp-for="UserProfile.LinkedIn" class="form-control" />
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label>Facebook</label>
-                            <input type="text" class="form-control" value="facebook.com/an.ngthi/" disabled />
+                            <input asp-for="UserProfile.Facebook" class="form-control" />
                         </div>
 
-                        <button type="button" class="btn btn-success px-4">Cập nhật</button>
+                        <div class="mb-3">
+                            <label>Giới thiệu bản thân</label>
+                            <textarea asp-for="UserProfile.AboutMe" class="form-control" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary px-4">Cập nhật</button>
+
+                        @if (!string.IsNullOrEmpty(Model.ResultMessage))
+                        {
+                            <div class="alert alert-info mt-3">@Model.ResultMessage</div>
+                        }
                     </form>
                 </div>
             </div>
