@@ -1,0 +1,47 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Employer.ListJobCriteriaModel
+@{
+    ViewData["Title"] = "Chiến dịch tuyển dụng";
+}
+
+<h2>Chiến dịch tuyển dụng của bạn</h2>
+
+@if (Model.JobCriteria == null || !Model.JobCriteria.Any())
+{
+    <div class="alert alert-info">Bạn chưa có chiến dịch tuyển dụng nào.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Kinh nghiệm yêu cầu</th>
+                <th>Kỹ năng yêu cầu</th>
+                <th>Trình độ học vấn</th>
+                <th>Vị trí công việc yêu cầu</th>
+                <th>Ngôn ngữ ưu tiên</th>
+                <th>Chứng chỉ ưu tiên</th>
+                <th>Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.JobCriteria.Count; i++)
+        {
+            var item = Model.JobCriteria[i];
+            <tr>
+                <td>@(i+1)</td>
+                <td>@item.RequiredExperience</td>
+                <td>@item.RequiredSkills</td>
+                <td>@item.EducationLevel</td>
+                <td>@item.RequiredJobTitles</td>
+                <td>@item.PreferredLanguages</td>
+                <td>@item.PreferredCertifications</td>
+                <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

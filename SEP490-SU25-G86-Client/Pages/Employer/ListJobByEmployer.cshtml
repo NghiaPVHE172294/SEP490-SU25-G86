@@ -28,7 +28,11 @@
                             <span class="text-custom fw-bold">@job.Salary</span>
                             <div>
                                 <a class="btn btn-primary btn-sm me-1" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
-                                <a class="btn btn-outline-secondary btn-sm" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">Danh sách CV</a>
+                                <a class="btn btn-outline-secondary btn-sm me-1" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">Danh sách CV</a>
+                                @if (!Model.JobPostIdsWithCriteria.Contains(job.JobPostId))
+                                {
+                                    <a class="btn btn-outline-primary btn-sm" href="/Employer/AddJobCriteria?jobPostId=@job.JobPostId">Thêm tiêu chí tuyển dụng</a>
+                                }
                             </div>
                         </div>
                         <div class="mt-2">

@@ -1,0 +1,46 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Employer.AddJobCriteriaModel
+@{
+    ViewData["Title"] = "Thêm tiêu chí tuyển dụng";
+}
+
+<h2>Thêm tiêu chí tuyển dụng cho JobPost #@Model.JobPostId</h2>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-success">@Model.Message</div>
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Input.JobPostId" />
+    <div class="mb-3">
+        <label class="form-label">Kinh nghiệm yêu cầu</label>
+        <input asp-for="Input.RequiredExperience" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Kỹ năng yêu cầu</label>
+        <input asp-for="Input.RequiredSkills" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Trình độ học vấn</label>
+        <input asp-for="Input.EducationLevel" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Vị trí công việc yêu cầu</label>
+        <input asp-for="Input.RequiredJobTitles" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Ngôn ngữ ưu tiên</label>
+        <input asp-for="Input.PreferredLanguages" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Chứng chỉ ưu tiên</label>
+        <input asp-for="Input.PreferredCertifications" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm tiêu chí</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} 
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

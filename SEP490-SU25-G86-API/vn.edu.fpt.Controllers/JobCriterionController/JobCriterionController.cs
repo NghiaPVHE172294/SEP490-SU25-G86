@@ -1,0 +1,82 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobCriterionController
+{
+    /// <summary>
+    /// Controller xử lý các API liên quan đến tiêu chí công việc (Job Criteria) của người dùng.
+    /// </summary>
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class JobCriterionController : ControllerBase
+    {
+        private readonly IJobCriterionService _service;
+        private readonly SEP490_G86_CvMatchContext _context;
+
+        public JobCriterionController(IJobCriterionService service, SEP490_G86_CvMatchContext context)
+        {
+            _service = service;
+            _context = context;
+        }
+
+        /// <summary>
+        /// Lấy danh sách tiêu chí công việc của user hiện tại (đang đăng nhập).
+        /// </summary>
+        /// <returns>Danh sách các tiêu chí công việc.</returns>
+        [HttpGet("my")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // Thành công
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] // Không xác thực
+        public async Task<IActionResult> GetMyJobCriteria()
+        {
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác định được tài khoản.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            var result = await _service.GetJobCriteriaByUserIdAsync(user.UserId);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Thêm một tiêu chí công việc mới cho user hiện tại.
+        /// </summary>
+        /// <param name="dto">Thông tin tiêu chí cần thêm.</param>
+        /// <returns>Kết quả thêm tiêu chí.</returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)] // Thành công
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Dữ liệu sai
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] // Không xác thực
+        public async Task<IActionResult> AddJobCriterion([FromBody] AddJobCriterionDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); // Kiểm tra dữ liệu đầu vào
+
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác định được tài khoản.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            var result = await _service.AddJobCriterionAsync(dto, user.UserId);
+
+            return Ok(result);
+        }
+    }
+}
