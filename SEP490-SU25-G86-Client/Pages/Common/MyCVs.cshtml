@@ -1,4 +1,4 @@
- @page
+@page
 @model SEP490_SU25_G86_Client.Pages.Common.MyCVsModel
 @{
     ViewData["Title"] = "CV của tôi";
@@ -28,7 +28,7 @@
                     foreach (var cv in Model.CVs)
                     {
                         <tr>
-                            <td>@cv.FileName</td>
+                            <td>@(cv.CVName ?? cv.FileName)</td>
                            <td>
                                     @(DateTime.TryParse(cv.UpdatedDate?.ToString(), out var dt) 
                                         ? dt.ToString("dd-MM-yyyy HH:mm tt") 
@@ -37,7 +37,7 @@
                             <td>
                                
                                 <a class="btn btn-info btn-sm" href="@cv.FileUrl" target="_blank">Chi tiết</a>
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-cvid="@cv.CvId" data-filename="@cv.FileName">Sửa tên</button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-cvid="@cv.CvId" data-filename="@cv.CVName">Sửa tên</button>
                                 <a class="btn btn-secondary btn-sm" href="@cv.FileUrl" target="_blank">Tải CV</a>
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-cvid="@cv.CvId">Xóa</button>
                             </td>
@@ -68,8 +68,8 @@
                             <input type="file" class="form-control" id="File" name="File" accept="application/pdf" required />
                         </div>
                         <div class="mb-3">
-                            <label for="FileName" class="form-label">Tên CV</label>
-                            <input type="text" class="form-control" id="FileName" name="FileName" required />
+                            <label for="CVName" class="form-label">Tên CV</label>
+                            <input type="text" class="form-control" id="CVName" name="CVName" required />
                         </div>
                         <div class="mb-3">
                             <label for="Notes" class="form-label">Ghi chú</label>
@@ -98,7 +98,7 @@
                         <input type="hidden" id="EditCvId" name="CvId" />
                         <div class="mb-3">
                             <label for="EditFileName" class="form-label">Tên CV</label>
-                            <input type="text" class="form-control" id="EditFileName" name="FileName" required />
+                            <input type="text" class="form-control" id="EditFileName" name="CVName" required />
                         </div>
                     </div>
                     <div class="modal-footer">

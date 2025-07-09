@@ -8,5 +8,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
         Task<CvDTO?> GetByIdAsync(int cvId);
         Task AddAsync(int userId, AddCvDTO dto, string fileUrl);
         Task DeleteAsync(int userId, int cvId);
+        Task UpdateCvNameAsync(int cvId, string newName);
     }
 } 

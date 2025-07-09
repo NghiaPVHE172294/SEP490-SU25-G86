@@ -74,6 +74,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
             return Ok(result);
         }
 
+        [HttpPut("rename/{cvId}")]
+        public async Task<IActionResult> RenameCv(int cvId, [FromBody] string newName)
+        {
+            var cv = await _service.GetByIdAsync(cvId);
+            if (cv == null) return NotFound();
+            // Cập nhật tên
+            await _service.UpdateCvNameAsync(cvId, newName);
+            return Ok();
+        }
+
         // Upload file PDF lên Google Drive, trả về link xem file
         private async Task<string> UploadFileToGoogleDrive(IFormFile file)
         {
