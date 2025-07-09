@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
+using System.Linq;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -17,6 +19,8 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         }
 
         public List<JobCriterionDTO> JobCriteria { get; set; } = new();
+        public List<JobPostListDTO> JobPosts { get; set; } = new();
+        public Dictionary<int, List<JobCriterionDTO>> CriteriaByJobPost { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -33,6 +37,14 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new System.Uri("https://localhost:7004/");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // Lấy danh sách JobPost
+            var jobsResponse = await client.GetAsync("api/jobposts/employer");
+            if (jobsResponse.IsSuccessStatusCode)
+            {
+                var jobsJson = await jobsResponse.Content.ReadAsStringAsync();
+                JobPosts = JsonSerializer.Deserialize<List<JobPostListDTO>>(jobsJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            // Lấy danh sách JobCriteria
             var response = await client.GetAsync("api/jobcriterion/my");
             if (response.IsSuccessStatusCode)
             {
@@ -43,6 +55,9 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             {
                 return RedirectToPage("/Common/Login");
             }
+            // Group JobCriteria theo JobPostId
+            CriteriaByJobPost = JobCriteria.GroupBy(jc => jc.JobPostId)
+                .ToDictionary(g => g.Key, g => g.ToList());
             return Page();
         }
 
