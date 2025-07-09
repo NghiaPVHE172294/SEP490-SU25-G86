@@ -1,0 +1,48 @@
+@page "~/Job/CvSubmissions"
+@model SEP490_SU25_G86_Client.Pages.Job.CvSubmissionsModel
+@{
+    ViewData["Title"] = "Danh sách CV đã nộp";
+}
+<h2>Danh sách CV đã nộp vào tin tuyển dụng</h2>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (Model.CvSubmissions != null && Model.CvSubmissions.Any())
+{
+    <table class="table table-bordered table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>STT</th>
+                <th>Tên ứng viên</th>
+                <th>File CV</th>
+                <th>Ngày nộp</th>
+                <th>Shortlisted</th>
+                <th>Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.CvSubmissions.Count; i++)
+        {
+            var cv = Model.CvSubmissions[i];
+            <tr>
+                <td>@(i+1)</td>
+                <td>@cv.CandidateName</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(cv.CvFileUrl))
+                    {
+                        <a href="@cv.CvFileUrl" target="_blank">Xem CV</a>
+                    }
+                </td>
+                <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
+                <td>@(cv.IsShortlisted == true ? "✔" : "")</td>
+                <td>@cv.RecruiterNote</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else if (string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
+} 

@@ -29,8 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="vn.edu.fpt.Repositories\UserRepository\" />
-    <Folder Include="vn.edu.fpt.Services\UserService\" />
+    <Compile Include="vn.edu.fpt.Controllers/JobController/CvSubmissionsController.cs" />
   </ItemGroup>
 
 </Project>

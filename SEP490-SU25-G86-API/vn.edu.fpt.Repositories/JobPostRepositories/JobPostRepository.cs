@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
@@ -7,10 +9,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
     public class JobPostRepository : IJobPostRepository
     {
         private readonly SEP490_G86_CvMatchContext _context;
+        private readonly ISynonymService _synonymService;
 
-        public JobPostRepository(SEP490_G86_CvMatchContext context)
+        public JobPostRepository(SEP490_G86_CvMatchContext context, ISynonymService synonymService)
         {
             _context = context;
+            _synonymService = synonymService;
         }
 
         public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
@@ -19,6 +23,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         .Include(j => j.Employer)
         .Include(j => j.SalaryRange)
         .Include(j => j.Province)
+        .Where(j => j.Status == "OPEN" &&
+                    (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date))
         .OrderByDescending(j => j.CreatedDate)
         .AsQueryable();
 
@@ -93,13 +99,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             string? keyword = null)
         {
             var query = _context.JobPosts
-                .Include(j => j.Employer)
+                .Include(j => j.Employer).ThenInclude(e => e.Company)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.Industry)
                 .Include(j => j.JobLevel)
                 .Include(j => j.SalaryRange)
+                .Where(j =>
+                        j.Status == "OPEN" &&
+                        (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date) &&
+                        !j.IsDelete)
                 .OrderByDescending(j => j.CreatedDate)
                 .AsQueryable();
 
@@ -136,17 +146,38 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             // Lọc theo keyword
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
+                //query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
+                if (!string.IsNullOrWhiteSpace(keyword))
+                {
+                    var terms = _synonymService.ExpandKeywords(keyword);
+                    var allPosts = await query.ToListAsync();
+
+                    var filteredResult = allPosts.Where(j =>
+                        terms.Any(k =>
+                            j.Title != null &&
+                            j.Title.Contains(k, StringComparison.OrdinalIgnoreCase)
+                        )
+                    ).ToList();
+
+                    var totalItems = filteredResult.Count;
+
+                    var paged = filteredResult
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+                    return (paged, totalItems);
+                }
             }
 
-            var totalItems = await query.CountAsync();
+            var total = await query.CountAsync();
 
             var posts = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (posts, totalItems);
+            return (posts, total);
         }
 
         public async Task<JobPost> AddJobPostAsync(JobPost jobPost)
@@ -240,21 +271,41 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             return et;
         }
 
-        public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId)
+        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize)
         {
-            return await _context.JobPosts
-                .Include(j => j.Employer)
-                .ThenInclude(u => u.Company)
+            var query = _context.JobPosts
+                .Include(j => j.Employer).ThenInclude(u => u.Company)
                 .Include(j => j.SalaryRange)
                 .Include(j => j.Province)
                 .Include(j => j.EmploymentType)
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.Industry)
                 .Include(j => j.JobLevel)
-                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId)
+                .Where(j => j.Employer != null && j.Employer.CompanyId == companyId &&
+                            j.Status == "OPEN" &&
+                            (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date))
                 .AsNoTracking()
+                .OrderByDescending(j => j.CreatedDate);
+
+            var totalItems = await query.CountAsync();
+
+            var posts = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (posts, totalItems);
+        }
+
+        public async Task<List<Cvsubmission>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
+        {
+            return await _context.Cvsubmissions
+                .Include(s => s.Cv)
+                .Include(s => s.SubmittedByUser)
+                .Where(s => s.JobPostId == jobPostId && !s.IsDelete)
                 .ToListAsync();
         }
+
     }
 
 }

@@ -1,0 +1,118 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Common.SettingProfileModel
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+<div class="container py-4">
+    <div class="row">
+        <!-- Left Column (Avatar + About Me) -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm mb-4">
+                <div class="card-body">
+                    <img src="~/images/avatar.jpg" class="rounded-circle mb-3" width="120" height="120" alt="Avatar" />
+                    <h6 class="text-primary fw-bold">@User-Name</h6>
+                    <p class="text-muted">user@email.com</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3">About Me</h6>
+                    <p><strong>Tên:</strong> Nguyễn Thị A</p>
+                    <p><strong>Email:</strong> abc@gmail.com</p>
+                    <p><strong>SDT:</strong> +84 35 478 965</p>
+                    <p><strong>Địa chỉ:</strong> Cầu Giấy, Hà Nội</p>
+                    <p><strong>Plan:</strong> 23/09/2000</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (Form Info + Password Management) -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Thông tin người dùng</h5>
+
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Tên</label>
+                                <input type="text" class="form-control" value="Nguyễn Thị A" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Địa chỉ</label>
+                                <input type="text" class="form-control" value="Cầu Giấy, Hà Nội" disabled />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Email</label>
+                                <input type="email" class="form-control" value="abc@gmail.com" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Số điện thoại</label>
+                                <input type="text" class="form-control" value="+84 35 478 965" disabled />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Ngày sinh</label>
+                                <input type="text" class="form-control" value="23/09/2000" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label>LinkedIn</label>
+                                <input type="text" class="form-control" value="linkedin.com/in/ant12" disabled />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Facebook</label>
+                            <input type="text" class="form-control" value="facebook.com/an.ngthi/" disabled />
+                        </div>
+
+                        <button type="button" class="btn btn-success px-4">Cập nhật</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Quản lý mật khẩu</h5>
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label>Mật khẩu hiện tại</label>
+                            <input asp-for="ChangePassword.CurrentPassword" type="password" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Mật khẩu mới</label>
+                            <input asp-for="ChangePassword.NewPassword" type="password" class="form-control" />
+                            <small class="form-text text-muted">
+                                Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa, 1 chữ thường và 1 số.
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label>Nhập lại mật khẩu mới</label>
+                            <input asp-for="ChangePassword.ConfirmNewPassword" type="password" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-success px-4">Thay đổi</button>
+                    </form>
+                    @if (!string.IsNullOrEmpty(Model.ResultMessage))
+                    {
+                        <div class="alert alert-info mt-3">@Model.ResultMessage</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

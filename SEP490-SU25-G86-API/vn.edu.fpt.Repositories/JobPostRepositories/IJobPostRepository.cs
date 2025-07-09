@@ -31,6 +31,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         Task<ExperienceLevel> AddExperienceLevelIfNotExistsAsync(string experienceLevelName);
         Task<JobLevel> AddJobLevelIfNotExistsAsync(string jobLevelName);
         Task<EmploymentType> AddEmploymentTypeIfNotExistsAsync(string employmentTypeName);
-        Task<IEnumerable<JobPost>> GetJobPostsByCompanyIdAsync(int companyId);
+        Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize);
+        Task<List<Cvsubmission>> GetCvSubmissionsByJobPostIdAsync(int jobPostId);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.CompanyFollowingDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -12,7 +11,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
         private readonly HttpClient _httpClient;
 
         public List<CompanyFollowingDTO> Companies { get; set; } = new();
-        public List<CompanyDTO> SuggestedCompanies { get; set; } = new();
+        public List<CompanyFollowingDTO> SuggestedCompanies { get; set; } = new();
 
         public FollowedCompaniesModel(IHttpClientFactory httpClientFactory)
         {
@@ -38,40 +37,27 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            try
+            // Lấy danh sách doanh nghiệp đang theo dõi
+            var response = await _httpClient.GetAsync($"api/CompanyFollowers/user/{userId}");
+            if (response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync($"api/CompanyFollowers/user/{userId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    Companies = JsonSerializer.Deserialize<List<CompanyFollowingDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-                }
-                else
-                {
-                    Companies = new();
-                }
+                var content = await response.Content.ReadAsStringAsync();
+                Companies = JsonSerializer.Deserialize<List<CompanyFollowingDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             }
-            catch
+            else
             {
                 Companies = new();
             }
 
-            // Gợi ý doanh nghiệp
-            try
+            // Lấy gợi ý doanh nghiệp
+            var suggestResponse = await _httpClient.GetAsync($"api/CompanyFollowers/suggest/{userId}?page=1&pageSize=5");
+            if (suggestResponse.IsSuccessStatusCode)
             {
-                var suggestResponse = await _httpClient.GetAsync($"api/Companies/suggest?page=1&pageSize=5");
-                if (suggestResponse.IsSuccessStatusCode)
-                {
-                    var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
-                    var suggestResult = JsonSerializer.Deserialize<SuggestedCompanyApiResponse>(suggestContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    SuggestedCompanies = suggestResult?.Companies ?? new List<CompanyDTO>();
-                }
-                else
-                {
-                    SuggestedCompanies = new();
-                }
+                var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
+                var suggestResult = JsonSerializer.Deserialize<SuggestedCompanyApiResponse>(suggestContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                SuggestedCompanies = suggestResult?.Companies ?? new();
             }
-            catch
+            else
             {
                 SuggestedCompanies = new();
             }
@@ -102,7 +88,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
         private class SuggestedCompanyApiResponse
         {
-            public List<CompanyDTO> Companies { get; set; } = new();
+            public List<CompanyFollowingDTO> Companies { get; set; } = new();
         }
     }
 }

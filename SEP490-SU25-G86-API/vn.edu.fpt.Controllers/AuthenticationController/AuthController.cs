@@ -1,17 +1,18 @@
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AccountDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
-using Google.Apis.Auth;
-using SEP490_SU25_G86_API.vn.edu.fpt.DTO.LoginDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
-using System.Net.Mail;
-using System.Net;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
@@ -215,6 +216,27 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             tokenEntity.IsUsed = true;
             _context.SaveChanges();
             return Ok("Đặt lại mật khẩu thành công.");
+        }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+        {
+            try
+            {
+                // Lấy accountId từ JWT
+                var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (accountId == 0) return Unauthorized("Không thể xác định người dùng.");
+
+                dto.AccountId = accountId;
+
+                var success = await _accountService.ChangePasswordAsync(dto);
+                return success ? Ok("Đổi mật khẩu thành công.") : BadRequest("Đổi mật khẩu thất bại.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         public class ResetPasswordRequest

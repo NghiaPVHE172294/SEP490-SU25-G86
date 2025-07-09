@@ -48,9 +48,7 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
@@ -518,13 +516,13 @@ namespace SEP490_SU25_G86_API.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.FromEmail).HasMaxLength(50);
+
                 entity.Property(e => e.Title).HasMaxLength(200);
 
-                entity.HasOne(d => d.Admin)
-                    .WithMany(p => p.Reminds)
-                    .HasForeignKey(d => d.AdminId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notifications_Users");
+                entity.Property(e => e.ToEmail)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("((0))");
             });
 
             modelBuilder.Entity<RequireOfCompany>(entity =>
@@ -553,7 +551,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A80B428D82");
+                    .HasName("PK__RolePerm__6400A1A8302A156F");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -561,13 +559,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__44CA3770");
+                    .HasConstraintName("FK__RolePermi__Permi__43D61337");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__45BE5BA9");
+                    .HasConstraintName("FK__RolePermi__RoleI__44CA3770");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>

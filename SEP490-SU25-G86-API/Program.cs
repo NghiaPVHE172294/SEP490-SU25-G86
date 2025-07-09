@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
@@ -14,6 +15,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
@@ -23,9 +25,11 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RemindRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
@@ -37,6 +41,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
@@ -46,9 +51,12 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.RemindService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using System.Reflection;
 using System.Security.Claims;
@@ -158,6 +166,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
             builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
+            // AdminSendRemind
+            builder.Services.AddScoped<IRemindService, RemindService>();
+            builder.Services.AddScoped<IRemindRepository, RemindRepository>();
+
             //GetUserByAccountIdFrAdmin
             builder.Services.AddScoped<IUserDetailOfAdminRepository, UserDetailOfAdminRepository>();
             builder.Services.AddScoped<IUserDetailOfAdminService, UserDetailOfAdminService>();
@@ -207,9 +219,19 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ISalaryRangeRepository, SalaryRangeRepository>();
             builder.Services.AddScoped<ISalaryRangeService, SalaryRangeService>();
 
+            //Company
+            builder.Services.AddScoped<ICompanyService, CompanyService>();
+            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+
+            //User
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+            //Search Synonym
+            builder.Services.AddScoped<ISynonymService, SynonymService>();
             // CORS
             builder.Services.AddCors(options =>
 			{
@@ -224,6 +246,10 @@ namespace SEP490_SU25_G86_API
             // New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
+
+            // JobCriterion
+            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.IJobCriterionRepository, SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.JobCriterionRepository>();
+            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.IJobCriterionService, SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.JobCriterionService>();
 
             var app = builder.Build();
 

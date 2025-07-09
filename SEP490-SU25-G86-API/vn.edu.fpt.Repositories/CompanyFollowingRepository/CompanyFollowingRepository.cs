@@ -31,5 +31,32 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositori
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<CompanyFollowingDTO>> GetSuggestedCompaniesAsync(int userId, int page, int pageSize)
+        {
+            var followedCompanyIds = await _context.CompanyFollowers
+                .Where(cf => cf.UserId == userId && cf.IsActive == true)
+                .Select(cf => cf.CompanyId)
+                .ToListAsync();
+
+            return await _context.Companies
+                .Where(c => !followedCompanyIds.Contains(c.CompanyId))
+                .Include(c => c.Industry)
+                .OrderByDescending(c => c.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new CompanyFollowingDTO
+                {
+                    CompanyId = c.CompanyId,
+                    CompanyName = c.CompanyName,
+                    LogoUrl = c.LogoUrl,
+                    Website = c.Website,
+                    IndustryName = c.Industry.IndustryName,
+                    Description = c.Description,
+                    FlowedAt = DateTime.Now // Không có ngày follow vì là suggest, có thể để mặc định hoặc null
+                })
+                .ToListAsync();
+        }
+
     }
 }

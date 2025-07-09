@@ -1,4 +1,5 @@
 ﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
@@ -16,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
         }
-
+        
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region);
@@ -136,7 +137,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             {
                 JobPostId = j.JobPostId,
                 Title = j.Title,
-                CompanyName = j.Employer?.Company?.CompanyName ?? j.Employer?.FullName ?? "Không rõ",
+                CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 Salary = (j.SalaryRange != null && j.SalaryRange.MinSalary.HasValue && j.SalaryRange.MaxSalary.HasValue)
                     ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                     : "Thỏa thuận",
@@ -235,17 +236,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             return detail!;
         }
 
-        public async Task<IEnumerable<JobPostListDTO>> GetJobPostsByCompanyIdAsync(int companyId)
+        public async Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize)
         {
-            var jobs = await _jobPostRepo.GetJobPostsByCompanyIdAsync(companyId);
-            return jobs.Select(j => new JobPostListDTO
+            var (posts, totalItems) = await _jobPostRepo.GetJobPostsByCompanyIdAsync(companyId, page, pageSize);
+
+            var result = posts.Select(j => new JobPostListDTO
             {
                 JobPostId = j.JobPostId,
                 Title = j.Title,
                 CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 Salary = j.SalaryRange != null
-                    ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
-                    : "Thỏa thuận",
+            ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
+            : "Thỏa thuận",
                 Location = j.Province?.ProvinceName,
                 EmploymentType = j.EmploymentType?.EmploymentTypeName,
                 JobLevel = j.JobLevel?.JobLevelName,
@@ -254,6 +256,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 CreatedDate = j.CreatedDate,
                 UpdatedDate = j.UpdatedDate
             });
+
+            return (result, totalItems);
         }
 
 
@@ -297,6 +301,20 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 UpdatedDate = j.UpdatedDate
             });
             return (result, totalItems);
+        }
+
+        public async Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
+        {
+            var submissions = await _jobPostRepo.GetCvSubmissionsByJobPostIdAsync(jobPostId);
+            return submissions.Select(s => new CvSubmissionForJobPostDTO
+            {
+                SubmissionId = s.SubmissionId,
+                SubmissionDate = s.SubmissionDate,
+                CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
+                CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
+                IsShortlisted = s.IsShortlisted,
+                RecruiterNote = s.RecruiterNote
+            }).ToList();
         }
     }
 
