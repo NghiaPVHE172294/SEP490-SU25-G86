@@ -9,5 +9,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
         Task AddAsync(Cv cv);
         Task DeleteAsync(Cv cv);
         Task<int> CountByUserAsync(int userId);
+        Task UpdateAsync(Cv cv);
     }
 }

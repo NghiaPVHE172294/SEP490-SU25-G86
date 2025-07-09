@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
     {
         private readonly ICvService _service;
         private readonly string _googleDriveFolderId = "1ZdRawzVPMq_8E4YlzvRKL_1YaRqvKX2N";
-        private readonly string _serviceAccountJson = "sep490-su25-g86-cvmatcher-74226a1b26d8.json";
+        private readonly string _serviceAccountJson = "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-d0d2e0374fa9.json";
         public CvController(ICvService service)
         {
             _service = service;
@@ -72,6 +72,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
             var result = await _service.GetByIdAsync(id);
             if (result == null) return NotFound();
             return Ok(result);
+        }
+
+        [HttpPut("rename/{cvId}")]
+        public async Task<IActionResult> RenameCv(int cvId, [FromBody] string newName)
+        {
+            var cv = await _service.GetByIdAsync(cvId);
+            if (cv == null) return NotFound();
+            // Cập nhật tên
+            await _service.UpdateCvNameAsync(cvId, newName);
+            return Ok();
         }
 
         // Upload file PDF lên Google Drive, trả về link xem file

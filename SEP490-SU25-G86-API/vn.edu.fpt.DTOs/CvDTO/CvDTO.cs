@@ -10,5 +10,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO
         public string? Notes { get; set; }
         public DateTime? UploadDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public string? CVName { get; set; }
+   
     }
 } 

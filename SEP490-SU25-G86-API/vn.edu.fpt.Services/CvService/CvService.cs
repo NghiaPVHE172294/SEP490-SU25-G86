@@ -23,7 +23,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
                 FileUrl = c.FileUrl,
                 Notes = c.Notes,
                 UploadDate = c.UploadDate,
-                UpdatedDate = c.UploadDate
+                UpdatedDate = c.UploadDate,
+                CVName = c.Cvname
             }).ToList();
         }
 
@@ -38,14 +39,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
                 FileUrl = c.FileUrl,
                 Notes = c.Notes,
                 UploadDate = c.UploadDate,
-                UpdatedDate = c.UploadDate
+                UpdatedDate = c.UploadDate,
+                CVName = c.Cvname
             };
         }
 
         public async Task AddAsync(int userId, AddCvDTO dto, string fileUrl)
         {
             if (dto.File == null)
-    throw new Exception("Bạn chưa chọn file CV để upload.");
+                throw new Exception("Bạn chưa chọn file CV để upload.");
             // Validate file size (≤ 5MB)
             if (dto.File.Length > 5 * 1024 * 1024)
                 throw new Exception("[BR-08] CV file size must not exceed 5MB.");
@@ -67,10 +69,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             var cv = new Cv
             {
                 UploadByUserId = userId,
+                CandidateId = userId,
                 FileUrl = fileUrl,
                 Notes = dto.Notes,
                 UploadDate = DateTime.UtcNow,
-                IsDelete = false
+                IsDelete = false,
+                Cvname = string.IsNullOrEmpty(dto.CVName) ? Path.GetFileName(fileUrl) : dto.CVName
             };
             await _repo.AddAsync(cv);
         }
@@ -80,6 +84,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             var cv = await _repo.GetByIdAsync(cvId);
             if (cv == null || cv.UploadByUserId != userId) throw new Exception("Not found or not allowed");
             await _repo.DeleteAsync(cv);
+        }
+
+        public async Task UpdateCvNameAsync(int cvId, string newName)
+        {
+            var cv = await _repo.GetByIdAsync(cvId);
+            if (cv == null) throw new Exception("CV không tồn tại");
+            cv.Cvname = newName;
+            await _repo.UpdateAsync(cv);
         }
     }
 }
