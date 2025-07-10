@@ -1,0 +1,51 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<section class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">Liên hệ với CVMatcher</h1>
+        <p class="text-muted">Chúng tôi luôn sẵn sàng hỗ trợ bạn</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="fw-semibold mb-3">Thông tin liên hệ</h4>
+            <p><i class="bi bi-envelope text-primary me-2"></i> Email: <a href="mailto:cv.matcher.team@gmail.com">cv.matcher.team@gmail.com</a></p>
+            <p><i class="bi bi-phone text-primary me-2"></i> Số điện thoại: 0123 456 789</p>
+            <p><i class="bi bi-geo-alt text-primary me-2"></i> Địa chỉ: FPT University, Khu CNC Hòa Lạc, Hà Nội</p>
+            <hr />
+            <p>💬 Bạn có thể gửi thắc mắc, góp ý hoặc báo lỗi qua biểu mẫu bên phải.</p>
+        </div>
+
+        <div class="col-md-6">
+            <h4 class="fw-semibold mb-3">Gửi tin nhắn</h4>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" name="FullName" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="Email" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nội dung</label>
+                    <textarea class="form-control" name="Message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Gửi tin nhắn</button>
+            </form>
+            @if (Model.Submitted)
+            {
+                <div class="alert alert-success mt-3" role="alert">
+                    ✅ Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
