@@ -85,17 +85,31 @@
           <div id="cvList">
             @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
             {
-                foreach (var cv in Model.MyCvs)
-                {
-                    <div>
-                        <span>@cv.FileName</span>
-                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
-                    </div>
-                }
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 60%;">Tên CV</th>
+                            <th style="width: 30%;">Ngày cập nhật</th>
+                            <th style="width: 10%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var cv in Model.MyCvs)
+                    {
+                        <tr id="cv-row-@cv.CvId">
+                            <td>@cv.CVName</td>
+                            <td>@(cv.UpdatedDate?.ToString("dd-MM-yyyy HH:mm") ?? "")</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             }
             else
             {
-                <div>Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
+                <div class="text-danger">Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
             }
           </div>
         </div>
@@ -129,7 +143,11 @@ document.getElementById('btnApplyNow').addEventListener('click', function() {
 
 window.selectCv = function(cvId) {
     selectedCvId = cvId;
-    // Optionally highlight selected CV
+    // Bỏ highlight tất cả
+    document.querySelectorAll('#cvList tr').forEach(tr => tr.classList.remove('selected'));
+    // Highlight dòng được chọn
+    var row = document.getElementById('cv-row-' + cvId);
+    if (row) row.classList.add('selected');
 };
 
 document.getElementById('btnSubmitApplication').addEventListener('click', function() {
