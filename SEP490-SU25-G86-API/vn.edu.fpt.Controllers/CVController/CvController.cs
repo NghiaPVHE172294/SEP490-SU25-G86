@@ -16,8 +16,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
     public class CvController : ControllerBase
     {
         private readonly ICvService _service;
-        private readonly string _googleDriveFolderId = "1ZdRawzVPMq_8E4YlzvRKL_1YaRqvKX2N";
-        private readonly string _serviceAccountJson = "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-d0d2e0374fa9.json";
+        private readonly string _googleDriveFolderId = "1jlghm3ntLE6JDPcwJqA2tlVrmCVBVpYM";
+        private readonly string _serviceAccountJson = "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-bcaf3b909702.json";
         public CvController(ICvService service)
         {
             _service = service;
