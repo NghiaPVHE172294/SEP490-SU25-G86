@@ -4,6 +4,16 @@
     ViewData["Title"] = "Danh sách CV đã nộp";
 }
 <h2>Danh sách CV đã nộp vào tin tuyển dụng</h2>
+@if (!string.IsNullOrEmpty(Model.JobPostTitle))
+{
+    <div class="mb-3">
+        <strong>Tin tuyển dụng:</strong> @Model.JobPostTitle
+        @if (!string.IsNullOrEmpty(Model.CompanyName))
+        {
+            <span> | <strong>Công ty:</strong> @Model.CompanyName</span>
+        }
+    </div>
+}
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
