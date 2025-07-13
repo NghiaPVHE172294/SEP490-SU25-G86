@@ -20,14 +20,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
-            var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region);
-            if (candidateId.HasValue)
-            {
-                var blockedCompanies = await _blockedCompanyRepo.GetBlockedCompaniesByCandidateIdAsync(candidateId.Value);
-                var blockedCompanyIds = blockedCompanies.Select(bc => bc.CompanyId).ToHashSet();
-                posts = posts.Where(j => j.Employer == null || j.Employer.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
-                totalItems = posts.Count();
-            }
+            var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
             var result = posts.Select(j => new JobPostHomeDto
             {
                 JobPostId = j.JobPostId,
@@ -36,7 +29,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 Salary = j.SalaryRange != null
                          ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                          : "Thỏa thuận",
-                Location = j.Province?.ProvinceName ?? "Không xác định"
+                Location = j.Province?.ProvinceName ?? "Không xác định",
+                IsApplied = j.IsApplied
             }).ToArray();
             return (result, totalItems);
         }
@@ -127,12 +121,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             int? jobLevelId = null,
             int? minSalary = null,
             int? maxSalary = null,
-            List<int>? datePostedRanges = null)
+            List<int>? datePostedRanges = null,
+            string? keyword = null,
+            int? candidateId = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetFilteredJobPostsAsync(
-                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges
+                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword, candidateId
             );
-
             var result = posts.Select(j => new JobPostListDTO
             {
                 JobPostId = j.JobPostId,
@@ -147,9 +142,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 ExperienceLevel = j.ExperienceLevel?.ExperienceLevelName,
                 Industry = j.Industry?.IndustryName,
                 CreatedDate = j.CreatedDate,
-                UpdatedDate = j.UpdatedDate
+                UpdatedDate = j.UpdatedDate,
+                EndDate = j.EndDate,
+                Status = j.Status,
+                WorkLocation = j.WorkLocation,
+                IsApplied = j.IsApplied
             });
-
             return (result, totalItems);
         }
 
@@ -261,48 +259,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         }
 
 
-        public async Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetFilteredJobPostsAsync(
-             int page, int pageSize,
-             int? provinceId = null,
-             int? industryId = null,
-             List<int>? employmentTypeIds = null,
-             List<int>? experienceLevelIds = null,
-             int? jobLevelId = null,
-             int? minSalary = null,
-             int? maxSalary = null,
-             List<int>? datePostedRanges = null,
-             string? keyword = null,
-             int? candidateId = null)
-        {
-            var (posts, totalItems) = await _jobPostRepo.GetFilteredJobPostsAsync(
-                page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword
-            );
-            if (candidateId.HasValue)
-            {
-                var blockedCompanies = await _blockedCompanyRepo.GetBlockedCompaniesByCandidateIdAsync(candidateId.Value);
-                var blockedCompanyIds = blockedCompanies.Select(bc => bc.CompanyId).ToHashSet();
-                posts = posts.Where(j => j.Employer == null || j.Employer.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
-                totalItems = posts.Count();
-            }
-            var result = posts.Select(j => new JobPostListDTO
-            {
-                JobPostId = j.JobPostId,
-                Title = j.Title,
-                CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
-                Salary = j.SalaryRange != null
-            ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
-            : "Thỏa thuận",
-                Location = j.Province?.ProvinceName,
-                EmploymentType = j.EmploymentType?.EmploymentTypeName,
-                JobLevel = j.JobLevel?.JobLevelName,
-                ExperienceLevel = j.ExperienceLevel?.ExperienceLevelName,
-                Industry = j.Industry?.IndustryName,
-                CreatedDate = j.CreatedDate,
-                UpdatedDate = j.UpdatedDate
-            });
-            return (result, totalItems);
-        }
-
         public async Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
         {
             var submissions = await _jobPostRepo.GetCvSubmissionsByJobPostIdAsync(jobPostId);
@@ -312,7 +268,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 SubmissionDate = s.SubmissionDate,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
-                IsShortlisted = s.IsShortlisted,
                 RecruiterNote = s.RecruiterNote
             }).ToList();
         }

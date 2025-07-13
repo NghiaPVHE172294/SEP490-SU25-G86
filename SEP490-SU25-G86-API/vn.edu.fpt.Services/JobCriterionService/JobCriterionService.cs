@@ -1,0 +1,75 @@
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
+using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
+{
+    public class JobCriterionService : IJobCriterionService
+    {
+        private readonly IJobCriterionRepository _repository;
+        private readonly SEP490_G86_CvMatchContext _context;
+        public JobCriterionService(IJobCriterionRepository repository, SEP490_G86_CvMatchContext context)
+        {
+            _repository = repository;
+            _context = context;
+        }
+
+        public async Task<List<JobCriterionDTO>> GetJobCriteriaByUserIdAsync(int userId)
+        {
+            var list = await _repository.GetJobCriteriaByUserIdAsync(userId);
+            return list.Select(jc => new JobCriterionDTO
+            {
+                JobCriteriaId = jc.JobCriteriaId,
+                JobPostId = jc.JobPostId,
+                RequiredExperience = jc.RequiredExperience,
+                RequiredSkills = jc.RequiredSkills,
+                EducationLevel = jc.EducationLevel,
+                RequiredJobTitles = jc.RequiredJobTitles,
+                PreferredLanguages = jc.PreferredLanguages,
+                PreferredCertifications = jc.PreferredCertifications,
+                CreatedAt = jc.CreatedAt
+            }).ToList();
+        }
+
+        public async Task<JobCriterionDTO> AddJobCriterionAsync(AddJobCriterionDTO dto, int userId)
+        {
+            // Kiểm tra quyền sở hữu JobPost
+            var jobPost = await _context.JobPosts.FirstOrDefaultAsync(jp => jp.JobPostId == dto.JobPostId && !jp.IsDelete);
+            if (jobPost == null)
+                throw new Exception("JobPost không tồn tại.");
+            if (jobPost.EmployerId != userId)
+                throw new UnauthorizedAccessException($"Access Denied: You do not have permission. (jobPost.EmployerId={jobPost.EmployerId}, userId={userId})");
+            var entity = new JobCriterion
+            {
+                JobPostId = dto.JobPostId,
+                RequiredExperience = dto.RequiredExperience,
+                RequiredSkills = dto.RequiredSkills,
+                EducationLevel = dto.EducationLevel,
+                RequiredJobTitles = dto.RequiredJobTitles,
+                PreferredLanguages = dto.PreferredLanguages,
+                PreferredCertifications = dto.PreferredCertifications,
+                CreatedAt = DateTime.UtcNow,
+                CreatedByUserId = userId,
+                IsDelete = false
+            };
+            var result = await _repository.AddJobCriterionAsync(entity);
+            return new JobCriterionDTO
+            {
+                JobCriteriaId = result.JobCriteriaId,
+                JobPostId = result.JobPostId,
+                RequiredExperience = result.RequiredExperience,
+                RequiredSkills = result.RequiredSkills,
+                EducationLevel = result.EducationLevel,
+                RequiredJobTitles = result.RequiredJobTitles,
+                PreferredLanguages = result.PreferredLanguages,
+                PreferredCertifications = result.PreferredCertifications,
+                CreatedAt = result.CreatedAt
+            };
+        }
+
+    }
+} 

@@ -1,157 +1,171 @@
 @page
 @model SEP490_SU25_G86_Client.Pages.Employer.AddJobPostModel
 @{
-    ViewData["Title"] = "Tạo mới tin tuyển dụng";
+    ViewData["Title"] = "Tạo bài đăng tuyển dụng";
 }
-<h2 class="fw-bold mb-4">Tạo mới tin tuyển dụng</h2>
+
+<h2>Tạo bài đăng tuyển dụng</h2>
+
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
 }
-<form method="post" class="row g-3">
-    <div class="col-md-6">
-        <label asp-for="JobPost.Title" class="form-label"></label>
-        <input asp-for="JobPost.Title" class="form-control" />
-        <span asp-validation-for="JobPost.Title" class="text-danger"></span>
+
+@if (Model.JobPostId > 0)
+{
+    <div class="alert alert-success">
+        Tạo bài đăng thành công!<br />
+        <a class="btn btn-primary mt-2" href="/Employer/AddJobCriteria?jobPostId=@Model.JobPostId">Thêm tiêu chí tuyển dụng</a>
+        <a class="btn btn-outline-secondary mt-2" href="/Employer/ListJobByEmployer">Xem danh sách bài đăng</a>
     </div>
-    <div class="col-md-6">
-        <label asp-for="JobPost.WorkLocation" class="form-label"></label>
-        <input asp-for="JobPost.WorkLocation" class="form-control" />
-        <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">
-        <label asp-for="JobPost.Status" class="form-label"></label>
-        <select asp-for="JobPost.Status" class="form-select">
-            <option value="">-- Chọn trạng thái --</option>
-            <option value="OPEN">OPEN</option>
-            <option value="CLOSED">CLOSED</option>
-        </select>
-        <span asp-validation-for="JobPost.Status" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">
-        <label asp-for="JobPost.EndDate" class="form-label"></label>
-        <input asp-for="JobPost.EndDate" type="date" class="form-control" />
-        <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
-    </div>
-    <div class="col-12">
-        <label asp-for="JobPost.Description" class="form-label"></label>
-        <textarea asp-for="JobPost.Description" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="JobPost.Description" class="text-danger"></span>
-    </div>
-    <div class="col-12">
-        <label asp-for="JobPost.CandidaterRequirements" class="form-label"></label>
-        <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2"></textarea>
-        <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
-    </div>
-    <div class="col-12">
-        <label asp-for="JobPost.Interest" class="form-label"></label>
-        <textarea asp-for="JobPost.Interest" class="form-control" rows="2"></textarea>
-        <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Ngành nghề</label>
-        <select id="industrySelect" name="JobPost.IndustryId" class="form-select" onchange="onIndustryChange()">
-            <option value="">-- Chọn ngành nghề --</option>
-            @foreach (var industry in Model.Industries)
-            {
-                <option value="@industry.IndustryId">@industry.IndustryName</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <input id="newIndustryInput" name="JobPost.NewIndustryName" class="form-control mt-2" style="display:none;" placeholder="Nhập ngành nghề mới" />
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Vị trí công việc</label>
-        <select id="jobPositionSelect" name="JobPost.JobPositionId" class="form-select" onchange="onJobPositionChange()">
-            <option value="">-- Chọn vị trí --</option>
-            @foreach (var pos in Model.JobPositions)
-            {
-                <option value="@pos.PositionId">@pos.PostitionName</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <input id="newJobPositionInput" name="JobPost.NewJobPositionName" class="form-control mt-2" style="display:none;" placeholder="Nhập vị trí mới" />
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Mức lương</label>
-        <select id="salaryRangeSelect" name="JobPost.SalaryRangeId" class="form-select" onchange="onSalaryRangeChange()">
-            <option value="">-- Chọn mức lương --</option>
-            @foreach (var s in Model.SalaryRanges)
-            {
-                <option value="@s.SalaryRangeId">@((s.MinSalary.HasValue && s.MaxSalary.HasValue) ? ($"{s.MinSalary:N0} - {s.MaxSalary:N0} {s.Currency}") : "Thỏa thuận")</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <div id="newSalaryRangeGroup" style="display:none;" class="mt-2">
-            <div class="row g-2">
-                <div class="col">
-                    <input id="minSalaryInput" class="form-control" placeholder="Lương tối thiểu" type="number" min="0" />
-                </div>
-                <div class="col">
-                    <input id="maxSalaryInput" class="form-control" placeholder="Lương tối đa" type="number" min="0" />
-                </div>
-                <div class="col">
-                    <input id="currencyInput" class="form-control" placeholder="Tiền tệ (VD: VND)" maxlength="10" />
-                </div>
-            </div>
-            <input type="hidden" id="newSalaryRangeHidden" name="JobPost.NewSalaryRange" />
+}
+else
+{
+    <form method="post" class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="JobPost.Title" class="form-label"></label>
+            <input asp-for="JobPost.Title" class="form-control" />
+            <span asp-validation-for="JobPost.Title" class="text-danger"></span>
         </div>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Tỉnh/Thành phố</label>
-        <select id="provinceSelect" name="JobPost.ProvinceId" class="form-select">
-            <option value="">-- Chọn tỉnh/thành --</option>
-            @foreach (var province in Model.Provinces)
-            {
-                <option value="@province.ProvinceId">@province.ProvinceName</option>
-            }
-        </select>
-        <span asp-validation-for="JobPost.ProvinceId" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Trình độ kinh nghiệm</label>
-        <select id="experienceLevelSelect" name="JobPost.ExperienceLevelId" class="form-select" onchange="onExperienceLevelChange()">
-            <option value="">-- Chọn trình độ --</option>
-            @foreach (var exp in Model.ExperienceLevels)
-            {
-                <option value="@exp.ExperienceLevelId">@exp.ExperienceLevelName</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <input id="newExperienceLevelInput" name="JobPost.NewExperienceLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập trình độ mới" />
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Cấp bậc</label>
-        <select id="jobLevelSelect" name="JobPost.JobLevelId" class="form-select" onchange="onJobLevelChange()">
-            <option value="">-- Chọn cấp bậc --</option>
-            @foreach (var jl in Model.JobLevels)
-            {
-                <option value="@jl.JobLevelId">@jl.JobLevelName</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <input id="newJobLevelInput" name="JobPost.NewJobLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập cấp bậc mới" />
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Loại hình làm việc</label>
-        <select id="employmentTypeSelect" name="JobPost.EmploymentTypeId" class="form-select" onchange="onEmploymentTypeChange()">
-            <option value="">-- Chọn loại hình --</option>
-            @foreach (var et in Model.EmploymentTypes)
-            {
-                <option value="@et.EmploymentTypeId">@et.EmploymentTypeName</option>
-            }
-            <option value="other">Khác...</option>
-        </select>
-        <input id="newEmploymentTypeInput" name="JobPost.NewEmploymentTypeName" class="form-control mt-2" style="display:none;" placeholder="Nhập loại hình mới" />
-    </div>
-    <div class="col-md-6 d-flex align-items-center">
-        <input asp-for="JobPost.IsAienabled" class="form-check-input me-2" type="checkbox" />
-        <label asp-for="JobPost.IsAienabled" class="form-check-label"></label>
-    </div>
-    <div class="col-12">
-        <button type="submit" class="btn btn-success px-5">Tạo mới</button>
-    </div>
-</form>
+        <div class="col-md-6">
+            <label asp-for="JobPost.WorkLocation" class="form-label"></label>
+            <input asp-for="JobPost.WorkLocation" class="form-control" />
+            <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="JobPost.Status" class="form-label"></label>
+            <select asp-for="JobPost.Status" class="form-select">
+                <option value="">-- Chọn trạng thái --</option>
+                <option value="OPEN">OPEN</option>
+                <option value="CLOSED">CLOSED</option>
+            </select>
+            <span asp-validation-for="JobPost.Status" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="JobPost.EndDate" class="form-label"></label>
+            <input asp-for="JobPost.EndDate" type="date" class="form-control" />
+            <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
+        </div>
+        <div class="col-12">
+            <label asp-for="JobPost.Description" class="form-label"></label>
+            <textarea asp-for="JobPost.Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="JobPost.Description" class="text-danger"></span>
+        </div>
+        <div class="col-12">
+            <label asp-for="JobPost.CandidaterRequirements" class="form-label"></label>
+            <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
+        </div>
+        <div class="col-12">
+            <label asp-for="JobPost.Interest" class="form-label"></label>
+            <textarea asp-for="JobPost.Interest" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Ngành nghề</label>
+            <select id="industrySelect" name="JobPost.IndustryId" class="form-select" onchange="onIndustryChange()">
+                <option value="">-- Chọn ngành nghề --</option>
+                @foreach (var industry in Model.Industries)
+                {
+                    <option value="@industry.IndustryId">@industry.IndustryName</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <input id="newIndustryInput" name="JobPost.NewIndustryName" class="form-control mt-2" style="display:none;" placeholder="Nhập ngành nghề mới" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Vị trí công việc</label>
+            <select id="jobPositionSelect" name="JobPost.JobPositionId" class="form-select" onchange="onJobPositionChange()">
+                <option value="">-- Chọn vị trí --</option>
+                @foreach (var pos in Model.JobPositions)
+                {
+                    <option value="@pos.PositionId">@pos.PostitionName</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <input id="newJobPositionInput" name="JobPost.NewJobPositionName" class="form-control mt-2" style="display:none;" placeholder="Nhập vị trí mới" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Mức lương</label>
+            <select id="salaryRangeSelect" name="JobPost.SalaryRangeId" class="form-select" onchange="onSalaryRangeChange()">
+                <option value="">-- Chọn mức lương --</option>
+                @foreach (var s in Model.SalaryRanges)
+                {
+                    <option value="@s.SalaryRangeId">@((s.MinSalary.HasValue && s.MaxSalary.HasValue) ? ($"{s.MinSalary:N0} - {s.MaxSalary:N0} {s.Currency}") : "Thỏa thuận")</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <div id="newSalaryRangeGroup" style="display:none;" class="mt-2">
+                <div class="row g-2">
+                    <div class="col">
+                        <input id="minSalaryInput" class="form-control" placeholder="Lương tối thiểu" type="number" min="0" />
+                    </div>
+                    <div class="col">
+                        <input id="maxSalaryInput" class="form-control" placeholder="Lương tối đa" type="number" min="0" />
+                    </div>
+                    <div class="col">
+                        <input id="currencyInput" class="form-control" placeholder="Tiền tệ (VD: VND)" maxlength="10" />
+                    </div>
+                </div>
+                <input type="hidden" id="newSalaryRangeHidden" name="JobPost.NewSalaryRange" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Tỉnh/Thành phố</label>
+            <select id="provinceSelect" name="JobPost.ProvinceId" class="form-select">
+                <option value="">-- Chọn tỉnh/thành --</option>
+                @foreach (var province in Model.Provinces)
+                {
+                    <option value="@province.ProvinceId">@province.ProvinceName</option>
+                }
+            </select>
+            <span asp-validation-for="JobPost.ProvinceId" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Trình độ kinh nghiệm</label>
+            <select id="experienceLevelSelect" name="JobPost.ExperienceLevelId" class="form-select" onchange="onExperienceLevelChange()">
+                <option value="">-- Chọn trình độ --</option>
+                @foreach (var exp in Model.ExperienceLevels)
+                {
+                    <option value="@exp.ExperienceLevelId">@exp.ExperienceLevelName</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <input id="newExperienceLevelInput" name="JobPost.NewExperienceLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập trình độ mới" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Cấp bậc</label>
+            <select id="jobLevelSelect" name="JobPost.JobLevelId" class="form-select" onchange="onJobLevelChange()">
+                <option value="">-- Chọn cấp bậc --</option>
+                @foreach (var jl in Model.JobLevels)
+                {
+                    <option value="@jl.JobLevelId">@jl.JobLevelName</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <input id="newJobLevelInput" name="JobPost.NewJobLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập cấp bậc mới" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Loại hình làm việc</label>
+            <select id="employmentTypeSelect" name="JobPost.EmploymentTypeId" class="form-select" onchange="onEmploymentTypeChange()">
+                <option value="">-- Chọn loại hình --</option>
+                @foreach (var et in Model.EmploymentTypes)
+                {
+                    <option value="@et.EmploymentTypeId">@et.EmploymentTypeName</option>
+                }
+                <option value="other">Khác...</option>
+            </select>
+            <input id="newEmploymentTypeInput" name="JobPost.NewEmploymentTypeName" class="form-control mt-2" style="display:none;" placeholder="Nhập loại hình mới" />
+        </div>
+        <div class="col-md-6 d-flex align-items-center">
+            <input asp-for="JobPost.IsAienabled" class="form-check-input me-2" type="checkbox" />
+            <label asp-for="JobPost.IsAienabled" class="form-check-label"></label>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-success px-5">Tạo mới</button>
+        </div>
+    </form>
+}
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
@@ -269,3 +283,4 @@
         });
     </script>
 } 
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

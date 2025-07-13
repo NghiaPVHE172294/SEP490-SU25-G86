@@ -1,0 +1,87 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.ContactModel
+@{
+    ViewData["Title"] = "Liên hệ CVMatcher";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<section class="container py-5" id="lien-he">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="text-center text-primary fw-bold mb-4">Liên hệ với <span class="text-dark">CVMatcher</span></h2>
+            <p class="text-center text-muted mb-5">Chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+
+            <div class="row g-4">
+                <!-- Contact Info -->
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <h5 class="fw-semibold text-dark mb-3">Thông tin liên hệ</h5>
+                        <p><i class="bi bi-geo-alt-fill text-primary me-2"></i> Tòa nhà Alpha, FPT University, Khu CNC Hòa Lạc, Hà Nội</p>
+                        <p><i class="bi bi-envelope-fill text-primary me-2"></i> <a href="mailto:support@cvmatcher.com">support@cvmatcher.com</a></p>
+                        <p><i class="bi bi-telephone-fill text-primary me-2"></i> 0123 456 789 (Tư vấn tuyển dụng)</p>
+                        <p><i class="bi bi-facebook text-primary me-2"></i> <a href="https://facebook.com/cvmatcher" target="_blank">facebook.com/cvmatcher</a></p>
+
+                        <hr />
+
+                        <h6 class="fw-semibold text-dark mt-4">Thời gian làm việc</h6>
+                        <p class="mb-1">⏰ Thứ 2 - Thứ 6: 08:00 - 17:00</p>
+                        <p>⛔ Thứ 7 & Chủ nhật: Nghỉ</p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-md-6">
+                    <h5 class="fw-semibold text-dark mb-3">Gửi tin nhắn</h5>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" asp-for="FullName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" asp-for="Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nội dung</label>
+                            <textarea class="form-control" rows="5" asp-for="Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-4">Gửi</button>
+                        @if (Model.Submitted)
+                        {
+                            <div class="alert alert-success mt-3">
+                                ✅ Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+
+            <!-- Google Maps -->
+            <div class="mt-5">
+                <h5 class="fw-semibold text-dark mb-3">Địa điểm văn phòng</h5>
+                <div class="ratio ratio-16x9 rounded shadow">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6313609176557!2d105.52699811493225!3d21.04657238598595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454b01fd319fd%3A0x5e1610ff6167d578!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBGUFQ!5e0!3m2!1svi!2s!4v1720570104471!5m2!1svi!2s"
+                            width="100%"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #lien-he {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+    }
+</style>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

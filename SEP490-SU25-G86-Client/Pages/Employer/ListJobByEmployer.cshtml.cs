@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using Microsoft.AspNetCore.Mvc;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -11,6 +12,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
     {
         private readonly HttpClient _httpClient;
         public List<JobPostListDTO> Jobs { get; set; }
+        public HashSet<int> JobPostIdsWithCriteria { get; set; } = new();
 
         public ListJobByEmployerModel(IHttpClientFactory httpClientFactory)
         {
@@ -42,7 +44,32 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 Jobs = new List<JobPostListDTO>();
             }
 
+            // Lấy toàn bộ JobCriteria của user
+            var criteriaResponse = await _httpClient.GetAsync("api/jobcriterion/my");
+            if (criteriaResponse.IsSuccessStatusCode)
+            {
+                var criteriaContent = await criteriaResponse.Content.ReadAsStringAsync();
+                var jobCriteria = JsonSerializer.Deserialize<List<JobCriterionDTO>>(criteriaContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                JobPostIdsWithCriteria = jobCriteria != null ? jobCriteria.Select(c => c.JobPostId).ToHashSet() : new HashSet<int>();
+            }
+            else
+            {
+                JobPostIdsWithCriteria = new HashSet<int>();
+            }
+
+            // DEBUG LOG
+            System.Diagnostics.Debug.WriteLine($"DEBUG: JobPostIdsWithCriteria = [{string.Join(",", JobPostIdsWithCriteria)}]");
+            if (Jobs != null)
+            {
+                foreach (var job in Jobs)
+                {
+                    System.Diagnostics.Debug.WriteLine($"DEBUG: JobPostId = {job.JobPostId}, HasCriteria = {JobPostIdsWithCriteria.Contains(job.JobPostId)}");
+                }
+            }
+
             return Page();
         }
+
+
     }
 }

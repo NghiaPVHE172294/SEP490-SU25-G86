@@ -247,6 +247,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
 
+            // JobCriterion
+            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.IJobCriterionRepository, SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.JobCriterionRepository>();
+            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.IJobCriterionService, SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.JobCriterionService>();
+
             var app = builder.Build();
 
             app.UseCors();

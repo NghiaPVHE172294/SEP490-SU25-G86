@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using SEP490_SU25_G86_API.Models;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
@@ -18,6 +19,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
         {
             var existingPermissions = _context.Permissions.ToList();
             var newPermissions = new List<Permission>();
+            var validPermissions = new List<(string Method, string Endpoint)>();
 
             foreach (var endpointSource in _endpointSources)
             {
@@ -26,31 +28,35 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
                     var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
                     var httpMethods = endpoint.Metadata.GetMetadata<HttpMethodMetadata>()?.HttpMethods;
 
-                    if (actionDescriptor == null || httpMethods == null) continue;
+                    if (actionDescriptor == null || httpMethods == null)
+                        continue;
 
                     var pattern = (endpoint as RouteEndpoint)?.RoutePattern?.RawText;
-                    if (string.IsNullOrEmpty(pattern)) continue;
+                    if (string.IsNullOrEmpty(pattern))
+                        continue;
 
                     foreach (var method in httpMethods)
                     {
                         var normalizedEndpoint = "/" + pattern.ToLower();
+                        var upperMethod = method.ToUpper();
+
+                        validPermissions.Add((upperMethod, normalizedEndpoint));
+
                         bool exists = existingPermissions.Any(p =>
-                            p.Method.ToUpper() == method.ToUpper() &&
+                            p.Method.ToUpper() == upperMethod &&
                             p.Endpoint.ToLower() == normalizedEndpoint.ToLower()
                         );
 
                         if (!exists)
                         {
-                            // Tạo tên hiển thị: Controller - Action (viết gọn)
                             var controllerName = actionDescriptor.ControllerName;
                             var actionName = actionDescriptor.ActionName;
-
-                            string name = $"{controllerName} - {actionName}";
+                            var name = $"{controllerName} - {actionName}";
 
                             newPermissions.Add(new Permission
                             {
                                 Name = name,
-                                Method = method.ToUpper(),
+                                Method = upperMethod,
                                 Endpoint = normalizedEndpoint
                             });
                         }
@@ -58,12 +64,30 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
                 }
             }
 
+            // Xóa các permission không còn tồn tại trong route thật
+            var toRemove = existingPermissions
+                .Where(p => !validPermissions.Any(v =>
+                    v.Method == p.Method.ToUpper() &&
+                    v.Endpoint.ToLower() == p.Endpoint.ToLower()
+                ))
+                .Where(p => !_context.RolePermissions.Any(rp => rp.PermissionId == p.Id)) // đảm bảo không bị FK
+                .ToList();
+
+
+            if (toRemove.Any())
+            {
+                _context.Permissions.RemoveRange(toRemove);
+            }
+
             if (newPermissions.Any())
             {
                 _context.Permissions.AddRange(newPermissions);
+            }
+
+            if (newPermissions.Any() || toRemove.Any())
+            {
                 await _context.SaveChangesAsync();
             }
         }
-
     }
 }

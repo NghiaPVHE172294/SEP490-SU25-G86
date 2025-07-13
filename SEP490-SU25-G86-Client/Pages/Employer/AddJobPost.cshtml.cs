@@ -23,6 +23,8 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
         public string ErrorMessage { get; set; }
 
+        public int JobPostId { get; set; }
+
         public List<EmploymentTypeDTO> EmploymentTypes { get; set; } = new();
         public List<JobPositionDTO> JobPositions { get; set; } = new();
         public List<ProvinceDTO> Provinces { get; set; } = new();
@@ -71,7 +73,9 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                     var resp = await response.Content.ReadAsStringAsync();
                     var job = JsonDocument.Parse(resp).RootElement;
                     int jobPostId = job.GetProperty("jobPostId").GetInt32();
-                    return Redirect($"/Job/DetailJobPost/{jobPostId}");
+                    JobPostId = jobPostId;
+                    await LoadComboboxDataAsync();
+                    return Page();
                 }
                 else
                 {

@@ -13,11 +13,7 @@ namespace SEP490_SU25_G86_API.Models
         public DateTime? SubmissionDate { get; set; }
         public int? LabelId { get; set; }
         public string? LabelSource { get; set; }
-<<<<<<< Updated upstream
-        public bool? IsShortlisted { get; set; }
-=======
         public string? Status { get; set; }
->>>>>>> Stashed changes
         public string? RecruiterNote { get; set; }
         public bool IsDelete { get; set; }
         public int? MatchedCvandJobPostId { get; set; }

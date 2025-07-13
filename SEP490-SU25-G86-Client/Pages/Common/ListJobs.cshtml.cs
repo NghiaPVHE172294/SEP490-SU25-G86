@@ -155,6 +155,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 
             [JsonPropertyName("experienceLevel")]
             public string Experience { get; set; }
+            [JsonPropertyName("isApplied")]
+            public bool IsApplied { get; set; }
         }
         public class JobPostApiResponse
         {
