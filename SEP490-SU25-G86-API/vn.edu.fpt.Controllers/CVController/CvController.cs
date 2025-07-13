@@ -77,8 +77,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
             var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
             if (user == null)
                 return Unauthorized(new { message = "Không tìm thấy người dùng tương ứng với tài khoản." });
-            await _service.DeleteAsync(user.UserId, id);
-            return NoContent();
+            try
+            {
+                await _service.DeleteAsync(user.UserId, id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

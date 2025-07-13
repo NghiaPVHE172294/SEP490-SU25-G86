@@ -5,6 +5,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AppliedJobDTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
 {
@@ -14,10 +15,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
     public class AppliedJobsController : ControllerBase
     {
         private readonly IAppliedJobService _appliedJobService;
+        private readonly ICvService _cvService;
 
-        public AppliedJobsController(IAppliedJobService appliedJobService)
+        public AppliedJobsController(IAppliedJobService appliedJobService, ICvService cvService)
         {
             _appliedJobService = appliedJobService;
+            _cvService = cvService;
         }
 
         [HttpGet("user/{userId}")]
@@ -48,7 +51,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
         {
             if (req.File == null || req.File.Length == 0)
                 return BadRequest("Vui lòng chọn file CV");
-            string fileUrl = await _appliedJobService.UploadFileToGoogleDrive(req.File);
+            // Upload file lên Google Drive (dùng lại logic của CvController)
+            string fileUrl = await _cvService.UploadFileToGoogleDrive(req.File);
             var cv = new SEP490_SU25_G86_API.Models.Cv
             {
                 CandidateId = req.CandidateId,
@@ -56,9 +60,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
                 Notes = req.Notes,
                 UploadDate = DateTime.UtcNow,
                 IsDelete = false,
-                UploadByUserId = req.CandidateId
+                UploadByUserId = req.CandidateId,
+                Cvname = req.CVName
             };
             int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);
+            // Tạo bản ghi ứng tuyển vào jobpost (CvSubmission)
             var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
             {
                 CvId = cvId,

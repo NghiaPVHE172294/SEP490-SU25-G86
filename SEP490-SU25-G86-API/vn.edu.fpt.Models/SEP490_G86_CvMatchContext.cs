@@ -273,7 +273,7 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
-                entity.Property(e => e.IsShortlisted).HasDefaultValueSql("((0))");
+         
 
                 entity.Property(e => e.LabelSource).HasMaxLength(20);
 

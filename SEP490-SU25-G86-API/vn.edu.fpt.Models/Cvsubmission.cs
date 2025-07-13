@@ -13,7 +13,6 @@ namespace SEP490_SU25_G86_API.Models
         public DateTime? SubmissionDate { get; set; }
         public int? LabelId { get; set; }
         public string? LabelSource { get; set; }
-        public bool? IsShortlisted { get; set; }
         public string? RecruiterNote { get; set; }
         public bool IsDelete { get; set; }
 

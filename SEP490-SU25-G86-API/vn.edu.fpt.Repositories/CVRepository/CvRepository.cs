@@ -43,5 +43,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
             _context.Cvs.Update(cv);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> HasBeenUsedInSubmissionAsync(int cvId)
+        {
+            return await _context.Cvsubmissions.AnyAsync(s => s.CvId == cvId && !s.IsDelete);
+        }
     }
 }
