@@ -23,5 +23,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<bool> HasUserAppliedToJobAsync(int userId, int jobPostId)
+        {
+            return await _context.Cvsubmissions.AnyAsync(s => s.SubmittedByUserId == userId && s.JobPostId == jobPostId && !s.IsDelete);
+        }
     }
 } 

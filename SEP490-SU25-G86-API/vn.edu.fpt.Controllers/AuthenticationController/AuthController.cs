@@ -156,7 +156,64 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             }
             var roleName = account.Role?.RoleName ?? "CANDIDATE";
             var token = GenerateJwtToken(account, roleName);
-            return Ok(new { token, role = roleName, email = account.Email, userId = account.AccountId });
+            var userEntity = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+            return Ok(new { token, role = roleName, email = account.Email, userId = userEntity?.UserId });
+        }
+
+        [HttpPost("external-login/facebook")]
+        public async Task<IActionResult> FacebookLogin([FromBody] ExternalLoginRequest request)
+        {
+            if (request.Provider != "Facebook" || string.IsNullOrEmpty(request.AccessToken))
+                return BadRequest("Invalid request");
+            // Gọi Facebook Graph API để lấy thông tin user
+            using (var httpClient = new HttpClient())
+            {
+                var fbRes = await httpClient.GetAsync($"https://graph.facebook.com/me?fields=id,name,email&access_token={request.AccessToken}");
+                if (!fbRes.IsSuccessStatusCode)
+                    return Unauthorized("Invalid Facebook token");
+                var fbContent = await fbRes.Content.ReadAsStringAsync();
+                using var doc = System.Text.Json.JsonDocument.Parse(fbContent);
+                var root = doc.RootElement;
+                string facebookEmail = root.TryGetProperty("email", out var emailProp) ? emailProp.GetString() : null;
+                string fullName = root.TryGetProperty("name", out var nameProp) ? nameProp.GetString() : "Facebook User";
+                string facebookId = root.TryGetProperty("id", out var idProp) ? idProp.GetString() : null;
+                // Nếu không có email, dùng id Facebook làm email giả
+                if (string.IsNullOrEmpty(facebookEmail) && !string.IsNullOrEmpty(facebookId))
+                {
+                    facebookEmail = $"fbuser_{facebookId}@facebook.local";
+                }
+                if (string.IsNullOrEmpty(facebookEmail))
+                    return BadRequest("Không lấy được thông tin định danh từ Facebook");
+                var account = _accountService.GetByEmail(facebookEmail);
+                if (account == null)
+                {
+                    // Tạo tài khoản mới cho user Facebook
+                    var role = _context.Roles.FirstOrDefault(r => r.RoleName == "CANDIDATE");
+                    account = new Account
+                    {
+                        Email = facebookEmail,
+                        Password = "", // Không có password
+                        RoleId = role?.RoleId ?? 2,
+                        IsActive = true,
+                        CreatedDate = DateTime.Now
+                    };
+                    _context.Accounts.Add(account);
+                    _context.SaveChanges();
+                    var user = new User
+                    {
+                        FullName = fullName,
+                        AccountId = account.AccountId,
+                        IsActive = true,
+                        CreatedDate = DateTime.Now
+                    };
+                    _context.Users.Add(user);
+                    _context.SaveChanges();
+                }
+                var roleName = account.Role?.RoleName ?? "CANDIDATE";
+                var token = GenerateJwtToken(account, roleName);
+                var userEntity = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+                return Ok(new { token, role = roleName, email = account.Email, userId = userEntity?.UserId });
+            }
         }
 
         [HttpPost("forgot-password")]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEP490_SU25_G86_API.Models
 {
@@ -32,6 +33,8 @@ namespace SEP490_SU25_G86_API.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public bool IsDelete { get; set; }
+        [NotMapped]
+        public bool IsApplied { get; set; }
 
         public virtual User? Employer { get; set; }
         public virtual EmploymentType? EmploymentType { get; set; }

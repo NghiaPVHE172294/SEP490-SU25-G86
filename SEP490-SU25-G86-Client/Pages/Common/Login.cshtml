@@ -72,7 +72,7 @@
                        
                   </div>
 
-                  <button class="social-button" disabled>
+                  <button class="social-button" id="facebook-login-btn" type="button">
                       <img src="~/assets/images/2023_Facebook_icon.svg.webp" alt="Facebook Icon">  
                   </button>  
               </div>  
@@ -105,9 +105,7 @@
               });
               if (res.ok) {
                   const data = await res.json();
-                  sessionStorage.setItem('jwt_token', data.token);
-                  sessionStorage.setItem('user_role', data.role);
-                    window.location.href = '/Common/Homepage';
+                  window.location.href = `/Common/GoogleLoginCallback?token=${data.token}&role=${data.role}&userId=${data.userId}`;
               } else {
                   alert('Đăng nhập Google thất bại!');
               }
@@ -115,6 +113,61 @@
               alert('Lỗi kết nối máy chủ!');
           }
       }
+
+      // Facebook SDK
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '2445139302530728',
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v19.0'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+      document.getElementById('facebook-login-btn').addEventListener('click', function() {
+        FB.login(function(response) {
+          if (response.authResponse) {
+            const accessToken = response.authResponse.accessToken;
+            // Log access token ra console
+            console.log('FB access token:', accessToken);
+            const payload = {
+              provider: 'Facebook',
+              accessToken: accessToken
+            };
+            fetch('https://localhost:7004/api/Auth/external-login/facebook', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            })
+            .then(async res => {
+              const text = await res.text();
+              // Log status code và nội dung response backend
+              console.log('Backend status:', res.status);
+              console.log('Backend response:', text);
+              if (res.ok) {
+                const data = JSON.parse(text);
+                if (data.token) {
+                  window.location.href = `/Common/GoogleLoginCallback?token=${data.token}&role=${data.role}&userId=${data.userId}`;
+                } else {
+                  alert('Đăng nhập Facebook thất bại!');
+                }
+              } else {
+                alert('Đăng nhập Facebook thất bại!');
+              }
+            })
+            .catch(() => alert('Lỗi kết nối máy chủ!'));
+          } else {
+            alert('Bạn chưa cho phép đăng nhập bằng Facebook!');
+          }
+        }, {scope: 'email,public_profile'});
+      });
   </script>  
 </body>  
 </html>

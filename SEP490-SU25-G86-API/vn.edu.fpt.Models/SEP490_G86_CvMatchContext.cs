@@ -48,10 +48,10 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -273,11 +273,15 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
-                entity.Property(e => e.IsShortlisted).HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.LabelSource).HasMaxLength(20);
 
+                entity.Property(e => e.MatchedCvandJobPostId).HasColumnName("MatchedCVandJobPostId");
+
                 entity.Property(e => e.SourceType).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(N'(Chờ xử lý)')");
 
                 entity.Property(e => e.SubmissionDate)
                     .HasColumnType("datetime")
@@ -297,6 +301,11 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.Cvsubmissions)
                     .HasForeignKey(d => d.LabelId)
                     .HasConstraintName("FK_CVSubmissions_CVLabels");
+
+                entity.HasOne(d => d.MatchedCvandJobPost)
+                    .WithMany(p => p.Cvsubmissions)
+                    .HasForeignKey(d => d.MatchedCvandJobPostId)
+                    .HasConstraintName("FK_CVSubmissions_MatchedCVandJobPost");
 
                 entity.HasOne(d => d.SubmittedByUser)
                     .WithMany(p => p.Cvsubmissions)
@@ -551,7 +560,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A8302A156F");
+                    .HasName("PK__RolePerm__6400A1A88054C862");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -559,13 +568,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__43D61337");
+                    .HasConstraintName("FK__RolePermi__Permi__11158940");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__44CA3770");
+                    .HasConstraintName("FK__RolePermi__RoleI__1209AD79");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>
@@ -605,8 +614,6 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.Address).HasMaxLength(30);
 
-                entity.Property(e => e.Avatar).HasMaxLength(30);
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -615,8 +622,6 @@ namespace SEP490_SU25_G86_API.Models
                     .HasColumnType("date")
                     .HasColumnName("DOB");
 
-                entity.Property(e => e.Facebook).HasMaxLength(30);
-
                 entity.Property(e => e.FullName).HasMaxLength(30);
 
                 entity.Property(e => e.Gender).HasMaxLength(10);
@@ -624,8 +629,6 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.IsBan).HasColumnName("isBan");
-
-                entity.Property(e => e.LinkedIn).HasMaxLength(30);
 
                 entity.Property(e => e.Phone).HasMaxLength(10);
 

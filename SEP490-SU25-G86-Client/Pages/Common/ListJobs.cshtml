@@ -164,6 +164,14 @@
                     </div>
                     <div>
                         <a class="btn btn-custom btn-sm" href="#">Chi tiết</a>
+                        @if (job.IsApplied)
+                        {
+                            <button class="btn btn-secondary btn-sm ms-2" disabled>Đã ứng tuyển</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary btn-sm ms-2">Ứng tuyển</button>
+                        }
                     </div>
                 </div>
             }

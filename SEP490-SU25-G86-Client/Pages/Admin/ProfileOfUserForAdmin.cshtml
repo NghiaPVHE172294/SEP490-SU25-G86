@@ -14,9 +14,25 @@
     <div style="flex: 3;">
         <a href="/Admin/ManageAccount"
            style="position: fixed; top: 70px; left: 20px; background-color: #309689; color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; z-index: 1000;">
-             Quay lại
+            Quay lại
         </a>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="color: green; margin: 10px 0; background: #e1f5e1; padding: 10px; border-radius: 5px;">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="color: red; margin: 10px 0; background: #ffe1e1; padding: 10px; border-radius: 5px;">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
         <h3>Thông tin người dùng</h3>
+        <!-- Phần còn lại giữ nguyên -->
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div>
                 <label>Tên</label>
@@ -56,8 +72,37 @@
         </div>
 
         <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <button style="background-color: #309689; color: white; padding: 8px 16px; border: none; border-radius: 4px;">Gửi Lời Nhắc</button>
-            <button style="background-color: #963330; color: white; padding: 8px 16px; border: none; border-radius: 4px;">Cấm</button>
+            <button type="button" style="background-color: #309689; color: white; padding: 8px 16px; border: none; border-radius: 4px;" onclick="openPopup()">Gửi Lời Nhắc</button>
+            <form method="post" asp-page-handler="Ban" asp-route-accountId="@Model.User.UserId">
+                <button type="submit" style="background-color: #963330; color: white; padding: 8px 16px; border: none; border-radius: 4px;">
+                    Cấm
+                </button>
+            </form>
         </div>
+
+        <!-- Popup Gửi Lời Nhắc -->
+        <div id="popupRemind" style="display:none; position:fixed; top:20%; left:35%; width:30%; background:#f8f8f8; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:2000;">
+            <h3>Gửi nhắc nhở</h3>
+            <form method="post">
+                <label for="RemindMessage">Lời Nhắc</label>
+                <textarea name="RemindMessage" id="RemindMessage" placeholder="Viết Lời Nhắc Vào Đây" style="width:100%; height:150px;"></textarea>
+
+                <div style="margin-top:10px; text-align:right;">
+                    <button type="submit" style="background:#309689; color:white; padding:6px 16px; border:none; border-radius:4px;">Gửi</button>
+                    <button type="button" onclick="closePopup()" style="background:#963330; color:white; padding:6px 16px; border:none; border-radius:4px;">Hủy</button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function openPopup() {
+                document.getElementById('popupRemind').style.display = 'block';
+            }
+
+            function closePopup() {
+                document.getElementById('popupRemind').style.display = 'none';
+                document.getElementById('RemindMessage').value = '';
+            }
+        </script>
     </div>
 </div>

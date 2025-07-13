@@ -4,7 +4,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 {
     public interface IJobPostRepository
     {
-        Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null);
+        Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null);
         Task<IEnumerable<JobPost>> GetAllAsync();
         Task<IEnumerable<JobPost>> GetByEmployerIdAsync(int employerId);
 
@@ -20,8 +20,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? minSalary = null,
             int? maxSalary = null,
             List<int>? datePostedRanges = null,
-            string? keyword = null
-        );
+            string? keyword = null,
+            int? candidateId = null);
 
         Task<JobPost> AddJobPostAsync(JobPost jobPost);
         Task<Industry> AddIndustryIfNotExistsAsync(string industryName);
@@ -32,5 +32,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         Task<JobLevel> AddJobLevelIfNotExistsAsync(string jobLevelName);
         Task<EmploymentType> AddEmploymentTypeIfNotExistsAsync(string employmentTypeName);
         Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize);
+        Task<List<Cvsubmission>> GetCvSubmissionsByJobPostIdAsync(int jobPostId);
     }
 }
