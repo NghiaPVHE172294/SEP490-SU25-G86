@@ -4,6 +4,7 @@
     ViewData["Title"] = "Applied Jobs";
     var userId = HttpContext.Session.GetString("userId");
     var jwtToken = HttpContext.Session.GetString("jwt_token");
+    var activeJobs = Model.AppliedJobs.Where(j => j.IsDelete == false || j.IsDelete == null).ToList();
 }
 <script>
     window.userId = '@userId';
@@ -25,10 +26,10 @@
                     </select>
                 </div>
                 <div class="card-body">
-                    @if (Model.AppliedJobs.Any())
+                    @if (activeJobs.Any())
                     {
                         <div class="list-group">
-                            @foreach (var job in Model.AppliedJobs)
+                            @foreach (var job in activeJobs)
                             {
                                 <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -126,30 +127,61 @@
 <script>
 let myCvs = [];
 function openUpdateCvModal(submissionId, currentCvId) {
+    console.log('Opening update CV modal - SubmissionId:', submissionId, 'CurrentCvId:', currentCvId);
+    
     // Lưu submissionId vào hidden input
     document.getElementById('updateSubmissionId').value = submissionId;
+    
     // Gọi API lấy danh sách CV của user
     fetch('/Common/MyCVs?handler=List', { method: 'GET' })
-        .then(res => res.json())
+        .then(res => {
+            console.log('MyCVs API response status:', res.status);
+            return res.json();
+        })
         .then(data => {
+            console.log('MyCVs data:', data);
             myCvs = data;
             let select = document.getElementById('selectNewCv');
             select.innerHTML = '';
-            myCvs.forEach(cv => {
+            
+            if (myCvs && myCvs.length > 0) {
+                myCvs.forEach(cv => {
+                    let option = document.createElement('option');
+                    option.value = cv.cvId;
+                    option.text = cv.cvName || cv.fileName;
+                    if (cv.cvId == currentCvId) option.selected = true;
+                    select.appendChild(option);
+                });
+            } else {
+                console.log('No CVs found for user');
                 let option = document.createElement('option');
-                option.value = cv.cvId;
-                option.text = cv.cvName;
-                if (cv.cvId == currentCvId) option.selected = true;
+                option.value = '';
+                option.text = 'Không có CV nào';
                 select.appendChild(option);
-            });
+            }
+            
             var modal = new bootstrap.Modal(document.getElementById('updateCvModal'));
             modal.show();
+        })
+        .catch(error => {
+            console.error('Error loading CVs:', error);
+            alert('Lỗi khi tải danh sách CV: ' + error.message);
         });
 }
 document.getElementById('btnUpdateCvConfirm').onclick = function() {
     let submissionId = document.getElementById('updateSubmissionId').value;
     let newCvId = document.getElementById('selectNewCv').value;
     if (!newCvId) { alert('Vui lòng chọn CV!'); return; }
+    
+    const requestData = { submissionId: parseInt(submissionId), newCvId: parseInt(newCvId), userId: parseInt(window.userId) };
+    console.log('Sending update CV request:', requestData);
+    console.log('JWT Token:', window.jwtToken ? 'Present' : 'Missing');
+    
+    if (!window.jwtToken) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        return;
+    }
+    
     // Gọi API cập nhật CV
     fetch('https://localhost:7004/api/AppliedJobs/update-cv', {
         method: 'PUT',
@@ -157,14 +189,24 @@ document.getElementById('btnUpdateCvConfirm').onclick = function() {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + window.jwtToken
         },
-        body: JSON.stringify({ submissionId: parseInt(submissionId), newCvId: parseInt(newCvId), userId: window.userId })
+        body: JSON.stringify(requestData)
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(data => {
+                throw new Error(data.message || 'Lỗi khi cập nhật CV!');
+            });
+        }
+        return res.json();
+    })
     .then(data => {
         alert(data.message || 'Cập nhật thành công!');
         location.reload();
     })
-    .catch(() => alert('Lỗi khi cập nhật CV!'));
+    .catch(error => {
+        console.error('Error updating CV:', error);
+        alert(error.message || 'Lỗi khi cập nhật CV!');
+    });
 };
 
 function withdrawApplication(submissionId) {

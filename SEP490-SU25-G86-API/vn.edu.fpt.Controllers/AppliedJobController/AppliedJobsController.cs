@@ -91,9 +91,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
         [HttpPut("update-cv")]
         public async Task<IActionResult> UpdateAppliedCv([FromBody] UpdateAppliedCvDTO req)
         {
+            if (req == null)
+                return BadRequest(new { message = "Dữ liệu yêu cầu không hợp lệ." });
+            
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new { message = "Dữ liệu không hợp lệ: " + string.Join(", ", errors) });
+            }
+            
             var updated = await _appliedJobService.UpdateAppliedCvAsync(req.SubmissionId, req.NewCvId, req.UserId);
             if (!updated)
-                return BadRequest(new { message = "Không thể cập nhật CV cho đơn ứng tuyển này." });
+                return BadRequest(new { message = "Không thể cập nhật CV cho đơn ứng tuyển này. Có thể đơn ứng tuyển không tồn tại hoặc bạn không có quyền cập nhật." });
             return Ok(new { message = "Cập nhật CV thành công." });
         }
 
