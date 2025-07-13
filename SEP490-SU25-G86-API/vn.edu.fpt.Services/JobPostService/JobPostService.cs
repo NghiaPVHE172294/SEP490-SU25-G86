@@ -312,7 +312,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 SubmissionDate = s.SubmissionDate,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
-                IsShortlisted = s.IsShortlisted,
                 RecruiterNote = s.RecruiterNote
             }).ToList();
         }

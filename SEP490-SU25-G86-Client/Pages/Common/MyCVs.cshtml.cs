@@ -56,7 +56,10 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var response = await client.PostAsync(ApiBase + "api/Cv/upload", content);
             if (!response.IsSuccessStatusCode)
             {
-                ModelState.AddModelError(string.Empty, "Tải lên thất bại: " + await response.Content.ReadAsStringAsync());
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, "Tải lên thất bại: " + errorMsg);
+                await OnGetAsync();
+                return Page();
             }
             return RedirectToPage();
         }

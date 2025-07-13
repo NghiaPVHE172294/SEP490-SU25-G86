@@ -85,17 +85,31 @@
           <div id="cvList">
             @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
             {
-                foreach (var cv in Model.MyCvs)
-                {
-                    <div>
-                        <span>@cv.FileName</span>
-                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
-                    </div>
-                }
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 60%;">Tên CV</th>
+                            <th style="width: 30%;">Ngày cập nhật</th>
+                            <th style="width: 10%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var cv in Model.MyCvs)
+                    {
+                        <tr id="cv-row-@cv.CvId">
+                            <td>@cv.CVName</td>
+                            <td>@(cv.UpdatedDate?.ToString("dd-MM-yyyy HH:mm") ?? "")</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             }
             else
             {
-                <div>Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
+                <div class="text-danger">Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
             }
           </div>
         </div>
@@ -103,6 +117,14 @@
         <div>
           <h6>Tải CV lên từ thiết bị</h6>
           <input type="file" id="uploadCvInput" accept="application/pdf"/>
+          <div class="mt-2">
+            <label for="uploadCvName" class="form-label">Tên CV</label>
+            <input type="text" id="uploadCvName" class="form-control" placeholder="Nhập tên CV" />
+          </div>
+          <div class="mt-2">
+            <label for="uploadCvNotes" class="form-label">Ghi chú</label>
+            <textarea id="uploadCvNotes" class="form-control" placeholder="Nhập ghi chú (tuỳ chọn)"></textarea>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -110,6 +132,12 @@
       </div>
     </div>
   </div>
+</div>
+<div id="uploadSpinner" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(255,255,255,0.7);align-items:center;justify-content:center;flex-direction:column;">
+  <div class="spinner-border text-primary" role="status" style="width:3rem;height:3rem;">
+    <span class="visually-hidden">Đang tải lên...</span>
+  </div>
+  <div style="margin-top:16px;font-size:18px;">Đang tải lên CV, vui lòng chờ...</div>
 </div>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @section Scripts {
@@ -129,7 +157,11 @@ document.getElementById('btnApplyNow').addEventListener('click', function() {
 
 window.selectCv = function(cvId) {
     selectedCvId = cvId;
-    // Optionally highlight selected CV
+    // Bỏ highlight tất cả
+    document.querySelectorAll('#cvList tr').forEach(tr => tr.classList.remove('selected'));
+    // Highlight dòng được chọn
+    var row = document.getElementById('cv-row-' + cvId);
+    if (row) row.classList.add('selected');
 };
 
 document.getElementById('btnSubmitApplication').addEventListener('click', function() {
@@ -156,11 +188,17 @@ document.getElementById('btnSubmitApplication').addEventListener('click', functi
     } else {
         // Nộp bằng CV upload mới
         let file = document.getElementById('uploadCvInput').files[0];
+        let cvName = document.getElementById('uploadCvName').value;
+        let notes = document.getElementById('uploadCvNotes').value;
         if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
+        if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
+        document.getElementById('uploadSpinner').style.display = 'flex'; // Hiện spinner
         let formData = new FormData();
         formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
         formData.append('candidateId', candidateId);
         formData.append('file', file);
+        formData.append('CVName', cvName);
+        if (notes) formData.append('Notes', notes);
         fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
             method: 'POST',
             headers: {
@@ -170,10 +208,16 @@ document.getElementById('btnSubmitApplication').addEventListener('click', functi
         })
         .then(res => res.json())
         .then(data => {
+            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
             alert(data.message || 'Ứng tuyển thành công!');
-            location.reload();
+            setTimeout(function() {
+                location.reload();
+            }, 100);
         })
-        .catch(() => alert('Lỗi khi ứng tuyển!'));
+        .catch(() => {
+            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
+            alert('Lỗi khi ứng tuyển!');
+        });
     }
 });
 </script>

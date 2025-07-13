@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SEP490_SU25_G86_API.Models;
 using Microsoft.AspNetCore.Http;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
+using System;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
 {
@@ -39,7 +40,20 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
         public async Task AddSubmissionAsync(Cvsubmission submission)
         {
             _context.Cvsubmissions.Add(submission);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AddSubmissionAsync] Exception: {ex}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[AddSubmissionAsync] InnerException: {ex.InnerException.Message}");
+                    throw new Exception($"Lỗi khi lưu submission: {ex.InnerException.Message}", ex);
+                }
+                throw;
+            }
         }
 
         public async Task<string> UploadFileToGoogleDrive(IFormFile file)
