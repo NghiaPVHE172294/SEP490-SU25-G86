@@ -7,6 +7,7 @@ using SEP490_SU25_G86_API.Models;
 using Microsoft.AspNetCore.Http;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
 {
@@ -33,7 +34,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
                 Title = s.JobPost?.Title ?? string.Empty,
                 WorkLocation = s.JobPost?.WorkLocation,
                 Status = s.JobPost?.Status,
-                SubmissionDate = s.SubmissionDate
+                SubmissionDate = s.SubmissionDate,
+                CvId = s.CvId,
+                CvName = s.Cv?.Cvname,
+                CvFileUrl = s.Cv?.FileUrl,
+                CvNotes = s.Cv?.Notes,
+                SourceType = s.SourceType
             });
         }
 
@@ -68,6 +74,31 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
             _context.Cvs.Add(cv);
             await _context.SaveChangesAsync();
             return cv.CvId;
+        }
+
+        public async Task<bool> HasUserAppliedToJobAsync(int userId, int jobPostId)
+        {
+            return await _appliedJobRepo.HasUserAppliedToJobAsync(userId, jobPostId);
+        }
+
+        public async Task<bool> UpdateAppliedCvAsync(int submissionId, int newCvId, int userId)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(s => s.SubmissionId == submissionId && s.SubmittedByUserId == userId && !s.IsDelete);
+            if (submission == null)
+                return false;
+            submission.CvId = newCvId;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> WithdrawApplicationAsync(int submissionId, int userId)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(s => s.SubmissionId == submissionId && s.SubmittedByUserId == userId && !s.IsDelete);
+            if (submission == null)
+                return false;
+            submission.IsDelete = true;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 } 

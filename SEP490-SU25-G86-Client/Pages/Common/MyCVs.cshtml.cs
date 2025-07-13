@@ -103,5 +103,21 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             }
             return RedirectToPage();
         }
+
+        public async Task<JsonResult> OnGetListAsync()
+        {
+            var client = new HttpClient();
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await client.GetAsync(ApiBase + "api/Cv/my");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var cvs = JsonSerializer.Deserialize<List<CvDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+                return new JsonResult(cvs);
+            }
+            return new JsonResult(new List<CvDTO>());
+        }
     }
 }

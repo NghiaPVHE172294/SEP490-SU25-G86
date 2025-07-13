@@ -33,6 +33,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
         [HttpPost("apply-existing")]
         public async Task<IActionResult> ApplyWithExistingCv([FromBody] ApplyExistingCvDTO req)
         {
+            // Check if user has already applied
+            if (await _appliedJobService.HasUserAppliedToJobAsync(req.CandidateId, req.JobPostId))
+            {
+                return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
+            }
             var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
             {
                 CvId = req.CvId,
@@ -51,6 +56,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
         {
             if (req.File == null || req.File.Length == 0)
                 return BadRequest("Vui lòng chọn file CV");
+            // Check if user has already applied
+            if (await _appliedJobService.HasUserAppliedToJobAsync(req.CandidateId, req.JobPostId))
+            {
+                return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
+            }
             // Upload file lên Google Drive (dùng lại logic của CvController)
             string fileUrl = await _cvService.UploadFileToGoogleDrive(req.File);
             var cv = new SEP490_SU25_G86_API.Models.Cv
@@ -76,6 +86,24 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
             };
             await _appliedJobService.AddSubmissionAsync(submission);
             return Ok(new { message = "Ứng tuyển thành công" });
+        }
+
+        [HttpPut("update-cv")]
+        public async Task<IActionResult> UpdateAppliedCv([FromBody] UpdateAppliedCvDTO req)
+        {
+            var updated = await _appliedJobService.UpdateAppliedCvAsync(req.SubmissionId, req.NewCvId, req.UserId);
+            if (!updated)
+                return BadRequest(new { message = "Không thể cập nhật CV cho đơn ứng tuyển này." });
+            return Ok(new { message = "Cập nhật CV thành công." });
+        }
+
+        [HttpDelete("withdraw/{submissionId}")]
+        public async Task<IActionResult> WithdrawApplication(int submissionId, [FromQuery] int userId)
+        {
+            var ok = await _appliedJobService.WithdrawApplicationAsync(submissionId, userId);
+            if (!ok)
+                return BadRequest(new { message = "Không thể rút đơn ứng tuyển này." });
+            return Ok(new { message = "Rút đơn ứng tuyển thành công." });
         }
 
         public class ApplyExistingCvRequest
