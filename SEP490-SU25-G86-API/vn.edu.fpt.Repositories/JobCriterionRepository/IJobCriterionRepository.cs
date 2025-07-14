@@ -8,5 +8,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository
     {
         Task<List<JobCriterion>> GetJobCriteriaByUserIdAsync(int userId);
         Task<JobCriterion> AddJobCriterionAsync(JobCriterion jobCriterion);
+        Task<JobCriterion> UpdateJobCriterionAsync(JobCriterion jobCriterion);
     }
 } 

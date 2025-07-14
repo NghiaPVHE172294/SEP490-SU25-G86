@@ -268,6 +268,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 SubmissionDate = s.SubmissionDate,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
+                Status = s.Status, // lấy Status mới
+                TotalScore = s.MatchedCvandJobPost != null ? s.MatchedCvandJobPost.TotalScore : null, // lấy TotalScore từ bảng liên kết
                 RecruiterNote = s.RecruiterNote
             }).ToList();
         }

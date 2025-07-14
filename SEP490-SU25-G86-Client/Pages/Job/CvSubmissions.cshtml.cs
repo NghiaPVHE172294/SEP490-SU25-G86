@@ -56,5 +56,35 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 ErrorMessage = $"Lỗi: {ex.Message}";
             }
         }
+
+        public async Task<IActionResult> OnPostApproveAsync(int id)
+        {
+            var client = new HttpClient();
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var content = new StringContent("\"APPROVED\"", System.Text.Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                ErrorMessage = "Không thể duyệt CV.";
+            }
+            return RedirectToPage(new { JobPostId });
+        }
+
+        public async Task<IActionResult> OnPostRejectAsync(int id)
+        {
+            var client = new HttpClient();
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var content = new StringContent("\"REJECTED\"", System.Text.Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                ErrorMessage = "Không thể từ chối CV.";
+            }
+            return RedirectToPage(new { JobPostId });
+        }
     }
 } 

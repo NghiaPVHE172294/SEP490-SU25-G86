@@ -342,6 +342,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             return await _context.Cvsubmissions
                 .Include(s => s.Cv)
                 .Include(s => s.SubmittedByUser)
+                .Include(s => s.MatchedCvandJobPost) // Thêm dòng này để lấy TotalScore
                 .Where(s => s.JobPostId == jobPostId && !s.IsDelete)
                 .ToListAsync();
         }
