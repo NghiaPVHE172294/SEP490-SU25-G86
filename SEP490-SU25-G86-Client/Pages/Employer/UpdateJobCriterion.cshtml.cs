@@ -23,7 +23,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         {
             var token = HttpContext.Session.GetString("jwt_token");
             if (string.IsNullOrEmpty(token))
-                return RedirectToPage("/Common/Login");
+                return RedirectToPage("/NotFound");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new System.Uri("https://localhost:7004/");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

@@ -45,11 +45,10 @@ else
                             <td>@item.PreferredLanguages</td>
                             <td>@item.PreferredCertifications</td>
                             <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
-                            <td>
-                                <form method="get" asp-page="/Employer/UpdateJobCriterion" asp-route-id="@item.JobCriteriaId" style="display:inline">
-                                    <button type="submit" class="btn btn-warning btn-sm">Update</button>
-                                </form>
-                            </td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">Update</a>
+                                </td>
+
                         </tr>
                     }
                     </tbody>
