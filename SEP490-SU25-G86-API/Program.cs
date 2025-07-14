@@ -61,6 +61,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BanUserRepository;
 
 namespace SEP490_SU25_G86_API
 {
@@ -226,6 +228,10 @@ namespace SEP490_SU25_G86_API
             //User
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            //BanUser
+            builder.Services.AddScoped<IBanUserService, BanUserService>();
+            builder.Services.AddScoped<IBanUserRepository, BanUserRepository>();
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

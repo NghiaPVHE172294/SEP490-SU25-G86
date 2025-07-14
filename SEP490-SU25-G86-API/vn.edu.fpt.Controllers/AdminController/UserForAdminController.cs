@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
@@ -11,10 +12,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
     public class UserForAdminController : Controller
     {
         private readonly IUserDetailOfAdminService _service;
+        private readonly IBanUserService _banUserService;
 
-        public UserForAdminController(IUserDetailOfAdminService service)
+        public UserForAdminController(IUserDetailOfAdminService service, IBanUserService banUserService)
         {
             _service = service;
+            _banUserService = banUserService;
         }
 
         [HttpGet("GetUserByAccount/{accountId}")]
@@ -25,6 +28,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
                 return NotFound("User not found");
 
             return Ok(userDetail);
+        }
+
+        [HttpPost("BanUser/{userId}")]
+        public async Task<IActionResult> BanUser(int userId)
+        {
+            var result = await _banUserService.BanUserAsync(userId);
+            if (!result)
+            {
+                return NotFound(new { message = "User not found!" });
+            }
+
+            return Ok(new { message = "User banned successfully!" });
         }
     }
 }

@@ -18,5 +18,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO
         public DateTime? EndDate { get; set; }
         public string? Status { get; set; }
         public string? WorkLocation { get; set; }
+        public bool IsApplied { get; set; }
     }
 }

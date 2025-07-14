@@ -111,5 +111,33 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
             return await OnGetAsync(accountId);
         }
 
+        public async Task<IActionResult> OnPostBanAsync(int accountId)
+        {
+            // Lấy token
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            // GỌI API BAN USER
+            var response = await _httpClient.PostAsync(
+                $"https://localhost:7004/api/UserForAdmin/BanUser/{accountId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Đã cấm user thành công.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Cấm user thất bại.";
+            }
+            return await OnGetAsync(accountId);
+        }
+
+
     }
 }

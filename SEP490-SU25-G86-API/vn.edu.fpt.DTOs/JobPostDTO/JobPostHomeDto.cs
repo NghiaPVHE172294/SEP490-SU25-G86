@@ -7,5 +7,6 @@
         public string CompanyName { get; set; } = null!;
         public string Salary { get; set; } = null!;
         public string Location { get; set; } = null!;
+        public bool IsApplied { get; set; }
     }
 }

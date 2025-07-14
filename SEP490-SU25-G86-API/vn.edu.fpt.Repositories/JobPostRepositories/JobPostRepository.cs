@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             _synonymService = synonymService;
         }
 
-        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null)
+        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
             var query = _context.JobPosts
         .Include(j => j.Employer)
@@ -42,6 +42,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            // Đánh dấu IsApplied nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var appliedJobPostIds = await _context.Cvsubmissions
+                    .Where(s => s.SubmittedByUserId == candidateId.Value && !s.IsDelete)
+                    .Select(s => s.JobPostId)
+                    .ToListAsync();
+                foreach (var post in posts)
+                {
+                    post.IsApplied = appliedJobPostIds.Contains(post.JobPostId);
+                }
+            }
 
             return (posts, totalItems);
         }
@@ -96,7 +109,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? minSalary = null,
             int? maxSalary = null,
             List<int>? datePostedRanges = null,
-            string? keyword = null)
+            string? keyword = null,
+            int? candidateId = null)
         {
             var query = _context.JobPosts
                 .Include(j => j.Employer).ThenInclude(e => e.Company)
@@ -161,6 +175,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 
                     var totalItems = filteredResult.Count;
 
+                    // Đánh dấu IsApplied nếu có candidateId
+                    if (candidateId.HasValue)
+                    {
+                        var appliedJobPostIds = await _context.Cvsubmissions
+                            .Where(s => s.SubmittedByUserId == candidateId.Value && !s.IsDelete)
+                            .Select(s => s.JobPostId)
+                            .ToListAsync();
+                        foreach (var post in filteredResult)
+                        {
+                            post.IsApplied = appliedJobPostIds.Contains(post.JobPostId);
+                        }
+                    }
+
                     var paged = filteredResult
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
@@ -176,6 +203,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            // Đánh dấu IsApplied nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var appliedJobPostIds = await _context.Cvsubmissions
+                    .Where(s => s.SubmittedByUserId == candidateId.Value && !s.IsDelete)
+                    .Select(s => s.JobPostId)
+                    .ToListAsync();
+                foreach (var post in posts)
+                {
+                    post.IsApplied = appliedJobPostIds.Contains(post.JobPostId);
+                }
+            }
 
             return (posts, total);
         }
