@@ -227,6 +227,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             return jobPost;
         }
 
+        public async Task<JobPost> UpdateJobPostAsync(JobPost jobPost)
+        {
+            _context.JobPosts.Update(jobPost);
+            await _context.SaveChangesAsync();
+            return jobPost;
+        }
+
         public async Task<Industry> AddIndustryIfNotExistsAsync(string industryName)
         {
             var industry = await _context.Industries.FirstOrDefaultAsync(i => i.IndustryName == industryName);
