@@ -10,12 +10,13 @@ namespace SEP490_SU25_G86_Client.Pages.Common
     public class SettingProfileModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        [BindProperty]
-        public ChangePasswordDTO ChangePassword { get; set; } = new();
+
         [BindProperty]
         public UserProfileDTO UserProfile { get; set; } = new();
+
         public string? ToastMessage { get; set; }
         public string ToastColor { get; set; } = "bg-info";
+
         public SettingProfileModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
@@ -32,6 +33,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var res = await client.GetAsync("https://localhost:7004/api/user/profile");
 
             if (res.IsSuccessStatusCode)
@@ -41,7 +43,6 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                 if (profile != null)
                     UserProfile = profile;
             }
-
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -58,7 +59,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var content = new StringContent(JsonSerializer.Serialize(UserProfile), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("https://localhost:7004/api/user/profile", content);
 
-            if (response.IsSuccessStatusCode) {
+            if (response.IsSuccessStatusCode)
+            {
                 ToastMessage = "✅ Cập nhật thông tin thành công.";
                 ToastColor = "bg-success";
 
@@ -88,12 +90,6 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 
             return Page();
         }
-    }
-    public class ChangePasswordDTO
-    {
-        public string CurrentPassword { get; set; } = null!;
-        public string NewPassword { get; set; } = null!;
-        public string ConfirmNewPassword { get; set; } = null!;
     }
     public class UserProfileDTO
     {
