@@ -92,7 +92,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             if (cv == null || cv.UploadByUserId != userId) throw new Exception("Not found or not allowed");
             // Prevent deletion if CV has been used for job applications
             if (await _repo.HasBeenUsedInSubmissionAsync(cvId))
-                throw new Exception("CV này đã được sử dụng để ứng tuyển công việc và không thể xóa.");
+                throw new Exception("CV này đang được dùng để ứng tuyển công việc (chưa rút đơn) và không thể xóa. Nếu bạn đã rút đơn ở tất cả các vị trí, bạn có thể xóa CV này.");
             await _repo.DeleteAsync(cv);
         }
 

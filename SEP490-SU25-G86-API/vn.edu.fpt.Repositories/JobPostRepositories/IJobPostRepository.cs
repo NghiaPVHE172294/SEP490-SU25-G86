@@ -24,6 +24,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             int? candidateId = null);
 
         Task<JobPost> AddJobPostAsync(JobPost jobPost);
+        Task<JobPost> UpdateJobPostAsync(JobPost jobPost);
         Task<Industry> AddIndustryIfNotExistsAsync(string industryName);
         Task<JobPosition> AddJobPositionIfNotExistsAsync(string jobPositionName, int? industryId = null);
         Task<SalaryRange> AddSalaryRangeIfNotExistsAsync(int minSalary, int maxSalary, string currency);
