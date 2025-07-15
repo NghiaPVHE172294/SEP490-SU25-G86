@@ -1,98 +1,109 @@
-﻿@page "{CompanyId:int}"
+﻿@page
 @model SEP490_SU25_G86_Client.Pages.Companies.UpdateCompanyModel
 @{
-    ViewData["Title"] = "Cập nhật thông tin công ty";
+    ViewData["Title"] = "Cập nhật công ty";
 }
 
-<div class="container mt-5">
+<section class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="mb-4">Cập nhật thông tin công ty</h2>
-
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success">@TempData["Success"]</div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger">@TempData["Error"]</div>
-            }
-
-            <form method="post">
-                <div class="mb-3">
-                    <label asp-for="Company.CompanyName" class="form-label">Tên công ty</label>
-                    <input asp-for="Company.CompanyName" class="form-control" />
-                    <span asp-validation-for="Company.CompanyName" class="text-danger"></span>
+        <div class="col-lg-9">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Cập nhật thông tin công ty</h4>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.TaxCode" class="form-label">Mã số thuế</label>
-                    <input asp-for="Company.TaxCode" class="form-control" />
-                    <span asp-validation-for="Company.TaxCode" class="text-danger"></span>
-                </div>
+                <div class="card-body p-4">
 
-                <div class="mb-3">
-                    <label asp-for="Company.IndustryId" class="form-label">Ngành nghề</label>
-                    <select asp-for="Company.IndustryId" class="form-select">
-                        <option value="">-- Chọn ngành --</option>
-                        @foreach (var industry in Model.Industries)
-                        {
-                            <option value="@industry.IndustryId" selected="@(industry.IndustryId == Model.Company.IndustryId)">
-                                @industry.IndustryName
-                            </option>
-                        }
-                    </select>
-                    <span asp-validation-for="Company.IndustryId" class="text-danger"></span>
-                </div>
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
 
-                <div class="mb-3">
-                    <label asp-for="Company.Email" class="form-label">Email</label>
-                    <input asp-for="Company.Email" class="form-control" />
-                    <span asp-validation-for="Company.Email" class="text-danger"></span>
-                </div>
+                    <form method="post" class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Company.CompanyName" class="form-label fw-semibold">Tên công ty</label>
+                            <input asp-for="Company.CompanyName" class="form-control" />
+                            <span asp-validation-for="Company.CompanyName" class="text-danger small"></span>
+                        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.Phone" class="form-label">Số điện thoại</label>
-                    <input asp-for="Company.Phone" class="form-control" />
-                    <span asp-validation-for="Company.Phone" class="text-danger"></span>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="Company.TaxCode" class="form-label fw-semibold">Mã số thuế</label>
+                            <input asp-for="Company.TaxCode" class="form-control" />
+                            <span asp-validation-for="Company.TaxCode" class="text-danger small"></span>
+                        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.Address" class="form-label">Địa chỉ</label>
-                    <input asp-for="Company.Address" class="form-control" />
-                    <span asp-validation-for="Company.Address" class="text-danger"></span>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="Company.IndustryId" class="form-label fw-semibold">Ngành nghề</label>
+                            <select asp-for="Company.IndustryId" class="form-select" asp-items="Model.IndustrySelectList">
+                                <option value="">-- Chọn ngành nghề --</option>
+                            </select>
+                            <span asp-validation-for="Company.IndustryId" class="text-danger small"></span>
+                        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.Description" class="form-label">Mô tả</label>
-                    <textarea asp-for="Company.Description" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Company.Description" class="text-danger"></span>
-                </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.Website" class="form-label">Website</label>
-                    <input asp-for="Company.Website" class="form-control" />
-                    <span asp-validation-for="Company.Website" class="text-danger"></span>
-                </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.CompanySize" class="form-label">Quy mô công ty</label>
-                    <input asp-for="Company.CompanySize" class="form-control" />
-                    <span asp-validation-for="Company.CompanySize" class="text-danger"></span>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="Company.CompanySize" class="form-label fw-semibold">Quy mô công ty</label>
+                            <input asp-for="Company.CompanySize" class="form-control" />
+                            <span asp-validation-for="Company.CompanySize" class="text-danger small"></span>
+                        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Company.LogoUrl" class="form-label">Logo URL</label>
-                    <input asp-for="Company.LogoUrl" class="form-control" />
-                    <span asp-validation-for="Company.LogoUrl" class="text-danger"></span>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="Company.Email" class="form-label fw-semibold">Email</label>
+                            <input asp-for="Company.Email" class="form-control" />
+                            <span asp-validation-for="Company.Email" class="text-danger small"></span>
+                        </div>
 
-                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-                <a asp-page="/Companies/CompanyInformation" class="btn btn-secondary ms-2">Quay lại</a>
-            </form>
+                        <div class="col-md-6">
+                            <label asp-for="Company.Phone" class="form-label fw-semibold">Số điện thoại</label>
+                            <input asp-for="Company.Phone" class="form-control" />
+                            <span asp-validation-for="Company.Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Company.Address" class="form-label fw-semibold">Địa chỉ</label>
+                            <input asp-for="Company.Address" class="form-control" />
+                            <span asp-validation-for="Company.Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Company.Description" class="form-label fw-semibold">Mô tả</label>
+                            <textarea asp-for="Company.Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Company.Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Company.Website" class="form-label fw-semibold">Website</label>
+                            <input asp-for="Company.Website" class="form-control" />
+                            <span asp-validation-for="Company.Website" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Company.LogoUrl" class="form-label fw-semibold">Logo URL</label>
+                            <input asp-for="Company.LogoUrl" class="form-control" />
+                            <span asp-validation-for="Company.LogoUrl" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
+                            <a asp-page="/Companies/CompanyInformation" class="btn btn-outline-secondary">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -13,14 +13,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             _repository = repository;
         }
 
-        public async Task<CompanyDetailDTO?> GetCompanyByUserIdAsync(int userId)
+        // Lấy công ty theo tài khoản (AccountId)
+        public async Task<CompanyDetailDTO?> GetCompanyByAccountIdAsync(int accountId)
         {
-            var company = await _repository.GetByUserIdAsync(userId);
+            var company = await _repository.GetByAccountIdAsync(accountId);
             if (company == null) return null;
 
             return MapToDetailDto(company);
         }
 
+        // Lấy công ty theo ID
         public async Task<CompanyDetailDTO?> GetCompanyByIdAsync(int companyId)
         {
             var company = await _repository.GetByIdAsync(companyId);
@@ -29,10 +31,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             return MapToDetailDto(company);
         }
 
-        public async Task<bool> CreateCompanyAsync(int userId, CompanyCreateUpdateDTO dto)
+        // Tạo mới công ty (check trùng trước)
+        public async Task<bool> CreateCompanyAsync(int accountId, CompanyCreateUpdateDTO dto)
         {
-            var existing = await _repository.GetByUserIdAsync(userId);
+            // Nếu đã có công ty với accountId => không cho tạo
+            var existing = await _repository.GetByAccountIdAsync(accountId);
             if (existing != null) return false;
+
+            // Kiểm tra trùng thông tin
+            var isDuplicate = await _repository.IsDuplicateCompanyAsync(dto);
+            if (isDuplicate)
+                throw new Exception("Thông tin công ty bị trùng (Tên, MST, Email, SĐT hoặc Website).");
 
             var company = new Company
             {
@@ -46,16 +55,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
                 CompanySize = dto.CompanySize,
                 Phone = dto.Phone,
                 LogoUrl = dto.LogoUrl,
-                CreatedByUserId = userId,
+                CreatedByUserId = accountId, // Gán accountId vào trường CreatedByUserId
                 CreatedAt = DateTime.UtcNow,
-                IsDelete = false,
-                //Status = "ACTIVE"
+                IsDelete = false
             };
 
             await _repository.CreateAsync(company);
             return true;
         }
 
+        // Cập nhật công ty
         public async Task<bool> UpdateCompanyAsync(int companyId, CompanyCreateUpdateDTO dto)
         {
             var company = await _repository.GetByIdAsync(companyId);
@@ -76,6 +85,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             return true;
         }
 
+        // Map từ entity sang DTO
         private CompanyDetailDTO MapToDetailDto(Company c) => new()
         {
             CompanyId = c.CompanyId,
@@ -88,7 +98,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             CompanySize = c.CompanySize,
             Phone = c.Phone,
             LogoUrl = c.LogoUrl,
-            IndustryName = c.Industry.IndustryName,
+            IndustryId = c.IndustryId,
+            IndustryName = c.Industry?.IndustryName ?? "",
             CreatedAt = c.CreatedAt
         };
     }
