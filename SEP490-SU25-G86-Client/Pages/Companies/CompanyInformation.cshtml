@@ -30,7 +30,8 @@ else
                 <img src="@Model.Company.LogoUrl" alt="Logo" style="max-height: 100px;" />
             }
 
-            <a asp-page="/Companies/UpdateCompany" asp-route-id="@Model.Company.CompanyId" class="btn btn-primary mt-3">Chỉnh sửa</a>
+            <a asp-page="/Companies/UpdateCompany" asp-route-companyId="@Model.Company.CompanyId" class="btn btn-primary mt-3">Chỉnh sửa</a>
+
         </div>
     </div>
 }

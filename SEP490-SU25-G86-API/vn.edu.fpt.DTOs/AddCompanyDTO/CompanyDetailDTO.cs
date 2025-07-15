@@ -12,6 +12,8 @@
         public string? Website { get; set; }
         public string CompanySize { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
+        public int IndustryId { get; set; }
+
         public string? LogoUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
     }

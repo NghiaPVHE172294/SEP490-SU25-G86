@@ -18,6 +18,9 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
+        [BindProperty(SupportsGet = true)]
+        public int CompanyId { get; set; }
+
         [BindProperty]
         public CompanyCreateUpdateDTO Company { get; set; } = new();
 
@@ -26,18 +29,18 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
         public async Task<IActionResult> OnGetAsync()
         {
             var role = HttpContext.Session.GetString("user_role");
+            var token = HttpContext.Session.GetString("jwt_token");
+
             if (role != "EMPLOYER")
                 return RedirectToPage("/NotFound");
 
-            var token = HttpContext.Session.GetString("jwt_token");
-            var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userIdStr))
+            if (string.IsNullOrEmpty(token))
                 return RedirectToPage("/Common/Login");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Lấy thông tin công ty của user hiện tại
-            var companyResponse = await _httpClient.GetAsync($"api/Companies/user/{userIdStr}");
+            // Lấy thông tin công ty theo ID
+            var companyResponse = await _httpClient.GetAsync($"api/Companies/{CompanyId}");
             if (!companyResponse.IsSuccessStatusCode)
                 return RedirectToPage("/NotFound");
 
@@ -57,9 +60,10 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var role = HttpContext.Session.GetString("user_role");
             var token = HttpContext.Session.GetString("jwt_token");
-            var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userIdStr))
+
+            if (role != "EMPLOYER" || string.IsNullOrEmpty(token))
                 return RedirectToPage("/Common/Login");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -67,7 +71,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             var json = JsonSerializer.Serialize(Company);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync("api/Companies", content);
+            var response = await _httpClient.PutAsync($"api/Companies/{CompanyId}", content);
 
             if (response.IsSuccessStatusCode)
             {
