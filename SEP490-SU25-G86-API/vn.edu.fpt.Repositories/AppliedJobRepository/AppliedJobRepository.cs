@@ -19,6 +19,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository
         {
             return await _context.Cvsubmissions
                 .Include(s => s.JobPost)
+                .Include(s => s.Cv)
                 .Where(s => s.SubmittedByUserId == userId)
                 .AsNoTracking()
                 .ToListAsync();

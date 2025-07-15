@@ -40,16 +40,17 @@
                                     <p class="mb-2 text-muted"><strong>Ngày ứng tuyển:</strong> @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
                                     @if (job.CvId != null)
                                     {
-                                        <div class="mb-2">
-                                            <strong>CV đã nộp:</strong> <a href="@job.CvFileUrl" target="_blank">@job.CvName</a>
-                                            @if (!string.IsNullOrEmpty(job.CvNotes))
-                                            {
-                                                <span class="text-muted small ms-2">(@job.CvNotes)</span>
-                                            }
-                                            <span class="badge bg-info ms-2">@job.SourceType</span>
-                                        </div>
+                                       
                                     }
-                                    <a href="/job/details/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+@if (!string.IsNullOrEmpty(job.CvFileUrl))
+{
+    <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm ms-2" target="_blank">Xem CV đã ứng tuyển</a>
+}
+else
+{
+    <span class="text-muted small ms-2">Không tìm thấy file CV</span>
+}
                                     
                                     <button class="btn btn-danger btn-sm ms-2" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
                                 </div>
