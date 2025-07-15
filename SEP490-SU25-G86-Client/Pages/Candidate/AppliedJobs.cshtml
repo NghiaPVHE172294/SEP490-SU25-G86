@@ -50,7 +50,7 @@
                                         </div>
                                     }
                                     <a href="/job/details/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
-                                    <button class="btn btn-warning btn-sm ms-2" onclick="openUpdateCvModal(@job.SubmissionId, @job.CvId)">Cập nhật CV</button>
+                                    
                                     <button class="btn btn-danger btn-sm ms-2" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
                                 </div>
                             }
@@ -97,118 +97,9 @@
         </div>
     </div>
 </section>
-<!-- Modal cập nhật CV -->
-<div class="modal fade" id="updateCvModal" tabindex="-1" aria-labelledby="updateCvModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateCvModalLabel">Cập nhật CV cho đơn ứng tuyển</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="updateCvForm">
-          <input type="hidden" id="updateSubmissionId" />
-          <div class="mb-3">
-            <label for="selectNewCv" class="form-label">Chọn CV mới</label>
-            <select class="form-select" id="selectNewCv">
-              <!-- Option sẽ được load bằng JS -->
-            </select>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" id="btnUpdateCvConfirm">Cập nhật</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
 <script>
-let myCvs = [];
-function openUpdateCvModal(submissionId, currentCvId) {
-    console.log('Opening update CV modal - SubmissionId:', submissionId, 'CurrentCvId:', currentCvId);
-    
-    // Lưu submissionId vào hidden input
-    document.getElementById('updateSubmissionId').value = submissionId;
-    
-    // Gọi API lấy danh sách CV của user
-    fetch('/Common/MyCVs?handler=List', { method: 'GET' })
-        .then(res => {
-            console.log('MyCVs API response status:', res.status);
-            return res.json();
-        })
-        .then(data => {
-            console.log('MyCVs data:', data);
-            myCvs = data;
-            let select = document.getElementById('selectNewCv');
-            select.innerHTML = '';
-            
-            if (myCvs && myCvs.length > 0) {
-                myCvs.forEach(cv => {
-                    let option = document.createElement('option');
-                    option.value = cv.cvId;
-                    option.text = cv.cvName || cv.fileName;
-                    if (cv.cvId == currentCvId) option.selected = true;
-                    select.appendChild(option);
-                });
-            } else {
-                console.log('No CVs found for user');
-                let option = document.createElement('option');
-                option.value = '';
-                option.text = 'Không có CV nào';
-                select.appendChild(option);
-            }
-            
-            var modal = new bootstrap.Modal(document.getElementById('updateCvModal'));
-            modal.show();
-        })
-        .catch(error => {
-            console.error('Error loading CVs:', error);
-            alert('Lỗi khi tải danh sách CV: ' + error.message);
-        });
-}
-document.getElementById('btnUpdateCvConfirm').onclick = function() {
-    let submissionId = document.getElementById('updateSubmissionId').value;
-    let newCvId = document.getElementById('selectNewCv').value;
-    if (!newCvId) { alert('Vui lòng chọn CV!'); return; }
-    
-    const requestData = { submissionId: parseInt(submissionId), newCvId: parseInt(newCvId), userId: parseInt(window.userId) };
-    console.log('Sending update CV request:', requestData);
-    console.log('JWT Token:', window.jwtToken ? 'Present' : 'Missing');
-    
-    if (!window.jwtToken) {
-        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        return;
-    }
-    
-    // Gọi API cập nhật CV
-    fetch('https://localhost:7004/api/AppliedJobs/update-cv', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.jwtToken
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(res => {
-        if (!res.ok) {
-            return res.json().then(data => {
-                throw new Error(data.message || 'Lỗi khi cập nhật CV!');
-            });
-        }
-        return res.json();
-    })
-    .then(data => {
-        alert(data.message || 'Cập nhật thành công!');
-        location.reload();
-    })
-    .catch(error => {
-        console.error('Error updating CV:', error);
-        alert(error.message || 'Lỗi khi cập nhật CV!');
-    });
-};
-
 function withdrawApplication(submissionId) {
     if (!confirm('Bạn chắc chắn muốn rút đơn ứng tuyển này?')) return;
     // Lấy userId từ biến toàn cục hoặc session
