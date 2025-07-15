@@ -10,9 +10,9 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
     {
         private readonly HttpClient _httpClient;
 
-        public CompanyInformationModel(IHttpClientFactory factory)
+        public CompanyInformationModel(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = factory.CreateClient();
+            _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
@@ -20,19 +20,28 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var token = HttpContext.Session.GetString("jwt_token");
             var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+            var role = HttpContext.Session.GetString("user_role");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userIdStr) || role != "EMPLOYER")
                 return RedirectToPage("/Common/Login");
 
-            var token = HttpContext.Session.GetString("jwt_token");
-            if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if (!int.TryParse(userIdStr, out int userId))
+                return RedirectToPage("/Common/Login");
 
-            var res = await _httpClient.GetAsync($"api/Companies/user/{userId}");
-            if (res.IsSuccessStatusCode)
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"api/Companies/me/{userId}");
+
+            if (response.IsSuccessStatusCode)
             {
-                var json = await res.Content.ReadAsStringAsync();
-                Company = JsonSerializer.Deserialize<CompanyDetailDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var content = await response.Content.ReadAsStringAsync();
+                Company = JsonSerializer.Deserialize<CompanyDetailDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
+            {
+                Company = null;
             }
 
             return Page();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
@@ -34,13 +35,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
             return Ok(company);
         }
 
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> CreateCompany(int userId, [FromBody] CompanyCreateUpdateDTO dto)
+        [HttpPost]
+        public async Task<IActionResult> CreateCompany([FromBody] CompanyCreateUpdateDTO dto)
         {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                return Unauthorized();
+
             var created = await _companyService.CreateCompanyAsync(userId, dto);
             if (!created) return BadRequest("User has already created a company.");
             return Ok("Company created successfully.");
         }
+
 
         [HttpPut("{companyId}")]
         public async Task<IActionResult> UpdateCompany(int companyId, [FromBody] CompanyCreateUpdateDTO dto)

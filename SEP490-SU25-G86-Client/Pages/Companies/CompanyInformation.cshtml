@@ -1,33 +1,36 @@
 ﻿@page
 @model SEP490_SU25_G86_Client.Pages.Companies.CompanyInformationModel
 @{
-    ViewData["Title"] = "Company Information";
+    ViewData["Title"] = "Thông tin công ty";
 }
 
-<section class="container py-5">
-    <div class="card">
-        <div class="card-body">
-            @if (Model.Company != null)
+@if (Model.Company == null)
+{
+    <div class="text-center mt-5">
+        <p>Bạn chưa tạo công ty nào.</p>
+        <a class="btn btn-success" asp-page="/Companies/CreateCompany">Tạo công ty</a>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <h2>Thông tin công ty</h2>
+        <div class="card p-4">
+            <h4>@Model.Company.CompanyName</h4>
+            <p><strong>Ngành nghề:</strong> @Model.Company.IndustryName</p>
+            <p><strong>Mã số thuế:</strong> @Model.Company.TaxCode</p>
+            <p><strong>Email:</strong> @Model.Company.Email</p>
+            <p><strong>Điện thoại:</strong> @Model.Company.Phone</p>
+            <p><strong>Địa chỉ:</strong> @Model.Company.Address</p>
+            <p><strong>Website:</strong> @Model.Company.Website</p>
+            <p><strong>Quy mô:</strong> @Model.Company.CompanySize</p>
+            <p><strong>Mô tả:</strong> @Model.Company.Description</p>
+            @if (!string.IsNullOrEmpty(Model.Company.LogoUrl))
             {
-                <h3>@Model.Company.CompanyName</h3>
-                <p><strong>Tax Code:</strong> @Model.Company.TaxCode</p>
-                <p><strong>Industry:</strong> @Model.Company.IndustryName</p>
-                <p><strong>Email:</strong> @Model.Company.Email</p>
-                <p><strong>Phone:</strong> @Model.Company.Phone</p>
-                <p><strong>Address:</strong> @Model.Company.Address</p>
-                <p><strong>Size:</strong> @Model.Company.CompanySize</p>
-                <p><strong>Description:</strong> @Model.Company.Description</p>
-                <p><strong>Website:</strong> <a href="@Model.Company.Website" target="_blank">@Model.Company.Website</a></p>
+                <img src="@Model.Company.LogoUrl" alt="Logo" style="max-height: 100px;" />
+            }
 
-                <a asp-page="/Companies/UpdateCompany" class="btn btn-primary mt-3">Cập nhật công ty</a>
-            }
-            else
-            {
-                <div class="text-center text-muted">
-                    <p>Bạn chưa có thông tin công ty nào.</p>
-                    <a asp-page="/Companies/CreateCompany" class="btn btn-success">Tạo mới công ty</a>
-                </div>
-            }
+            <a asp-page="/Companies/UpdateCompany" asp-route-id="@Model.Company.CompanyId" class="btn btn-primary mt-3">Chỉnh sửa</a>
         </div>
     </div>
-</section>
+}
