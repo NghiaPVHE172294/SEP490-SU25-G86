@@ -29,7 +29,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
 
         public async Task DeleteAsync(Cv cv)
         {
-            _context.Cvs.Remove(cv);
+            cv.IsDelete = true;
+            _context.Cvs.Update(cv);
             await _context.SaveChangesAsync();
         }
 
@@ -47,6 +48,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
         public async Task<bool> HasBeenUsedInSubmissionAsync(int cvId)
         {
             return await _context.Cvsubmissions.AnyAsync(s => s.CvId == cvId && !s.IsDelete);
+        }
+
+        public async Task<bool> HasBeenUsedInSubmissionAsync(int cvId, bool onlyActive = true)
+        {
+            if (onlyActive)
+                return await _context.Cvsubmissions.AnyAsync(s => s.CvId == cvId && !s.IsDelete);
+            else
+                return await _context.Cvsubmissions.AnyAsync(s => s.CvId == cvId);
         }
     }
 }
