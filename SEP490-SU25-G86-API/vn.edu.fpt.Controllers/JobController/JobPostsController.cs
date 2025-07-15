@@ -161,6 +161,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             return Ok(result);
         }
 
+        /// <summary>
+        /// Cập nhật một bài tuyển dụng
+        /// </summary>
+        /// <param name="dto">Thông tin job post cần cập nhật</param>
+        /// <returns>Chi tiết job post vừa cập nhật</returns>
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateJobPost([FromBody] UpdateJobPostDTO dto)
+        {
+            var accountId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+            var result = await _jobPostService.UpdateJobPostAsync(dto, user.UserId);
+            return Ok(result);
+        }
+
         [HttpGet("{id}/jobposts")]
         [AllowAnonymous]
         public async Task<IActionResult> GetJobPostsByCompanyId(int id, [FromQuery] int page = 1, [FromQuery] int pageSize = 5)

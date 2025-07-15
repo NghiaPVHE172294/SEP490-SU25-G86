@@ -1,105 +1,106 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.IndustryDTO;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
-namespace SEP490_SU25_G86_Client.Pages.Employer
+namespace SEP490_SU25_G86_Client.Pages.Companies
 {
     public class CreateCompanyModel : PageModel
     {
         private readonly HttpClient _httpClient;
 
+        // Constructor nhận IHttpClientFactory để tạo HttpClient dùng cho gọi API
         public CreateCompanyModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new System.Uri("https://localhost:7004/");
+            _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
+        // Bind dữ liệu từ form tạo công ty
         [BindProperty]
-        public AddCompanyDTO Company { get; set; } = new();
+        public CompanyCreateUpdateDTO Company { get; set; } = new();
 
-        public string ErrorMessage { get; set; }
-        public string SuccessMessage { get; set; }
+        // Danh sách ngành nghề (dropdown)
+        public List<IndustryDTO> Industries { get; set; } = new();
 
+        // Khi truy cập GET vào trang
         public async Task<IActionResult> OnGetAsync()
         {
+            // Kiểm tra vai trò: chỉ EMPLOYER mới được phép tạo công ty
             var role = HttpContext.Session.GetString("user_role");
-            if (role != "EMPLOYER")
-            {
-                return RedirectToPage("/NotFound");
-            }
-
-            // Check for success message from TempData
-            if (TempData["SuccessMessage"] != null)
-            {
-                SuccessMessage = TempData["SuccessMessage"].ToString();
-            }
-
-            return Page();
-        }
-
-        public class AddCompanyDTO
-        {
-            [Required(ErrorMessage = "Tên công ty là bắt buộc.")]
-            public string CompanyName { get; set; }
-
-            public string? Email { get; set; }
-            public string? Address { get; set; }
-            public string? Phone { get; set; }
-            public string? Website { get; set; }
-            public string? TaxCode { get; set; }
-            public string? Description { get; set; }
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var role = HttpContext.Session.GetString("user_role");
-            if (role != "EMPLOYER")
-            {
-                return RedirectToPage("/NotFound");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                ErrorMessage = "Vui lòng nhập đầy đủ thông tin.";
-                return Page();
-            }
+            if (role != "EMPLOYER") return RedirectToPage("/Common/Login");
 
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var json = JsonSerializer.Serialize(Company);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
+            // Gọi API lấy danh sách ngành nghề
+            var res = await _httpClient.GetAsync("api/Industries");
+            if (res.IsSuccessStatusCode)
             {
-                var response = await _httpClient.PostAsync("api/AddCompany", content);
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
-                    return RedirectToPage("/Companies/CreateCompany");
-                }
-                else
-                {
-                    
-                    TempData["SuccessMessage"] = "Công ty đã được tạo thành công!";
-                    return RedirectToPage("/Companies/CreateCompany");
-                    //var errorContent = await response.Content.ReadAsStringAsync();
-                    //ErrorMessage = $"Lỗi: {response.StatusCode} - {errorContent}";
-                    //return Page();
-                }
-            }
-            catch (System.Exception ex)
-            {
-                ErrorMessage = $"Lỗi hệ thống: {ex.Message}";
+                var content = await res.Content.ReadAsStringAsync();
+                Industries = JsonSerializer.Deserialize<List<IndustryDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             }
 
             return Page();
+        }
+
+        // Khi submit form POST để tạo công ty
+        public async Task<IActionResult> OnPostAsync()
+        {
+            // Kiểm tra session
+            var role = HttpContext.Session.GetString("user_role");
+            var userIdStr = HttpContext.Session.GetString("userId");
+            var token = HttpContext.Session.GetString("jwt_token");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userIdStr) || role != "EMPLOYER")
+                return RedirectToPage("/Common/Login");
+
+            if (!int.TryParse(userIdStr, out int userId))
+                return RedirectToPage("/Common/Login");
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Nếu dữ liệu không hợp lệ (validation failed)
+            if (!ModelState.IsValid)
+            {
+                await LoadIndustriesAsync();
+                TempData["Error"] = "Thông tin nhập vào không hợp lệ.";
+                return Page();
+            }
+
+            // Serialize DTO thành JSON và gửi API
+            var json = JsonSerializer.Serialize(Company);
+            var contentJson = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("api/Companies", contentJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Tạo thành công => chuyển đến trang thông tin công ty
+                return RedirectToPage("/Companies/CompanyInformation");
+            }
+            else
+            {
+                await LoadIndustriesAsync(); // load lại dropdown
+                var errMsg = await response.Content.ReadAsStringAsync();
+                TempData["Error"] = $"Tạo công ty thất bại: {errMsg}";
+                return Page();
+            }
+        }
+
+        // Hàm hỗ trợ load lại danh sách ngành nghề nếu xảy ra lỗi
+        private async Task LoadIndustriesAsync()
+        {
+            var res = await _httpClient.GetAsync("api/Industries");
+            if (res.IsSuccessStatusCode)
+            {
+                var content = await res.Content.ReadAsStringAsync();
+                Industries = JsonSerializer.Deserialize<List<IndustryDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
         }
     }
 }

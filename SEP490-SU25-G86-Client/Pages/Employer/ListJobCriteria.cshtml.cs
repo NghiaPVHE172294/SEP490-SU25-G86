@@ -37,6 +37,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new System.Uri("https://localhost:7004/");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             // Lấy danh sách JobPost
             var jobsResponse = await client.GetAsync("api/jobposts/employer");
             if (jobsResponse.IsSuccessStatusCode)

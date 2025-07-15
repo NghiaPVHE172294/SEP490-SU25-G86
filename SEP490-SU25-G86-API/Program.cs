@@ -233,6 +233,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IBanUserService, BanUserService>();
             builder.Services.AddScoped<IBanUserRepository, BanUserRepository>();
 
+            //InfoCompany
+            builder.Services.AddScoped<IInfoCompanyService, InfoCompanyService>();
+            builder.Services.AddScoped<IInfoCompanyRepository, InfoCompanyRepository>();
+
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 

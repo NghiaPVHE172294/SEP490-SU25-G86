@@ -27,8 +27,10 @@
                 <th>Tên ứng viên</th>
                 <th>File CV</th>
                 <th>Ngày nộp</th>
-                <th>Shortlisted</th>
+                <th>Trạng thái</th>
+                <th>Điểm phù hợp</th>
                 <th>Ghi chú</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +47,20 @@
                     }
                 </td>
                 <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
-                <td>@(cv.IsShortlisted == true ? "✔" : "")</td>
+                <td>@cv.Status</td>
+                <td>@(cv.TotalScore?.ToString("0.##") ?? "-")</td>
                 <td>@cv.RecruiterNote</td>
+                <td>
+                        @if (!string.IsNullOrEmpty(cv.Status) && cv.Status.Trim().ToUpper().Contains("CHỜ XỬ LÝ"))
+                    {
+                        <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
+                            <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
+                        </form>
+                        <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+                            <button type="submit" class="btn btn-danger btn-sm">Không duyệt</button>
+                        </form>
+                    }
+                </td>
             </tr>
         }
         </tbody>

@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\images\" />
+    <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
+    <Content Update="wwwroot\css\NotFound.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -70,6 +70,39 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 CreatedAt = result.CreatedAt
             };
         }
-
+// ... existing code ...
+        public async Task<JobCriterionDTO> UpdateJobCriterionAsync(UpdateJobCriterionDTO dto, int userId)
+        {
+            var jobCriterion = await _context.JobCriteria.FirstOrDefaultAsync(jc => jc.JobCriteriaId == dto.JobCriteriaId && !jc.IsDelete);
+            if (jobCriterion == null)
+                throw new Exception("JobCriterion không tồn tại.");
+            var jobPost = await _context.JobPosts.FirstOrDefaultAsync(jp => jp.JobPostId == dto.JobPostId && !jp.IsDelete);
+            if (jobPost == null)
+                throw new Exception("JobPost không tồn tại.");
+            if (jobPost.EmployerId != userId)
+                throw new UnauthorizedAccessException($"Access Denied: You do not have permission. (jobPost.EmployerId={jobPost.EmployerId}, userId={userId})");
+            // Cập nhật các trường
+            jobCriterion.JobPostId = dto.JobPostId;
+            jobCriterion.RequiredExperience = dto.RequiredExperience;
+            jobCriterion.RequiredSkills = dto.RequiredSkills;
+            jobCriterion.EducationLevel = dto.EducationLevel;
+            jobCriterion.RequiredJobTitles = dto.RequiredJobTitles;
+            jobCriterion.PreferredLanguages = dto.PreferredLanguages;
+            jobCriterion.PreferredCertifications = dto.PreferredCertifications;
+            var result = await _repository.UpdateJobCriterionAsync(jobCriterion);
+            return new JobCriterionDTO
+            {
+                JobCriteriaId = result.JobCriteriaId,
+                JobPostId = result.JobPostId,
+                RequiredExperience = result.RequiredExperience,
+                RequiredSkills = result.RequiredSkills,
+                EducationLevel = result.EducationLevel,
+                RequiredJobTitles = result.RequiredJobTitles,
+                PreferredLanguages = result.PreferredLanguages,
+                PreferredCertifications = result.PreferredCertifications,
+                CreatedAt = result.CreatedAt
+            };
+        }
+// ... existing code ...
     }
 } 

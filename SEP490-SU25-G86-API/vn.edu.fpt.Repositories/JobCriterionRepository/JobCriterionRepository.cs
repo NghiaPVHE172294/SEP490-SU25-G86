@@ -27,5 +27,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository
             await _context.SaveChangesAsync();
             return jobCriterion;
         }
+
+        public async Task<JobCriterion> UpdateJobCriterionAsync(JobCriterion jobCriterion)
+        {
+            _context.JobCriteria.Update(jobCriterion);
+            await _context.SaveChangesAsync();
+            return jobCriterion;
+        }
     }
 } 

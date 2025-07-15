@@ -234,6 +234,85 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             return detail!;
         }
 
+        public async Task<ViewDetailJobPostDTO> UpdateJobPostAsync(UpdateJobPostDTO dto, int employerId)
+        {
+            var jobPost = await _jobPostRepo.GetJobPostByIdAsync(dto.JobPostId);
+            if (jobPost == null)
+                throw new Exception("JobPost không tồn tại.");
+            if (jobPost.EmployerId != employerId)
+                throw new UnauthorizedAccessException($"Access Denied: You do not have permission. (jobPost.EmployerId={jobPost.EmployerId}, employerId={employerId})");
+
+            // Xử lý các trường liên kết nếu có nhập mới
+            int? industryId = dto.IndustryId;
+            if (!string.IsNullOrWhiteSpace(dto.NewIndustryName))
+            {
+                var industry = await _jobPostRepo.AddIndustryIfNotExistsAsync(dto.NewIndustryName.Trim());
+                industryId = industry.IndustryId;
+            }
+            int? jobPositionId = dto.JobPositionId;
+            if (!string.IsNullOrWhiteSpace(dto.NewJobPositionName))
+            {
+                var jobPosition = await _jobPostRepo.AddJobPositionIfNotExistsAsync(dto.NewJobPositionName.Trim(), industryId);
+                jobPositionId = jobPosition.PositionId;
+            }
+            int? salaryRangeId = dto.SalaryRangeId;
+            if (!string.IsNullOrWhiteSpace(dto.NewSalaryRange))
+            {
+                var parts = dto.NewSalaryRange.Split('-');
+                if (parts.Length == 3 && int.TryParse(parts[0], out int min) && int.TryParse(parts[1], out int max))
+                {
+                    var salaryRange = await _jobPostRepo.AddSalaryRangeIfNotExistsAsync(min, max, parts[2]);
+                    salaryRangeId = salaryRange.SalaryRangeId;
+                }
+            }
+            int? provinceId = dto.ProvinceId;
+            if (!string.IsNullOrWhiteSpace(dto.NewProvinceName))
+            {
+                var province = await _jobPostRepo.AddProvinceIfNotExistsAsync(dto.NewProvinceName.Trim());
+                provinceId = province.ProvinceId;
+            }
+            int? experienceLevelId = dto.ExperienceLevelId;
+            if (!string.IsNullOrWhiteSpace(dto.NewExperienceLevelName))
+            {
+                var exp = await _jobPostRepo.AddExperienceLevelIfNotExistsAsync(dto.NewExperienceLevelName.Trim());
+                experienceLevelId = exp.ExperienceLevelId;
+            }
+            int? jobLevelId = dto.JobLevelId;
+            if (!string.IsNullOrWhiteSpace(dto.NewJobLevelName))
+            {
+                var jl = await _jobPostRepo.AddJobLevelIfNotExistsAsync(dto.NewJobLevelName.Trim());
+                jobLevelId = jl.JobLevelId;
+            }
+            int? employmentTypeId = dto.EmploymentTypeId;
+            if (!string.IsNullOrWhiteSpace(dto.NewEmploymentTypeName))
+            {
+                var et = await _jobPostRepo.AddEmploymentTypeIfNotExistsAsync(dto.NewEmploymentTypeName.Trim());
+                employmentTypeId = et.EmploymentTypeId;
+            }
+
+            // Cập nhật các trường
+            jobPost.IndustryId = industryId;
+            jobPost.JobPositionId = jobPositionId;
+            jobPost.Title = dto.Title;
+            jobPost.SalaryRangeId = salaryRangeId;
+            jobPost.ProvinceId = provinceId;
+            jobPost.ExperienceLevelId = experienceLevelId;
+            jobPost.JobLevelId = jobLevelId;
+            jobPost.EmploymentTypeId = employmentTypeId;
+            jobPost.EndDate = dto.EndDate;
+            jobPost.Description = dto.Description;
+            jobPost.CandidaterRequirements = dto.CandidaterRequirements;
+            jobPost.Interest = dto.Interest;
+            jobPost.WorkLocation = dto.WorkLocation;
+            jobPost.IsAienabled = dto.IsAienabled;
+            jobPost.Status = dto.Status;
+            jobPost.UpdatedDate = DateTime.UtcNow;
+
+            var updated = await _jobPostRepo.UpdateJobPostAsync(jobPost);
+            var detail = await GetJobPostDetailByIdAsync(updated.JobPostId);
+            return detail!;
+        }
+
         public async Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize)
         {
             var (posts, totalItems) = await _jobPostRepo.GetJobPostsByCompanyIdAsync(companyId, page, pageSize);
@@ -268,6 +347,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 SubmissionDate = s.SubmissionDate,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
+                Status = s.Status, // lấy Status mới
+                TotalScore = s.MatchedCvandJobPost != null ? s.MatchedCvandJobPost.TotalScore : null, // lấy TotalScore từ bảng liên kết
                 RecruiterNote = s.RecruiterNote
             }).ToList();
         }

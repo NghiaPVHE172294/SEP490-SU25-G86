@@ -78,5 +78,28 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobCriterionController
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// Cập nhật một tiêu chí công việc cho user hiện tại.
+        /// </summary>
+        /// <param name="dto">Thông tin tiêu chí cần cập nhật.</param>
+        /// <returns>Kết quả cập nhật tiêu chí.</returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> UpdateJobCriterion([FromBody] UpdateJobCriterionDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác định được tài khoản.");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+            var result = await _service.UpdateJobCriterionAsync(dto, user.UserId);
+            return Ok(result);
+        }
     }
 }

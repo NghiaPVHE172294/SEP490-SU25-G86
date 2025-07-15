@@ -1,8 +1,25 @@
 @page
 @model SEP490_SU25_G86_Client.Pages.NotFoundModel
 @{
+    Layout = null;
     ViewData["Title"] = "404 - Không tìm thấy trang";
 }
-<h2>404 - Không tìm thấy trang</h2>
-<p>Bạn không có quyền truy cập vào trang này hoặc trang không tồn tại.</p>
-<a href="/Homepage">Quay về trang chủ</a> 
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Không tìm thấy trang</title>
+    <link rel="stylesheet" href="~/css/NotFound.css" />
+</head>
+<body>
+    <div class="bg-gif"></div>
+
+    <div class="container">
+        <h1>404</h1>
+        <p>Không tìm thấy trang hoặc bạn không có quyền truy cập 🚀</p>
+        <a href="/Common/Homepage">🔙 Quay về trang chủ</a>
+    </div>
+</body>
+</html>

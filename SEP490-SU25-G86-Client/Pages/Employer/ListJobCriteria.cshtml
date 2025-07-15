@@ -29,6 +29,7 @@ else
                             <th>Ngôn ngữ ưu tiên</th>
                             <th>Chứng chỉ ưu tiên</th>
                             <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +45,10 @@ else
                             <td>@item.PreferredLanguages</td>
                             <td>@item.PreferredCertifications</td>
                             <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">Update</a>
+                                </td>
+
                         </tr>
                     }
                     </tbody>
@@ -51,7 +56,10 @@ else
             }
             else
             {
-                <div class="alert alert-secondary">Chưa có tiêu chí tuyển dụng cho tin này.</div>
+                <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+                    <span>Chưa có tiêu chí tuyển dụng cho tin này.</span>
+                    <a class="btn btn-primary btn-sm" href="/Employer/AddJobCriteria?jobPostId=@job.JobPostId">Thêm tiêu chí tuyển dụng</a>
+                </div>
             }
         </div>
     }

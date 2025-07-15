@@ -36,6 +36,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
                 return NotFound("Không tìm thấy job post.");
             if (jobPost.EmployerId != user.UserId)
                 return Unauthorized("Bạn không có quyền xem CV submissions của job post này.");
+            // Trả về danh sách submissions có Status và TotalScore
             var result = await _jobPostService.GetCvSubmissionsByJobPostIdAsync(jobPostId);
             return Ok(result);
         }

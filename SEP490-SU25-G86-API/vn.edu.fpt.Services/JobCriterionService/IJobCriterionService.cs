@@ -9,6 +9,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
         Task<List<JobCriterionDTO>> GetJobCriteriaByUserIdAsync(int userId);
 
         Task<JobCriterionDTO> AddJobCriterionAsync(AddJobCriterionDTO dto, int userId);
+        Task<JobCriterionDTO> UpdateJobCriterionAsync(UpdateJobCriterionDTO dto, int userId);
 
     }
 } 
