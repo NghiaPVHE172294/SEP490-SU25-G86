@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository
 {
@@ -12,16 +13,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository
             _context = context;
         }
 
-        public async Task<Company?> GetByUserIdAsync(int userId)
+        public async Task<Company?> GetByAccountIdAsync(int accountId)
         {
             return await _context.Companies
                 .Include(c => c.Industry)
-                .FirstOrDefaultAsync(c => c.CreatedByUserId == userId && c.IsDelete == false);
+                .FirstOrDefaultAsync(c => c.CreatedByUserId == accountId && c.IsDelete == false);
         }
 
         public async Task<Company?> GetByIdAsync(int companyId)
         {
-            return await _context.Companies.Include(c => c.Industry)
+            return await _context.Companies
+                .Include(c => c.Industry)
                 .FirstOrDefaultAsync(c => c.CompanyId == companyId && c.IsDelete == false);
         }
 
@@ -36,5 +38,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository
             _context.Companies.Update(company);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> IsDuplicateCompanyAsync(CompanyCreateUpdateDTO dto)
+        {
+            return await _context.Companies.AnyAsync(c =>
+                !c.IsDelete &&
+                (c.CompanyName == dto.CompanyName ||
+                 c.TaxCode == dto.TaxCode ||
+                 c.Email == dto.Email ||
+                 c.Phone == dto.Phone ||
+                 (!string.IsNullOrEmpty(dto.Website) && c.Website == dto.Website))
+            );
+        }
+
     }
 }

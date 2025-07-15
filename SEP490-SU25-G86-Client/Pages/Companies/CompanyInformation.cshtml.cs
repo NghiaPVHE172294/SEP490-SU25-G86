@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
 using System.Net.Http.Headers;
@@ -10,29 +10,45 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
     {
         private readonly HttpClient _httpClient;
 
-        public CompanyInformationModel(IHttpClientFactory factory)
+        // Constructor: khởi tạo HttpClient với base URL
+        public CompanyInformationModel(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = factory.CreateClient();
+            _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
+        // Thuộc tính để binding dữ liệu công ty trả về từ API
         public CompanyDetailDTO? Company { get; set; }
 
+        // Xử lý khi gọi trang (HTTP GET)
         public async Task<IActionResult> OnGetAsync()
         {
-            var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+            // Lấy token và role từ Session
+            var token = HttpContext.Session.GetString("jwt_token");
+            var role = HttpContext.Session.GetString("user_role");
+
+            // Nếu chưa đăng nhập hoặc không phải EMPLOYER, chuyển đến trang đăng nhập
+            if (string.IsNullOrEmpty(token) || role != "EMPLOYER")
                 return RedirectToPage("/Common/Login");
 
-            var token = HttpContext.Session.GetString("jwt_token");
-            if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // Gắn token vào Header để gọi API bảo vệ
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var res = await _httpClient.GetAsync($"api/Companies/user/{userId}");
-            if (res.IsSuccessStatusCode)
+            // Gọi API để lấy thông tin công ty do người dùng hiện tại tạo
+            var response = await _httpClient.GetAsync("api/Companies/me");
+
+            // Nếu lấy thành công thì deserialize dữ liệu, ngược lại gán Company = null
+            if (response.IsSuccessStatusCode)
             {
-                var json = await res.Content.ReadAsStringAsync();
-                Company = JsonSerializer.Deserialize<CompanyDetailDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var content = await response.Content.ReadAsStringAsync();
+                Company = JsonSerializer.Deserialize<CompanyDetailDTO>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            else
+            {
+                Company = null;
             }
 
             return Page();
