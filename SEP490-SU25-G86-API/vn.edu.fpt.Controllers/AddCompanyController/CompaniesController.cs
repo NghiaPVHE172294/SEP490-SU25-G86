@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService;
@@ -19,10 +18,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
             _companyService = companyService;
         }
 
-        [HttpGet("me/{userId}")]
-        public async Task<IActionResult> GetMyCompany(int userId)
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyCompany()
         {
-            var company = await _companyService.GetCompanyByUserIdAsync(userId);
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(accountIdStr) || !int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized();
+
+            var company = await _companyService.GetCompanyByAccountIdAsync(accountId);
             if (company == null) return NotFound();
             return Ok(company);
         }
@@ -38,22 +41,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyCreateUpdateDTO dto)
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(accountIdStr) || !int.TryParse(accountIdStr, out int accountId))
                 return Unauthorized();
 
-            var created = await _companyService.CreateCompanyAsync(userId, dto);
-            if (!created) return BadRequest("User has already created a company.");
-            return Ok("Company created successfully.");
+            var created = await _companyService.CreateCompanyAsync(accountId, dto);
+            if (!created) return BadRequest("Tài khoản này đã tạo công ty.");
+            return Ok("Tạo công ty thành công.");
         }
-
 
         [HttpPut("{companyId}")]
         public async Task<IActionResult> UpdateCompany(int companyId, [FromBody] CompanyCreateUpdateDTO dto)
         {
             var updated = await _companyService.UpdateCompanyAsync(companyId, dto);
-            if (!updated) return NotFound("Company not found.");
-            return Ok("Company updated successfully.");
+            if (!updated) return NotFound("Không tìm thấy công ty.");
+            return Ok("Cập nhật công ty thành công.");
         }
     }
 }
