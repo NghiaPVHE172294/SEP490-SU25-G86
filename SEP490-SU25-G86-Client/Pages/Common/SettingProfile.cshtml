@@ -80,11 +80,6 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary px-4">Cập nhật</button>
-
-                        @if (!string.IsNullOrEmpty(Model.ResultMessage))
-                        {
-                            <div class="alert alert-info mt-3">@Model.ResultMessage</div>
-                        }
                     </form>
                 </div>
             </div>
@@ -111,10 +106,6 @@
                         </div>
                         <button type="submit" class="btn btn-success px-4">Thay đổi</button>
                     </form>
-                    @if (!string.IsNullOrEmpty(Model.ResultMessage))
-                    {
-                        <div class="alert alert-info mt-3">@Model.ResultMessage</div>
-                    }
                 </div>
             </div>
         </div>
@@ -141,6 +132,36 @@
         </div>
     </div>
 </div>
+<!--Toast message-->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="toastMessage" class="toast align-items-center text-white @Model.ToastColor border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastBody">
+                <!-- Message content here -->
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Đóng"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const message = @Html.Raw(Json.Serialize(Model.ToastMessage));
+            if (message) {
+                const toastEl = document.getElementById("toastMessage");
+                const toastBody = document.getElementById("toastBody");
+
+                // Clear any previous content and set message
+                toastBody.textContent = message;
+
+                // Create and show toast
+                const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+                toast.show();
+            }
+        });
+    </script>
+}
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

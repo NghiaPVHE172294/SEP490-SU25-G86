@@ -14,7 +14,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public ChangePasswordDTO ChangePassword { get; set; } = new();
         [BindProperty]
         public UserProfileDTO UserProfile { get; set; } = new();
-        public string? ResultMessage { get; set; }
+        public string? ToastMessage { get; set; }
+        public string ToastColor { get; set; } = "bg-info";
         public SettingProfileModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
@@ -57,20 +58,32 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var content = new StringContent(JsonSerializer.Serialize(UserProfile), Encoding.UTF8, "application/json");
             var response = await client.PutAsync("https://localhost:7004/api/user/profile", content);
 
-            if (response.IsSuccessStatusCode)
-                ResultMessage = "✅ Cập nhật thông tin thành công.";
+            if (response.IsSuccessStatusCode) {
+                ToastMessage = "✅ Cập nhật thông tin thành công.";
+                ToastColor = "bg-success";
+
+                var getRes = await client.GetAsync("https://localhost:7004/api/user/profile");
+                if (getRes.IsSuccessStatusCode)
+                {
+                    var json = await getRes.Content.ReadAsStringAsync();
+                    var profile = JsonSerializer.Deserialize<UserProfileDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (profile != null)
+                        UserProfile = profile;
+                }
+            }
             else
             {
                 var msg = await response.Content.ReadAsStringAsync();
                 try
                 {
                     var json = JsonDocument.Parse(msg);
-                    ResultMessage = $"❌ {json.RootElement.GetProperty("message").GetString()}";
+                    ToastMessage = $"❌ {json.RootElement.GetProperty("message").GetString()}";
                 }
                 catch
                 {
-                    ResultMessage = "❌ Cập nhật thất bại.";
+                    ToastMessage = "❌ Cập nhật thất bại.";
                 }
+                ToastColor = "bg-danger";
             }
 
             return Page();

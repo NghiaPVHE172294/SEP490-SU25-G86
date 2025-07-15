@@ -37,17 +37,34 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
             var user = await _userRepo.GetUserByAccountIdAsync(accountId);
             if (user == null) return false;
 
-            user.Avatar = dto.Avatar;
-            user.FullName = dto.FullName;
-            user.Address = dto.Address;
-            user.Phone = dto.Phone;
-            if (DateTime.TryParseExact(dto.Dob, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dob))
+            if (!string.IsNullOrWhiteSpace(dto.FullName))
+                user.FullName = dto.FullName;
+
+            if (dto.Address != null)
+                user.Address = dto.Address;
+
+            if (dto.Phone != null)
+                user.Phone = dto.Phone;
+
+            if (!string.IsNullOrWhiteSpace(dto.Dob))
             {
-                user.Dob = dob.Date;
+                if (DateTime.TryParseExact(dto.Dob, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDob))
+                {
+                    user.Dob = parsedDob;
+                }
             }
-            user.LinkedIn = dto.LinkedIn;
-            user.Facebook = dto.Facebook;
-            user.AboutMe = dto.AboutMe;
+
+            if (dto.LinkedIn != null)
+                user.LinkedIn = dto.LinkedIn;
+
+            if (dto.Facebook != null)
+                user.Facebook = dto.Facebook;
+
+            if (dto.AboutMe != null)
+                user.AboutMe = dto.AboutMe;
+
+            if (dto.Avatar != null)
+                user.Avatar = dto.Avatar;
 
             await _userRepo.UpdateUserAsync(user);
             return true;
