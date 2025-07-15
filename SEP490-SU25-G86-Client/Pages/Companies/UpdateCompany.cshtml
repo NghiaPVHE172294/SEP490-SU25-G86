@@ -1,0 +1,79 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Companies.UpdateCompanyModel
+@{
+    ViewData["Title"] = "Update Company";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Cập nhật thông tin công ty</h2>
+
+    @if (!string.IsNullOrEmpty(TempData["Error"] as string))
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Tên công ty</label>
+            <input asp-for="Company.CompanyName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mã số thuế</label>
+            <input asp-for="Company.TaxCode" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ngành nghề</label>
+            <select asp-for="Company.IndustryId" class="form-select" required>
+                <option value="">-- Chọn ngành nghề --</option>
+                @foreach (var industry in Model.Industries)
+                {
+                    <option value="@industry.IndustryId">@industry.IndustryName</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input asp-for="Company.Email" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Số điện thoại</label>
+            <input asp-for="Company.Phone" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Địa chỉ</label>
+            <input asp-for="Company.Address" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Website</label>
+            <input asp-for="Company.Website" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Quy mô công ty</label>
+            <input asp-for="Company.CompanySize" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Logo URL</label>
+            <input asp-for="Company.LogoUrl" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea asp-for="Company.Description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+        <a href="/Companies/CompanyInformation" class="btn btn-secondary ms-2">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

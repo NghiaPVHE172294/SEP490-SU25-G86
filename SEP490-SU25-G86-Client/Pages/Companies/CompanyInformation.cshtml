@@ -1,0 +1,33 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Companies.CompanyInformationModel
+@{
+    ViewData["Title"] = "Company Information";
+}
+
+<section class="container py-5">
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Company != null)
+            {
+                <h3>@Model.Company.CompanyName</h3>
+                <p><strong>Tax Code:</strong> @Model.Company.TaxCode</p>
+                <p><strong>Industry:</strong> @Model.Company.IndustryName</p>
+                <p><strong>Email:</strong> @Model.Company.Email</p>
+                <p><strong>Phone:</strong> @Model.Company.Phone</p>
+                <p><strong>Address:</strong> @Model.Company.Address</p>
+                <p><strong>Size:</strong> @Model.Company.CompanySize</p>
+                <p><strong>Description:</strong> @Model.Company.Description</p>
+                <p><strong>Website:</strong> <a href="@Model.Company.Website" target="_blank">@Model.Company.Website</a></p>
+
+                <a asp-page="/Companies/UpdateCompany" class="btn btn-primary mt-3">Cập nhật công ty</a>
+            }
+            else
+            {
+                <div class="text-center text-muted">
+                    <p>Bạn chưa có thông tin công ty nào.</p>
+                    <a asp-page="/Companies/CreateCompany" class="btn btn-success">Tạo mới công ty</a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
