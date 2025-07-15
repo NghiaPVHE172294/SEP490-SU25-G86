@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,6 +10,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 {
     public class ListJobsModel : PageModel
     {
+        private readonly HttpClient _httpClient;
         public List<JobDto> Jobs { get; set; } = new();
         public List<Province> Provinces { get; set; } = new();
         public int? ProvinceId { get; set; }
@@ -25,6 +28,14 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
+        public List<CvDTO> MyCvs { get; set; } = new List<CvDTO>();
+
+        public ListJobsModel(IHttpClientFactory httpClientFactory)
+        {
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.BaseAddress = new Uri("https://localhost:7004/");
+        }
+
         public async Task OnGetAsync(
             [FromQuery] int page = 1,
             [FromQuery] int? provinceId = null,
@@ -117,6 +128,17 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             {
                 Console.WriteLine($"Error fetching jobs: {ex.Message}");
             }
+            // Lấy danh sách CV nếu đã đăng nhập
+            var userIdStr = HttpContext.Session.GetString("userId");
+            if (!string.IsNullOrEmpty(userIdStr) && int.TryParse(userIdStr, out int userId))
+            {
+                var cvRes = await _httpClient.GetAsync("api/Cv/my");
+                if (cvRes.IsSuccessStatusCode)
+                {
+                    var cvContent = await cvRes.Content.ReadAsStringAsync();
+                    MyCvs = JsonSerializer.Deserialize<List<CvDTO>>(cvContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<CvDTO>();
+                }
+            }
         }
         private async Task LoadProvincesAsync()
         {
@@ -132,6 +154,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         }
         public class JobDto
         {
+            [JsonPropertyName("jobPostId")]
+            public int JobPostId { get; set; }
             [JsonPropertyName("title")]
             public string Title { get; set; }
 
@@ -157,6 +181,18 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             public string Experience { get; set; }
             [JsonPropertyName("isApplied")]
             public bool IsApplied { get; set; }
+            public string FormattedSalary
+            {
+                get
+                {
+                    var parts = SalaryRange.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 4)
+                    {
+                        return $"{parts[0]} {parts[1]} {parts[2]} Triệu {parts[3]}";
+                    }
+                    return SalaryRange; 
+                }
+            }
         }
         public class JobPostApiResponse
         {

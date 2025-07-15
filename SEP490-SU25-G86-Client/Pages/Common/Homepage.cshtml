@@ -34,9 +34,10 @@
                 <!-- Location dropdown (mapped to provinceId) -->
                 <select class="form-select border-0 px-3" name="provinceId" style="flex: 0 0 20%;">
                     <option selected value="">Vị trí</option>
-                    <option value="1">Hà Nội</option>
-                    <option value="2">TP. Hồ Chí Minh</option>
-                    <option value="3">Đà Nẵng</option>
+                    @foreach (var province in Model.Provinces)
+                    {
+                        <option value="@province.ProvinceId">@province.ProvinceName</option>
+                    }
                 </select>
 
                 <!-- Search button -->
@@ -86,7 +87,7 @@
                                 <p class="text-muted mb-1">@job.CompanyName</p>
                                 <p class="text-muted mb-1">@job.Location</p>
                                 <div class="d-flex align-items-center justify-content-between mt-3">
-                                    <span class="text-custom fw-bold">@job.Salary Triệu</span>
+                                    <span class="text-custom fw-bold">@job.FormattedSalary</span>
                                     <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
                                 </div>
                             </div>

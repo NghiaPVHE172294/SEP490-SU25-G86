@@ -7,6 +7,7 @@ namespace SEP490_SU25_G86_Client.Pages
     public class HomepageModel : PageModel
     {
         public List<JobPostViewModel> JobPosts { get; set; } = new();
+        public List<Province> Provinces { get; set; } = new();
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
@@ -17,6 +18,30 @@ namespace SEP490_SU25_G86_Client.Pages
             int pageSize = 9;
             CurrentPage = page < 1 ? 1 : page;
             Region = region;
+
+            try
+            {
+                using var client = new HttpClient();
+                var provinceRes = await client.GetAsync("https://localhost:7004/api/provinces");
+
+                if (provinceRes.IsSuccessStatusCode)
+                {
+                    var provinceJson = await provinceRes.Content.ReadAsStringAsync();
+                    var provinceList = JsonSerializer.Deserialize<List<Province>>(provinceJson, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (provinceList != null)
+                    {
+                        Provinces = provinceList;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Provinces = new List<Province>();
+            }
             try
             {
                 using var client = new HttpClient();
@@ -82,12 +107,30 @@ namespace SEP490_SU25_G86_Client.Pages
             public string CompanyName { get; set; }
             public string Location { get; set; }
             public string Salary { get; set; }
+            public string FormattedSalary
+            {
+                get
+                {
+                    var parts = Salary.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 4)
+                    {
+                        return $"{parts[0]} {parts[1]} {parts[2]} Triệu {parts[3]}";
+                    }
+                    return Salary; 
+                }
+            }
         }
 
         private class JobPostApiResponse
         {
             public int TotalItems { get; set; }
             public List<JobPostViewModel> Jobs { get; set; }
+        }
+        public class Province
+        {
+            public int ProvinceId { get; set; }
+            public string ProvinceName { get; set; }
+            public string? Region { get; set; }
         }
     }
 }

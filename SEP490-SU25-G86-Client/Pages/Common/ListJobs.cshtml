@@ -15,21 +15,21 @@
             <div class="border rounded p-3 bg-white">
                 <form method="get" class="mb-4">
                 <!-- Search-->
-                <h5 class="mb-3">Search by Job Title</h5>
-                        <input type="text" name="keyword" class="form-control mb-3" placeholder="Job title or company" value="@Model.Keyword" />
+                <h5 class="mb-3">Tìm kiếm vị trí tuyển dụng</h5>
+                        <input type="text" name="keyword" class="form-control mb-3" placeholder="Vị trí tuyển dụng" value="@Model.Keyword" />
                 <!-- Location-->
-                <h6 class="mt-4">Location</h6>
+                <h6 class="mt-4">Địa điểm</h6>
                 <select class="form-select mb-3" name="provinceId">
-                    <option value="">Choose city</option>
+                    <option value="">Chọn thành phố</option>
                     @foreach (var province in Model.Provinces)
                     {
                         <option value="@province.ProvinceId">@province.ProvinceName</option>
                     }
                 </select>
                 <!-- Category Type -->
-                <h6 class="mt-4">Category</h6>
+                <h6 class="mt-4">Theo danh mục nghề</h6>
                 <select class="form-select mb-3" name="industryId">
-                    <option value="">Choose category</option>
+                    <option value="">Chọn danh mục nghề</option>
                     @foreach (var industry in Model.Industries)
                     {
                         <option value="@industry.IndustryId">@industry.IndustryName</option>
@@ -37,7 +37,7 @@
                 </select>
 
                 <!-- Job Type -->
-                    <h6 class="fw-bold">Job Type</h6>
+                    <h6 class="fw-bold">Hình thức việc làm</h6>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="jobtype-all" name="employmentTypeIds" value="">
                         <label class="form-check-label">Tất cả</label>
@@ -56,7 +56,7 @@
                     </div>
 
                 <!-- Experience Level -->
-                <h6 class="fw-bold">Experience Level</h6>
+                <h6 class="fw-bold">Kinh nghiệm</h6>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="" id="exp-all">
                         <label class="form-check-label" for="exp-all">Tất cả</label>
@@ -83,7 +83,7 @@
                     </div>
 
                 <!-- Date Posted -->
-                <h6 class="fw-bold">Date Posted</h6>
+                <h6 class="fw-bold">Ngày đăng</h6>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" name="datePostedRanges" value="" id="date-24h">
                         <label class="form-check-label" for="date-24h">Tất cả</label>
@@ -104,7 +104,7 @@
                     </div>
 
                 <!-- Salary -->
-                <h6 class="fw-bold">Salary</h6>
+                <h6 class="fw-bold">Mức lương</h6>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="salary_range" value="0-0">
                         <label class="form-check-label">Tất cả</label>
@@ -150,27 +150,31 @@
             {
                 <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
                     <div>
-                        @* <small class="text-muted">@job.TimePosted</small> *@
                         <h5 class="fw-bold mt-1">@job.Title</h5>
                         <div class="text-muted">@job.CompanyName</div>
 
                         <div class="d-flex flex-wrap mt-2 gap-3">
                             <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
                             <span class="text-secondary"><i class="bi bi-clock"></i> @job.JobType</span>
-                            <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.SalaryRange Triệu</span>
+                            <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.FormattedSalary</span>
                             <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.Experience</span>
                             <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
                         </div>
                     </div>
-                    <div>
-                        <a class="btn btn-custom btn-sm" href="#">Chi tiết</a>
+                    <div class="d-flex align-items-center gap-2">
+                        <a class="btn btn-custom btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
                         @if (job.IsApplied)
                         {
-                            <button class="btn btn-secondary btn-sm ms-2" disabled>Đã ứng tuyển</button>
+                            <button class="btn btn-secondary btn-sm" disabled>Đã ứng tuyển</button>
                         }
                         else
                         {
-                            <button class="btn btn-primary btn-sm ms-2">Ứng tuyển</button>
+                            <button type="button"
+                                    class="btn btn-primary btn-sm btn-apply-now"
+                                    data-job-id="@job.JobPostId"
+                                    data-job-title="@job.Title">
+                                <i class="bi bi-send"></i> Ứng tuyển
+                            </button>
                         }
                     </div>
                 </div>
@@ -206,6 +210,76 @@
         </div>
     </div>
 </div>
+
+<!-- Modal ứng tuyển -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyModalTitle">Ứng tuyển</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h6>Chọn CV để ứng tuyển</h6>
+                    <div id="cvList">
+                        @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
+                        {
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60%;">Tên CV</th>
+                                        <th style="width: 30%;">Ngày cập nhật</th>
+                                        <th style="width: 10%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cv in Model.MyCvs)
+                                    {
+                                        <tr id="cv-row-@cv.CvId">
+                                            <td>@cv.CVName</td>
+                                            <td>@(cv.UpdatedDate?.ToString("dd-MM-yyyy HH:mm") ?? "")</td>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="text-danger">Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
+                        }
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <h6>Tải CV lên từ thiết bị</h6>
+                    <input type="file" id="uploadCvInput" accept="application/pdf" />
+                    <div class="mt-2">
+                        <label for="uploadCvName" class="form-label">Tên CV</label>
+                        <input type="text" id="uploadCvName" class="form-control" placeholder="Nhập tên CV" />
+                    </div>
+                    <div class="mt-2">
+                        <label for="uploadCvNotes" class="form-label">Ghi chú</label>
+                        <textarea id="uploadCvNotes" class="form-control" placeholder="Nhập ghi chú (tuỳ chọn)"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnSubmitApplication">Nộp Hồ Sơ Ứng Tuyển</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="uploadSpinner" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(255,255,255,0.7);align-items:center;justify-content:center;flex-direction:column;">
+    <div class="spinner-border text-primary" role="status" style="width:3rem;height:3rem;">
+        <span class="visually-hidden">Đang tải lên...</span>
+    </div>
+    <div style="margin-top:16px;font-size:18px;">Đang tải lên CV, vui lòng chờ...</div>
+</div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -267,4 +341,102 @@
         }
         return query;
     }
+}
+@section Scripts {
+    <script>
+        const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
+        let selectedCvId = null;
+        let candidateId = '@HttpContext.Session.GetString("userId")';
+        let currentJobPostId = null;
+
+        // Gán sự kiện cho tất cả các nút "Ứng tuyển ngay"
+        document.querySelectorAll('.btn-apply-now').forEach(button => {
+            button.addEventListener('click', function () {
+                if (!candidateId) {
+                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                currentJobPostId = this.getAttribute('data-job-id');
+                const jobTitle = this.getAttribute('data-job-title');
+
+                document.getElementById('applyModalTitle').textContent = "Ứng tuyển " + jobTitle;
+                var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+                modal.show();
+            });
+        });
+
+        // Chọn CV có sẵn
+        window.selectCv = function (cvId) {
+            selectedCvId = cvId;
+            document.querySelectorAll('#cvList tr').forEach(tr => tr.classList.remove('selected'));
+            var row = document.getElementById('cv-row-' + cvId);
+            if (row) row.classList.add('selected');
+        };
+
+        // Nút "Gửi ứng tuyển"
+        document.getElementById('btnSubmitApplication').addEventListener('click', function () {
+            if (!currentJobPostId) {
+                alert('Không xác định được công việc.');
+                return;
+            }
+
+            if (selectedCvId) {
+                // Nộp bằng CV đã có
+                fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify({
+                        jobPostId: currentJobPostId,
+                        cvId: selectedCvId,
+                        candidateId: candidateId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    location.reload();
+                })
+                .catch(() => alert('Lỗi khi ứng tuyển!'));
+            } else {
+                // Nộp bằng upload mới
+                let file = document.getElementById('uploadCvInput').files[0];
+                let cvName = document.getElementById('uploadCvName').value;
+                let notes = document.getElementById('uploadCvNotes').value;
+                if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
+                if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
+
+                document.getElementById('uploadSpinner').style.display = 'flex';
+                let formData = new FormData();
+                formData.append('jobPostId', currentJobPostId);
+                formData.append('candidateId', candidateId);
+                formData.append('file', file);
+                formData.append('CVName', cvName);
+                if (notes) formData.append('Notes', notes);
+
+                fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('uploadSpinner').style.display = 'none';
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 100);
+                })
+                .catch(() => {
+                    document.getElementById('uploadSpinner').style.display = 'none';
+                    alert('Lỗi khi ứng tuyển!');
+                });
+            }
+        });
+    </script>
 }
