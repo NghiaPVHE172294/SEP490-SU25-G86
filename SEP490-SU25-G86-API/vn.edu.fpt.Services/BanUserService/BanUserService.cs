@@ -20,5 +20,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService
             await _banUserRepository.UpdateAsync(user);
             return true;
         }
+
+        public async Task<bool> UnbanUserAsync(int userId)
+        {
+            var user = await _banUserRepository.GetByIdAsync(userId);
+            if (user == null)
+                return false;
+
+            user.IsBan = false;
+            await _banUserRepository.UpdateAsync(user);
+            return true;
+        }
     }
 }
