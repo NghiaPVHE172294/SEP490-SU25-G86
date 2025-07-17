@@ -13,6 +13,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BanUserRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
@@ -24,13 +25,14 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PhoneOtpRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RemindRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.RolePermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SalaryRangeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services;
@@ -39,6 +41,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminAccoutServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
@@ -50,19 +53,18 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.PhoneOtpService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RemindService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.RolePermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SalaryRangeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BanUserRepository;
 
 namespace SEP490_SU25_G86_API
 {
@@ -236,6 +238,13 @@ namespace SEP490_SU25_G86_API
             //InfoCompany
             builder.Services.AddScoped<IInfoCompanyService, InfoCompanyService>();
             builder.Services.AddScoped<IInfoCompanyRepository, InfoCompanyRepository>();
+
+            // Phone OTP
+            builder.Services.AddMemoryCache();
+            builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddScoped<IOTPProvider, TwilioOtpProvider>();
+            builder.Services.AddScoped<IPhoneOtpService, PhoneOtpService>();
+            builder.Services.AddScoped<IPhoneOtpRepository, PhoneOtpRepository>();
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
