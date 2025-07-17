@@ -13,6 +13,9 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
         public List<AppliedJobDTO> AppliedJobs { get; set; } = new();
         public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
+        [BindProperty(SupportsGet = true)]
+        public string? StatusFilter { get; set; }
+
         public AppliedJobsModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -42,15 +45,24 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                AppliedJobs = JsonSerializer.Deserialize<List<AppliedJobDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                AppliedJobs = JsonSerializer.Deserialize<List<AppliedJobDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<AppliedJobDTO>();
             }
             else
             {
                 AppliedJobs = new List<AppliedJobDTO>();
             }
 
-            // Lấy 10 job mới nhất cho gợi ý
-            var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
+            // Lọc theo trạng thái nếu có
+            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái")
+            {
+                string backendStatus = StatusFilter;
+                if (StatusFilter == "Đã ứng tuyển")
+                    backendStatus = "OPEN";
+                AppliedJobs = AppliedJobs.Where(j => (j.Status ?? "").Equals(backendStatus, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            // Gợi ý việc làm
+            var suggestResponse = await _httpClient.GetAsync($"api/JobPosts/suggested/{userId}");
             if (suggestResponse.IsSuccessStatusCode)
             {
                 var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
