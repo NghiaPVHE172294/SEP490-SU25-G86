@@ -3,5 +3,6 @@
     public interface IBanUserService
     {
         Task<bool> BanUserAsync(int userId);
+        Task<bool> UnbanUserAsync(int userId);
     }
 }

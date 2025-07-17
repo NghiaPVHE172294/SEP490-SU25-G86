@@ -73,11 +73,22 @@
 
         <div style="margin-top: 20px; display: flex; gap: 10px;">
             <button type="button" style="background-color: #309689; color: white; padding: 8px 16px; border: none; border-radius: 4px;" onclick="openPopup()">Gửi Lời Nhắc</button>
-            <form method="post" asp-page-handler="Ban" asp-route-accountId="@Model.User.UserId">
-                <button type="submit" style="background-color: #963330; color: white; padding: 8px 16px; border: none; border-radius: 4px;">
-                    Cấm
-                </button>
-            </form>
+            @if (Model.User.IsBan == true)
+            {
+                <form method="post" asp-page-handler="Unban" asp-route-accountId="@Model.User.AccountId" asp-route-userId="@Model.User.UserId">
+                    <button type="submit" style="background-color: #4078c0; color: white; padding: 8px 16px; border: none; border-radius: 4px;">
+                        Gỡ Cấm
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="Ban" asp-route-accountId="@Model.User.AccountId" asp-route-userId="@Model.User.UserId">
+                    <button type="submit" style="background-color: #963330; color: white; padding: 8px 16px; border: none; border-radius: 4px;">
+                        Cấm
+                    </button>
+                </form>
+            }
         </div>
 
         <!-- Popup Gửi Lời Nhắc -->

@@ -16,5 +16,7 @@
 
         public string AccountEmail { get; set; }
         public string CompanyName { get; set; }
+        public bool IsBan { get; set; }
+        public int AccountId { get; set; }
     }
 }

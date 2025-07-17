@@ -111,32 +111,109 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
             return await OnGetAsync(accountId);
         }
 
-        public async Task<IActionResult> OnPostBanAsync(int accountId)
+        public async Task<IActionResult> OnPostBanAsync(int accountId, int userId)
         {
-            // Lấy token
             var token = HttpContext.Session.GetString("jwt_token");
             if (string.IsNullOrEmpty(token))
-            {
                 return RedirectToPage("/Login");
-            }
 
             _httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            // GỌI API BAN USER
+            // Gọi API BAN
             var response = await _httpClient.PostAsync(
-                $"https://localhost:7004/api/UserForAdmin/BanUser/{accountId}", null);
+                $"https://localhost:7004/api/UserForAdmin/BanUser/{userId}", null);
 
             if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "Đã cấm user thành công.";
+
+                // GỌI LẠI API để lấy email
+                var userResponse = await _httpClient.GetAsync($"https://localhost:7004/api/UserForAdmin/GetUserByAccount/{accountId}");
+                if (userResponse.IsSuccessStatusCode)
+                {
+                    User = await userResponse.Content.ReadFromJsonAsync<UserDetailOfAdminDTO>();
+
+                    string subject = "[CVMatcher] TÀI KHOẢN của bạn đã bị tạm KHOÁ";
+                    string message = $@"
+                    <p>Xin chào <b>{User.FullName ?? "người dùng"}</b>,</p>
+                    <p>Tài khoản của bạn trên hệ thống <b>CVMatcher</b> đã bị <span style='color:red;'>tạm khóa</span> do vi phạm chính sách hoặc theo yêu cầu từ quản trị viên.</p>
+                    <p>Nếu bạn cho rằng đây là sự nhầm lẫn hoặc cần hỗ trợ, vui lòng liên hệ với bộ phận hỗ trợ khách hàng.</p>
+
+                    <hr style='margin: 30px 0;' />
+
+                    <p style='font-size: 14px; color: #555;'>
+                    <strong>Thông tin liên hệ:</strong><br />
+                    📞 Hotline: <a href='tel:+84961075070' style='color: #309689;'>(+84) 961075070</a><br />
+                    📧 Email: <a href='mailto:thandea6@gmail.com' style='color: #309689;'>thandea6@gmail.com</a>
+                    </p>
+
+                    <p style='margin-top: 20px;'>Trân trọng,<br /><b>Đội ngũ CVMatcher</b></p>";
+
+                    var emailPayload = new { toEmail = User.AccountEmail, subject, message };
+                    await _httpClient.PostAsJsonAsync("https://localhost:7004/api/AdminSendRemind/sendRemind", emailPayload);
+                }
             }
             else
             {
                 TempData["ErrorMessage"] = "Cấm user thất bại.";
             }
+
             return await OnGetAsync(accountId);
         }
+
+
+        public async Task<IActionResult> OnPostUnbanAsync(int accountId, int userId)
+        {
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToPage("/Login");
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.PostAsync(
+                $"https://localhost:7004/api/UserForAdmin/UnbanUser/{userId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Đã gỡ cấm user thành công.";
+
+                var userResponse = await _httpClient.GetAsync($"https://localhost:7004/api/UserForAdmin/GetUserByAccount/{accountId}");
+                if (userResponse.IsSuccessStatusCode)
+                {
+                    User = await userResponse.Content.ReadFromJsonAsync<UserDetailOfAdminDTO>();
+
+                    string subject = "[CVMatcher] TÀI KHOẢN của bạn đã được KÍCH HOẠT lại";
+                    string message = $@"
+                    <p>Xin chào <b>{User.FullName ?? "người dùng"}</b>,</p>
+                    <p>Tài khoản của bạn trên hệ thống <b>CVMatcher</b> đã được <span style='color:green;'>kích hoạt lại</span> và bạn có thể tiếp tục sử dụng dịch vụ.</p>
+                    <p>Chúng tôi rất mong tiếp tục đồng hành cùng bạn trong quá trình tìm kiếm và kết nối cơ hội nghề nghiệp phù hợp.</p>
+
+                    <hr style='margin: 30px 0;' />
+
+                    <p style='font-size: 14px; color: #555;'>
+                    <strong>Thông tin liên hệ:</strong><br />
+                    📞 Hotline: <a href='tel:+84961075070' style='color: #309689;'>(+84) 961075070</a><br />
+                    📧 Email: <a href='mailto:thandea6@gmail.com' style='color: #309689;'>thandea6@gmail.com</a>
+                    </p>
+
+                    <p style='margin-top: 20px;'>Trân trọng,<br /><b>Đội ngũ CVMatcher</b></p>";
+
+                    var emailPayload = new { toEmail = User.AccountEmail, subject, message };
+                    await _httpClient.PostAsJsonAsync("https://localhost:7004/api/AdminSendRemind/sendRemind", emailPayload);
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Gỡ cấm user thất bại.";
+            }
+
+            return await OnGetAsync(accountId);
+        }
+
+
+
 
 
     }
