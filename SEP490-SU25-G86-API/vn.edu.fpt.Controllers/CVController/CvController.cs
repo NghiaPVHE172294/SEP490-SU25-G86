@@ -52,13 +52,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
             if (accountIdClaim == null)
                 return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản." });
             var accountId = int.Parse(accountIdClaim.Value);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            var user = await _context.Users.Include(u => u.Account).ThenInclude(a => a.Role).FirstOrDefaultAsync(u => u.AccountId == accountId);
             if (user == null)
                 return Unauthorized(new { message = "Không tìm thấy người dùng tương ứng với tài khoản." });
             try
             {
                 string fileUrl = await UploadFileToGoogleDrive(dto.File);
-                await _service.AddAsync(user.UserId, dto, fileUrl);
+                string roleName = user.Account?.Role?.RoleName ?? string.Empty;
+                await _service.AddAsync(user.UserId, roleName, dto, fileUrl);
                 return Ok();
             }
             catch (Exception ex)
