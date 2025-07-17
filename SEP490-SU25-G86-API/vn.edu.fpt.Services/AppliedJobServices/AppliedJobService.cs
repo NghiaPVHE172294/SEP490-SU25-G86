@@ -141,6 +141,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
             if (submission == null)
                 return false;
             submission.IsDelete = true;
+            submission.Status = "Hồ sơ đã rút";
             await _context.SaveChangesAsync();
             return true;
         }

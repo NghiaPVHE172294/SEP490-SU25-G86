@@ -45,7 +45,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
                 SubmittedByUserId = req.CandidateId,
                 SubmissionDate = DateTime.UtcNow,
                 IsDelete = false,
-                SourceType = "EXISTING"
+                SourceType = "EXISTING",
+                Status = "Đã ứng tuyển"
             };
             await _appliedJobService.AddSubmissionAsync(submission);
             return Ok(new { message = "Ứng tuyển thành công" });
@@ -82,7 +83,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
                 SubmittedByUserId = req.CandidateId,
                 SubmissionDate = DateTime.UtcNow,
                 IsDelete = false,
-                SourceType = "UPLOAD"
+                SourceType = "UPLOAD",
+                Status = "Đã ứng tuyển"
             };
             await _appliedJobService.AddSubmissionAsync(submission);
             return Ok(new { message = "Ứng tuyển thành công" });
