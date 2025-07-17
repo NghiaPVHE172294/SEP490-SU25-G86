@@ -60,16 +60,20 @@
 
             <!-- Filters -->
             <div class="d-flex gap-2 mb-4 flex-wrap">
-                <select class="form-select" style="width: 200px; color: #6c757d; border: 1px solid #000;">
-                    <option>Vị trí</option>
-                    <option>Mức lương</option>
-                    <option>Kinh nghiệm</option>
+                <select id="filterSelect" class="form-select" style="width: 200px; color: #6c757d; border: 1px solid #000;">
+                    <option value="region">Vị trí</option>
+                    <option value="salary">Mức lương</option>
+                    <option value="experience">Kinh nghiệm</option>
                 </select>
 
-                <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
-                <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
-                <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
-                <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
+                <div id="dynamicFilters" class="d-flex flex-wrap gap-2 mt-2">
+                    <div id="regionButtons">
+                        <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
+                        <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
+                        <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
+                        <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
+                    </div>
+                </div>
             </div>
 
             @if (!Model.JobPosts.Any())
@@ -153,4 +157,33 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
+<script>
+    const filterSelect = document.getElementById("filterSelect");
+    const dynamicFilters = document.getElementById("dynamicFilters");
+
+    const salaryOptions = [
+        "Tất cả", "Dưới 10 triệu", "Từ 10-15 triệu", "Từ 15-20 triệu",
+        "Từ 25-30 triệu", "Trên 30 triệu"
+    ];
+    const experienceOptions = [
+        "Tất cả", "Không có kinh nghiệm", "Dưới 1 năm", "1 năm",
+        "2 năm", "3 năm", "4 năm", "5 năm"
+    ];
+
+    filterSelect.addEventListener("change", function () {
+        dynamicFilters.innerHTML = ""; // Clear old buttons
+        let options = [];
+
+        if (this.value === "salary") options = salaryOptions;
+        else if (this.value === "experience") options = experienceOptions;
+
+        options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "btn btn-outline-secondary";
+            btn.innerText = opt;
+            btn.type = "button";
+            dynamicFilters.appendChild(btn);
+        });
+    });
+</script>
 </html>
