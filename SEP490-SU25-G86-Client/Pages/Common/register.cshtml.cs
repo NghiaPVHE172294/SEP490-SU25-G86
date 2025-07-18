@@ -63,7 +63,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var response = await client.PostAsync("https://localhost:7004/api/Auth/register", content);
             if (response.IsSuccessStatusCode)
             {
-                // Đăng ký thành công, chuyển về Login
+                // Đăng ký thành công, lưu thông báo vào TempData và chuyển về Login
+                TempData["RegisterSuccess"] = "Đăng ký thành công! Vui lòng đăng nhập.";
                 return RedirectToPage("/Common/Login");
             }
             else

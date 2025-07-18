@@ -301,6 +301,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
         [HttpPost("reset-password")]
         public IActionResult ResetPassword([FromBody] ResetPasswordRequest req)
         {
+            // Validate strong password: 6 ký tự, chữ hoa, chữ thường, số
+            var regex = new System.Text.RegularExpressions.Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$");
+            if (!regex.IsMatch(req.NewPassword))
+                return BadRequest("Mật khẩu mới phải có ít nhất 1 chữ hoa, 1 chữ thường, 1 số và tối thiểu 6 ký tự.");
+
             var tokenEntity = _context.PasswordResetTokens.FirstOrDefault(t => t.Token == req.Token && t.ExpireAt > DateTime.Now && (t.IsUsed == false || t.IsUsed == null));
             if (tokenEntity == null)
                 return BadRequest("Token không hợp lệ hoặc đã hết hạn.");
