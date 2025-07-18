@@ -61,8 +61,8 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
                 AppliedJobs = AppliedJobs.Where(j => (j.Status ?? "").Equals(backendStatus, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // Gợi ý việc làm
-            var suggestResponse = await _httpClient.GetAsync($"api/JobPosts/suggested/{userId}");
+            // Gợi ý việc làm (kiểu phổ thông)
+            var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
             if (suggestResponse.IsSuccessStatusCode)
             {
                 var suggestContent = await suggestResponse.Content.ReadAsStringAsync();
