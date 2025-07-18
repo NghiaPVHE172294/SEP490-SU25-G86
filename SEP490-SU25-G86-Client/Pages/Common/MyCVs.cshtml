@@ -9,14 +9,14 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">CV đã tải lên CVMatcher</h4>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadModal" id="btnUploadCv" @(Model.CVs.Count >= 5 ? "disabled" : "")>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadModal" id="btnUploadCv" @(Model.CVs.Count >= 20 ? "disabled" : "")>
                 <i class="bi bi-upload"></i> Tải CV lên
             </button>
         </div>
-        @if (Model.CVs.Count >= 5)
+        @if (Model.CVs.Count >= 20)
         {
             <div class="alert alert-warning mt-2 mb-0">
-                Bạn chỉ được tải lên tối đa 5 CV. Vui lòng xóa bớt CV cũ nếu muốn tải lên CV mới.
+                Bạn chỉ được tải lên tối đa 20 CV. Vui lòng xóa bớt CV cũ nếu muốn tải lên CV mới.
             </div>
         }
         <div class="card-body">

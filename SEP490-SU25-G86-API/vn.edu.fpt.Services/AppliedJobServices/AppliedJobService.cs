@@ -72,6 +72,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
 
         public async Task<int> AddCvAndGetIdAsync(Cv cv)
         {
+            // Đếm số lượng CV đã upload của ứng viên này
+            int maxCv = 20;
+            int currentCount = await _context.Cvs.CountAsync(x => x.CandidateId == cv.CandidateId && !x.IsDelete);
+            if (currentCount >= maxCv)
+                throw new Exception($"[BR-10] Bạn đã đạt đến số lượng CV tối đa cho phép ({maxCv}).");
+
             _context.Cvs.Add(cv);
             await _context.SaveChangesAsync();
             return cv.CvId;
