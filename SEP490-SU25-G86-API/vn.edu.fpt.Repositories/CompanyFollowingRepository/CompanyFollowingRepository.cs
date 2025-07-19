@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.CompanyFollowingDTO;
 
@@ -6,6 +6,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositori
 {
     public class CompanyFollowingRepository : ICompanyFollowingRepository
     {
+        // Đếm tổng số công ty đã follow
+        public async Task<int> CountFollowedCompaniesAsync(int userId)
+        {
+            return await _context.CompanyFollowers.CountAsync(cf => cf.UserId == userId && cf.IsActive == true);
+        }
+    
         private readonly SEP490_G86_CvMatchContext _context;
 
         public CompanyFollowingRepository(SEP490_G86_CvMatchContext context)
@@ -13,12 +19,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositori
             _context = context;
         }
 
-        public async Task<IEnumerable<CompanyFollowingDTO>> GetFollowedCompaniesByUserIdAsync(int userId)
+        public async Task<IEnumerable<CompanyFollowingDTO>> GetFollowedCompaniesByUserIdAsync(int userId, int page, int pageSize)
         {
             return await _context.CompanyFollowers
                 .Where(cf => cf.UserId == userId && cf.IsActive == true)
                 .Include(cf => cf.Company)
                 .ThenInclude(c => c.Industry)
+                .OrderByDescending(cf => cf.FlowedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(cf => new CompanyFollowingDTO
                 {
                     CompanyId = cf.CompanyId,
@@ -27,20 +36,34 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositori
                     Website = cf.Company.Website,
                     IndustryName = cf.Company.Industry.IndustryName,
                     Description = cf.Company.Description,
-                    FlowedAt = cf.FlowedAt
+                    FlowedAt = cf.FlowedAt,
+                    Location = cf.Company.Address,
+                    ActiveJobsCount = _context.JobPosts.Count(jp => jp.Employer.CompanyId == cf.CompanyId && jp.Status == "OPEN" && (!jp.EndDate.HasValue || jp.EndDate.Value.Date >= DateTime.UtcNow.Date)),
+                    FollowId = cf.FollowId
                 })
                 .ToListAsync();
         }
 
+        public async Task<int> CountSuggestedCompaniesAsync(int userId)
+        {
+            var blockedCompanyIds = await _context.BlockedCompanies
+                .Where(bc => bc.CandidateId == userId)
+                .Select(bc => bc.CompanyId)
+                .ToListAsync();
+            return await _context.Companies.CountAsync(c => !blockedCompanyIds.Contains(c.CompanyId));
+        }
+
         public async Task<IEnumerable<CompanyFollowingDTO>> GetSuggestedCompaniesAsync(int userId, int page, int pageSize)
         {
-            var followedCompanyIds = await _context.CompanyFollowers
-                .Where(cf => cf.UserId == userId && cf.IsActive == true)
-                .Select(cf => cf.CompanyId)
+            
+            // Lấy danh sách công ty đã bị block
+            var blockedCompanyIds = await _context.BlockedCompanies
+                .Where(bc => bc.CandidateId == userId)
+                .Select(bc => bc.CompanyId)
                 .ToListAsync();
 
             return await _context.Companies
-                .Where(c => !followedCompanyIds.Contains(c.CompanyId))
+                .Where(c => !blockedCompanyIds.Contains(c.CompanyId))
                 .Include(c => c.Industry)
                 .OrderByDescending(c => c.CreatedAt)
                 .Skip((page - 1) * pageSize)
