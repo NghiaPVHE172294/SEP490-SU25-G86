@@ -32,20 +32,43 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             _context = context;
         }
 
+        //[HttpPost("login")]
+        //public IActionResult Login([FromBody] LoginRequest request)
+        //{
+        //    var account = _accountService.Authenticate(request.Email, request.Password);
+        //    if (account == null)
+        //        return Unauthorized(new { message = "Email hoặc mật khẩu không đúng" });
+        //    if (account.Role == null)
+        //        return Unauthorized(new { message = "Tài khoản chưa được gán quyền." });
+
+        //    var roleName = account.Role.RoleName;
+        //    var token = GenerateJwtToken(account, roleName);
+        //    var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+        //    return Ok(new { token, role = roleName, email = account.Email, userId = user?.UserId });
+        //}
+
+        //cập nhật Login cho phần Ban User
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
             var account = _accountService.Authenticate(request.Email, request.Password);
             if (account == null)
                 return Unauthorized(new { message = "Email hoặc mật khẩu không đúng" });
+
             if (account.Role == null)
                 return Unauthorized(new { message = "Tài khoản chưa được gán quyền." });
 
+            // ✅ Lấy user để kiểm tra IsBan
+            var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+            if (user != null && user.IsBan == true)
+                return Unauthorized(new { message = "Tài khoản của bạn đã bị khóa.\nVui lòng liên hệ quản trị viên." });
+
             var roleName = account.Role.RoleName;
             var token = GenerateJwtToken(account, roleName);
-            var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+
             return Ok(new { token, role = roleName, email = account.Email, userId = user?.UserId });
         }
+
 
         private string GenerateJwtToken(Account account, string roleName)
         {
@@ -116,6 +139,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
         [HttpPost("external-login/google")]
         public async Task<IActionResult> GoogleLogin([FromBody] ExternalLoginRequest request)
         {
+
+
             if (request.Provider != "Google" || string.IsNullOrEmpty(request.IdToken))
                 return BadRequest("Invalid request");
             GoogleJsonWebSignature.Payload payload;
@@ -157,6 +182,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             var roleName = account.Role?.RoleName ?? "CANDIDATE";
             var token = GenerateJwtToken(account, roleName);
             var userEntity = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+
+            // ✅ LẤY userEntity và KIỂM TRA IsBan
+            if (userEntity?.IsBan == true)
+            {
+                return Unauthorized("Tài khoản của bạn đã bị khóa.\nVui lòng liên hệ quản trị viên.");
+            }
+
             return Ok(new { token, role = roleName, email = account.Email, userId = userEntity?.UserId });
         }
 
@@ -212,6 +244,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
                 var roleName = account.Role?.RoleName ?? "CANDIDATE";
                 var token = GenerateJwtToken(account, roleName);
                 var userEntity = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
+
+                // ✅ LẤY userEntity và KIỂM TRA IsBan
+                if (userEntity?.IsBan == true)
+                {
+                    return Unauthorized("Tài khoản của bạn đã bị khóa.\nVui lòng liên hệ quản trị viên.");
+                }
+
                 return Ok(new { token, role = roleName, email = account.Email, userId = userEntity?.UserId });
             }
         }

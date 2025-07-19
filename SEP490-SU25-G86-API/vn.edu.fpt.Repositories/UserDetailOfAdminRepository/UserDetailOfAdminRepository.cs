@@ -35,7 +35,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserDetailOfAdminRepositor
                             IsActive = user.IsActive,
 
                             AccountEmail = acc.Email,
-                            CompanyName = company.CompanyName
+                            CompanyName = company.CompanyName,
+                            IsBan = user.IsBan,
+                            AccountId = acc.AccountId
                         };
 
             return await query.FirstOrDefaultAsync();
