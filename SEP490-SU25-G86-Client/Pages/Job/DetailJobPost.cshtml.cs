@@ -69,13 +69,16 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                         MyCvs = JsonSerializer.Deserialize<List<CvDTO>>(cvContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<CvDTO>();
                     }
 
-                    // Kiểm tra job đã được lưu hay chưa
+                    // Deserialize kết quả từ API SavedJobs/check
                     var checkRes = await _httpClient.GetAsync($"api/SavedJobs/check?userId={userId}&jobPostId={id}");
                     if (checkRes.IsSuccessStatusCode)
                     {
                         var savedStr = await checkRes.Content.ReadAsStringAsync();
-                        bool.TryParse(savedStr, out bool isSaved);
-                        IsSaved = isSaved;
+                        using var doc = JsonDocument.Parse(savedStr);
+                        if (doc.RootElement.TryGetProperty("isSaved", out JsonElement value))
+                        {
+                            IsSaved = value.GetBoolean();
+                        }
                     }
                 }
             }
