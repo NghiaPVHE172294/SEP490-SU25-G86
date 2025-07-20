@@ -36,6 +36,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "environmentVariables": {
+      "TWILIO_AUTH_TOKEN": "9669a881ebe6da2738798ef03bb03d5a"
     }
   }
 }

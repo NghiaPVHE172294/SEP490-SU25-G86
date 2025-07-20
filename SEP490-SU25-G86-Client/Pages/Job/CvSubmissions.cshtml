@@ -51,15 +51,18 @@
                 <td>@(cv.TotalScore?.ToString("0.##") ?? "-")</td>
                 <td>@cv.RecruiterNote</td>
                 <td>
+                        <form method="post" asp-page-handler="AIFilter" asp-route-id="@cv.SubmissionId" style="display:inline">
+                            <button type="submit" class="btn btn-warning btn-sm me-1">Lọc CV bằng AI</button>
+                        </form>
                         @if (!string.IsNullOrEmpty(cv.Status) && cv.Status.Trim().ToUpper().Contains("CHỜ XỬ LÝ"))
-                    {
-                        <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
-                            <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
-                        </form>
-                        <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
-                            <button type="submit" class="btn btn-danger btn-sm">Không duyệt</button>
-                        </form>
-                    }
+                        {
+                            <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                <button type="submit" class="btn btn-success btn-sm me-1">Duyệt CV</button>
+                            </form>
+                            <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
+                            </form>
+                        }
                 </td>
             </tr>
         }
