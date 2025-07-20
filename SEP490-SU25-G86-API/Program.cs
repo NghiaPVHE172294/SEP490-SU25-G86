@@ -62,6 +62,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Twilio;
 
 namespace SEP490_SU25_G86_API
 {
@@ -70,9 +71,21 @@ namespace SEP490_SU25_G86_API
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
+            // cấu hình Twilio
+            // 1. Bind cấu hình từ appsettings.json
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
-			// Add services to the container.
-			builder.Services.AddControllers();
+            // 2. Lấy AuthToken từ biến môi trường
+            var authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+
+            // 3. Khởi tạo Twilio Client
+            TwilioClient.Init(
+                builder.Configuration["Twilio:AccountSid"],
+                authToken
+            );
+
+            // Add services to the container.
+            builder.Services.AddControllers();
 
 			// Swagger with JWT Bearer support
 			builder.Services.AddEndpointsApiExplorer();
