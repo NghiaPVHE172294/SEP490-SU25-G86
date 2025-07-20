@@ -22,9 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="vn.edu.fpt.Controllers\" />
     <Folder Include="vn.edu.fpt.Services\" />
     <Folder Include="vn.edu.fpt.Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
   </ItemGroup>
 
 </Project>
