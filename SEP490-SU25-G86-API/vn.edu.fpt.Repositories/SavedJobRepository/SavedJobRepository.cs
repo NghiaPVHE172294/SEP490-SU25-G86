@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories
 {
@@ -15,20 +16,32 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories
         public async Task<IEnumerable<SavedJob>> GetByUserIdAsync(int userId)
         {
             return await _context.SavedJobs
-                .Include(s => s.JobPost)
-                .Where(s => s.UserId == userId)
-                .AsNoTracking()
+                .Include(x => x.JobPost)
+                .Where(x => x.UserId == userId)
                 .ToListAsync();
+        }
+
+        public async Task<SavedJob?> GetByUserAndJobPostAsync(int userId, int jobPostId)
+        {
+            return await _context.SavedJobs
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.JobPostId == jobPostId);
+        }
+
+        public async Task CreateAsync(SavedJob savedJob)
+        {
+            _context.SavedJobs.Add(savedJob);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(int saveJobId)
         {
-            var entity = await _context.SavedJobs.FindAsync(saveJobId);
-            if (entity == null)
-                return false;
-            _context.SavedJobs.Remove(entity);
+            var job = await _context.SavedJobs.FindAsync(saveJobId);
+            if (job == null) return false;
+
+            _context.SavedJobs.Remove(job);
             await _context.SaveChangesAsync();
             return true;
         }
     }
+
 }

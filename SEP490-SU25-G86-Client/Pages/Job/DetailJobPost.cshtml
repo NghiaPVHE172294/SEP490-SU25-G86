@@ -35,7 +35,15 @@
                 <a href="#" class="ms-2"><i class="bi bi-x fs-4"></i></a>
                 <a href="#" class="ms-2"><i class="bi bi-linkedin fs-4"></i></a>
             </div>
-            <button class="btn btn-success px-5">Save</button>
+            @* <button id="saveButton" class="btn btn-success px-5">Save</button> *@
+            @if (Model.CurrentUserId != null)
+            {
+                <button id="saveButton" class="btn @(Model.IsSaved ? "btn-secondary" : "btn-success") px-5">
+                    @(Model.IsSaved ? "Saved" : "Save")
+                </button>
+            }
+
+
             <button class="btn btn-primary px-5 ms-2" id="btnApplyNow">
                 <i class="bi bi-send"></i> Ứng tuyển ngay
             </button>
@@ -146,6 +154,76 @@ const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
 let selectedCvId = null;
 let candidateId = '@HttpContext.Session.GetString("userId")';
 
+//xu ly nut save cho chuc nang savedjob
+
+        let jobPostId = @Model.JobPostDetail?.JobPostId;
+        let saveBtn = document.getElementById("saveButton");
+
+
+                // Kiểm tra trạng thái job đã được lưu chưa
+        fetch(`https://localhost:7004/api/SavedJobs/check?userId=${candidateId}&jobPostId=${jobPostId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data === true) {
+                saveBtn.textContent = "Saved";
+                saveBtn.classList.remove("btn-success");
+                saveBtn.classList.add("btn-secondary");
+            }
+        });
+
+        // Xử lý khi click nút Save / Saved
+        saveBtn.addEventListener('click', function () {
+            if (!candidateId) {
+                window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
+
+            if (saveBtn.textContent === "Save") {
+                // Gọi API lưu job
+                fetch('https://localhost:7004/api/SavedJobs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify({
+                        userId: candidateId,
+                        jobPostId: jobPostId
+                    })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        saveBtn.textContent = "Saved";
+                        saveBtn.classList.remove("btn-success");
+                        saveBtn.classList.add("btn-secondary");
+                    } else {
+                        alert("Không thể lưu công việc.");
+                    }
+                });
+            } else {
+                // Gọi API xóa job đã lưu
+                fetch(`https://localhost:7004/api/SavedJobs?userId=${candidateId}&jobPostId=${jobPostId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        saveBtn.textContent = "Save";
+                        saveBtn.classList.remove("btn-secondary");
+                        saveBtn.classList.add("btn-success");
+                    } else {
+                        alert("Không thể hủy lưu công việc.");
+                    }
+                });
+            }
+        });
+        //end
 document.getElementById('btnApplyNow').addEventListener('click', function() {
     if (!candidateId) {
         window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
