@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Chiến dịch tuyển dụng";
 }
+<link rel="stylesheet" href="~/css/jobcriteria.css">
 
 <h2>Chiến dịch tuyển dụng của bạn</h2>
 
@@ -12,6 +13,7 @@
 }
 else
 {
+    int stt = 1;
     foreach (var job in Model.JobPosts)
     {
         <div class="mb-4">
@@ -21,15 +23,21 @@ else
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Kinh nghiệm yêu cầu</th>
-                            <th>Kỹ năng yêu cầu</th>
-                            <th>Trình độ học vấn</th>
-                            <th>Vị trí công việc yêu cầu</th>
-                            <th>Ngôn ngữ ưu tiên</th>
-                            <th>Chứng chỉ ưu tiên</th>
-                            <th>Ngày tạo</th>
-                            <th>Hành động</th>
+                            <th class="stt-col text-center">STT</th>
+                            <th style="min-width:120px">Kinh nghiệm yêu cầu</th>
+                            <th style="min-width:120px">Kỹ năng yêu cầu</th>
+                            <th style="min-width:120px">Trình độ học vấn</th>
+                            <th style="min-width:120px">Vị trí công việc yêu cầu</th>
+                            <th style="min-width:120px">Ngôn ngữ ưu tiên</th>
+                            <th style="min-width:120px">Chứng chỉ ưu tiên</th>
+                            <th style="min-width:120px">Địa chỉ</th>
+                            <th style="min-width:120px">Tóm tắt</th>
+                            <th class="text-nowrap" style="min-width:160px">Lịch sử công việc</th>
+                            <th style="min-width:120px">Dự án</th>
+                            <th style="min-width:120px">Khả năng nhận việc</th>
+                            <th style="min-width:120px">Mức lương mong muốn</th>
+                            <th style="min-width:100px">Ngày tạo</th>
+                            <th style="min-width:100px">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,19 +45,25 @@ else
                     {
                         var item = Model.CriteriaByJobPost[job.JobPostId][i];
                         <tr>
-                            <td>@(i+1)</td>
+                            <td class="stt-col text-center">@stt</td>
                             <td>@item.RequiredExperience</td>
                             <td>@item.RequiredSkills</td>
                             <td>@item.EducationLevel</td>
                             <td>@item.RequiredJobTitles</td>
                             <td>@item.PreferredLanguages</td>
                             <td>@item.PreferredCertifications</td>
+                            <td>@item.Address</td>
+                            <td>@item.Summary</td>
+                            <td class="work-history-cell">@Html.Raw(item.WorkHistory?.Replace("\n", "<br/>") ?? "")</td>
+                            <td>@item.Projects</td>
+                            <td>@item.Availability</td>
+                            <td>@item.SalaryExpectation</td>
                             <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
-                                <td>
-                                    <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">Update</a>
-                                </td>
-
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">Update</a>
+                            </td>
                         </tr>
+                        stt++;
                     }
                     </tbody>
                 </table>
@@ -64,5 +78,4 @@ else
         </div>
     }
 }
-
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

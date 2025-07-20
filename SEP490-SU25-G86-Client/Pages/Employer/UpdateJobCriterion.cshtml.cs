@@ -46,6 +46,12 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 Input.RequiredJobTitles = item.RequiredJobTitles;
                 Input.PreferredLanguages = item.PreferredLanguages;
                 Input.PreferredCertifications = item.PreferredCertifications;
+                Input.Address = item.Address;
+                Input.Summary = item.Summary;
+                Input.WorkHistory = item.WorkHistory;
+                Input.Projects = item.Projects;
+                Input.Availability = item.Availability;
+                Input.SalaryExpectation = item.SalaryExpectation;
             }
             else
             {
