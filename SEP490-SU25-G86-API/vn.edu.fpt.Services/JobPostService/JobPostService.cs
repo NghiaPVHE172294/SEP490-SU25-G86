@@ -1,4 +1,4 @@
-﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
@@ -21,6 +21,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
+            
+            // Lọc bỏ job posts từ blocked companies nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var blockedCompanies = await _blockedCompanyRepo.GetBlockedCompaniesByCandidateIdAsync(candidateId.Value);
+                var blockedCompanyIds = blockedCompanies.Select(bc => bc.CompanyId).ToHashSet();
+                
+                posts = posts.Where(j => j.Employer?.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
+                totalItems = posts.Count(); // Cập nhật lại totalItems sau khi lọc
+            }
+            
+      List<int> appliedJobPostIds = new();
+if (candidateId.HasValue)
+{
+    appliedJobPostIds = await _jobPostRepo.GetAppliedJobPostIdsAsync(candidateId.Value);
+}
+
             var result = posts.Select(j => new JobPostHomeDto
             {
                 JobPostId = j.JobPostId,
@@ -30,7 +47,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                          ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                          : "Thỏa thuận",
                 Location = j.Province?.ProvinceName ?? "Không xác định",
-                IsApplied = j.IsApplied
+                IsApplied = candidateId.HasValue ? appliedJobPostIds.Contains(j.JobPostId) : false
             }).ToArray();
             return (result, totalItems);
         }
@@ -128,6 +145,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             var (posts, totalItems) = await _jobPostRepo.GetFilteredJobPostsAsync(
                 page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword, candidateId
             );
+
+
+            List<int> appliedJobPostIds = new();
+            if (candidateId.HasValue)
+            {
+                appliedJobPostIds = await _jobPostRepo.GetAppliedJobPostIdsAsync(candidateId.Value);
+            }
+
             var result = posts.Select(j => new JobPostListDTO
             {
                 JobPostId = j.JobPostId,
@@ -146,7 +171,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 EndDate = j.EndDate,
                 Status = j.Status,
                 WorkLocation = j.WorkLocation,
-                IsApplied = j.IsApplied
+                IsApplied = candidateId.HasValue ? appliedJobPostIds.Contains(j.JobPostId) : false
             });
             return (result, totalItems);
         }

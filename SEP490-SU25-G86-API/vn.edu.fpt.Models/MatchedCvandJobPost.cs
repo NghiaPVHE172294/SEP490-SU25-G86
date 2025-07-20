@@ -19,6 +19,11 @@ namespace SEP490_SU25_G86_API.Models
         public double? JobTitlesScore { get; set; }
         public double? LanguagesScore { get; set; }
         public double? CertificationsScore { get; set; }
+        public double? SummaryScore { get; set; }
+        public double? WorkHistoryScore { get; set; }
+        public double? ProjectsScore { get; set; }
+        public double? AvailabilityScore { get; set; }
+        public double? SalaryExpectationScore { get; set; }
         public double? TotalScore { get; set; }
 
         public virtual CvparsedDatum CvparsedData { get; set; } = null!;

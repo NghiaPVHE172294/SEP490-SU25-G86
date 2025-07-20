@@ -1,4 +1,4 @@
-﻿@page  
+@page  
 @model SEP490_SU25_G86_Client.Pages.Common.LoginModel  
 @{  
   Layout = null;  
@@ -33,7 +33,10 @@
            <div class="form-container">  
               <h2 class="title">Chào mừng bạn đã quay trở lại</h2>  
               <p class="subtitle">Cùng khám phá những cơ hội việc làm phù hợp nhất dành cho bạn</p>  
-
+              @if (TempData["RegisterSuccess"] != null)
+              {
+                  <div class="alert alert-success" style="margin-bottom:10px">@TempData["RegisterSuccess"]</div>
+              }
               <form method="post" class="login-form">  
                   <div class="input-group">  
                       <img src="~/assets/images/email.svg" alt="Email Icon" class="input-icon">  

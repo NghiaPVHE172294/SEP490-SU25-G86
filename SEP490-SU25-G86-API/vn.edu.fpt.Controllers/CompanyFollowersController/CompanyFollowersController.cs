@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.CompanyFollowingDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 
@@ -16,17 +16,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CompanyFollowingController
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<CompanyFollowingDTO>>> GetFollowedCompaniesByUser(int userId)
+        public async Task<IActionResult> GetFollowedCompaniesByUser(int userId, int page = 1, int pageSize = 6)
         {
-            var companies = await _service.GetFollowedCompaniesAsync(userId);
-            return Ok(companies);
+            var companies = await _service.GetFollowedCompaniesAsync(userId, page, pageSize);
+            var total = await _service.CountFollowedCompaniesAsync(userId);
+            return Ok(new { Companies = companies, Total = total });
         }
 
         [HttpGet("suggest/{userId}")]
-        public async Task<ActionResult<IEnumerable<CompanyFollowingDTO>>> GetSuggestedCompanies(int userId, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetSuggestedCompanies(int userId, int page = 1, int pageSize = 5)
         {
             var suggested = await _service.GetSuggestedCompaniesAsync(userId, page, pageSize);
-            return Ok(new { Companies = suggested });
+            var total = await _service.CountSuggestedCompaniesAsync(userId);
+            return Ok(new { Companies = suggested, Total = total });
         }
     }
 }

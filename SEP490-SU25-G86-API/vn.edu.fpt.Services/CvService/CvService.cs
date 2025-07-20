@@ -51,7 +51,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             };
         }
 
-        public async Task AddAsync(int userId, AddCvDTO dto, string fileUrl)
+        public async Task AddAsync(int userId, string roleName, AddCvDTO dto, string fileUrl)
         {
             if (dto.File == null)
                 throw new Exception("Bạn chưa chọn file CV để upload.");
@@ -62,16 +62,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             if (!dto.File.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) && dto.File.ContentType != "application/pdf")
                 throw new Exception("[BR-09] CV file must be in PDF format.");
             // Validate số lượng CV theo role
-            // (Giả sử bạn lấy role từ DB hoặc truyền vào, ở đây demo lấy từ DB qua userId)
-            int maxCv = 5; // default Candidate
-            // TODO: Lấy role thực tế từ DB, ví dụ:
-            // var user = ... lấy user từ DB theo userId
-            // if (user.Role == "EMPLOYER") maxCv = 200;
-            // Ở đây giả lập: nếu userId < 10000 là candidate, >= 10000 là employer
-            if (userId >= 10000) maxCv = 200;
+            int maxCv = 20;
+            if (roleName == "EMPLOYER" || roleName == "RECRUITER")
+            {
+                maxCv = 100;
+            }
             int currentCount = await _repo.CountByUserAsync(userId);
             if (currentCount >= maxCv)
-                throw new Exception($"[BR-10] You have reached the maximum number of CVs ({maxCv}).");
+                throw new Exception($"[BR-10] Bạn đã đạt đến số lượng CV tối đa cho phép ({maxCv}).");
 
             var cv = new Cv
             {

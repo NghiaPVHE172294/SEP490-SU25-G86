@@ -17,13 +17,31 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h2 class="h5 mb-0">Danh sách việc làm đã ứng tuyển</h2>
-                    <select class="form-select w-auto">
-                        <option>Trạng thái</option>
-                        <option>Đã ứng tuyển</option>
-                        <option>NTD xem hồ sơ</option>
-                        <option>Hồ sơ phù hợp</option>
-                        <option>Hồ sơ không phù hợp</option>
-                    </select>
+                    @{
+                        var statusList = new List<string>
+                        {
+                            "Trạng thái",
+                            "Đã ứng tuyển",
+                            "Hồ sơ phù hợp",
+                            "Hồ sơ không phù hợp",
+                            "Hồ sơ đã rút"
+                        };
+                    }
+                    <form method="get" class="d-inline">
+                        <select class="form-select w-auto d-inline" name="StatusFilter" onchange="this.form.submit()">
+                            @foreach (var status in statusList)
+{
+                            if (Model.StatusFilter == status)
+                            {
+                                <option value="@status" selected>@status</option>
+                            }
+                            else
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        }
+                        </select>
+                    </form>
                 </div>
                 <div class="card-body">
                     @if (activeJobs.Any())
@@ -34,7 +52,30 @@
                                 <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h5 class="mb-0">@job.Title</h5>
-                                        <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
+                                        @{
+                                        string badgeClass = "bg-secondary";
+                                        string statusText = (job.Status ?? "").Trim();
+                                        switch (statusText)
+                                        {
+                                            case "OPEN":
+                                                statusText = "Đã ứng tuyển";
+                                                badgeClass = "bg-primary";
+                                                break;
+                                            case "Đã ứng tuyển":
+                                                badgeClass = "bg-primary";
+                                                break;
+                                            case "Hồ sơ phù hợp":
+                                                badgeClass = "bg-success";
+                                                break;
+                                            case "Hồ sơ không phù hợp":
+                                                badgeClass = "bg-danger";
+                                                break;
+                                            case "Hồ sơ đã rút":
+                                                badgeClass = "bg-dark";
+                                                break;
+                                        }
+                                    }
+<span class="badge @badgeClass">@statusText</span>
                                     </div>
                                     <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
                                     <p class="mb-2 text-muted"><strong>Ngày ứng tuyển:</strong> @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
@@ -77,16 +118,18 @@ else
                     {
                         @foreach (var job in Model.SuggestedJobs)
                         {
-                            <div class="mb-3 p-2 border rounded d-flex align-items-center">
-                                <div class="bg-light p-2 rounded me-3">
-                                    <span class="text-success fw-bold">@job.Salary</span>
+                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
+                                <div class="mb-3 p-2 border rounded d-flex align-items-center hover-shadow" style="transition:box-shadow .2s;">
+                                    <div class="bg-light p-2 rounded me-3 d-flex align-items-center justify-content-center" style="min-width:80px; min-height:50px;">
+                                        <span class="text-success fw-bold">@job.Salary</span>
+                                    </div>
+                                    <div style="flex:1;min-width:0;">
+                                        <div class="fw-bold text-truncate">@job.Title</div>
+                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                    </div>
+                                    <span class="ms-auto text-muted small d-none d-md-inline">@job.Location</span>
                                 </div>
-                                <div>
-                                    <div class="fw-bold">@job.Title</div>
-                                    <div class="text-muted small">@job.CompanyName</div>
-                                </div>
-                                <span class="ms-auto text-muted small">@job.Location</span>
-                            </div>
+                            </a>
                         }
                     }
                     else
