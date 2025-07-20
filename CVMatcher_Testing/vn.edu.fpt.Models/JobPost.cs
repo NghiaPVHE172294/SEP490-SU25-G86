@@ -8,7 +8,6 @@ namespace SEP490_SU25_G86_API.Models
     {
         public JobPost()
         {
-            CvTemplateForJobposts = new HashSet<CvTemplateForJobpost>();
             Cvsubmissions = new HashSet<Cvsubmission>();
             JobPostViews = new HashSet<JobPostView>();
             SavedJobs = new HashSet<SavedJob>();
@@ -34,6 +33,8 @@ namespace SEP490_SU25_G86_API.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public bool IsDelete { get; set; }
+        [NotMapped]
+        public bool IsApplied { get; set; }
 
         public virtual User? Employer { get; set; }
         public virtual EmploymentType? EmploymentType { get; set; }
@@ -43,11 +44,8 @@ namespace SEP490_SU25_G86_API.Models
         public virtual JobPosition? JobPosition { get; set; }
         public virtual Province? Province { get; set; }
         public virtual SalaryRange? SalaryRange { get; set; }
-        public virtual ICollection<CvTemplateForJobpost> CvTemplateForJobposts { get; set; }
         public virtual ICollection<Cvsubmission> Cvsubmissions { get; set; }
         public virtual ICollection<JobPostView> JobPostViews { get; set; }
         public virtual ICollection<SavedJob> SavedJobs { get; set; }
-        [NotMapped]
-        public bool IsApplied { get; set; }
     }
 }

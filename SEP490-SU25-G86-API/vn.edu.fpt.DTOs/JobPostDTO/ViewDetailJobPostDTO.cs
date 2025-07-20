@@ -32,5 +32,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public string? JobLevelName { get; set; }
         public string? EmploymentTypeName { get; set; }
         public string? CompanyName { get; set; }
+
+        //bo sung saved job
+        public bool IsSaved { get; set; }
+        public int? CurrentUserId { get; set; }
+
     }
 } 

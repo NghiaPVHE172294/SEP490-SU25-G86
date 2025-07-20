@@ -22,12 +22,6 @@ namespace SEP490_SU25_G86_API.Models
         public string? Languages { get; set; }
         public string? Certifications { get; set; }
         public DateTime ParsedAt { get; set; }
-        public string? Address { get; set; }
-        public string? Summary { get; set; }
-        public string? WorkHistory { get; set; }
-        public string? Projects { get; set; }
-        public string? Availability { get; set; }
-        public string? SalaryExpectation { get; set; }
         public bool IsDelete { get; set; }
 
         public virtual Cv Cv { get; set; } = null!;
