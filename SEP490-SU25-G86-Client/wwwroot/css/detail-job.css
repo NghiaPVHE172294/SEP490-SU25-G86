@@ -1,0 +1,77 @@
+/* CSS cho trang Chi tiết tin tuyển dụng */
+.job-header {
+    background: #f8fafc;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+.job-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a237e;
+}
+.company-name {
+    font-size: 1.2rem;
+    color: #607d8b;
+}
+.badge-custom {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    margin-right: 6px;
+    margin-bottom: 4px;
+    padding: 6px 14px;
+    transition: background 0.2s;
+}
+.badge-custom:hover {
+    background: #1976d2;
+    color: #fff;
+}
+.card-custom {
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: none;
+}
+.btn-main {
+    background: #1976d2;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 32px;
+    transition: background 0.2s;
+}
+.btn-main:hover {
+    background: #0d47a1;
+    color: #fff;
+}
+.btn-save {
+    background: #43a047;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 32px;
+    transition: background 0.2s;
+}
+.btn-save:hover {
+    background: #2e7d32;
+    color: #fff;
+}
+.list-unstyled li b {
+    color: #1976d2;
+}
+.selected {
+    background: #e3f2fd !important;
+}
+.modal-title {
+    color: #1976d2;
+    font-weight: 700;
+}
+.form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.15);
+}
+.table-hover tbody tr:hover {
+    background: #f1f8e9;
+} 
