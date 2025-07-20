@@ -1,4 +1,5 @@
 ﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.UserDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository;
 using System.Globalization;
 
@@ -68,6 +69,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
 
             await _userRepo.UpdateUserAsync(user);
             return true;
+        }
+        public async Task<bool> FollowCompanyAsync(int userId, int companyId)
+        {
+            return await _userRepo.FollowCompanyAsync(userId, companyId);
+        }
+
+        public async Task<bool> BlockCompanyAsync(int userId, int companyId, string? reason)
+        {
+            return await _userRepo.BlockCompanyAsync(userId, companyId, reason);
         }
     }
 }
