@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.ComponentModel.Design;
@@ -21,6 +21,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         {
             var query = _context.JobPosts
         .Include(j => j.Employer)
+        .ThenInclude(u => u.Company)
         .Include(j => j.SalaryRange)
         .Include(j => j.Province)
         .Where(j => j.Status == "OPEN" &&

@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SEP490-SU25-G86-API", "SEP4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SEP490-SU25-G86-Client", "SEP490-SU25-G86-Client\SEP490-SU25-G86-Client.csproj", "{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CVMatcher_Testing", "CVMatcher_Testing\CVMatcher_Testing.csproj", "{F0351C48-6370-47E3-97C7-72E4AFD40D5E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F3F136D0-9A50-4E2B-B82B-1651FAA6662D} = {F3F136D0-9A50-4E2B-B82B-1651FAA6662D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF5B4AE5-BDF3-4616-929C-B82D3F084B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0351C48-6370-47E3-97C7-72E4AFD40D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0351C48-6370-47E3-97C7-72E4AFD40D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0351C48-6370-47E3-97C7-72E4AFD40D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0351C48-6370-47E3-97C7-72E4AFD40D5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

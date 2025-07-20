@@ -1,4 +1,4 @@
-﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
@@ -21,6 +21,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
+            
+            // Lọc bỏ job posts từ blocked companies nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var blockedCompanies = await _blockedCompanyRepo.GetBlockedCompaniesByCandidateIdAsync(candidateId.Value);
+                var blockedCompanyIds = blockedCompanies.Select(bc => bc.CompanyId).ToHashSet();
+                
+                posts = posts.Where(j => j.Employer?.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
+                totalItems = posts.Count(); // Cập nhật lại totalItems sau khi lọc
+            }
+            
             var result = posts.Select(j => new JobPostHomeDto
             {
                 JobPostId = j.JobPostId,

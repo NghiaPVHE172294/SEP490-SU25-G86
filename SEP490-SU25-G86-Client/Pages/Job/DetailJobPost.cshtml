@@ -35,7 +35,16 @@
                 <a href="#" class="ms-2"><i class="bi bi-x fs-4"></i></a>
                 <a href="#" class="ms-2"><i class="bi bi-linkedin fs-4"></i></a>
             </div>
-            <button class="btn btn-success px-5">Save</button>
+            @* <button id="saveButton" class="btn btn-success px-5">Save</button> *@
+            @if (Model.CurrentUserId != null)
+            {
+                <button id="saveButton" class="btn @(Model.IsSaved ? "btn-secondary" : "btn-success") px-5">
+                    @(Model.IsSaved ? "Saved" : "Save")
+                </button>
+            }
+
+
+
             <button class="btn btn-primary px-5 ms-2" id="btnApplyNow">
                 <i class="bi bi-send"></i> Ứng tuyển ngay
             </button>
@@ -73,152 +82,225 @@
 
 <!-- Modal ứng tuyển -->
 <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Ứng tuyển @Model.JobPostDetail?.Title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div>
-          <h6>Chọn CV để ứng tuyển</h6>
-          <div id="cvList">
-            @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
-            {
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th style="width: 60%;">Tên CV</th>
-                            <th style="width: 30%;">Ngày cập nhật</th>
-                            <th style="width: 10%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var cv in Model.MyCvs)
-                    {
-                        <tr id="cv-row-@cv.CvId">
-                            <td>@cv.CVName</td>
-                            <td>@(cv.UpdatedDate?.ToString("dd-MM-yyyy HH:mm") ?? "")</td>
-                            <td>
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="text-danger">Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
-            }
-          </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ứng tuyển @Model.JobPostDetail?.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h6>Chọn CV để ứng tuyển</h6>
+                    <div id="cvList">
+                        @if (Model.MyCvs != null && Model.MyCvs.Count > 0)
+                        {
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60%;">Tên CV</th>
+                                        <th style="width: 30%;">Ngày cập nhật</th>
+                                        <th style="width: 10%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cv in Model.MyCvs)
+                                    {
+                                        <tr id="cv-row-@cv.CvId">
+                                            <td>@cv.CVName</td>
+                                            <td>@(cv.UpdatedDate?.ToString("dd-MM-yyyy HH:mm") ?? "")</td>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="selectCv('@cv.CvId')">Chọn CV</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="text-danger">Bạn chưa có CV nào. Vui lòng upload CV mới!</div>
+                        }
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <h6>Tải CV lên từ thiết bị</h6>
+                    <input type="file" id="uploadCvInput" accept="application/pdf" />
+                    <div class="mt-2">
+                        <label for="uploadCvName" class="form-label">Tên CV</label>
+                        <input type="text" id="uploadCvName" class="form-control" placeholder="Nhập tên CV" />
+                    </div>
+                    <div class="mt-2">
+                        <label for="uploadCvNotes" class="form-label">Ghi chú</label>
+                        <textarea id="uploadCvNotes" class="form-control" placeholder="Nhập ghi chú (tuỳ chọn)"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnSubmitApplication">Nộp Hồ Sơ Ứng Tuyển</button>
+            </div>
         </div>
-        <hr/>
-        <div>
-          <h6>Tải CV lên từ thiết bị</h6>
-          <input type="file" id="uploadCvInput" accept="application/pdf"/>
-          <div class="mt-2">
-            <label for="uploadCvName" class="form-label">Tên CV</label>
-            <input type="text" id="uploadCvName" class="form-control" placeholder="Nhập tên CV" />
-          </div>
-          <div class="mt-2">
-            <label for="uploadCvNotes" class="form-label">Ghi chú</label>
-            <textarea id="uploadCvNotes" class="form-control" placeholder="Nhập ghi chú (tuỳ chọn)"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="btnSubmitApplication">Nộp Hồ Sơ Ứng Tuyển</button>
-      </div>
     </div>
-  </div>
 </div>
 <div id="uploadSpinner" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(255,255,255,0.7);align-items:center;justify-content:center;flex-direction:column;">
-  <div class="spinner-border text-primary" role="status" style="width:3rem;height:3rem;">
-    <span class="visually-hidden">Đang tải lên...</span>
-  </div>
-  <div style="margin-top:16px;font-size:18px;">Đang tải lên CV, vui lòng chờ...</div>
+    <div class="spinner-border text-primary" role="status" style="width:3rem;height:3rem;">
+        <span class="visually-hidden">Đang tải lên...</span>
+    </div>
+    <div style="margin-top:16px;font-size:18px;">Đang tải lên CV, vui lòng chờ...</div>
 </div>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @section Scripts {
-<script>
-const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
-let selectedCvId = null;
-let candidateId = '@HttpContext.Session.GetString("userId")';
+    <script>
+        const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
+        let selectedCvId = null;
+        let candidateId = '@HttpContext.Session.GetString("userId")';
 
-document.getElementById('btnApplyNow').addEventListener('click', function() {
-    if (!candidateId) {
-        window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
-        return;
-    }
-    var modal = new bootstrap.Modal(document.getElementById('applyModal'));
-    modal.show();
-});
+        //xu ly nut save cho chuc nang savedjob
+            let isSaved = @(Model.IsSaved.ToString().ToLower());
+        let jobPostId = @Model.JobPostDetail?.JobPostId;
+        let saveBtn = document.getElementById("saveButton");
 
-window.selectCv = function(cvId) {
-    selectedCvId = cvId;
-    // Bỏ highlight tất cả
-    document.querySelectorAll('#cvList tr').forEach(tr => tr.classList.remove('selected'));
-    // Highlight dòng được chọn
-    var row = document.getElementById('cv-row-' + cvId);
-    if (row) row.classList.add('selected');
-};
+        saveBtn.addEventListener('click', function () {
+            if (!candidateId) {
+                window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
 
-document.getElementById('btnSubmitApplication').addEventListener('click', function() {
-    if (selectedCvId) {
-        // Nộp bằng CV có sẵn
-        fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: JSON.stringify({
-                jobPostId: @Model.JobPostDetail?.JobPostId,
-                cvId: selectedCvId,
-                candidateId: candidateId
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message || 'Ứng tuyển thành công!');
-            location.reload();
-        })
-        .catch(() => alert('Lỗi khi ứng tuyển!'));
-    } else {
-        // Nộp bằng CV upload mới
-        let file = document.getElementById('uploadCvInput').files[0];
-        let cvName = document.getElementById('uploadCvName').value;
-        let notes = document.getElementById('uploadCvNotes').value;
-        if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
-        if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
-        document.getElementById('uploadSpinner').style.display = 'flex'; // Hiện spinner
-        let formData = new FormData();
-        formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
-        formData.append('candidateId', candidateId);
-        formData.append('file', file);
-        formData.append('CVName', cvName);
-        if (notes) formData.append('Notes', notes);
-        fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
-            alert(data.message || 'Ứng tuyển thành công!');
-            setTimeout(function() {
-                location.reload();
-            }, 100);
-        })
-        .catch(() => {
-            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
-            alert('Lỗi khi ứng tuyển!');
+            if (!isSaved) {
+                //  Gọi API lưu công việc
+                fetch('https://localhost:7004/api/SavedJobs/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify({
+                        userId: candidateId,
+                        jobPostId: jobPostId
+                    })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        isSaved = true;
+                        saveBtn.textContent = "Saved";
+                        saveBtn.classList.remove("btn-success");
+                        saveBtn.classList.add("btn-secondary");
+                    } else {
+                        alert("Không thể lưu công việc.");
+                    }
+                });
+            } else {
+                //  Gọi API lấy danh sách đã lưu để tìm saveJobId
+                fetch(`https://localhost:7004/api/SavedJobs/user/${candidateId}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    let match = data.find(x => x.jobPostId === jobPostId);
+                    if (!match) {
+                        alert("Không tìm thấy công việc đã lưu.");
+                        return;
+                    }
+
+                    let saveJobId = match.saveJobId;
+
+                    //  Gọi API xóa job đã lưu
+                    fetch(`https://localhost:7004/api/SavedJobs/${saveJobId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + jwtToken
+                        }
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            isSaved = false;
+                            saveBtn.textContent = "Save";
+                            saveBtn.classList.remove("btn-secondary");
+                            saveBtn.classList.add("btn-success");
+                        } else {
+                            alert("Không thể hủy lưu công việc.");
+                        }
+                    });
+                });
+            }
         });
-    }
-});
-</script>
+
+                //end
+        document.getElementById('btnApplyNow').addEventListener('click', function() {
+            if (!candidateId) {
+                window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
+            var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+            modal.show();
+        });
+
+        window.selectCv = function(cvId) {
+            selectedCvId = cvId;
+            // Bỏ highlight tất cả
+            document.querySelectorAll('#cvList tr').forEach(tr => tr.classList.remove('selected'));
+            // Highlight dòng được chọn
+            var row = document.getElementById('cv-row-' + cvId);
+            if (row) row.classList.add('selected');
+        };
+
+        document.getElementById('btnSubmitApplication').addEventListener('click', function() {
+            if (selectedCvId) {
+                // Nộp bằng CV có sẵn
+                fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify({
+                        jobPostId: @Model.JobPostDetail?.JobPostId,
+                        cvId: selectedCvId,
+                        candidateId: candidateId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    location.reload();
+                })
+                .catch(() => alert('Lỗi khi ứng tuyển!'));
+            } else {
+                // Nộp bằng CV upload mới
+                let file = document.getElementById('uploadCvInput').files[0];
+                let cvName = document.getElementById('uploadCvName').value;
+                let notes = document.getElementById('uploadCvNotes').value;
+                if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
+                if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
+                document.getElementById('uploadSpinner').style.display = 'flex'; // Hiện spinner
+                let formData = new FormData();
+                formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
+                formData.append('candidateId', candidateId);
+                formData.append('file', file);
+                formData.append('CVName', cvName);
+                if (notes) formData.append('Notes', notes);
+                fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 100);
+                })
+                .catch(() => {
+                    document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
+                    alert('Lỗi khi ứng tuyển!');
+                });
+            }
+        });
+    </script>
 } 

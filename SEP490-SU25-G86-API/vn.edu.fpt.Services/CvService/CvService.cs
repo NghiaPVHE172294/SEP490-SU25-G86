@@ -62,10 +62,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             if (!dto.File.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) && dto.File.ContentType != "application/pdf")
                 throw new Exception("[BR-09] CV file must be in PDF format.");
             // Validate số lượng CV theo role
-            int maxCv = 5; // default ứng viên
-            if (!string.IsNullOrEmpty(roleName) && roleName.Trim().ToUpper() == "EMPLOYER")
+            int maxCv = 20;
+            if (roleName == "EMPLOYER" || roleName == "RECRUITER")
             {
-                maxCv = 200;
+                maxCv = 100;
             }
             int currentCount = await _repo.CountByUserAsync(userId);
             if (currentCount >= maxCv)

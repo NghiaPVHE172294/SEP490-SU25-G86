@@ -53,28 +53,28 @@
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h5 class="mb-0">@job.Title</h5>
                                         @{
-    string badgeClass = "bg-secondary";
-    string statusText = (job.Status ?? "").Trim();
-    switch (statusText)
-    {
-        case "OPEN":
-            statusText = "Đã ứng tuyển";
-            badgeClass = "bg-primary";
-            break;
-        case "Đã ứng tuyển":
-            badgeClass = "bg-primary";
-            break;
-        case "Hồ sơ phù hợp":
-            badgeClass = "bg-success";
-            break;
-        case "Hồ sơ không phù hợp":
-            badgeClass = "bg-danger";
-            break;
-        case "Hồ sơ đã rút":
-            badgeClass = "bg-dark";
-            break;
-    }
-}
+                                        string badgeClass = "bg-secondary";
+                                        string statusText = (job.Status ?? "").Trim();
+                                        switch (statusText)
+                                        {
+                                            case "OPEN":
+                                                statusText = "Đã ứng tuyển";
+                                                badgeClass = "bg-primary";
+                                                break;
+                                            case "Đã ứng tuyển":
+                                                badgeClass = "bg-primary";
+                                                break;
+                                            case "Hồ sơ phù hợp":
+                                                badgeClass = "bg-success";
+                                                break;
+                                            case "Hồ sơ không phù hợp":
+                                                badgeClass = "bg-danger";
+                                                break;
+                                            case "Hồ sơ đã rút":
+                                                badgeClass = "bg-dark";
+                                                break;
+                                        }
+                                    }
 <span class="badge @badgeClass">@statusText</span>
                                     </div>
                                     <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
@@ -118,16 +118,18 @@ else
                     {
                         @foreach (var job in Model.SuggestedJobs)
                         {
-                            <div class="mb-3 p-2 border rounded d-flex align-items-center">
-                                <div class="bg-light p-2 rounded me-3">
-                                    <span class="text-success fw-bold">@job.Salary</span>
+                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
+                                <div class="mb-3 p-2 border rounded d-flex align-items-center hover-shadow" style="transition:box-shadow .2s;">
+                                    <div class="bg-light p-2 rounded me-3 d-flex align-items-center justify-content-center" style="min-width:80px; min-height:50px;">
+                                        <span class="text-success fw-bold">@job.Salary</span>
+                                    </div>
+                                    <div style="flex:1;min-width:0;">
+                                        <div class="fw-bold text-truncate">@job.Title</div>
+                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                    </div>
+                                    <span class="ms-auto text-muted small d-none d-md-inline">@job.Location</span>
                                 </div>
-                                <div>
-                                    <div class="fw-bold">@job.Title</div>
-                                    <div class="text-muted small">@job.CompanyName</div>
-                                </div>
-                                <span class="ms-auto text-muted small">@job.Location</span>
-                            </div>
+                            </a>
                         }
                     }
                     else
