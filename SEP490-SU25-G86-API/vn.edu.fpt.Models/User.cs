@@ -10,6 +10,7 @@ namespace SEP490_SU25_G86_API.Models
             AuditLogs = new HashSet<AuditLog>();
             BlockedCompanies = new HashSet<BlockedCompany>();
             CompanyFollowers = new HashSet<CompanyFollower>();
+            CvTemplateOfEmployers = new HashSet<CvTemplateOfEmployer>();
             Cvs = new HashSet<Cv>();
             Cvsubmissions = new HashSet<Cvsubmission>();
             JobCriteria = new HashSet<JobCriterion>();
@@ -40,6 +41,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
         public virtual ICollection<BlockedCompany> BlockedCompanies { get; set; }
         public virtual ICollection<CompanyFollower> CompanyFollowers { get; set; }
+        public virtual ICollection<CvTemplateOfEmployer> CvTemplateOfEmployers { get; set; }
         public virtual ICollection<Cv> Cvs { get; set; }
         public virtual ICollection<Cvsubmission> Cvsubmissions { get; set; }
         public virtual ICollection<JobCriterion> JobCriteria { get; set; }
