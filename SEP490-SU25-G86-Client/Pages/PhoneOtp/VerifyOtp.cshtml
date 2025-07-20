@@ -1,0 +1,30 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.PhoneOtp.VerifyOtpModel
+@{
+    ViewData["Title"] = "Xác minh OTP";
+}
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="text-center w-50">
+        <h2 class="mb-4">Xác thực mã OTP</h2>
+
+        <form method="post">
+            <div class="form-group mb-3">
+                <input asp-for="OTP" class="form-control" placeholder="Nhập mã OTP..." />
+                <span asp-validation-for="OTP" class="text-danger"></span>
+            </div>
+
+            <!-- Hidden input cho PhoneNumber -->
+            <input type="hidden" asp-for="PhoneNumber" />
+
+            <!-- Hidden input cho UserId -->
+            <input type="hidden" asp-for="UserId" />
+
+            <button type="submit" class="btn btn-success">Xác thực</button>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="alert alert-info mt-3">@Model.Message</div>
+        }
+    </div>
+</div>

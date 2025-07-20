@@ -1,0 +1,23 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.PhoneOtp.SendOtpModel
+@{
+    ViewData["Title"] = "Gửi OTP";
+}
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="text-center w-50">
+        <h2 class="mb-4">Xác thực số điện thoại của bạn</h2>
+
+        <form method="post">
+            <div class="form-group mb-3">
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại..." />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Xác thực</button>
+        </form>
+
+        @if (Model.Message != null)
+        {
+            <div class="mt-3 alert alert-info">@Model.Message</div>
+        }
+    </div>
+</div>
