@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEP490_SU25_G86_API.Models
 {
@@ -46,5 +47,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual ICollection<Cvsubmission> Cvsubmissions { get; set; }
         public virtual ICollection<JobPostView> JobPostViews { get; set; }
         public virtual ICollection<SavedJob> SavedJobs { get; set; }
+        [NotMapped]
+        public bool IsApplied { get; set; }
     }
 }
