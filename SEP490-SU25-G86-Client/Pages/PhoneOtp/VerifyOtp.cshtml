@@ -3,27 +3,28 @@
 @{
     ViewData["Title"] = "Xác minh OTP";
 }
-<div class="container text-center mt-5">
-    <h2 class="mb-4">Xác thực số điện thoại của bạn</h2>
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="text-center w-50">
+        <h2 class="mb-4">Xác thực mã OTP</h2>
 
-    <form method="post" class="w-50 mx-auto">
-        <!-- Nhập OTP -->
-        <div class="form-group mb-3">
-            <input asp-for="OTP" class="form-control" placeholder="Nhập mã OTP..." />
-            <span asp-validation-for="OTP" class="text-danger"></span>
-        </div>
+        <form method="post">
+            <div class="form-group mb-3">
+                <input asp-for="OTP" class="form-control" placeholder="Nhập mã OTP..." />
+                <span asp-validation-for="OTP" class="text-danger"></span>
+            </div>
 
-        <!-- Hidden input cho PhoneNumber -->
-        <input type="hidden" asp-for="PhoneNumber" />
+            <!-- Hidden input cho PhoneNumber -->
+            <input type="hidden" asp-for="PhoneNumber" />
 
-        <!-- Hidden input cho UserId -->
-        <input type="hidden" asp-for="UserId" />
+            <!-- Hidden input cho UserId -->
+            <input type="hidden" asp-for="UserId" />
 
-        <button type="submit" class="btn btn-success">Xác thực</button>
-    </form>
+            <button type="submit" class="btn btn-success">Xác thực</button>
+        </form>
 
-    @if (!string.IsNullOrEmpty(Model.Message))
-    {
-        <div class="alert alert-info mt-3">@Model.Message</div>
-    }
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="alert alert-info mt-3">@Model.Message</div>
+        }
+    </div>
 </div>
