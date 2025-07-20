@@ -1,4 +1,4 @@
-﻿using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.Models;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 {
@@ -34,5 +34,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         Task<EmploymentType> AddEmploymentTypeIfNotExistsAsync(string employmentTypeName);
         Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize);
         Task<List<Cvsubmission>> GetCvSubmissionsByJobPostIdAsync(int jobPostId);
+        Task<List<int>> GetAppliedJobPostIdsAsync(int candidateId);
     }
 }
