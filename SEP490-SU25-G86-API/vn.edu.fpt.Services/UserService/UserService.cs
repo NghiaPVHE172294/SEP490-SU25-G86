@@ -70,14 +70,26 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
             await _userRepo.UpdateUserAsync(user);
             return true;
         }
-        public async Task<bool> FollowCompanyAsync(int userId, int companyId)
+        public async Task<bool> FollowCompanyAsync(int accountId, int companyId)
         {
-            return await _userRepo.FollowCompanyAsync(userId, companyId);
+            return await _userRepo.FollowCompanyAsync(accountId, companyId);
         }
 
-        public async Task<bool> BlockCompanyAsync(int userId, int companyId, string? reason)
+        public async Task<bool> BlockCompanyAsync(int accountId, int companyId, string? reason)
         {
-            return await _userRepo.BlockCompanyAsync(userId, companyId, reason);
+            return await _userRepo.BlockCompanyAsync(accountId, companyId, reason);
+        }
+
+        public async Task<FollowBlockStatusDTO> GetFollowBlockStatusAsync(int accountId, int companyId)
+        {
+            var isFollowing = await _userRepo.IsCompanyFollowedAsync(accountId, companyId);
+            var isBlocked = await _userRepo.IsCompanyBlockedAsync(accountId, companyId);
+
+            return new FollowBlockStatusDTO
+            {
+                IsFollowing = isFollowing,
+                IsBlocked = isBlocked
+            };
         }
     }
 }

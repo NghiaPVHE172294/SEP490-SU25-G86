@@ -4,13 +4,13 @@
     {
         public class FollowRequest
         {
-            public int UserId { get; set; }
+            public int AccountId { get; set; }
             public int CompanyId { get; set; }
         }
 
         public class BlockRequest
         {
-            public int UserId { get; set; }
+            public int AccountId { get; set; }
             public int CompanyId { get; set; }
             public string? Reason { get; set; }
         }

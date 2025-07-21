@@ -43,7 +43,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.UserController
         [HttpPost("follow")]
         public async Task<IActionResult> FollowCompany([FromBody] FollowRequest request)
         {
-            var result = await _userService.FollowCompanyAsync(request.UserId, request.CompanyId);
+            var result = await _userService.FollowCompanyAsync(request.AccountId, request.CompanyId);
             if (result)
                 return Ok("Theo dõi công ty thành công.");
             return BadRequest("Bạn đã theo dõi công ty này rồi.");
@@ -52,10 +52,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.UserController
         [HttpPost("block")]
         public async Task<IActionResult> BlockCompany([FromBody] BlockRequest request)
         {
-            var result = await _userService.BlockCompanyAsync(request.UserId, request.CompanyId, request.Reason);
+            var result = await _userService.BlockCompanyAsync(request.AccountId, request.CompanyId, request.Reason);
             if (result)
                 return Ok("Chặn công ty thành công.");
             return BadRequest("Bạn đã chặn công ty này rồi.");
+        }
+
+        [HttpGet("{companyId}/check-follow-block")]
+        public async Task<IActionResult> CheckFollowBlock(int companyId, [FromQuery] int accountId)
+        {
+            var status = await _userService.GetFollowBlockStatusAsync(accountId, companyId);
+            return Ok(status);
         }
     }
 }
