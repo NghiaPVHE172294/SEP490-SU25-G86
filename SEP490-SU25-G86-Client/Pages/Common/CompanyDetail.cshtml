@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+
+<div id="session-data" data-user-id="@HttpContext.Session.GetString("userId")"></div>
 <div class="company-header">
     <div class="d-flex align-items-center">
         <img src="@Model.Company?.LogoUrl ?? " class="img-fluid rounded me-3" style="width: 70px; height: 70px;" />
@@ -22,8 +25,21 @@
         </div>
     </div>
     <div>
-        <button class="btn btn-light text-success fw-bold">+ Theo dõi công ty</button>
-        <button class="btn btn-light text-danger fw-bold">✖ Chặn công ty</button>
+        @if (Model.IsBlocked)
+        {
+            <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id" disabled>+ Theo dõi công ty</button>
+            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id" disabled>✔ Đã chặn công ty</button>
+        }
+        else if (Model.IsFollowing)
+        {
+            <button id="followButton" class="btn btn-secondary fw-bold" data-company-id="@Model.Id">✔ Đang theo dõi</button>
+            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+        }
+        else
+        {
+            <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id">+ Theo dõi công ty</button>
+            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+        }
     </div>
 </div>
 
@@ -104,6 +120,126 @@
         <div class="text-muted">Không có tin tuyển dụng nào.</div>
     }
 </div>
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055">
+    <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">
+                Đã theo dõi công ty thành công.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const token = '@HttpContext.Session.GetString("jwt_token")';
+            const accountId = @Html.Raw(Json.Serialize(Model.UserId));
+
+            function showToast(message, isSuccess = true) {
+                const toastId = 'toast-' + Date.now();
+                const bgClass = isSuccess ? 'bg-success' : 'bg-danger';
+
+                const toastHtml = `
+                    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+
+                // Append to the correct container
+                $('#toastContainer').append(toastHtml);
+
+                // Initialize and show the toast
+                const toastElement = document.getElementById(toastId);
+                if (toastElement) {
+                    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+                    toast.show();
+                } else {
+                    console.error('Toast element not found:', toastId);
+                }
+            }
+
+            $('#followButton').click(function () {
+                var companyId = $(this).data('company-id');
+
+                if (!accountId || !token || token === 'null' || accountId === 'null') {
+                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent('/Common/CompanyDetail?id=' + companyId);
+                    return;
+                }
+
+                $.ajax({
+                    url: 'https://localhost:7004/api/User/follow',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: JSON.stringify({
+                        userId: parseInt(accountId),
+                        companyId: parseInt(companyId)
+                    }),
+                    success: function () {
+                        const button = $('#followButton');
+                        if (button.text().includes('Đang theo dõi')) {
+                            button.removeClass('btn-secondary').addClass('btn-light text-success');
+                            button.text('+ Theo dõi công ty');
+                            showToast('Đã hủy theo dõi công ty.');
+                        } else {
+                            button.removeClass('btn-light text-success').addClass('btn-secondary');
+                            button.text('✔ Đang theo dõi');
+                            showToast('Đã theo dõi công ty thành công.');
+                        }
+                    },
+                    error: function (xhr) {
+                        showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
+                    }
+                });
+            });
+
+            $('#blockButton').click(function () {
+                var companyId = $(this).data('company-id');
+
+                if (!accountId || !token || token === 'null' || accountId === 'null') {
+                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent('/Common/CompanyDetail?id=' + companyId);
+                    return;
+                }
+
+                var reason = prompt('Nhập lý do chặn công ty:');
+                if (!reason) return;
+
+                $.ajax({
+                    url: 'https://localhost:7004/api/User/block',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: JSON.stringify({
+                        userId: parseInt(accountId),
+                        companyId: parseInt(companyId),
+                        reason: reason
+                    }),
+                    success: function () {
+                        $('#blockButton')
+                            .removeClass('btn-light text-danger')
+                            .addClass('btn-light text-danger')
+                            .text('✔ Đã chặn công ty')
+                            .prop('disabled', true);
+
+                        $('#followButton').prop('disabled', true);
+                        showToast('Đã chặn công ty thành công.');
+                    },
+                    error: function (xhr) {
+                        showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
+                    }
+                });
+            });
+        });
+    </script>
+}

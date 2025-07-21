@@ -24,21 +24,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> FollowCompanyAsync(int accountId, int companyId)
+        public async Task<bool> FollowCompanyAsync(int userId, int companyId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
-            if (user == null)
-            {
-                throw new Exception($"No user found for AccountId: {accountId}");
-            }
-            var userId = user.UserId;
-
             var follow = await _context.CompanyFollowers
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.CompanyId == companyId);
-
+            Console.WriteLine("Trying to follow company with userId: " + userId);
             if (follow == null)
             {
-                // Chưa từng follow → tạo mới
                 follow = new CompanyFollower
                 {
                     UserId = userId,
@@ -61,7 +53,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
             }
             else
             {
-                // Đang follow → hủy theo dõi
                 follow.IsActive = false;
                 _context.CompanyFollowers.Update(follow);
                 await _context.SaveChangesAsync();
@@ -69,15 +60,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
             }
         }
 
-        public async Task<bool> BlockCompanyAsync(int accountId, int companyId, string? reason)
+        public async Task<bool> BlockCompanyAsync(int userId, int companyId, string? reason)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
-            if (user == null)
-            {
-                throw new Exception($"No user found for AccountId: {accountId}");
-            }
-            var userId = user.UserId;
-
             var exists = await _context.BlockedCompanies
                 .AnyAsync(x => x.CandidateId == userId && x.CompanyId == companyId);
 
@@ -96,6 +80,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
 
             return false;
         }
+
 
         public async Task<bool> IsCompanyFollowedAsync(int accountId, int companyId)
         {

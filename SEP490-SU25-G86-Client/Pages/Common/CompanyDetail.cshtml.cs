@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Google.Apis.Drive.v3.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace SEP490_SU25_G86_Client.Pages.Common
@@ -18,11 +21,40 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
+        public bool IsFollowing { get; set; }
+        public bool IsBlocked { get; set; }
+        public int Id { get; set; }
+        public string? AccountId { get; set; }
+        public string UserId { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id, [FromQuery] int page = 1)
+
+        public async Task<IActionResult> OnGetAsync([FromQuery] int id, [FromQuery] int page = 1)
         {
+            UserId = HttpContext.Session.GetString("userId");
+
+            if (!HttpContext.Request.Query.TryGetValue("id", out var idValue) || !int.TryParse(idValue, out var parsedId) || parsedId <= 0)
+            {
+                return BadRequest("Invalid company ID");
+            }
+
+            id = parsedId;
+            Id = id;
+
             const int pageSize = 5;
             CurrentPage = page < 1 ? 1 : page;
+
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                AccountId = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    AccountId = null;
+                }
+            }
 
             // Lấy thông tin công ty
             var companyResponse = await _httpClient.GetAsync($"https://localhost:7004/api/Company/{id}");
@@ -30,13 +62,15 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             {
                 return NotFound();
             }
-
             Company = await companyResponse.Content.ReadFromJsonAsync<CompanyDto>();
+            if (Company == null)
+            {
+                return NotFound();
+            }
 
             // Lấy danh sách jobposts có phân trang
             var jobPostsResponse = await _httpClient.GetAsync(
                 $"https://localhost:7004/api/JobPosts/{id}/jobposts?page={CurrentPage}&pageSize={pageSize}");
-
             if (jobPostsResponse.IsSuccessStatusCode)
             {
                 var json = await jobPostsResponse.Content.ReadAsStringAsync();
@@ -51,6 +85,32 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                     TotalItems = result.TotalItems;
                     TotalPages = (int)Math.Ceiling((double)TotalItems / pageSize);
                 }
+            }
+
+            // Kiểm tra trạng thái theo dõi công ty
+            if (!string.IsNullOrEmpty(AccountId))
+            {
+                var checkUrl = $"https://localhost:7004/api/User/{id}/check-follow-block?accountId={AccountId}";
+                var checkResponse = await _httpClient.GetAsync(checkUrl);
+                if (checkResponse.IsSuccessStatusCode)
+                {
+                    var json = await checkResponse.Content.ReadAsStringAsync();
+                    var checkResult = JsonSerializer.Deserialize<FollowBlockStatusDto>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (checkResult != null)
+                    {
+                        IsFollowing = checkResult.IsFollowing;
+                        IsBlocked = checkResult.IsBlocked;
+                    }
+                }
+            }
+            else
+            {
+                IsFollowing = false;
+                IsBlocked = false;
             }
 
             return Page();
@@ -93,5 +153,13 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public List<JobPostListDTO>? Items { get; set; }
         [JsonPropertyName("totalItems")]
         public int TotalItems { get; set; }
+    }
+    public class FollowBlockStatusDto
+    {
+        [JsonPropertyName("isFollowing")]
+        public bool IsFollowing { get; set; }
+
+        [JsonPropertyName("isBlocked")]
+        public bool IsBlocked { get; set; }
     }
 }
