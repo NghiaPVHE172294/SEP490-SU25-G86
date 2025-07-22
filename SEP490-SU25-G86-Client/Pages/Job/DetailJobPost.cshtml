@@ -36,7 +36,16 @@
                 <a href="#" class="ms-2" title="Chia sẻ X"><i class="bi bi-x fs-4"></i></a>
                 <a href="#" class="ms-2" title="Chia sẻ LinkedIn"><i class="bi bi-linkedin fs-4"></i></a>
             </div>
-            <button class="btn btn-save me-2"><i class="bi bi-heart"></i> Lưu tin</button>
+            @* <button class="btn btn-save me-2"><i class="bi bi-heart"></i> Lưu tin</button> *@
+            @*sửa lại nút Lưu tin  *@
+            @if (Model.CurrentUserId != null)
+            {
+                <button id="saveButton" class="btn btn-save me-2 @(Model.IsSaved ? "btn-secondary" : "btn-success")">
+                    <i class="bi bi-heart"></i> @(Model.IsSaved ? "Đã Lưu" : "Lưu tin")
+                </button>
+            }
+
+
             <button class="btn btn-main ms-1" id="btnApplyNow">
                 <i class="bi bi-send"></i> Ứng tuyển ngay
             </button>
@@ -146,6 +155,79 @@
 const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
 let selectedCvId = null;
 let candidateId = '@HttpContext.Session.GetString("userId")';
+
+//chiennk 23/07/2025 (saved job button)
+        let isSaved = @(Model.IsSaved.ToString().ToLower());
+            let jobPostId = @Model.JobPostDetail?.JobPostId;
+            let saveBtn = document.getElementById("saveButton");
+
+            saveBtn.addEventListener('click', function () {
+                if (!candidateId) {
+                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    return;
+                }
+
+                if (!isSaved) {
+                    // Gọi API lưu công việc
+                    fetch('https://localhost:7004/api/SavedJobs/save', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + jwtToken
+                        },
+                        body: JSON.stringify({
+                            userId: candidateId,
+                            jobPostId: jobPostId
+                        })
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            isSaved = true;
+                            saveBtn.textContent = "Đã Lưu";
+                            saveBtn.classList.remove("btn-success");
+                            saveBtn.classList.add("btn-secondary");
+                        } else {
+                            alert("Không thể lưu công việc.");
+                        }
+                    });
+                } else {
+                    // Gọi API lấy danh sách đã lưu để tìm saveJobId
+                    fetch(`https://localhost:7004/api/SavedJobs/user/${candidateId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + jwtToken
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        let match = data.find(x => x.jobPostId === jobPostId);
+                        if (!match) {
+                            alert("Không tìm thấy công việc đã lưu.");
+                            return;
+                        }
+
+                        let saveJobId = match.saveJobId;
+
+                        // Gọi API xóa job đã lưu
+                        fetch(`https://localhost:7004/api/SavedJobs/${saveJobId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': 'Bearer ' + jwtToken
+                            }
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                isSaved = false;
+                                saveBtn.textContent = "Lưu Tin";
+                                saveBtn.classList.remove("btn-secondary");
+                                saveBtn.classList.add("btn-success");
+                            } else {
+                                alert("Không thể hủy lưu công việc.");
+                            }
+                        });
+                    });
+                }
+            });
+//end chiennk edit
 
 document.getElementById('btnApplyNow').addEventListener('click', function() {
     if (!candidateId) {
