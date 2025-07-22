@@ -40,9 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-
-    <Folder Include="CVMatcher_UnitTesting\vn.edu.fpt.Controllers\" />
     <Folder Include="CVMatcher_UnitTesting\vn.edu.fpt.Services\" />
   </ItemGroup>
 
