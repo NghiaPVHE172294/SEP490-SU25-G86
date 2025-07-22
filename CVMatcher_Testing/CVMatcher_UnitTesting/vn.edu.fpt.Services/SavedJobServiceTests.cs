@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 
-namespace CVMatcher_Testing.vn.edu.fpt.Services
+namespace CVMatcher_Testing.CVMatcher_UnitTesting.vn.edu.fpt.Services
 {
     public class SavedJobServiceTests
     {

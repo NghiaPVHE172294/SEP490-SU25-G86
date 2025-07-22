@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SEP490_SU25_G86_API.vn.edu.fpt.Controllers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController;
@@ -10,7 +9,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SEP490_SU25_G86_API.Tests.Controllers
+namespace CVMatcher_Testing.CVMatcher_UnitTesting.vn.edu.fpt.Controllers
 {
     public class UserDetailOfAdminControllerTests
     {
