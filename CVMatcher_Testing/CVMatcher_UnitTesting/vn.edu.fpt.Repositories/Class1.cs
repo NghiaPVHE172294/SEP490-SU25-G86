@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CVMatcher_Testing.CVMatcher_UnitTesting.vn.edu.fpt.Repositories
 {
-    internal class Class1
+    internal class Class1a
     {
     }
 }
