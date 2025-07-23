@@ -62,16 +62,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
             {
                 return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
             }
-            // Upload file lên Google Drive (dùng lại logic của CvController)
-            string fileUrl = await _cvService.UploadFileToGoogleDrive(req.File);
+            // Upload file lên Firebase Storage (thay vì Google Drive)
+            string fileUrl = await _cvService.UploadFileToFirebaseStorage(req.File);
             var cv = new SEP490_SU25_G86_API.Models.Cv
             {
-                CandidateId = req.CandidateId,
+                UploadByUserId = req.CandidateId,
                 FileUrl = fileUrl,
-                Notes = req.Notes,
                 UploadDate = DateTime.UtcNow,
                 IsDelete = false,
-                UploadByUserId = req.CandidateId,
                 Cvname = req.CVName
             };
             int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);

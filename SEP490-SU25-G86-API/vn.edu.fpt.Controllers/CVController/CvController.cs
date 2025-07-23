@@ -20,8 +20,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
         private readonly ICvService _service;
 
         private readonly SEP490_G86_CvMatchContext _context;
-        private readonly string _googleDriveFolderId = "1jlghm3ntLE6JDPcwJqA2tlVrmCVBVpYM";
-        private readonly string _serviceAccountJson = "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-2ad992eb4897.json";
+
         public CvController(ICvService service, SEP490_G86_CvMatchContext context)
 
         {
@@ -57,7 +56,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
                 return Unauthorized(new { message = "Không tìm thấy người dùng tương ứng với tài khoản." });
             try
             {
-                string fileUrl = await UploadFileToGoogleDrive(dto.File);
+                string fileUrl = await _service.UploadFileToFirebaseStorage(dto.File);
                 string roleName = user.Account?.Role?.RoleName ?? string.Empty;
                 await _service.AddAsync(user.UserId, roleName, dto, fileUrl);
                 return Ok();
@@ -107,66 +106,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CVController
             // Cập nhật tên
             await _service.UpdateCvNameAsync(cvId, newName);
             return Ok();
-        }
-
-        // Upload file PDF lên Google Drive, trả về link xem file
-        private async Task<string> UploadFileToGoogleDrive(IFormFile file)
-        {
-            var credential = GoogleCredential.FromFile(_serviceAccountJson)
-                .CreateScoped(DriveService.Scope.Drive);
-
-            var service = new DriveService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "CVMatcher"
-            });
-
-            var fileMetadata = new Google.Apis.Drive.v3.Data.File()
-            {
-                Name = file.FileName,
-                Parents = new List<string> { _googleDriveFolderId }
-            };
-
-            using (var stream = file.OpenReadStream())
-            {
-                var request = service.Files.Create(fileMetadata, stream, file.ContentType);
-                request.Fields = "id, webViewLink, webContentLink";
-                request.SupportsAllDrives = true; // Hỗ trợ Drive dùng chung
-                try
-                {
-                    var uploadResult = await request.UploadAsync();
-                    Console.WriteLine($"[GoogleDrive] Upload status: {uploadResult.Status}, Exception: {uploadResult.Exception}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[GoogleDrive] Exception during upload: {ex}");
-                    throw new Exception($"Google Drive upload exception: {ex.Message}", ex);
-                }
-
-                var uploadedFile = request.ResponseBody;
-                if (uploadedFile == null)
-                {
-                    Console.WriteLine("[GoogleDrive] ResponseBody is null after upload. Possible cause: service account, folderId, or permission error.");
-                    throw new Exception("Không upload được file lên Google Drive. ResponseBody null.");
-                }
-                if (string.IsNullOrEmpty(uploadedFile.Id))
-                {
-                    Console.WriteLine("[GoogleDrive] Uploaded file does not have an Id.");
-                    throw new Exception("File upload lên Google Drive không có Id.");
-                }
-
-                // Set quyền public cho file
-                var permission = new Google.Apis.Drive.v3.Data.Permission
-                {
-                    Type = "anyone",
-                    Role = "reader"
-                };
-                var permissionRequest = service.Permissions.Create(permission, uploadedFile.Id);
-                permissionRequest.SupportsAllDrives = true;
-                await permissionRequest.ExecuteAsync();
-
-                return uploadedFile.WebViewLink;
-            }
         }
     }
 }

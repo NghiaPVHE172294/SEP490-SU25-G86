@@ -9,6 +9,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
         Task AddAsync(int userId, string roleName, AddCvDTO dto, string fileUrl);
         Task DeleteAsync(int userId, int cvId);
         Task UpdateCvNameAsync(int cvId, string newName);
-        Task<string> UploadFileToGoogleDrive(Microsoft.AspNetCore.Http.IFormFile file);
+        Task<string> UploadFileToFirebaseStorage(Microsoft.AspNetCore.Http.IFormFile file);
     }
 } 

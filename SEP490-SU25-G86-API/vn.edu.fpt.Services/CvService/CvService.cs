@@ -102,65 +102,33 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             await _repo.UpdateAsync(cv);
         }
 
-        public async Task<string> UploadFileToGoogleDrive(IFormFile file)
+        public async Task<string> UploadFileToFirebaseStorage(IFormFile file)
         {
-            var serviceAccountJson = "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-2ad992eb4897.json"; // Đảm bảo đồng bộ với controller
-            var googleDriveFolderId = "1jlghm3ntLE6JDPcwJqA2tlVrmCVBVpYM";
-            var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(serviceAccountJson)
-                .CreateScoped(Google.Apis.Drive.v3.DriveService.Scope.Drive);
+            string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+            string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET") ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
+            string folderName = "CV storage";
 
-            var service = new Google.Apis.Drive.v3.DriveService(new Google.Apis.Services.BaseClientService.Initializer()
+            // Khởi tạo FirebaseApp nếu chưa có
+            if (FirebaseAdmin.FirebaseApp.DefaultInstance == null)
             {
-                HttpClientInitializer = credential,
-                ApplicationName = "CVMatcher"
-            });
-
-            var fileMetadata = new Google.Apis.Drive.v3.Data.File()
-            {
-                Name = file.FileName,
-                Parents = new List<string> { googleDriveFolderId }
-            };
-
-            using (var stream = file.OpenReadStream())
-            {
-                var request = service.Files.Create(fileMetadata, stream, file.ContentType);
-                request.Fields = "id, webViewLink, webContentLink";
-                request.SupportsAllDrives = true;
-                try
+                FirebaseAdmin.FirebaseApp.Create(new FirebaseAdmin.AppOptions()
                 {
-                    var uploadResult = await request.UploadAsync();
-                    Console.WriteLine($"[GoogleDrive] Upload status: {uploadResult.Status}, Exception: {uploadResult.Exception}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[GoogleDrive] Exception during upload: {ex}");
-                    throw new Exception($"Google Drive upload exception: {ex.Message}", ex);
-                }
-
-                var uploadedFile = request.ResponseBody;
-                if (uploadedFile == null)
-                {
-                    Console.WriteLine("[GoogleDrive] ResponseBody is null after upload. Possible cause: service account, folderId, or permission error.");
-                    throw new Exception("Không upload được file lên Google Drive. ResponseBody null.");
-                }
-                if (string.IsNullOrEmpty(uploadedFile.Id))
-                {
-                    Console.WriteLine("[GoogleDrive] Uploaded file does not have an Id.");
-                    throw new Exception("File upload lên Google Drive không có Id.");
-                }
-
-                // Set quyền public cho file
-                var permission = new Google.Apis.Drive.v3.Data.Permission
-                {
-                    Type = "anyone",
-                    Role = "reader"
-                };
-                var permissionRequest = service.Permissions.Create(permission, uploadedFile.Id);
-                permissionRequest.SupportsAllDrives = true;
-                await permissionRequest.ExecuteAsync();
-
-                return uploadedFile.WebViewLink;
+                    Credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(firebaseCredentialsPath),
+                });
             }
+            // Tạo credential cho StorageClient
+            var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(firebaseCredentialsPath);
+            var storage = Google.Cloud.Storage.V1.StorageClient.Create(credential);
+            using var stream = file.OpenReadStream();
+            string objectName = $"{folderName}/{file.FileName}";
+            var obj = await storage.UploadObjectAsync(
+                bucket: bucketName,
+                objectName: objectName,
+                contentType: file.ContentType,
+                source: stream
+            );
+            // Trả về public URL
+            return $"https://storage.googleapis.com/{bucketName}/{objectName}";
         }
     }
 }
