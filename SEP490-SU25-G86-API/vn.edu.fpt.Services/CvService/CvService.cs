@@ -102,12 +102,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             await _repo.UpdateAsync(cv);
         }
 
-        public async Task<string> UploadFileToFirebaseStorage(IFormFile file)
+        public async Task<string> UploadFileToFirebaseStorage(IFormFile file, int candidateId)
         {
             string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET") ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
             string folderName = "CV storage";
-
             // Khởi tạo FirebaseApp nếu chưa có
             if (FirebaseAdmin.FirebaseApp.DefaultInstance == null)
             {
@@ -120,15 +119,24 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(firebaseCredentialsPath);
             var storage = Google.Cloud.Storage.V1.StorageClient.Create(credential);
             using var stream = file.OpenReadStream();
-            string objectName = $"{folderName}/{file.FileName}";
+            // Tạo objectName duy nhất: "CV storage/{candidateId}_{yyyyMMddHHmmss}_{fileName}"
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string objectName = $"{folderName}/{candidateId}_{timestamp}_{file.FileName}";
             var obj = await storage.UploadObjectAsync(
                 bucket: bucketName,
                 objectName: objectName,
                 contentType: file.ContentType,
                 source: stream
             );
-            // Trả về public URL
-            return $"https://storage.googleapis.com/{bucketName}/{objectName}";
+            // Trả về public URL đúng chuẩn Firebase
+            var fileUrl = $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(objectName)}?alt=media";
+            return fileUrl;
+        }
+        // Overload cũ cho các controller chưa truyền candidateId
+        public async Task<string> UploadFileToFirebaseStorage(IFormFile file)
+        {
+            // Có thể throw exception hoặc dùng candidateId = 0 (tùy logic của bạn)
+            return await UploadFileToFirebaseStorage(file, 0);
         }
     }
 }
