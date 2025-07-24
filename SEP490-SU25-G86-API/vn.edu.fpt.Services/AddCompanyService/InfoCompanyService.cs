@@ -31,6 +31,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             return MapToDetailDto(company);
         }
 
+        // Chuẩn hóa URL (thêm http/https nếu cần)
+        private string? NormalizeUrl(string? url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return null;
+
+            url = url.Trim();
+
+            if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return "https://" + url;
+            }
+
+            return url;
+        }
+
+
         // Tạo mới công ty (check trùng trước)
         public async Task<bool> CreateCompanyAsync(int accountId, CompanyCreateUpdateDTO dto)
         {
@@ -51,10 +68,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
                 Email = dto.Email,
                 Address = dto.Address,
                 Description = dto.Description,
-                Website = dto.Website,
+                Website = NormalizeUrl(dto.Website),
                 CompanySize = dto.CompanySize,
                 Phone = dto.Phone,
-                LogoUrl = dto.LogoUrl,
+                LogoUrl = NormalizeUrl(dto.LogoUrl),
                 CreatedByUserId = accountId, // Gán accountId vào trường CreatedByUserId
                 CreatedAt = DateTime.UtcNow,
                 IsDelete = false
@@ -76,10 +93,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             company.Email = dto.Email;
             company.Address = dto.Address;
             company.Description = dto.Description;
-            company.Website = dto.Website;
+            company.Website = NormalizeUrl(dto.Website);
             company.CompanySize = dto.CompanySize;
             company.Phone = dto.Phone;
-            company.LogoUrl = dto.LogoUrl;
+            company.LogoUrl = NormalizeUrl(dto.LogoUrl);
 
             await _repository.UpdateAsync(company);
             return true;
