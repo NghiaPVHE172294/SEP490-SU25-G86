@@ -36,3 +36,4 @@ appsettings*.json
 
 # Others
 TestResults/
+**/launchSettings.json
