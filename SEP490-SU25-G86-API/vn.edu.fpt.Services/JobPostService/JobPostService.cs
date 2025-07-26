@@ -1,3 +1,4 @@
+using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
@@ -11,11 +12,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
     {
         private readonly IJobPostRepository _jobPostRepo;
         private readonly IBlockedCompanyRepository _blockedCompanyRepo;
+        private readonly SEP490_G86_CvMatchContext _context;
 
-        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo)
+        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context)
         {
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
+            _context = context;
         }
         
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
@@ -366,15 +369,40 @@ if (candidateId.HasValue)
         public async Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
         {
             var submissions = await _jobPostRepo.GetCvSubmissionsByJobPostIdAsync(jobPostId);
+            foreach (var s in submissions)
+            {
+                Console.WriteLine($"[DEBUG] SubmissionId={s.SubmissionId}, CvId={s.CvId}, JobPostId={s.JobPostId}");
+                var cvParsedDataQuery = _context.CvparsedData.Where(p => p.CvId == s.CvId && !p.IsDelete);
+                var jobCriteriaQuery = _context.JobCriteria.Where(c => c.JobPostId == s.JobPostId && !c.IsDelete);
+                Console.WriteLine($"[DEBUG] CvparsedDatum count: {cvParsedDataQuery.Count()}, JobCriteria count: {jobCriteriaQuery.Count()}");
+                var cvParsedDataId = cvParsedDataQuery.OrderByDescending(p => p.ParsedAt).Select(p => (int?)p.CvparsedDataId).FirstOrDefault();
+                var jobCriteriaId = jobCriteriaQuery.OrderByDescending(c => c.CreatedAt).Select(c => (int?)c.JobCriteriaId).FirstOrDefault();
+                Console.WriteLine($"[DEBUG] Mapped CvParsedDataId={cvParsedDataId}, JobCriteriaId={jobCriteriaId}");
+            }
             return submissions.Select(s => new CvSubmissionForJobPostDTO
             {
+                CvParsedDataId = (s != null && s.CvId != null && _context?.CvparsedData != null && _context.CvparsedData.Any(p => p.CvId == s.CvId && !p.IsDelete))
+    ? _context.CvparsedData
+        .Where(p => p.CvId == s.CvId && !p.IsDelete)
+        .OrderByDescending(p => p.ParsedAt)
+        .Select(p => (int?)p.CvparsedDataId)
+        .FirstOrDefault()
+    : null,
+                JobCriteriaId = (s != null && s.JobPostId != null && _context?.JobCriteria != null && _context.JobCriteria.Any(c => c.JobPostId == s.JobPostId && !c.IsDelete))
+    ? _context.JobCriteria
+        .Where(c => c.JobPostId == s.JobPostId && !c.IsDelete)
+        .OrderByDescending(c => c.CreatedAt)
+        .Select(c => (int?)c.JobCriteriaId)
+        .FirstOrDefault()
+    : null,
                 SubmissionId = s.SubmissionId,
                 SubmissionDate = s.SubmissionDate,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
                 Status = s.Status, // lấy Status mới
                 TotalScore = s.MatchedCvandJobPost != null ? s.MatchedCvandJobPost.TotalScore : null, // lấy TotalScore từ bảng liên kết
-                RecruiterNote = s.RecruiterNote
+                RecruiterNote = s.RecruiterNote,
+                MatchedCvandJobPostId = s.MatchedCvandJobPostId
             }).ToList();
         }
     }

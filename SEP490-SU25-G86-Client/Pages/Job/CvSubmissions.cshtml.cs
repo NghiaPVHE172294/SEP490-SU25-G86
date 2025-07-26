@@ -94,31 +94,26 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Gọi API AI để chấm điểm
+            // Lấy submission để lấy hai id cần thiết
+            var submission = CvSubmissions.FirstOrDefault(x => x.SubmissionId == id);
+            if (submission == null || submission.CvParsedDataId == null || submission.JobCriteriaId == null)
+            {
+                ErrorMessage = "Không đủ dữ liệu để lọc AI cho CV này!";
+                return RedirectToPage(new { JobPostId });
+            }
+            var body = new
+            {
+                cvParsedDataId = submission.CvParsedDataId,
+                jobCriteriaId = submission.JobCriteriaId
+            };
+            var jsonBody = new StringContent(System.Text.Json.JsonSerializer.Serialize(body), System.Text.Encoding.UTF8, "application/json");
+
             var aiResponse = await client.PostAsync(
-                $"https://localhost:7004/api/AI/CompareCvWithJobCriteria?cvSubmissionId={id}", null);
+                $"https://localhost:7004/api/AI/CompareCvWithJobCriteria", jsonBody);
 
             if (aiResponse.IsSuccessStatusCode)
             {
-                // Nhận kết quả điểm số
-                var json = await aiResponse.Content.ReadAsStringAsync();
-                // Đảm bảo DTO đúng namespace nếu cần
-                // Nếu namespace khác, hãy sửa lại cho đúng project bạn
-                // var result = JsonSerializer.Deserialize<vn.edu.fpt.DTOs.GeminiDTO.MatchedCvandJobPostDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                // Nếu backend đã tự động cập nhật điểm và trạng thái thì chỉ reload lại trang
-                // Nếu cần cập nhật thủ công thì gọi API PUT/PATCH ở đây
-                // Ví dụ:
-                // var updateContent = new StringContent(JsonSerializer.Serialize(new {
-                //     TotalScore = result.TotalScore,
-                //     Status = "Đã chấm điểm bằng AI"
-                // }), System.Text.Encoding.UTF8, "application/json");
-                // var updateResponse = await client.PutAsync(
-                //     $"https://localhost:7004/api/cvsubmissions/{id}/score", updateContent);
-                // if (!updateResponse.IsSuccessStatusCode)
-                // {
-                //     ErrorMessage = "Không thể cập nhật trạng thái/điểm!";
-                // }
+                // Xử lý như cũ
             }
             else
             {
