@@ -302,3 +302,55 @@ Response: {
   "responseId": "NLeEaLykCJ2Bn9kPlI2r-Q8"
 }
 
+[7/27/2025 2:28:13 AM] CV: 9, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng (kinh nghiệm, kỹ năng, học vấn, chức danh, ngôn ngữ, chứng chỉ, tóm tắt, lịch sử làm việc, dự án, khả năng nhận việc, kỳ vọng lương).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó và giải thích lý do.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+- Trường explanations: giải thích ngắn gọn cho từng điểm số (nếu có).
+
+Dữ liệu:
+CV: {"CvparsedDataId":9,"CvId":38,"FullName":"Quang H\u00F9ng                                                                                                                                                                                              ","Email":"5e49e0@gvmatcher.net","Phone":"0123 456 789","YearsOfExperience":4,"Skills":"PHP, MySQL, JavaScript, Laravel, Framework, jQuery, React, Linux, Redis, MongoDB","EducationLevel":"Bachelor","JobTitles":"Front End Developer, Flutter Developer","Languages":null,"Certifications":"Nh\u00E2n vi\u00EAn xu\u1EA5t s\u1EAFc n\u0103m 2023 (NTD), Nh\u00E2n vi\u00EAn c\u1ED1ng hi\u1EBFn c\u1EE7a n\u0103m 2020 (DEF)","ParsedAt":"2025-07-27T00:52:00","Address":"Du\u1EA9n Ho\u00E0n Ki\u1EBFm, H\u00E0 N\u1ED9i","Summary":"V\u1EDBi 6 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh, mong mu\u1ED1n tr\u1EDF th\u00E0nh Senior trong 2 n\u0103m t\u1EDBi v\u00E0 ph\u00E1t tri\u1EC3n th\u00E0nh Lead gi\u1ECFi.","WorkHistory":"[{\u0022Company\u0022: \u0022C\u00F4ng ty TNHH MTV SVT\u0022, \u0022Position\u0022: \u0022Front End Developer\u0022, \u0022Duration\u0022: \u00222021-2023\u0022, \u0022Accomplishments\u0022: \u0022Qu\u1EA3n l\u00FD d\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n web, t\u1ED1i \u01B0u t\u01B0\u01A1ng th\u00EDch tr\u00ECnh duy\u1EC7t, t\u00EDch h\u1EE3p CMS, l\u1EADp tr\u00ECnh canvas HTML5.\u0022}, {\u0022Company\u0022: \u0022C\u00F4ng ty CP C\u00F4ng ngh\u1EC7 NDS\u0022, \u0022Position\u0022: \u0022Flutter Developer\u0022, \u0022Duration\u0022: \u00222023-2025\u0022, \u0022Accomplishments\u0022: \u0022Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng Mobile App, submit l\u00EAn App Store (Google \u0026 Apple).\u0022}]","Projects":"Ph\u00E1t tri\u1EC3n trang web ch\u1EE9a game tr\u1EF1c tuy\u1EBFn l\u1EDBn, t\u00EDch h\u1EE3p v\u1EDBi Facebook, Twitter, YouTube","Availability":"2 weeks notice","SalaryExpectation":"1500.00","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","Availability":"Immediately","SalaryExpectation":"D\u01B0\u1EDBi 10 tri\u1EC7u VND/th\u00E1ng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 0.0,\n  \"educationScore\": 10.0,\n  \"jobTitlesScore\": 5.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 5.0,\n  \"workHistoryScore\": 5.0,\n  \"projectsScore\": 5.0,\n  \"availabilityScore\": 5.0,\n  \"salaryExpectationScore\": 8.0,\n  \"totalScore\": 4.55,\n  \"explanations\": {\n    \"experienceScore\": \"Ứng viên có 4 năm kinh nghiệm, Job yêu cầu không có kinh nghiệm vẫn phù hợp.\",\n    \"skillsScore\": \"CV không có skills nào trùng khớp với yêu cầu công việc (C#, ASP.NET, SQL Server).\",\n    \"educationScore\": \"Ứng viên có bằng Bachelor, phù hợp với yêu cầu.\",\n    \"jobTitlesScore\": \"CV có kinh nghiệm Front End Developer, Flutter Developer, một phần phù hợp với Intern Developer.\",\n    \"languagesScore\": \"CV không có thông tin về ngôn ngữ.\",\n    \"certificationsScore\": \"CV không có chứng chỉ nào liên quan đến Software Development Lifecycle Specialization, Web Design for Everybody.\",\n    \"summaryScore\": \"Tóm tắt CV có đề cập đến kinh nghiệm lập trình, phù hợp với yêu cầu công việc.\",\n    \"workHistoryScore\": \"CV có kinh nghiệm làm việc liên quan đến phát triển ứng dụng, phù hợp một phần với yêu cầu.\",\n    \"projectsScore\": \"CV có dự án phát triển trang web, có liên quan đến phát triển ứng dụng.\",\n    \"availabilityScore\": \"CV cần 2 tuần để bắt đầu, trong khi Job yêu cầu có thể nhận việc ngay.\",\n    \"salaryExpectationScore\": \"Mức lương mong muốn của ứng viên là 1500$, thấp hơn 10 triệu VND/tháng.\"\n  }\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.13831889575906933
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1900,
+    "candidatesTokenCount": 446,
+    "totalTokenCount": 2346,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1900
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 446
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "TCyFaLb2CbOlnvgPnbu0wQU"
+}
+

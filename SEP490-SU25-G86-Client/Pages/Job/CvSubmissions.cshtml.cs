@@ -94,6 +94,20 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+            // Luôn fetch lại submissions từ API để đảm bảo dữ liệu mới nhất
+            var apiUrl = $"https://localhost:7004/api/cvsubmissions/jobpost/{JobPostId}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                CvSubmissions = System.Text.Json.JsonSerializer.Deserialize<List<CvSubmissionForJobPostDTO>>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            else
+            {
+                ErrorMessage = $"Không thể tải danh sách CV: {response.ReasonPhrase}";
+                return RedirectToPage(new { JobPostId });
+            }
+
             // Lấy submission để lấy hai id cần thiết
             var submission = CvSubmissions.FirstOrDefault(x => x.SubmissionId == id);
             if (submission == null || submission.CvParsedDataId == null || submission.JobCriteriaId == null)
@@ -113,7 +127,9 @@ namespace SEP490_SU25_G86_Client.Pages.Job
 
             if (aiResponse.IsSuccessStatusCode)
             {
-                // Xử lý như cũ
+                // Reload lại submissions để cập nhật điểm và trạng thái mới
+                await OnGetAsync();
+                TempData["SuccessMessage"] = "Lọc AI thành công!";
             }
             else
             {
