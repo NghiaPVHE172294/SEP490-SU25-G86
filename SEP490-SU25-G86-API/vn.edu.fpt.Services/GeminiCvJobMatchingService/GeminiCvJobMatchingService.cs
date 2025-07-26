@@ -63,6 +63,16 @@ namespace SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService
             // Lưu vào DB
             _context.MatchedCvandJobPosts.Add(matched);
             await _context.SaveChangesAsync();
+
+            // Sau khi lưu matched, cập nhật lại Cvsubmission liên quan
+            // Tìm Cvsubmission theo CvId (từ cv.CvId) và JobPostId (từ criteria.JobPostId)
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(s => s.CvId == cv.CvId && s.JobPostId == criteria.JobPostId && !s.IsDelete);
+            if (submission != null)
+            {
+                submission.MatchedCvandJobPostId = matched.MatchedCvandJobPostId;
+                submission.Status = "Đã chấm điểm bằng AI";
+                await _context.SaveChangesAsync();
+            }
             return matched;
         }
 
