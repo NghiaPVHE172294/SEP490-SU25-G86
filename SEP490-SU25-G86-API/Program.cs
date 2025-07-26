@@ -275,6 +275,9 @@ namespace SEP490_SU25_G86_API
             // New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
+             builder.Services.AddHttpClient();
+            // Gemini AI Matching
+            IServiceCollection serviceCollection = builder.Services.AddScoped<SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.IGeminiCvJobMatchingService, SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.GeminiCvJobMatchingService>();
 
             // JobCriterion
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.IJobCriterionRepository, SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.JobCriterionRepository>();
