@@ -93,6 +93,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
     }
     public class UserProfileDTO
     {
+        public int Id { get; set; }
         public string? Avatar { get; set; }
         public string FullName { get; set; } = null!;
         public string? Address { get; set; }

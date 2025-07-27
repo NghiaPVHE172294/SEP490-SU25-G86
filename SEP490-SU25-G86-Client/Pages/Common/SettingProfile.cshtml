@@ -59,7 +59,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Số điện thoại</label>
-                                <input asp-for="UserProfile.Phone" class="form-control" />
+                                <a class="btn btn-outline-primary w-100"
+                                   asp-page="/PhoneOtp/SendOtp"
+                                   asp-route-userId="@Model.UserProfile.Id">
+                                    <i class="bi bi-phone-fill me-1"></i> @Model.UserProfile.Phone
+                                </a>
                             </div>
                         </div>
 

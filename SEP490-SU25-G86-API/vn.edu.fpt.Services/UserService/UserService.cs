@@ -21,6 +21,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
 
             return new UserProfileDTO
             {
+                Id = user.UserId,
                 Avatar = user.Avatar,
                 FullName = user.FullName,
                 Address = user.Address,
