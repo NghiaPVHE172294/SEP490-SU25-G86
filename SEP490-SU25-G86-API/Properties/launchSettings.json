@@ -27,7 +27,7 @@
       "applicationUrl": "https://localhost:7004;http://localhost:5175",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "TWILIO_AUTH_TOKEN": "3da8708947906605186474a0bcc5eedb"
+        "TWILIO_AUTH_TOKEN": "2a2bb91dba66f722ef0ce00a49f20711"
       }
     },
     "IIS Express": {

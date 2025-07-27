@@ -1,51 +1,54 @@
-/* CSS cho trang danh sách tiêu chí tuyển dụng */
-.table {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    background: #fff;
-}
-.table th, .table td {
-    vertical-align: top;
-    word-break: break-word;
-    white-space: pre-line;
-    padding: 10px 14px;
-    font-size: 15px;
-}
-.table th {
-    background: #f1f5f9;
-    color: #1a237e;
+.page-title {
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 14px;
-    border-bottom: 2px solid #e3e3e3;
     text-align: center;
-    white-space: normal;
+    color: #1a3c5e;
+    margin-bottom: 2rem;
 }
-.table th.stt-col, .table td.stt-col {
-    min-width: 40px;
-    max-width: 50px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 15px;
+
+.job-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
-.table th.text-nowrap {
-    white-space: nowrap;
+
+.job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
-.table-bordered td, .table-bordered th {
-    border: 1px solid #dee2e6;
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a3c5e;
 }
-.table-hover tbody tr:hover {
-    background: #e3f2fd;
+
+.card-body p {
+    font-size: 0.9rem;
+    color: #4b5563;
 }
-.work-history-cell {
-    min-width: 180px;
-    max-width: 320px;
-    white-space: pre-line;
-    word-break: break-word;
-    font-size: 15px;
-    line-height: 1.5;
-    padding: 8px 10px;
+
+.btn-warning, .btn-primary {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
 }
-.table .text-center {
-    text-align: center;
-} 
+
+.btn-outline-primary {
+    font-size: 0.875rem;
+}
+
+.alert {
+    font-size: 0.9rem;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+}
