@@ -21,8 +21,8 @@ namespace vn.edu.fpt.DTOs.GeminiDTO
                 SummaryScore = entity.SummaryScore,
                 WorkHistoryScore = entity.WorkHistoryScore,
                 ProjectsScore = entity.ProjectsScore,
-                AvailabilityScore = entity.AvailabilityScore,
-                SalaryExpectationScore = entity.SalaryExpectationScore,
+                
+                
                 TotalScore = entity.TotalScore
             };
         }

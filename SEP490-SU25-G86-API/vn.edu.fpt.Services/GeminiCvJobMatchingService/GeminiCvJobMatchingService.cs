@@ -83,12 +83,25 @@ Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu 
 
 Yêu cầu:
 - Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
-- So sánh từng tiêu chí tương ứng (kinh nghiệm, kỹ năng, học vấn, chức danh, ngôn ngữ, chứng chỉ, tóm tắt, lịch sử làm việc, dự án, khả năng nhận việc, kỳ vọng lương).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
 - Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
-- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó và giải thích lý do.
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
 - Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
 - Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
-- Trường explanations: giải thích ngắn gọn cho từng điểm số (nếu có).
+
+Ví dụ format JSON:
+{{
+  ""experienceScore"": 8.5,
+  ""skillsScore"": 7,
+  ""educationLevelScore"": 9,
+  ""jobTitlesScore"": 8,
+  ""languagesScore"": 7.5,
+  ""certificationsScore"": 6,
+  ""summaryScore"": 8,
+  ""workHistoryScore"": 9,
+  ""projectsScore"": 7,
+  ""totalScore"": 7.78
+}}
 
 Dữ liệu:
 CV: {JsonSerializer.Serialize(cv)}
@@ -155,8 +168,8 @@ JobCriteria: {JsonSerializer.Serialize(criteria)}";
                 SummaryScore = GetScore("summaryScore"),
                 WorkHistoryScore = GetScore("workHistoryScore"),
                 ProjectsScore = GetScore("projectsScore"),
-                AvailabilityScore = GetScore("availabilityScore"),
-                SalaryExpectationScore = GetScore("salaryExpectationScore"),
+                
+                
                 TotalScore = GetScore("totalScore"),
             };
             return matched;

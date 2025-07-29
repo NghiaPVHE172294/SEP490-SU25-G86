@@ -14,8 +14,8 @@ namespace vn.edu.fpt.DTOs.GeminiDTO
         public double? SummaryScore { get; set; }
         public double? WorkHistoryScore { get; set; }
         public double? ProjectsScore { get; set; }
-        public double? AvailabilityScore { get; set; }
-        public double? SalaryExpectationScore { get; set; }
+        
+        
         public double? TotalScore { get; set; }
     }
 }
