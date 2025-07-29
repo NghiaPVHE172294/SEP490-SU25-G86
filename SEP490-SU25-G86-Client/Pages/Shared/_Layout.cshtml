@@ -29,6 +29,7 @@
                 <div class="nav">
                     <a asp-page="/Index">Trang chủ</a>
                     <a asp-page="/Common/ListJobs">Tìm việc làm</a>
+                    <a asp-page="/Companies/ListCompany">Danh sách công ty</a>
                     <a asp-page="/Contact">Liên hệ</a>
                 </div>
             }
@@ -102,45 +103,66 @@
     </div>
 
 
-    <footer>
-        <div class="container-fluid footer-container">
-            <div class="footer-row">
-                <div class="items">
-                    <h3>Job</h3>
-                    <p>Quis enim pellentesque viverra tellus eget malesuada facilisis. Congue nibh vivamus aliquet nunc mauris...</p>
+    <!-- Nhúng Google Font Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <footer class="bg-light py-4 mt-5 border-top">
+        <div class="container">
+            <div class="row">
+                <!-- Thông tin công ty -->
+                <div class="col-md-8">
+                    <h5 class="fw-bold">Công ty CvMatcher</h5>
+                    <p><i class="bi bi-file-earmark-text-fill text-primary me-2"></i>Giấy phép đăng ký kinh doanh số: <strong>0123456789</strong></p>
+                    <p><i class="bi bi-file-earmark-check-fill text-success me-2"></i>Giấy phép hoạt động dịch vụ việc làm số: <strong>23/CVMT-HRGP</strong></p>
+                    <p><i class="bi bi-geo-alt-fill text-danger me-2"></i>Trụ sở chính: Số 12, ngõ 123 Trần Duy Hưng, Quận Cầu Giấy, Hà Nội</p>
                 </div>
-                <div class="items">
-                    <h3>Company</h3>
-                    <ul class="list-unstyled">
-                        <li><a asp-page="/Common/About">About Us</a></li>
-                        <li><a asp-page="/Common/Contact">Contact Us</a></li>
-                        <li><a asp-page="#">Partners</a></li>
-                        <li><a asp-page="#">For Candidates</a></li>
-                        <li><a asp-page="#">For Employers</a></li>
-                    </ul>
+
+                <!-- QR + link -->
+                <div class="col-md-4 text-center">
+                    <img src="/images/qr-cvmatcher.png" alt="QR Code" width="120" class="mb-2" />
+                    <p><a href="https://cvmatcher.vn" class="text-primary fw-semibold text-decoration-none">cvmatcher.vn</a></p>
                 </div>
-                <div class="items">
-                    <h3>Job Categories</h3>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Telecommunications</a></li>
-                        <li><a href="#">Hotels & Tourism</a></li>
-                        <li><a href="#">Construction</a></li>
-                        <li><a href="#">Education</a></li>
-                        <li><a href="#">Financial Services</a></li>
-                    </ul>
+            </div>
+
+            <!-- Dịch vụ & liên hệ -->
+            <h6 class="fw-bold mt-4 mb-3">Kênh liên hệ & dịch vụ hỗ trợ của CvMatcher</h6>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="bg-primary text-white rounded p-3 h-100">
+                        <i class="bi bi-telephone-fill me-2"></i> Hỗ trợ trực tiếp:
+                        <div class="fw-bold fs-6 mt-1">0961 075 000</div>
+                    </div>
                 </div>
-                <div class="items newsletter">
-                    <h3>Newsletter</h3>
-                    <p>Eu nunc pretium vitae platea. Non netus elementum vulputate.</p>
-                    <div class="input-group justify-content-center">
-                        <input type="email" class="form-control" placeholder="Email Address" />
-                        <button class="btn" type="button">Subscribe now</button>
+                <div class="col-md-3">
+                    <div class="bg-warning text-white rounded p-3 h-100">
+                        <i class="bi bi-envelope-fill me-2"></i> Email CSKH:
+                        <div class="fw-bold fs-6 mt-1">thandea6@gmail.com</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-info text-white rounded p-3 h-100">
+                        <i class="bi bi-facebook me-2"></i> Fanpage Facebook:
+                        <div><a href="https://facebook.com/cvmatcher" class="text-white text-decoration-underline">facebook.com/cvmatcher</a></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-success text-white rounded p-3 h-100">
+                        <i class="bi bi-globe2 me-2"></i> Website chính thức:
+                        <div><a href="https://cvmatcher.vn" class="text-white text-decoration-underline">cvmatcher.vn</a></div>
                     </div>
                 </div>
             </div>
-          
+
+            <!-- Bản quyền -->
+            <div class="text-center mt-4 text-muted small">
+                &copy; 2025 CvMatcher. All rights reserved.
+            </div>
         </div>
     </footer>
+
+
+
+
 
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

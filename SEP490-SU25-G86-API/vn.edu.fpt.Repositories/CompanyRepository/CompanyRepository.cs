@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository
 {
@@ -19,5 +20,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository
                 .FirstOrDefaultAsync(c => c.CompanyId == id);
         }
 
+        public async Task<(List<Company> Companies, int TotalCount)> GetPagedCompaniesAsync(int page, int pageSize)
+        {
+            var query = _context.Companies
+        .Include(c => c.Industry)
+        .Include(c => c.CompanyFollowers)
+        .Include(c => c.Users)
+            .ThenInclude(u => u.JobPosts)
+        .Where(c => c.IsDelete == false && c.Status == false);
+
+            var totalCount = await query.CountAsync();
+
+            var companies = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (companies, totalCount);
+        }
     }
 }

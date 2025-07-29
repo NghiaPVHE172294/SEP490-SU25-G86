@@ -12,8 +12,12 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FirebaseAdmin" Version="3.3.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.69.0.3783" />
+    <PackageReference Include="Google.Cloud.AIPlatform.V1" Version="3.38.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
+    <PackageReference Include="Google_GenerativeAI" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.36" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
@@ -31,6 +35,10 @@
 
   <ItemGroup>
     <Compile Include="vn.edu.fpt.Controllers/JobController/CvSubmissionsController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="vn.edu.fpt.DTOs\GeminiDTO\" />
   </ItemGroup>
 
 </Project>

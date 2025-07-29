@@ -1,4 +1,7 @@
-﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.UserDTO;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.UserDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository;
 using System.Globalization;
 
@@ -20,6 +23,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
 
             return new UserProfileDTO
             {
+                Id = user.UserId,
                 Avatar = user.Avatar,
                 FullName = user.FullName,
                 Address = user.Address,
@@ -63,11 +67,106 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
             if (dto.AboutMe != null)
                 user.AboutMe = dto.AboutMe;
 
-            if (dto.Avatar != null)
-                user.Avatar = dto.Avatar;
+            if (dto.AvatarFile != null)
+            {
+
+                if (!string.IsNullOrWhiteSpace(user.Avatar))
+                {
+                    await DeleteAvatarFromFirebaseStorageAsync(user.Avatar);
+                }
+
+                string firebaseUrl = await UploadAvatarToFirebaseStorage(dto.AvatarFile, user.UserId);
+                user.Avatar = firebaseUrl;
+            }
 
             await _userRepo.UpdateUserAsync(user);
             return true;
+        }
+        public async Task<bool> FollowCompanyAsync(int userId, int companyId)
+        {
+            return await _userRepo.FollowCompanyAsync(userId, companyId);
+        }
+
+        public async Task<bool> BlockCompanyAsync(int userId, int companyId, string? reason)
+        {
+            return await _userRepo.BlockCompanyAsync(userId, companyId, reason);
+        }
+
+        public async Task<FollowBlockStatusDTO> GetFollowBlockStatusAsync(int accountId, int companyId)
+        {
+            var isFollowing = await _userRepo.IsCompanyFollowedAsync(accountId, companyId);
+            var isBlocked = await _userRepo.IsCompanyBlockedAsync(accountId, companyId);
+
+            return new FollowBlockStatusDTO
+            {
+                IsFollowing = isFollowing,
+                IsBlocked = isBlocked
+            };
+        }
+
+        public async Task<string> UploadAvatarToFirebaseStorage(IFormFile file, int userId)
+        {
+            string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS")
+                ?? "D:\\Hoc_Tap\\SU25\\SEP490\\Project\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+
+            string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
+                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
+
+            string folderName = "Image_storage/UserAvatar";
+
+            // Khởi tạo FirebaseApp nếu cần
+            if (FirebaseAdmin.FirebaseApp.DefaultInstance == null)
+            {
+                FirebaseAdmin.FirebaseApp.Create(new FirebaseAdmin.AppOptions()
+                {
+                    Credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(firebaseCredentialsPath),
+                });
+            }
+
+            var credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(firebaseCredentialsPath);
+            var storage = Google.Cloud.Storage.V1.StorageClient.Create(credential);
+            using var stream = file.OpenReadStream();
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string objectName = $"{folderName}/{userId}_{timestamp}_{file.FileName}";
+
+            var obj = await storage.UploadObjectAsync(
+                bucket: bucketName,
+                objectName: objectName,
+                contentType: file.ContentType,
+                source: stream
+            );
+
+            return $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(objectName)}?alt=media";
+        }
+
+        public async Task DeleteAvatarFromFirebaseStorageAsync(string avatarUrl)
+        {
+            string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS")
+                ?? "D:\\Hoc_Tap\\SU25\\SEP490\\Project\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+
+            string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
+                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
+
+            // Giải mã objectName từ URL
+            var uri = new Uri(avatarUrl);
+            var objectNameEncoded = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("alt") == "media"
+                ? uri.AbsolutePath.Replace("/v0/b/" + bucketName + "/o/", "")
+                : null;
+            if (string.IsNullOrEmpty(objectNameEncoded)) return;
+
+            string objectName = Uri.UnescapeDataString(objectNameEncoded);
+
+            var credential = GoogleCredential.FromFile(firebaseCredentialsPath);
+            var storage = StorageClient.Create(credential);
+
+            try
+            {
+                await storage.DeleteObjectAsync(bucketName, objectName);
+            }
+            catch (Google.GoogleApiException ex) when (ex.HttpStatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // Không sao nếu file không tồn tại
+            }
         }
     }
 }

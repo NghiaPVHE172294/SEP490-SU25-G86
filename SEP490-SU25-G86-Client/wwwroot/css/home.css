@@ -76,3 +76,6 @@
 .pagination .page-item span.page-link {
     cursor: default;
 }
+a:hover h5 {
+    text-decoration: underline;
+}

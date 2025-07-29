@@ -52,6 +52,7 @@
                 <td>@cv.RecruiterNote</td>
                 <td>
                         <form method="post" asp-page-handler="AIFilter" asp-route-id="@cv.SubmissionId" style="display:inline">
+                            <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
                             <button type="submit" class="btn btn-warning btn-sm me-1">Lọc CV bằng AI</button>
                         </form>
                         @if (!string.IsNullOrEmpty(cv.Status) && cv.Status.Trim().ToUpper().Contains("CHỜ XỬ LÝ"))

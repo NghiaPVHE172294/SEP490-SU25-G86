@@ -35,8 +35,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 Summary = jc.Summary,
                 WorkHistory = jc.WorkHistory,
                 Projects = jc.Projects,
-                Availability = jc.Availability,
-                SalaryExpectation = jc.SalaryExpectation,
+                
+                
                 CreatedAt = jc.CreatedAt
             }).ToList();
         }
@@ -62,8 +62,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 Summary = dto.Summary,
                 WorkHistory = dto.WorkHistory,
                 Projects = dto.Projects,
-                Availability = dto.Availability,
-                SalaryExpectation = dto.SalaryExpectation,
                 CreatedAt = DateTime.UtcNow,
                 CreatedByUserId = userId,
                 IsDelete = false
@@ -83,8 +81,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 Summary = result.Summary,
                 WorkHistory = result.WorkHistory,
                 Projects = result.Projects,
-                Availability = result.Availability,
-                SalaryExpectation = result.SalaryExpectation,
+                
+                
                 CreatedAt = result.CreatedAt
             };
         }
@@ -111,8 +109,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
             jobCriterion.Summary = dto.Summary;
             jobCriterion.WorkHistory = dto.WorkHistory;
             jobCriterion.Projects = dto.Projects;
-            jobCriterion.Availability = dto.Availability;
-            jobCriterion.SalaryExpectation = dto.SalaryExpectation;
             var result = await _repository.UpdateJobCriterionAsync(jobCriterion);
             return new JobCriterionDTO
             {
@@ -128,8 +124,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 Summary = result.Summary,
                 WorkHistory = result.WorkHistory,
                 Projects = result.Projects,
-                Availability = result.Availability,
-                SalaryExpectation = result.SalaryExpectation,
+                
+                
                 CreatedAt = result.CreatedAt
             };
         }

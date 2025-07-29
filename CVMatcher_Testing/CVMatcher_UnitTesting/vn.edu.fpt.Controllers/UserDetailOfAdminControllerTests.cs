@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SEP490_SU25_G86_API.vn.edu.fpt.Controllers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController;
@@ -10,7 +9,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SEP490_SU25_G86_API.Tests.Controllers
+namespace CVMatcher_Testing.CVMatcher_UnitTesting.vn.edu.fpt.Controllers
 {
     public class UserDetailOfAdminControllerTests
     {
@@ -28,6 +27,7 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
         [Fact]
         public async Task GetUserDetailByAccountId_ReturnsOk_WhenUserExists()
         {
+            // Arrange
             int testAccountId = 1;
             var expectedDto = new UserDetailOfAdminDTO
             {
@@ -39,8 +39,10 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
             _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(testAccountId))
                         .ReturnsAsync(expectedDto);
 
+            // Act
             var result = await _controller.GetUserDetailByAccountId(testAccountId);
 
+            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<UserDetailOfAdminDTO>(okResult.Value);
             Assert.Equal(expectedDto.AccountId, returnValue.AccountId);
@@ -50,26 +52,30 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
         [Fact]
         public async Task GetUserDetailByAccountId_ReturnsNotFound_WhenUserDoesNotExist()
         {
+            // Arrange
             int testAccountId = 999;
 
             _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(testAccountId))
                         .ReturnsAsync((UserDetailOfAdminDTO)null);
 
+            // Act
             var result = await _controller.GetUserDetailByAccountId(testAccountId);
 
+            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("User not found", notFoundResult.Value);
         }
 
         [Fact]
-        public async Task GetUserDetailByAccountId_HandlesServiceException()
+        public async Task GetUserDetailByAccountId_ThrowsException_WhenServiceFails()
         {
+            // Arrange
             int testAccountId = 123;
 
             _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(testAccountId))
                         .ThrowsAsync(new Exception("Database error"));
 
-            // Wrap trong try-catch nếu controller không xử lý exception
+            // Assert
             await Assert.ThrowsAsync<Exception>(() =>
                 _controller.GetUserDetailByAccountId(testAccountId));
         }
@@ -79,11 +85,14 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
         [InlineData(0)]
         public async Task GetUserDetailByAccountId_InvalidId_ReturnsNotFound(int accountId)
         {
+            // Arrange
             _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(accountId))
                         .ReturnsAsync((UserDetailOfAdminDTO)null);
 
+            // Act
             var result = await _controller.GetUserDetailByAccountId(accountId);
 
+            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("User not found", notFoundResult.Value);
         }
@@ -91,6 +100,7 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
         [Fact]
         public async Task GetUserDetailByAccountId_ReturnsFullDtoData()
         {
+            // Arrange
             int testAccountId = 101;
             var expectedDto = new UserDetailOfAdminDTO
             {
@@ -112,12 +122,34 @@ namespace SEP490_SU25_G86_API.Tests.Controllers
             _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(testAccountId))
                         .ReturnsAsync(expectedDto);
 
+            // Act
             var result = await _controller.GetUserDetailByAccountId(testAccountId);
 
+            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<UserDetailOfAdminDTO>(okResult.Value);
             Assert.Equal(expectedDto.CompanyName, returnValue.CompanyName);
             Assert.True(returnValue.IsActive);
+            Assert.False(returnValue.IsBan);
+        }
+
+        [Theory]
+        [InlineData(1)]                          // Biên dưới + 1
+        [InlineData(int.MaxValue - 1)]          // Trước biên trên
+        [InlineData(int.MaxValue)]              // Biên trên
+        [InlineData(999999999)]                 // Bất thường: quá lớn
+        public async Task GetUserDetailByAccountId_BoundaryAndLargeValues_ReturnsResultOrNotFound(int accountId)
+        {
+            // Arrange
+            _mockService.Setup(s => s.GetUserDetailByAccountIdAsync(accountId))
+                        .ReturnsAsync((UserDetailOfAdminDTO)null); // Giả định không tồn tại
+
+            // Act
+            var result = await _controller.GetUserDetailByAccountId(accountId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("User not found", notFoundResult.Value);
         }
     }
 }

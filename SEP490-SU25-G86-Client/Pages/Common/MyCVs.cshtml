@@ -42,7 +42,7 @@
                             </td>
                             <td>
                                
-                                <a class="btn btn-info btn-sm" href="@cv.FileUrl" target="_blank">Chi tiết</a>
+                                <a class="btn btn-info btn-sm" href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(cv.FileUrl))&embedded=true" target="_blank">Chi tiết</a>
                                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-cvid="@cv.CvId" data-filename="@cv.CVName">Sửa tên</button>
                                 <a class="btn btn-secondary btn-sm" href="@cv.FileUrl" target="_blank">Tải CV</a>
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-cvid="@cv.CvId" @(cv.IsUsed ? "disabled title='CV này đã được dùng để ứng tuyển, không thể xóa'" : "")>Xóa</button>

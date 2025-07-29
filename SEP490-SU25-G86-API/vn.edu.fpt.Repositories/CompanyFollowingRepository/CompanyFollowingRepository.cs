@@ -81,5 +81,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositori
                 .ToListAsync();
         }
 
+        public async Task<bool> UnfollowCompanyAsync(int followId)
+        {
+            var follow = await _context.CompanyFollowers.FirstOrDefaultAsync(cf => cf.FollowId == followId);
+
+            if (follow == null || follow.IsActive == false)
+                return false;
+
+            follow.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+
     }
 }

@@ -4,7 +4,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AccountService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.Models;
 
-namespace CVMatcher_Testing.vn.edu.fpt.Services
+namespace CVMatcher_Testing.CVMatcher_UnitTesting.vn.edu.fpt.Services
 {
     public class AccountServiceTests
     {

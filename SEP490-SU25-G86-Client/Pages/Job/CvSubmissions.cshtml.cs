@@ -86,5 +86,57 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             }
             return RedirectToPage(new { JobPostId });
         }
+
+        public async Task<IActionResult> OnPostAIFilterAsync(int id)
+        {
+            var client = new HttpClient();
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Luôn fetch lại submissions từ API để đảm bảo dữ liệu mới nhất
+            var apiUrl = $"https://localhost:7004/api/cvsubmissions/jobpost/{JobPostId}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                CvSubmissions = System.Text.Json.JsonSerializer.Deserialize<List<CvSubmissionForJobPostDTO>>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            else
+            {
+                ErrorMessage = $"Không thể tải danh sách CV: {response.ReasonPhrase}";
+                return RedirectToPage(new { JobPostId });
+            }
+
+            // Lấy submission để lấy hai id cần thiết
+            var submission = CvSubmissions.FirstOrDefault(x => x.SubmissionId == id);
+            if (submission == null || submission.CvParsedDataId == null || submission.JobCriteriaId == null)
+            {
+                ErrorMessage = "Không đủ dữ liệu để lọc AI cho CV này!";
+                return RedirectToPage(new { JobPostId });
+            }
+            var body = new
+            {
+                cvParsedDataId = submission.CvParsedDataId,
+                jobCriteriaId = submission.JobCriteriaId
+            };
+            var jsonBody = new StringContent(System.Text.Json.JsonSerializer.Serialize(body), System.Text.Encoding.UTF8, "application/json");
+
+            var aiResponse = await client.PostAsync(
+                $"https://localhost:7004/api/AI/CompareCvWithJobCriteria", jsonBody);
+
+            if (aiResponse.IsSuccessStatusCode)
+            {
+                // Reload lại submissions để cập nhật điểm và trạng thái mới
+                await OnGetAsync();
+                TempData["SuccessMessage"] = "Lọc AI thành công!";
+            }
+            else
+            {
+                ErrorMessage = "Không thể lọc AI cho CV này!";
+            }
+
+            return RedirectToPage(new { JobPostId });
+        }
     }
-} 
+}

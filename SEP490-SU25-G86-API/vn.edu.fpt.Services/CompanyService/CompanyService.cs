@@ -31,5 +31,31 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService
                 FollowersCount = company.CompanyFollowers.Count
             };
         }
+
+        public async Task<(List<CompanyListDTO> Companies, int TotalCount)> GetPagedCompanyListWithJobPostCountAsync(int page, int pageSize)
+        {
+            var (companies, totalCount) = await _repo.GetPagedCompaniesAsync(page, pageSize);
+
+            var result = companies.Select(company => new CompanyListDTO
+            {
+                CompanyId = company.CompanyId,
+                CompanyName = company.CompanyName,
+                Website = company.Website,
+                CompanySize = company.CompanySize,
+                Email = company.Email,
+                Phone = company.Phone,
+                Address = company.Address,
+                Description = company.Description,
+                LogoUrl = company.LogoUrl,
+                IndustryName = company.Industry.IndustryName,
+                FollowerCount = company.CompanyFollowers.Count,
+
+                TotalJobPostEnabled = company.Users
+            .SelectMany(u => u.JobPosts)
+            .Count(jp => jp.IsDelete == false && jp.Status == "OPEN")
+            }).ToList();
+
+            return (result, totalCount);
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 
         [BindProperty]
         public UserProfileDTO UserProfile { get; set; } = new();
+        [BindProperty]
+        public UserProfileUpdateDTO UserUpdate { get; set; } = new();
 
         public string? ToastMessage { get; set; }
         public string ToastColor { get; set; } = "bg-info";
@@ -56,14 +58,46 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var content = new StringContent(JsonSerializer.Serialize(UserProfile), Encoding.UTF8, "application/json");
-            var response = await client.PutAsync("https://localhost:7004/api/user/profile", content);
+            // ✅ Gửi multipart/form-data
+            var formData = new MultipartFormDataContent();
+
+            if (!string.IsNullOrWhiteSpace(UserUpdate.FullName))
+                formData.Add(new StringContent(UserUpdate.FullName), "FullName");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.Address))
+                formData.Add(new StringContent(UserUpdate.Address), "Address");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.Phone))
+                formData.Add(new StringContent(UserUpdate.Phone), "Phone");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.Dob))
+                formData.Add(new StringContent(UserUpdate.Dob), "Dob");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.LinkedIn))
+                formData.Add(new StringContent(UserUpdate.LinkedIn), "LinkedIn");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.Facebook))
+                formData.Add(new StringContent(UserUpdate.Facebook), "Facebook");
+            if (!string.IsNullOrWhiteSpace(UserUpdate.AboutMe))
+                formData.Add(new StringContent(UserUpdate.AboutMe), "AboutMe");
+
+            if (UserUpdate.AvatarFile == null || !UserUpdate.AvatarFile.ContentType.StartsWith("image/"))
+            {
+                ToastMessage = "❌ File không hợp lệ. Vui lòng chọn ảnh.";
+                ToastColor = "bg-danger";
+                return RedirectToPage(); 
+            }
+
+            if (UserUpdate.AvatarFile != null && UserUpdate.AvatarFile.Length > 0)
+            {
+                var streamContent = new StreamContent(UserUpdate.AvatarFile.OpenReadStream());
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue(UserUpdate.AvatarFile.ContentType);
+                formData.Add(streamContent, "AvatarFile", UserUpdate.AvatarFile.FileName);
+            }
+
+            var response = await client.PutAsync("https://localhost:7004/api/user/profile", formData);
 
             if (response.IsSuccessStatusCode)
             {
                 ToastMessage = "✅ Cập nhật thông tin thành công.";
                 ToastColor = "bg-success";
 
+                // Refresh thông tin
                 var getRes = await client.GetAsync("https://localhost:7004/api/user/profile");
                 if (getRes.IsSuccessStatusCode)
                 {
@@ -93,6 +127,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
     }
     public class UserProfileDTO
     {
+        public int Id { get; set; }
         public string? Avatar { get; set; }
         public string FullName { get; set; } = null!;
         public string? Address { get; set; }
@@ -102,5 +137,17 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public string? LinkedIn { get; set; }
         public string? Facebook { get; set; }
         public string? AboutMe { get; set; }
+    }
+    public class UserProfileUpdateDTO
+    {
+        public string? FullName { get; set; }
+        public string? Address { get; set; }
+        public string? Phone { get; set; }
+        public string? Dob { get; set; }
+        public string? LinkedIn { get; set; }
+        public string? Facebook { get; set; }
+        public string? AboutMe { get; set; }
+
+        public IFormFile? AvatarFile { get; set; } 
     }
 }

@@ -74,7 +74,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                 if (maxs.Any()) maxSalary = maxs.Max();
             }
 
-            int pageSize = 5;
+            int pageSize = 10;
             CurrentPage = page < 1 ? 1 : page;
 
             using var client = new HttpClient();

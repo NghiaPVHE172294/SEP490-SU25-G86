@@ -23,5 +23,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CompanyController
             if (company == null) return NotFound();
             return Ok(company);
         }
+        [HttpGet("list-company")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPagedCompanies([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var (companies, totalCount) = await _service.GetPagedCompanyListWithJobPostCountAsync(page, pageSize);
+            return Ok(new { data = companies, totalCount });
+        }
     }
 }
