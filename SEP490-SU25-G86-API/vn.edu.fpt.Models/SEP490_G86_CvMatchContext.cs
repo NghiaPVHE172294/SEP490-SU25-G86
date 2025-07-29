@@ -50,10 +50,11 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -281,11 +282,7 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.CvparsedDataId).HasColumnName("CVParsedDataId");
 
-                entity.Property(e => e.Address)
-                    .HasMaxLength(200)
-                    .IsFixedLength();
-
-                entity.Property(e => e.Availability).HasMaxLength(50);
+                entity.Property(e => e.Address).HasMaxLength(200);
 
                 entity.Property(e => e.EducationLevel).HasMaxLength(100);
 
@@ -302,8 +299,6 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.ParsedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Phone).HasMaxLength(30);
-
-                entity.Property(e => e.SalaryExpectation).HasMaxLength(50);
 
                 entity.HasOne(d => d.Cv)
                     .WithMany(p => p.CvparsedData)
@@ -392,8 +387,6 @@ namespace SEP490_SU25_G86_API.Models
                     .HasMaxLength(200)
                     .IsFixedLength();
 
-                entity.Property(e => e.Availability).HasMaxLength(50);
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.EducationLevel).HasMaxLength(100);
@@ -401,8 +394,6 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
                 entity.Property(e => e.PreferredLanguages).HasMaxLength(200);
-
-                entity.Property(e => e.SalaryExpectation).HasMaxLength(50);
 
                 entity.HasOne(d => d.CreatedByUser)
                     .WithMany(p => p.JobCriteria)
@@ -615,7 +606,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A85620CEF0");
+                    .HasName("PK__RolePerm__6400A1A8D7800811");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
