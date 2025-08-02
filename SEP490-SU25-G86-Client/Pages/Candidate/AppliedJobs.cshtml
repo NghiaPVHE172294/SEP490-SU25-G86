@@ -16,7 +16,7 @@
     }
     else
     {
-        filteredJobs = Model.AppliedJobs.Where(j => j.IsDelete == false || j.IsDelete == null).ToList();
+        filteredJobs = Model.AppliedJobs;
     }
 }
 <script>
