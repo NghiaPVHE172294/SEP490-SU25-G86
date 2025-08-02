@@ -1,4 +1,14 @@
-@page "~/Job/CvSubmissions"
+@page
+@{
+    var jwtToken = HttpContext.Session.GetString("jwt_token");
+}
+<script>
+    // Lưu token vào localStorage nếu chưa có (chỉ thực hiện khi trang load)
+    const serverToken = '@jwtToken';
+    if (serverToken && !localStorage.getItem('jwt_token')) {
+        localStorage.setItem('jwt_token', serverToken);
+    }
+</script> "~/Job/CvSubmissions"
 @model SEP490_SU25_G86_Client.Pages.Job.CvSubmissionsModel
 @{
     ViewData["Title"] = "Danh sách CV đã nộp";
@@ -48,23 +58,23 @@
                 </td>
                 <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
                 <td>@cv.Status</td>
-                <td>@(cv.TotalScore?.ToString("0.##") ?? "-")</td>
+                <td>
+                    <span id="score-@cv.SubmissionId">@((cv.TotalScore?.ToString("0.##")) ?? "-")</span>
+                    <span id="spinner-@cv.SubmissionId" class="spinner-border spinner-border-sm text-warning" style="display:none"></span>
+                </td>
                 <td>@cv.RecruiterNote</td>
                 <td>
-                        <form method="post" asp-page-handler="AIFilter" asp-route-id="@cv.SubmissionId" style="display:inline">
-                            <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-                            <button type="submit" class="btn btn-warning btn-sm me-1">Lọc CV bằng AI</button>
-                        </form>
-                        @if (!string.IsNullOrEmpty(cv.Status) && cv.Status.Trim().ToUpper().Contains("CHỜ XỬ LÝ"))
-                        {
-                            <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
-                                <button type="submit" class="btn btn-success btn-sm me-1">Duyệt CV</button>
-                            </form>
-                            <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
-                                <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
-                            </form>
-                        }
-                </td>
+    <button type="button" class="btn btn-warning btn-sm me-1" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
+    @if (!string.IsNullOrEmpty(cv.Status) && cv.Status.Trim().ToUpper().Contains("CHỜ XỬ LÝ"))
+    {
+        <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
+            <button type="submit" class="btn btn-success btn-sm me-1">Duyệt CV</button>
+        </form>
+        <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+            <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
+        </form>
+    }
+</td>
             </tr>
         }
         </tbody>
@@ -75,3 +85,36 @@ else if (string.IsNullOrEmpty(Model.ErrorMessage))
     <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
 } 
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId) {
+    // Ẩn điểm, hiện spinner
+    document.getElementById('score-' + submissionId).style.display = 'none';
+    document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
+    try {
+        // Gọi API AI filter (endpoint backend đang dùng)
+        const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+        const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+            },
+            body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
+        });
+        if (!resp.ok) throw new Error("Lọc AI thất bại");
+        const data = await resp.json();
+        // Giả sử backend trả về totalScore, nếu không thì cần reload lại trang hoặc fetch lại từng submission
+        if (data && data.totalScore !== undefined && data.totalScore !== null) {
+            document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
+        } else {
+            // Nếu không có điểm, reload trang để lấy dữ liệu mới
+            location.reload();
+        }
+    } catch (e) {
+        alert(e.message || "Có lỗi khi lọc AI");
+    }
+    // Hiện lại điểm, ẩn spinner
+    document.getElementById('score-' + submissionId).style.display = 'inline';
+    document.getElementById('spinner-' + submissionId).style.display = 'none';
+}
+</script>
