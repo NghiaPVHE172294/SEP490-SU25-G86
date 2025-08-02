@@ -63,7 +63,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var content = new StringContent("\"APPROVED\"", System.Text.Encoding.UTF8, "application/json");
+            var content = new StringContent("\"ĐÃ DUYỆT\"", System.Text.Encoding.UTF8, "application/json");
             var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
             if (!response.IsSuccessStatusCode)
             {
@@ -78,7 +78,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var content = new StringContent("\"REJECTED\"", System.Text.Encoding.UTF8, "application/json");
+            var content = new StringContent("\"ĐÃ TỪ CHỐI\"", System.Text.Encoding.UTF8, "application/json");
             var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
             if (!response.IsSuccessStatusCode)
             {

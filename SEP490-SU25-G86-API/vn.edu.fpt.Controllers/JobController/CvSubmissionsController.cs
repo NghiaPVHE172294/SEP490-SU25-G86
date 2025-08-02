@@ -40,5 +40,30 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             var result = await _jobPostService.GetCvSubmissionsByJobPostIdAsync(jobPostId);
             return Ok(result);
         }
+        [HttpPut("{id}/status")]
+        [Authorize]
+        public async Task<IActionResult> UpdateSubmissionStatus(int id, [FromBody] string newStatus)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(c => c.SubmissionId == id && !c.IsDelete);
+            if (submission == null)
+                return NotFound("Không tìm thấy submission.");
+            submission.Status = newStatus;
+            _context.Cvsubmissions.Update(submission);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPut("withdraw/{id}")]
+        [Authorize]
+        public async Task<IActionResult> WithdrawSubmission(int id)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(c => c.SubmissionId == id && !c.IsDelete);
+            if (submission == null)
+                return NotFound("Không tìm thấy submission.");
+            submission.Status = "Hồ sơ đã rút";
+            submission.IsDelete = true;
+            _context.Cvsubmissions.Update(submission);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 } 
