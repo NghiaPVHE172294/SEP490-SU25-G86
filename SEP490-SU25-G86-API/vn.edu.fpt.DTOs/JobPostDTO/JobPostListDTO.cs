@@ -19,5 +19,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO
         public string? Status { get; set; }
         public string? WorkLocation { get; set; }
         public bool IsApplied { get; set; }
+        public string DaysSincePostedOrUpdated
+        {
+            get
+            {
+                var days = UpdatedDate.HasValue
+                    ? (DateTime.UtcNow.Date - UpdatedDate.Value.Date).Days
+                    : (DateTime.UtcNow.Date - CreatedDate!.Value.Date).Days;
+                return days == 0
+                    ? (UpdatedDate.HasValue ? "Cập nhật hôm nay" : "Đăng hôm nay")
+                    : (UpdatedDate.HasValue ? $"Cập nhật {days} ngày trước" : $"Đăng {days} ngày trước");
+            }
+        }
     }
 }

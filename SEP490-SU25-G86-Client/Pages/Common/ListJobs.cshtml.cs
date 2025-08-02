@@ -193,6 +193,8 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                     return SalaryRange; 
                 }
             }
+            [JsonPropertyName("daysSincePostedOrUpdated")]
+            public string DaysSincePostedOrUpdated { get; set; }
         }
         public class JobPostApiResponse
         {
