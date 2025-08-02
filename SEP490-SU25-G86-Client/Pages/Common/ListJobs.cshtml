@@ -162,15 +162,15 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <a class="btn btn-custom btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                        <a class="btn btn-custom btn-sm btn-fixed" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
                         @if (job.IsApplied)
                         {
-                            <button class="btn btn-secondary btn-sm" disabled>Đã ứng tuyển</button>
+                            <button class="btn btn-custom btn-sm btn-fixed" disabled>Đã ứng tuyển</button>
                         }
                         else
                         {
                             <button type="button"
-                                    class="btn btn-primary btn-sm btn-apply-now"
+                                    class="btn btn-primary btn-sm btn-apply-now btn-fixed"
                                     data-job-id="@job.JobPostId"
                                     data-job-title="@job.Title">
                                 <i class="bi bi-send"></i> Ứng tuyển
