@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+body, .container-cv {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #f6f8fb;
+}
+.container-cv {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 0 24px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.cv-card {
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.05);
+    padding: 28px 28px 16px 28px;
+    margin-bottom: 32px;
+}
+.table-responsive-cv {
+    width: 100%;
+    overflow-x: auto;
+}
+.table {
+    min-width: 900px;
+    width: 100%;
+    table-layout: fixed;
+}
+.table th, .table td {
+    padding-left: 8px;
+    padding-right: 8px;
+    vertical-align: middle;
+}
+.table td, .table th {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+}
+.table th.actions-col, .table td.actions-col {
+    width: 240px;
+    min-width: 200px;
+    max-width: 260px;
+    white-space: nowrap !important;
+    text-align: center;
+    vertical-align: middle;
+}
+.actions-cell {
+    flex-wrap: nowrap !important;
+}
+.cv-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+.cv-filter-form label {
+    font-weight: 500;
+}
+.cv-filter-form .form-control {
+    border-radius: 6px;
+    font-size: 1rem;
+}
+.cv-filter-form .btn {
+    font-size: 1rem;
+    border-radius: 6px;
+}
+.pagination {
+    margin-top: 12px;
+}
+.pagination .page-link {
+    border-radius: 6px !important;
+}
+@media (max-width: 900px) {
+    .table { min-width: 600px; }
+    .cv-card { padding: 16px 4px; }
+}
