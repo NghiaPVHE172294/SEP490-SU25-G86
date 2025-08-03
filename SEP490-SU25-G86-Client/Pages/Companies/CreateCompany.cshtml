@@ -19,7 +19,7 @@
                 <div class="alert alert-danger">@TempData["Error"]</div>
             }
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label asp-for="Company.CompanyName" class="form-label">Tên công ty</label>
                     <input asp-for="Company.CompanyName" class="form-control" />
@@ -81,9 +81,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Company.LogoUrl" class="form-label">Logo URL</label>
-                    <input asp-for="Company.LogoUrl" class="form-control" />
-                    <span asp-validation-for="Company.LogoUrl" class="text-danger"></span>
+                    <label asp-for="Company.LogoFile" class="form-label">Logo công ty</label>
+                    <input asp-for="Company.LogoFile" type="file" class="form-control" />
+                    <span asp-validation-for="Company.LogoFile" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-success">Tạo công ty</button>
