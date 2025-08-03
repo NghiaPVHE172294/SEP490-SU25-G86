@@ -29,7 +29,7 @@
                         </div>
                     }
 
-                    <form method="post" class="row g-3">
+                    <form method="post" enctype="multipart/form-data" class="row g-3">
                         <div class="col-md-6">
                             <label asp-for="Company.CompanyName" class="form-label fw-semibold">Tên công ty</label>
                             <input asp-for="Company.CompanyName" class="form-control" />
@@ -89,9 +89,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label asp-for="Company.LogoUrl" class="form-label fw-semibold">Logo URL</label>
-                            <input asp-for="Company.LogoUrl" class="form-control" />
-                            <span asp-validation-for="Company.LogoUrl" class="text-danger small"></span>
+                            <label asp-for="Company.LogoFile" class="form-label fw-semibold">Logo (mới)</label>
+                            <input asp-for="Company.LogoFile" type="file" class="form-control" />
+                            <span asp-validation-for="Company.LogoFile" class="text-danger small"></span>
                         </div>
 
                         <div class="col-12 d-flex justify-content-end">

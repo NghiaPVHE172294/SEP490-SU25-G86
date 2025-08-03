@@ -123,9 +123,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
                 ?? "D:\\FPTU\\SEP490_SUMMER25_G86\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
 
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
-                ?? "sep490-su25-g86-cvmatcher.appspot.com";
+                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
 
-            string folderName = "Image_storage/CompanyLogo";
+            string folderName = "Image_storage/CompanyAvatar";
 
             if (FirebaseAdmin.FirebaseApp.DefaultInstance == null)
             {
