@@ -8,7 +8,7 @@
     if (serverToken && !localStorage.getItem('jwt_token')) {
         localStorage.setItem('jwt_token', serverToken);
     }
-</script> "~/Job/CvSubmissions"
+</script>
 @model SEP490_SU25_G86_Client.Pages.Job.CvSubmissionsModel
 @{
     ViewData["Title"] = "Danh sách CV đã nộp";
@@ -64,15 +64,33 @@
                 </td>
                 <td>@cv.RecruiterNote</td>
                 <td>
-    <button type="button" class="btn btn-warning btn-sm me-1" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
+@if (cv.Status == "ĐÃ DUYỆT" || cv.Status == "ĐÃ TỪ CHỐI")
+{
+    <div class="action-disabled">
+        <button type="button" class="btn btn-warning btn-sm me-1" disabled>Lọc CV bằng AI</button>
+        <button type="button" class="btn btn-success btn-sm me-1" disabled>Duyệt CV</button>
+        <button type="button" class="btn btn-danger btn-sm" disabled>Từ chối CV</button>
+    </div>
+}
+else
+{
+    @if (cv.Status == "Đã chấm điểm bằng AI")
+    {
+        <button type="button" class="btn btn-warning btn-sm me-1" disabled>Lọc CV bằng AI</button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-warning btn-sm me-1" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
+    }
     <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
-    <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-    <button type="submit" class="btn btn-success btn-sm me-1">Duyệt CV</button>
-</form>
-<form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
-    <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-    <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
-</form>
+        <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+        <button type="submit" class="btn btn-success btn-sm me-1">Duyệt CV</button>
+    </form>
+    <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+        <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+        <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
+    </form>
+}
 </td>
             </tr>
         }
@@ -83,6 +101,14 @@ else if (string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
 } 
+<style>
+.action-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    display: flex;
+    gap: 0.25rem;
+}
+</style>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId) {
