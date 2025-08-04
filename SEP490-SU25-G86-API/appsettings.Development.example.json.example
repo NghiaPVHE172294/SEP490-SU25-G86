@@ -1,6 +1,6 @@
 {
   "Gemini": {
-    "ApiKey": "api tôi gửi riêng tránh bị lộ",
+    "ApiKey": "AIzaSyAqiOm9BvawXIcTPkKapnFZrIHHZA81TcM",
     "Gemini:Endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent"
   }
 }
