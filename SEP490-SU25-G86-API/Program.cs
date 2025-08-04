@@ -75,7 +75,18 @@ namespace SEP490_SU25_G86_API
 	{
 		public static void Main(string[] args)
 		{
-			var builder = WebApplication.CreateBuilder(args);
+			// Ưu tiên load file cấu hình mẫu nếu tồn tại (dùng cho teamwork)
+var configBuilder = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.example.json.example", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+var configuration = configBuilder.Build();
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddConfiguration(configuration);
             // cấu hình Twilio
             // 1. Bind cấu hình từ appsettings.json
             builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
