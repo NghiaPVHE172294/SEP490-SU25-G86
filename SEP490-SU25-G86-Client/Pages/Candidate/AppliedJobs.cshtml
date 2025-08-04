@@ -1,10 +1,23 @@
 @page
 @model SEP490_SU25_G86_Client.Pages.AppliedJobs.AppliedJobsModel
+@using SEP490_SU25_G86_API.vn.edu.fpt.DTO.AppliedJobDTO
 @{
     ViewData["Title"] = "Applied Jobs";
     var userId = HttpContext.Session.GetString("userId");
     var jwtToken = HttpContext.Session.GetString("jwt_token");
-    var activeJobs = Model.AppliedJobs.Where(j => j.IsDelete == false || j.IsDelete == null).ToList();
+    List<AppliedJobDTO> filteredJobs;
+    if (Model.StatusFilter == "Hồ sơ đã rút")
+    {
+        filteredJobs = Model.AppliedJobs.Where(j => j.Status == "Hồ sơ đã rút" && j.IsDelete == true).ToList();
+    }
+    else if (!string.IsNullOrEmpty(Model.StatusFilter))
+    {
+        filteredJobs = Model.AppliedJobs.Where(j => (j.IsDelete == false || j.IsDelete == null) && j.Status == Model.StatusFilter).ToList();
+    }
+    else
+    {
+        filteredJobs = Model.AppliedJobs;
+    }
 }
 <script>
     window.userId = '@userId';
@@ -18,63 +31,59 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h2 class="h5 mb-0">Danh sách việc làm đã ứng tuyển</h2>
                     @{
-                        var statusList = new List<string>
+                        var statusMap = new Dictionary<string, string>
                         {
-                            "Trạng thái",
-                            "Đã ứng tuyển",
-                            "Hồ sơ phù hợp",
-                            "Hồ sơ không phù hợp",
-                            "Hồ sơ đã rút"
+                            { "Đã ứng tuyển", "Đã ứng tuyển" },
+                            { "ĐÃ DUYỆT", "Hồ sơ phù hợp" },
+                            { "ĐÃ TỪ CHỐI", "Hồ sơ không phù hợp" },
+                            { "Hồ sơ đã rút", "Hồ sơ đã rút" }
                         };
                     }
                     <form method="get" class="d-inline">
-                        <select class="form-select w-auto d-inline" name="StatusFilter" onchange="this.form.submit()">
-                            @foreach (var status in statusList)
-{
-                            if (Model.StatusFilter == status)
+                    <select class="form-select w-auto d-inline" name="StatusFilter" onchange="this.form.submit()">
+                        <option value="">Tất cả trạng thái</option>
+                        @foreach (var kv in statusMap)
+                        {
+                            if (Model.StatusFilter == kv.Key)
                             {
-                                <option value="@status" selected>@status</option>
+                                @:<option value="@kv.Key" selected>@kv.Value</option>
                             }
                             else
                             {
-                                <option value="@status">@status</option>
+                                @:<option value="@kv.Key">@kv.Value</option>
                             }
                         }
-                        </select>
+                    </select>
                     </form>
                 </div>
                 <div class="card-body">
-                    @if (activeJobs.Any())
+                    @if (filteredJobs.Any())
                     {
                         <div class="list-group">
-                            @foreach (var job in activeJobs)
+                            @foreach (var job in filteredJobs)
                             {
                                 <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h5 class="mb-0">@job.Title</h5>
                                         @{
-                                        string badgeClass = "bg-secondary";
-                                        string statusText = (job.Status ?? "").Trim();
-                                        switch (statusText)
-                                        {
-                                            case "OPEN":
-                                                statusText = "Đã ứng tuyển";
-                                                badgeClass = "bg-primary";
-                                                break;
-                                            case "Đã ứng tuyển":
-                                                badgeClass = "bg-primary";
-                                                break;
-                                            case "Hồ sơ phù hợp":
-                                                badgeClass = "bg-success";
-                                                break;
-                                            case "Hồ sơ không phù hợp":
-                                                badgeClass = "bg-danger";
-                                                break;
-                                            case "Hồ sơ đã rút":
-                                                badgeClass = "bg-dark";
-                                                break;
+                                            string badgeClass = "bg-secondary";
+                                            string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
+                                            switch (job.Status ?? "")
+                                            {
+                                                case "Đã ứng tuyển":
+                                                    badgeClass = "bg-primary";
+                                                    break;
+                                                case "ĐÃ DUYỆT":
+                                                    badgeClass = "bg-success";
+                                                    break;
+                                                case "ĐÃ TỪ CHỐI":
+                                                    badgeClass = "bg-danger";
+                                                    break;
+                                                case "Hồ sơ đã rút":
+                                                    badgeClass = "bg-dark";
+                                                    break;
+                                            }
                                         }
-                                    }
 <span class="badge @badgeClass">@statusText</span>
                                     </div>
                                     <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>

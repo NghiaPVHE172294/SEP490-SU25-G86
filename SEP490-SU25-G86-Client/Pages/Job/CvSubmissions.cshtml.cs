@@ -12,9 +12,31 @@ namespace SEP490_SU25_G86_Client.Pages.Job
         [BindProperty(SupportsGet = true)]
         public int JobPostId { get; set; }
         public List<CvSubmissionForJobPostDTO> CvSubmissions { get; set; } = new();
+        [BindProperty]
+        public CVSubRecruiterNoteDTO RecruiterNoteForm { get; set; } = new();
         public string? ErrorMessage { get; set; }
         public string? JobPostTitle { get; set; }
         public string? CompanyName { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? StatusFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? CandidateNameFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public double? ScoreMin { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public double? ScoreMax { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public DateTime? SubmissionDateFrom { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public DateTime? SubmissionDateTo { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int PageSize { get; set; } = 10;
+        public int TotalPages { get; set; }
+        public int TotalRecords { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -45,6 +67,26 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     CvSubmissions = JsonSerializer.Deserialize<List<CvSubmissionForJobPostDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+                    // Lọc theo filter
+                    if (!string.IsNullOrEmpty(StatusFilter))
+                        CvSubmissions = CvSubmissions.Where(x => x.Status != null && x.Status.Equals(StatusFilter, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (!string.IsNullOrEmpty(CandidateNameFilter))
+                        CvSubmissions = CvSubmissions.Where(x => x.CandidateName != null && x.CandidateName.Contains(CandidateNameFilter, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (ScoreMin.HasValue)
+                        CvSubmissions = CvSubmissions.Where(x => x.TotalScore.HasValue && x.TotalScore.Value >= ScoreMin.Value).ToList();
+                    if (ScoreMax.HasValue)
+                        CvSubmissions = CvSubmissions.Where(x => x.TotalScore.HasValue && x.TotalScore.Value <= ScoreMax.Value).ToList();
+                    if (SubmissionDateFrom.HasValue)
+                        CvSubmissions = CvSubmissions.Where(x => x.SubmissionDate.HasValue && x.SubmissionDate.Value.Date >= SubmissionDateFrom.Value.Date).ToList();
+                    if (SubmissionDateTo.HasValue)
+                        CvSubmissions = CvSubmissions.Where(x => x.SubmissionDate.HasValue && x.SubmissionDate.Value.Date <= SubmissionDateTo.Value.Date).ToList();
+
+                    // Phân trang
+                    TotalRecords = CvSubmissions.Count;
+                    TotalPages = (int)Math.Ceiling(TotalRecords / (double)PageSize);
+                    if (PageIndex < 1) PageIndex = 1;
+                    if (PageIndex > TotalPages && TotalPages > 0) PageIndex = TotalPages;
+                    CvSubmissions = CvSubmissions.Skip((PageIndex - 1) * PageSize).Take(PageSize).ToList();
                 }
                 else
                 {
@@ -63,7 +105,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var content = new StringContent("\"APPROVED\"", System.Text.Encoding.UTF8, "application/json");
+            var content = new StringContent("\"ĐÃ DUYỆT\"", System.Text.Encoding.UTF8, "application/json");
             var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
             if (!response.IsSuccessStatusCode)
             {
@@ -78,7 +120,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var content = new StringContent("\"REJECTED\"", System.Text.Encoding.UTF8, "application/json");
+            var content = new StringContent("\"ĐÃ TỪ CHỐI\"", System.Text.Encoding.UTF8, "application/json");
             var response = await client.PutAsync($"https://localhost:7004/api/cvsubmissions/{id}/status", content);
             if (!response.IsSuccessStatusCode)
             {
@@ -138,5 +180,46 @@ namespace SEP490_SU25_G86_Client.Pages.Job
 
             return RedirectToPage(new { JobPostId });
         }
+        public async Task<IActionResult> OnPostUpdateNoteAsync()
+        {
+            Console.WriteLine($"SUBMISSION ID = {RecruiterNoteForm.SubmissionId}, NOTE = {RecruiterNoteForm.RecruiterNote}");
+            try
+            {
+                var client = new HttpClient();
+                var token = HttpContext.Session.GetString("jwt_token");
+                if (!string.IsNullOrEmpty(token))
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var json = JsonSerializer.Serialize(RecruiterNoteForm, options);
+                Console.WriteLine("JSON gửi lên: " + json);  // Debug JSON body
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+
+                var response = await client.PatchAsync("https://localhost:7004/api/CvSubmissions/recruiter-note", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API response: " + responseContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Cập nhật ghi chú thành công!";
+                }
+                else
+                {
+                    ErrorMessage = "Không thể cập nhật ghi chú.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi ghi chú: {ex.Message}";
+            }
+
+            return RedirectToPage(new { JobPostId });
+        }
+
     }
 }

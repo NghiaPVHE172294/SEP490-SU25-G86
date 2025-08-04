@@ -3,6 +3,10 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
+using Google.Api;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AdminDashboardDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
@@ -12,10 +16,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
     {
         private readonly IJobPostService _jobPostService;
         private readonly SEP490_G86_CvMatchContext _context;
-        public CvSubmissionsController(IJobPostService jobPostService, SEP490_G86_CvMatchContext context)
+        private readonly ICvSubmissionService _service;
+        public CvSubmissionsController(IJobPostService jobPostService, SEP490_G86_CvMatchContext context, ICvSubmissionService service)
         {
             _jobPostService = jobPostService;
             _context = context;
+            _service = service;
         }
 
         [HttpGet("jobpost/{jobPostId}")]
@@ -39,6 +45,46 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             // Trả về danh sách submissions có Status và TotalScore
             var result = await _jobPostService.GetCvSubmissionsByJobPostIdAsync(jobPostId);
             return Ok(result);
+        }
+
+        [HttpPatch("recruiter-note")]
+        [Authorize]
+        public async Task<IActionResult> UpdateRecruiterNote([FromBody] CVSubRecruiterNoteDTO dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.RecruiterNote))
+                return BadRequest("RecruiterNote must not be empty.");
+
+            var result = await _service.UpdateRecruiterNoteAsync(dto.SubmissionId, dto.RecruiterNote);
+            if (!result)
+                return NotFound("Submission not found.");
+
+            return Ok("Recruiter note updated successfully.");
+        }
+
+        [HttpPut("{id}/status")]
+        [Authorize]
+        public async Task<IActionResult> UpdateSubmissionStatus(int id, [FromBody] string newStatus)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(c => c.SubmissionId == id && !c.IsDelete);
+            if (submission == null)
+                return NotFound("Không tìm thấy submission.");
+            submission.Status = newStatus;
+            _context.Cvsubmissions.Update(submission);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPut("withdraw/{id}")]
+        [Authorize]
+        public async Task<IActionResult> WithdrawSubmission(int id)
+        {
+            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(c => c.SubmissionId == id && !c.IsDelete);
+            if (submission == null)
+                return NotFound("Không tìm thấy submission.");
+            submission.Status = "Hồ sơ đã rút";
+            submission.IsDelete = true;
+            _context.Cvsubmissions.Update(submission);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 } 

@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Middleware;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AccountRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository;
@@ -24,6 +25,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ParseCvRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PhoneOtpRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
@@ -49,6 +51,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.ParseCvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PhoneOtpService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
@@ -59,6 +62,8 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -91,6 +96,8 @@ namespace SEP490_SU25_G86_API
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(c =>
 			{
+                c.OperationFilter<FormFileOperationFilter>();
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -163,6 +170,10 @@ namespace SEP490_SU25_G86_API
             // SavedJob
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();
+
+            //CVsubmittion
+            builder.Services.AddScoped<ICvSubmissionRepository, CvSubmissionRepository>();
+            builder.Services.AddScoped<ICvSubmissionService, CvSubmissionService>();
 
             // AccountList
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
@@ -256,6 +267,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<IPhoneOtpService, PhoneOtpService>();
             builder.Services.AddScoped<IPhoneOtpRepository, PhoneOtpRepository>();
 
+            // Parse CV
+            builder.Services.AddScoped<IParseCvRepository, ParseCvRepository>();
+            builder.Services.AddScoped<IParseCvService, ParseCvService>();
+
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -275,7 +290,32 @@ namespace SEP490_SU25_G86_API
             // New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
-             builder.Services.AddHttpClient();
+            
+            builder.Services.AddHttpClient("OpenAI", client =>
+            {
+                client.BaseAddress = new Uri("https://api.openai.com/");
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(
+                        "Bearer",
+                        builder.Configuration["OpenAI:ApiKey"]
+                    );
+            })
+            // Cấu hình Polly để tự retry khi có lỗi mạng hoặc 429 Rate Limit
+            .AddPolicyHandler(
+                HttpPolicyExtensions
+                    .HandleTransientHttpError()
+                    .OrResult(msg => msg.StatusCode == (HttpStatusCode)429)
+                    .WaitAndRetryAsync(
+                        retryCount: 3,
+                        sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+                        onRetry: (outcome, timespan, retryAttempt, context) =>
+                        {
+                            // Có thể log ở đây
+                        }
+                    )
+            );
+
+
             // Gemini AI Matching
             IServiceCollection serviceCollection = builder.Services.AddScoped<SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.IGeminiCvJobMatchingService, SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.GeminiCvJobMatchingService>();
 

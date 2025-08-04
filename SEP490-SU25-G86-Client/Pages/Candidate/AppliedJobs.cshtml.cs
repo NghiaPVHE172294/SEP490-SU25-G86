@@ -53,13 +53,22 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
             }
 
             // Lọc theo trạng thái nếu có
-            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái")
+            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái" && StatusFilter != "" && StatusFilter != "Tất cả trạng thái")
             {
                 string backendStatus = StatusFilter;
-                if (StatusFilter == "Đã ứng tuyển")
-                    backendStatus = "OPEN";
-                AppliedJobs = AppliedJobs.Where(j => (j.Status ?? "").Equals(backendStatus, StringComparison.OrdinalIgnoreCase)).ToList();
+                
+                if (StatusFilter == "Hồ sơ đã rút")
+                {
+                    AppliedJobs = AppliedJobs.Where(j => (j.Status ?? "").Equals("Hồ sơ đã rút", StringComparison.OrdinalIgnoreCase) && j.IsDelete == true).ToList();
+                }
+                else
+                {
+                    AppliedJobs = AppliedJobs.Where(j => (j.IsDelete == false || j.IsDelete == null) && (j.Status ?? "").Equals(backendStatus, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
             }
+            // Nếu là tất cả trạng thái hoặc không filter thì trả về toàn bộ AppliedJobs (kể cả đã rút)
+            // else giữ nguyên AppliedJobs như API trả về
+
 
             // Gợi ý việc làm (kiểu phổ thông)
             var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");

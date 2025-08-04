@@ -18,7 +18,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
         public int TotalFollowed { get; set; }
         // Suggestion pagination
         public int CurrentSuggestPage { get; set; } = 1;
-        public int SuggestPageSize { get; set; } = 3;
+        public int SuggestPageSize { get; set; } = 6;
         public int TotalSuggestPages { get; set; }
         public int TotalSuggested { get; set; }
 
