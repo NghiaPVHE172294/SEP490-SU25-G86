@@ -49,7 +49,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                     if (role == "ADMIN") return RedirectToPage("/Admin/AdminDashboard");
                     //if (role == "EMPLOYER") return RedirectToPage("/EmployerDashboard");
                     // Candidate và Employer đều về Homepage
-                    return RedirectToPage("/Common/Homepage");
+                    return RedirectToPage("/Common/Homepage", new { token = token });
                 }
                 else
                 {
