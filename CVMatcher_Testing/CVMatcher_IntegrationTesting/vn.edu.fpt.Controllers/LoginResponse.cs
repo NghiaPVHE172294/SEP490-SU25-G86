@@ -5,6 +5,6 @@ namespace vn.edu.fpt.Controllers
         public string Token { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
-        // Add other fields if needed based on AuthController's actual response
+        public int? UserId { get; set; } // Thêm userId để lấy id ứng viên cho test
     }
 }
