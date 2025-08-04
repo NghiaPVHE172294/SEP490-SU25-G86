@@ -164,6 +164,10 @@ namespace SEP490_SU25_G86_API
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();
 
+            //CVsubmittion
+            builder.Services.AddScoped<ICvSubmissionRepository, CvSubmissionRepository>();
+            builder.Services.AddScoped<ICvSubmissionService, CvSubmissionService>();
+
             // AccountList
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();
             builder.Services.AddScoped<IAccountListService, AccountListService>();

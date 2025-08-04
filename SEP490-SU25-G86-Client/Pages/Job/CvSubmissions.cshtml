@@ -14,6 +14,11 @@
         }
     </div>
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
@@ -49,7 +54,19 @@
                 <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
                 <td>@cv.Status</td>
                 <td>@(cv.TotalScore?.ToString("0.##") ?? "-")</td>
-                <td>@cv.RecruiterNote</td>
+                    <td>
+                        @if (string.IsNullOrWhiteSpace(cv.RecruiterNote))
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="openNoteModal(@cv.SubmissionId, '')">Thêm ghi chú</button>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0)" onclick="openNoteModal(@cv.SubmissionId, '@cv.RecruiterNote?.Replace("'", "\\'")')">
+                                @cv.RecruiterNote
+                            </a>
+                        }
+                    </td>
+
                 <td>
                         <form method="post" asp-page-handler="AIFilter" asp-route-id="@cv.SubmissionId" style="display:inline">
                             <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
@@ -74,4 +91,39 @@ else if (string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
 } 
+<!-- Modal cập nhật ghi chú -->
+<form method="post" asp-page-handler="UpdateNote">
+    <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+
+    <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalLabel">Cập nhật ghi chú</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="RecruiterNoteForm.SubmissionId" id="modalSubmissionId" />
+                    <div class="mb-3">
+                        <label for="modalRecruiterNote" class="form-label">Ghi chú:</label>
+                        <textarea class="form-control" name="RecruiterNoteForm.RecruiterNote" id="modalRecruiterNote" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function openNoteModal(submissionId, recruiterNote) {
+        document.getElementById("modalSubmissionId").value = submissionId;
+        document.getElementById("modalRecruiterNote").value = recruiterNote;
+        const modal = new bootstrap.Modal(document.getElementById("noteModal"));
+        modal.show();
+    }
+</script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
