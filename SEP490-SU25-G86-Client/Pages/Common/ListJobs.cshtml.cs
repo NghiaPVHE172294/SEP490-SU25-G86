@@ -196,7 +196,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             [JsonPropertyName("daysSincePostedOrUpdated")]
             public string DaysSincePostedOrUpdated { get; set; }
             [JsonPropertyName("companyId")]
-            public int CompanyId { get; set; }
+            public int? CompanyId { get; set; }
         }
         public class JobPostApiResponse
         {
