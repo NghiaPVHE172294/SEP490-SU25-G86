@@ -51,7 +51,6 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
         // Khi submit form POST để tạo công ty
         public async Task<IActionResult> OnPostAsync()
         {
-            // Kiểm tra session
             var role = HttpContext.Session.GetString("user_role");
             var userIdStr = HttpContext.Session.GetString("userId");
             var token = HttpContext.Session.GetString("jwt_token");
@@ -64,7 +63,6 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Nếu dữ liệu không hợp lệ (validation failed)
             if (!ModelState.IsValid)
             {
                 await LoadIndustriesAsync();
@@ -72,25 +70,41 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
                 return Page();
             }
 
-            // Serialize DTO thành JSON và gửi API
-            var json = JsonSerializer.Serialize(Company);
-            var contentJson = new StringContent(json, Encoding.UTF8, "application/json");
+            // Tạo form data multipart
+            var formData = new MultipartFormDataContent();
 
-            var response = await _httpClient.PostAsync("api/Companies", contentJson);
+            formData.Add(new StringContent(Company.CompanyName), "CompanyName");
+            formData.Add(new StringContent(Company.TaxCode), "TaxCode");
+            formData.Add(new StringContent(Company.IndustryId.ToString()), "IndustryId");
+            formData.Add(new StringContent(Company.Email), "Email");
+            formData.Add(new StringContent(Company.Phone), "Phone");
+            formData.Add(new StringContent(Company.Address), "Address");
+            formData.Add(new StringContent(Company.Description ?? ""), "Description");
+            formData.Add(new StringContent(Company.Website ?? ""), "Website");
+            formData.Add(new StringContent(Company.CompanySize), "CompanySize");
+
+            if (Company.LogoFile != null)
+            {
+                var fileContent = new StreamContent(Company.LogoFile.OpenReadStream());
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Company.LogoFile.ContentType);
+                formData.Add(fileContent, "LogoFile", Company.LogoFile.FileName);
+            }
+
+            var response = await _httpClient.PostAsync("api/Companies", formData);
 
             if (response.IsSuccessStatusCode)
             {
-                // Tạo thành công => chuyển đến trang thông tin công ty
                 return RedirectToPage("/Companies/CompanyInformation");
             }
             else
             {
-                await LoadIndustriesAsync(); // load lại dropdown
+                await LoadIndustriesAsync();
                 var errMsg = await response.Content.ReadAsStringAsync();
                 TempData["Error"] = $"Tạo công ty thất bại: {errMsg}";
                 return Page();
             }
         }
+
 
         // Hàm hỗ trợ load lại danh sách ngành nghề nếu xảy ra lỗi
         private async Task LoadIndustriesAsync()

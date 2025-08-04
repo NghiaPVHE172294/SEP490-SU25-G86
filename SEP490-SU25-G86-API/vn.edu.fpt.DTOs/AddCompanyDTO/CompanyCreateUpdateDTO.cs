@@ -45,5 +45,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO
         [Url(ErrorMessage = "Logo URL không đúng định dạng.")]
         [StringLength(300, ErrorMessage = "Logo URL không được vượt quá 300 ký tự.")]
         public string? LogoUrl { get; set; }
+        public IFormFile? LogoFile { get; set; } // Dùng để upload logo mới, nếu có
     }
 }

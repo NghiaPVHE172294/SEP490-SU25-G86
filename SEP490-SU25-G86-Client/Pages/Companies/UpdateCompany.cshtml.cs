@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net.Http.Headers;
+
 
 namespace SEP490_SU25_G86_Client.Pages.Companies
 {
@@ -90,15 +92,13 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Kiểm tra xác thực
             var token = HttpContext.Session.GetString("jwt_token");
             if (string.IsNullOrEmpty(token))
                 return RedirectToPage("/Common/Login");
 
-            // Gán token
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Lấy lại thông tin công ty hiện tại từ API (để lấy CompanyId)
+            // Lấy lại CompanyId từ API /me
             var companyInfoRes = await _httpClient.GetAsync("api/Companies/me");
             if (!companyInfoRes.IsSuccessStatusCode) return RedirectToPage("/NotFound");
 
@@ -106,11 +106,27 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             var companyDetail = JsonSerializer.Deserialize<CompanyDetailDTO>(jsonCompany, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (companyDetail == null) return RedirectToPage("/NotFound");
 
-            // Gửi PUT request để cập nhật công ty
-            var json = JsonSerializer.Serialize(Company);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // Tạo form-data để gửi kèm file
+            var formData = new MultipartFormDataContent();
+            formData.Add(new StringContent(Company.CompanyName ?? ""), "CompanyName");
+            formData.Add(new StringContent(Company.TaxCode ?? ""), "TaxCode");
+            formData.Add(new StringContent(Company.IndustryId.ToString()), "IndustryId");
+            formData.Add(new StringContent(Company.Email ?? ""), "Email");
+            formData.Add(new StringContent(Company.Phone ?? ""), "Phone");
+            formData.Add(new StringContent(Company.Address ?? ""), "Address");
+            formData.Add(new StringContent(Company.Description ?? ""), "Description");
+            formData.Add(new StringContent(Company.Website ?? ""), "Website");
+            formData.Add(new StringContent(Company.CompanySize ?? ""), "CompanySize");
 
-            var updateResponse = await _httpClient.PutAsync($"api/Companies/{companyDetail.CompanyId}", content);
+            if (Company.LogoFile != null)
+            {
+                var fileContent = new StreamContent(Company.LogoFile.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(Company.LogoFile.ContentType);
+                formData.Add(fileContent, "LogoFile", Company.LogoFile.FileName);
+            }
+
+            var updateResponse = await _httpClient.PutAsync($"api/Companies/{companyDetail.CompanyId}", formData);
+
             if (updateResponse.IsSuccessStatusCode)
             {
                 TempData["Success"] = "Cập nhật công ty thành công.";
@@ -118,7 +134,14 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             }
 
             TempData["Error"] = "Cập nhật công ty thất bại.";
+            if (!updateResponse.IsSuccessStatusCode)
+            {
+                var errDetail = await updateResponse.Content.ReadAsStringAsync();
+                TempData["Error"] += $" Lý do: {errDetail}";
+                return Page();
+            }
             return Page();
         }
+
     }
 }

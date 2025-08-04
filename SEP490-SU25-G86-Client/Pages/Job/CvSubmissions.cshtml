@@ -35,82 +35,103 @@
         }
         @await Html.PartialAsync("_CvSubmissionFilters", Model)
         @if (Model.CvSubmissions != null && Model.CvSubmissions.Any())
-{
-    <div class="table-responsive-cv">
-    <table class="table table-bordered table-hover mt-3">
-        <thead class="table-light">
-            <tr>
-                <th>STT</th>
-                <th>Tên ứng viên</th>
-                <th>File CV</th>
-                <th>Ngày nộp</th>
-                <th>Trạng thái</th>
-                <th>Điểm phù hợp</th>
-                <th>Ghi chú</th>
-                <th class="actions-col">Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-        @for (int i = 0; i < Model.CvSubmissions.Count; i++)
         {
-            var cv = Model.CvSubmissions[i];
-            <tr>
-                <td>@(i+1)</td>
-                <td>@cv.CandidateName</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(cv.CvFileUrl))
-                    {
-                        <a href="@cv.CvFileUrl" target="_blank">Xem CV</a>
-                    }
-                </td>
-                <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
-                <td>@cv.Status</td>
-                <td>
-                    <span id="score-@cv.SubmissionId">@((cv.TotalScore?.ToString("0.##")) ?? "-")</span>
-                    <span id="spinner-@cv.SubmissionId" class="spinner-border spinner-border-sm text-warning" style="display:none"></span>
-                </td>
-                <td>@cv.RecruiterNote</td>
-                <td class="actions-col">
-@if (cv.Status == "ĐÃ DUYỆT" || cv.Status == "ĐÃ TỪ CHỐI")
-{
-    <div class="action-disabled actions-cell">
-        <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
-        <button type="button" class="btn btn-success btn-sm" disabled>Duyệt CV</button>
-        <button type="button" class="btn btn-danger btn-sm" disabled>Từ chối CV</button>
-    </div>
-}
-else
-{
-    <div class="actions-cell">
-        @if (cv.Status == "Đã chấm điểm bằng AI")
-        {
-            <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-warning btn-sm" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
-        }
-        <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
-            <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-            <button type="submit" class="btn btn-success btn-sm">Duyệt CV</button>
-        </form>
-        <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
-            <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-            <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
-        </form>
-    </div>
-}
-</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-    </div>
-    <!-- PHÂN TRANG -->
-    <nav aria-label="CV pagination">
-        <ul class="pagination justify-content-center">
-                <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
-                    <a class="page-link" href="@Url.Page(null, null, new {
+            <div class="table-responsive-cv">
+                <table class="table table-bordered table-hover mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên ứng viên</th>
+                            <th>File CV</th>
+                            <th>Ngày nộp</th>
+                            <th>Trạng thái</th>
+                            <th>Điểm phù hợp</th>
+                            <th>Ghi chú</th>
+                            <th class="actions-col">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.CvSubmissions.Count; i++)
+                        {
+                            var cv = Model.CvSubmissions[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@cv.CandidateName</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(cv.CvFileUrl))
+                                    {
+                                        <a href="@cv.CvFileUrl" target="_blank">Xem CV</a>
+                                    }
+                                </td>
+                                <td>@(cv.SubmissionDate?.ToString("dd/MM/yyyy HH:mm") ?? "")</td>
+                                <td>@cv.Status</td>
+                                <td>
+                                    <span id="score-@cv.SubmissionId">@((cv.TotalScore?.ToString("0.##")) ?? "-")</span>
+                                    <span id="spinner-@cv.SubmissionId" class="spinner-border spinner-border-sm text-warning" style="display:none"></span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center" style="max-width: 130px;">
+                                        @if (string.IsNullOrWhiteSpace(cv.RecruiterNote))
+                                        {
+                                            <button type="button" class="btn btn-sm btn-outline-primary text-truncate"
+                                                    style="width: 100%;"
+                                                    onclick="openNoteModal(@cv.SubmissionId, '')">
+                                                Thêm ghi chú
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:void(0)" class="text-primary text-truncate d-block"
+                                               style="max-width: 130px;"
+                                               onclick="openNoteModal(@cv.SubmissionId, '@cv.RecruiterNote?.Replace("'", "\\'")')">
+                                                @cv.RecruiterNote
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+
+
+                                <td class="actions-col">
+                                    @if (cv.Status == "ĐÃ DUYỆT" || cv.Status == "ĐÃ TỪ CHỐI")
+                                    {
+                                        <div class="action-disabled actions-cell">
+                                            <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
+                                            <button type="button" class="btn btn-success btn-sm" disabled>Duyệt CV</button>
+                                            <button type="button" class="btn btn-danger btn-sm" disabled>Từ chối CV</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="actions-cell">
+                                            @if (cv.Status == "Đã chấm điểm bằng AI")
+                                            {
+                                                <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-warning btn-sm" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
+                                            }
+                                            <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+                                                <button type="submit" class="btn btn-success btn-sm">Duyệt CV</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
+                                            </form>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- PHÂN TRANG -->
+            <nav aria-label="CV pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Page(null, null, new {
                         JobPostId = Model.JobPostId,
                         StatusFilter = Model.StatusFilter,
                         CandidateNameFilter = Model.CandidateNameFilter,
@@ -121,13 +142,13 @@ else
                         PageIndex = Model.PageIndex - 1,
                         PageSize = Model.PageSize
                     }, null)">
-                        &laquo;
-                    </a>
-                </li>
-                @for (int p = 1; p <= Model.TotalPages; p++)
-                {
-                    <li class="page-item @(p == Model.PageIndex ? "active" : "")">
-                        <a class="page-link" href="@Url.Page(null, null, new {
+                            &laquo;
+                        </a>
+                    </li>
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" href="@Url.Page(null, null, new {
                             JobPostId = Model.JobPostId,
                             StatusFilter = Model.StatusFilter,
                             CandidateNameFilter = Model.CandidateNameFilter,
@@ -138,10 +159,10 @@ else
                             PageIndex = p,
                             PageSize = Model.PageSize
                         }, null)">@p</a>
-                    </li>
-                }
-                <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link" href="@Url.Page(null, null, new {
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Page(null, null, new {
                         JobPostId = Model.JobPostId,
                         StatusFilter = Model.StatusFilter,
                         CandidateNameFilter = Model.CandidateNameFilter,
@@ -152,63 +173,96 @@ else
                         PageIndex = Model.PageIndex + 1,
                         PageSize = Model.PageSize
                     }, null)">
-                        &raquo;
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    <div class="text-center text-muted" style="margin-top: 0.5rem;">
-        @{
-            var start = (Model.TotalRecords == 0) ? 0 : ((Model.PageIndex - 1) * Model.PageSize + 1);
-            var end = Math.Min(Model.PageIndex * Model.PageSize, Model.TotalRecords);
+                            &raquo;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="text-center text-muted" style="margin-top: 0.5rem;">
+                @{
+                    var start = (Model.TotalRecords == 0) ? 0 : ((Model.PageIndex - 1) * Model.PageSize + 1);
+                    var end = Math.Min(Model.PageIndex * Model.PageSize, Model.TotalRecords);
+                }
+                Hiển thị @start - @end trong tổng số @Model.TotalRecords CV
+            </div>
         }
-        Hiển thị @start - @end trong tổng số @Model.TotalRecords CV
-    </div>
-}
 
-else if (string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
-} 
-<style>
-.action-disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    display: flex;
-    gap: 0.25rem;
-}
-</style>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId) {
-    // Ẩn điểm, hiện spinner
-    document.getElementById('score-' + submissionId).style.display = 'none';
-    document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
-    try {
-        // Gọi API AI filter (endpoint backend đang dùng)
-        const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
-        const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(token ? { 'Authorization': 'Bearer ' + token } : {})
-            },
-            body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
-        });
-        if (!resp.ok) throw new Error("Lọc AI thất bại");
-        const data = await resp.json();
-        // Giả sử backend trả về totalScore, nếu không thì cần reload lại trang hoặc fetch lại từng submission
-        if (data && data.totalScore !== undefined && data.totalScore !== null) {
-            document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
-        } else {
-            // Nếu không có điểm, reload trang để lấy dữ liệu mới
-            location.reload();
+        else if (string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
         }
-    } catch (e) {
-        alert(e.message || "Có lỗi khi lọc AI");
-    }
-    // Hiện lại điểm, ẩn spinner
-    document.getElementById('score-' + submissionId).style.display = 'inline';
-    document.getElementById('spinner-' + submissionId).style.display = 'none';
-}
-</script>
+        <style>
+            .action-disabled {
+                opacity: 0.5;
+                pointer-events: none;
+                display: flex;
+                gap: 0.25rem;
+            }
+        </style>
+        <form method="post" asp-page-handler="UpdateNote">
+            <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+            <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="noteModalLabel">Cập nhật ghi chú</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="RecruiterNoteForm.SubmissionId" id="modalSubmissionId" />
+                            <div class="mb-3">
+                                <label for="modalRecruiterNote" class="form-label">Ghi chú:</label>
+                                <textarea class="form-control" name="RecruiterNoteForm.RecruiterNote"
+                                          id="modalRecruiterNote" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId) {
+                // Ẩn điểm, hiện spinner
+                document.getElementById('score-' + submissionId).style.display = 'none';
+                document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
+                try {
+                    // Gọi API AI filter (endpoint backend đang dùng)
+                    const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+                    const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+                        },
+                        body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
+                    });
+                    if (!resp.ok) throw new Error("Lọc AI thất bại");
+                    const data = await resp.json();
+                    // Giả sử backend trả về totalScore, nếu không thì cần reload lại trang hoặc fetch lại từng submission
+                    if (data && data.totalScore !== undefined && data.totalScore !== null) {
+                        document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
+                    } else {
+                        // Nếu không có điểm, reload trang để lấy dữ liệu mới
+                        location.reload();
+                    }
+                } catch (e) {
+                    alert(e.message || "Có lỗi khi lọc AI");
+                }
+                // Hiện lại điểm, ẩn spinner
+                document.getElementById('score-' + submissionId).style.display = 'inline';
+                document.getElementById('spinner-' + submissionId).style.display = 'none';
+            }
+
+            function openNoteModal(submissionId, recruiterNote) {
+                    document.getElementById("modalSubmissionId").value = submissionId;
+                    document.getElementById("modalRecruiterNote").value = recruiterNote;
+                    const modal = new bootstrap.Modal(document.getElementById("noteModal"));
+                    modal.show();
+            }
+        </script>
