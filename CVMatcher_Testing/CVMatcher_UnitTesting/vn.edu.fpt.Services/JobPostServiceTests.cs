@@ -22,7 +22,7 @@ namespace CVMatcher_Testing.vn.edu.fpt.Services
         {
             _jobPostRepoMock = new Mock<IJobPostRepository>();
             _blockedCompanyRepoMock = new Mock<IBlockedCompanyRepository>();
-            _service = new JobPostService(_jobPostRepoMock.Object, _blockedCompanyRepoMock.Object);
+          //  _service = new JobPostService(_jobPostRepoMock.Object, _blockedCompanyRepoMock.Object);
         }
 
         [Fact]

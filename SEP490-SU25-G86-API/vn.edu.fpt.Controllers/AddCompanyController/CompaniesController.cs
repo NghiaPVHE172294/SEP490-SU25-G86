@@ -39,19 +39,28 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] CompanyCreateUpdateDTO dto)
+        [RequestSizeLimit(10_000_000)] // Optional: Limit file size (10MB)
+        public async Task<IActionResult> CreateCompany([FromForm] CompanyCreateUpdateDTO dto)
         {
             var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(accountIdStr) || !int.TryParse(accountIdStr, out int accountId))
                 return Unauthorized();
 
-            var created = await _companyService.CreateCompanyAsync(accountId, dto);
-            if (!created) return BadRequest("Tài khoản này đã tạo công ty.");
-            return Ok("Tạo công ty thành công.");
+            try
+            {
+                var created = await _companyService.CreateCompanyAsync(accountId, dto);
+                if (!created) return BadRequest("Tài khoản này đã tạo công ty.");
+                return Ok("Tạo công ty thành công.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{companyId}")]
-        public async Task<IActionResult> UpdateCompany(int companyId, [FromBody] CompanyCreateUpdateDTO dto)
+        [RequestSizeLimit(10_000_000)]
+        public async Task<IActionResult> UpdateCompany(int companyId, [FromForm] CompanyCreateUpdateDTO dto)
         {
             var updated = await _companyService.UpdateCompanyAsync(companyId, dto);
             if (!updated) return NotFound("Không tìm thấy công ty.");

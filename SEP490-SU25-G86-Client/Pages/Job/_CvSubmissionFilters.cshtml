@@ -1,0 +1,38 @@
+@model SEP490_SU25_G86_Client.Pages.Job.CvSubmissionsModel
+<form method="get" class="row g-3 align-items-end mb-3" id="cv-filter-form">
+    <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+    <div class="col-md-2">
+        <label class="form-label">Trạng thái</label>
+        <select class="form-select" name="StatusFilter">
+            <option value="">Tất cả</option>
+            <option value="Chưa chấm điểm AI">Chưa chấm điểm AI</option>
+            <option value="Đã chấm điểm bằng AI">Đã chấm điểm bằng AI</option>
+            <option value="ĐÃ DUYỆT">ĐÃ DUYỆT</option>
+            <option value="ĐÃ TỪ CHỐI">ĐÃ TỪ CHỐI</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Tên ứng viên</label>
+        <input type="text" class="form-control" name="CandidateNameFilter" placeholder="Nhập tên ứng viên..." value="@Model.CandidateNameFilter">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Điểm phù hợp (từ)</label>
+        <input type="number" step="0.01" class="form-control" name="ScoreMin" placeholder="Min" value="@Model.ScoreMin">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Điểm phù hợp (đến)</label>
+        <input type="number" step="0.01" class="form-control" name="ScoreMax" placeholder="Max" value="@Model.ScoreMax">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Ngày nộp (từ)</label>
+        <input type="date" class="form-control" name="SubmissionDateFrom" value="@Model.SubmissionDateFrom">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Ngày nộp (đến)</label>
+        <input type="date" class="form-control" name="SubmissionDateTo" value="@Model.SubmissionDateTo">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Lọc</button>
+        <a href="?JobPostId=@Model.JobPostId" class="btn btn-secondary ms-2">Xóa lọc</a>
+    </div>
+</form>

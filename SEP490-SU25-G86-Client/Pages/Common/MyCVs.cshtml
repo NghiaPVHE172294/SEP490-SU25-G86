@@ -5,7 +5,9 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
+<link rel="stylesheet" href="~/css/mycvs.css" />
+<div class="container-cv">
+    <div class="cv-card">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">CV đã tải lên CVMatcher</h4>
@@ -20,7 +22,28 @@
             </div>
         }
         <div class="card-body">
-            <table class="table table-bordered table-hover">
+            <!-- FILTER FORM -->
+            <form method="get" id="cv-filter-form" class="cv-filter-form row g-2 align-items-end mb-3">
+                <div class="col-md-4">
+                    <label for="SearchName" class="form-label">Tìm kiếm tên CV</label>
+                    <input type="text" class="form-control" id="SearchName" name="SearchName" value="@Request.Query["SearchName"]" placeholder="Nhập tên CV...">
+                </div>
+                <div class="col-md-3">
+                    <label for="DateFrom" class="form-label">Ngày cập nhật (từ)</label>
+                    <input type="date" class="form-control" id="DateFrom" name="DateFrom" value="@Request.Query["DateFrom"]">
+                </div>
+                <div class="col-md-3">
+                    <label for="DateTo" class="form-label">Ngày cập nhật (đến)</label>
+                    <input type="date" class="form-control" id="DateTo" name="DateTo" value="@Request.Query["DateTo"]">
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">Lọc</button>
+                    <a href="@Url.Page(null, null, null)" class="btn btn-outline-secondary w-100">Xóa lọc</a>
+                </div>
+            </form>
+
+            <div class="table-responsive-cv">
+<table class="table table-bordered table-hover">
                 <thead class="table-light">
                     <tr>
                         <th>TÊN CV</th>
@@ -56,6 +79,45 @@
                 }
                 </tbody>
             </table>
+</div>
+            <!-- PHÂN TRANG -->
+<nav aria-label="CV pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Page(null, null, new {
+                SearchName = Request.Query["SearchName"],
+                DateFrom = Request.Query["DateFrom"],
+                DateTo = Request.Query["DateTo"],
+                PageIndex = Model.PageIndex - 1,
+                PageSize = Model.PageSize
+            }, null)">&laquo;</a>
+        </li>
+        @for (int p = 1; p <= (Model.TotalPages > 0 ? Model.TotalPages : 1); p++)
+        {
+            <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                <a class="page-link" href="@Url.Page(null, null, new {
+                    SearchName = Request.Query["SearchName"],
+                    DateFrom = Request.Query["DateFrom"],
+                    DateTo = Request.Query["DateTo"],
+                    PageIndex = p,
+                    PageSize = Model.PageSize
+                }, null)">@p</a>
+            </li>
+        }
+        <li class="page-item @(Model.PageIndex == (Model.TotalPages > 0 ? Model.TotalPages : 1) ? "disabled" : "")">
+            <a class="page-link" href="@Url.Page(null, null, new {
+                SearchName = Request.Query["SearchName"],
+                DateFrom = Request.Query["DateFrom"],
+                DateTo = Request.Query["DateTo"],
+                PageIndex = Model.PageIndex + 1,
+                PageSize = Model.PageSize
+            }, null)">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+
+
+
         </div>
     </div>
 

@@ -10,6 +10,10 @@ namespace SEP490_SU25_G86_Client.Pages.Common
     public class MyCVsModel : PageModel
     {
         public List<CvDTO> CVs { get; set; } = new();
+public int PageIndex { get; set; } = 1;
+public int PageSize { get; set; } = 10;
+public int TotalPages { get; set; } = 1;
+
 
         [BindProperty]
         public string CVName { get; set; }
@@ -29,11 +33,40 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             if (!string.IsNullOrEmpty(token))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await client.GetAsync(ApiBase + "api/Cv/my");
+            var allCvs = new List<CvDTO>();
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                CVs = JsonSerializer.Deserialize<List<CvDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+                allCvs = JsonSerializer.Deserialize<List<CvDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             }
+
+            // FILTER
+            var searchName = Request.Query["SearchName"].ToString()?.Trim();
+            var dateFromStr = Request.Query["DateFrom"].ToString();
+            var dateToStr = Request.Query["DateTo"].ToString();
+            DateTime? dateFrom = null, dateTo = null;
+            if (DateTime.TryParse(dateFromStr, out var dtFrom)) dateFrom = dtFrom.Date;
+            if (DateTime.TryParse(dateToStr, out var dtTo)) dateTo = dtTo.Date.AddDays(1).AddTicks(-1); // end of day
+
+            var filtered = allCvs.AsQueryable();
+            if (!string.IsNullOrEmpty(searchName))
+                filtered = filtered.Where(cv => (cv.CVName ?? cv.FileName).ToLower().Contains(searchName.ToLower()));
+            if (dateFrom.HasValue)
+                filtered = filtered.Where(cv => cv.UpdatedDate >= dateFrom);
+            if (dateTo.HasValue)
+                filtered = filtered.Where(cv => cv.UpdatedDate <= dateTo);
+
+            // PAGINATION
+            int pageIndex = 1, pageSize = 10;
+            int.TryParse(Request.Query["PageIndex"], out pageIndex);
+            int.TryParse(Request.Query["PageSize"], out pageSize);
+            if (pageIndex < 1) pageIndex = 1;
+            if (pageSize < 1) pageSize = 10;
+            int totalRecords = filtered.Count();
+            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            PageIndex = pageIndex;
+            PageSize = pageSize;
+            CVs = filtered.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()

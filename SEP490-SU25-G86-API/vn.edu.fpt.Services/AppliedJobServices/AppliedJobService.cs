@@ -33,7 +33,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
                 JobPostId = s.JobPostId ?? 0,
                 Title = s.JobPost?.Title ?? string.Empty,
                 WorkLocation = s.JobPost?.WorkLocation,
-                Status = s.JobPost?.Status,
+                Status = s.Status,
                 SubmissionDate = s.SubmissionDate,
                 CvId = s.CvId,
                 CvName = s.Cv?.Cvname,
