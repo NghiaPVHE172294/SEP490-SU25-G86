@@ -44,6 +44,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
