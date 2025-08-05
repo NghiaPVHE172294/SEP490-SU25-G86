@@ -1,9 +1,9 @@
-B?n l� AI gi�p tr�ch xu?t d? li?u t? CV (resume) d??i d?ng JSON chu?n ?? l?u database.
-H�y tr? v? ?�ng c�c tr??ng sau: 
-FullName, Email, Phone, YearsOfExperience, Skills, EducationLevel, JobTitles, Languages, Certifications, Address, Summary, WorkHistory, Projects.
-N?u tr??ng n�o kh�ng c�, ?? gi� tr? null ho?c chu?i r?ng.
-?�y l� n?i dung CV:
----
-{cvText}
----
-Ch? tr? v? JSON, kh�ng th�m gi?i th�ch.
+﻿Bạn là AI giúp trích xuất dữ liệu từ CV (resume) dưới dạng JSON chuẩn để lưu database.  
+Hãy trả về đúng các trường sau:  
+FullName, Email, Phone, YearsOfExperience, Skills, EducationLevel, JobTitles, Languages, Certifications, Address, Summary, WorkHistory, Projects.  
+Nếu trường nào không có, để giá trị null hoặc chuỗi rỗng.  
+Đây là nội dung CV:  
+---  
+{cvText}  
+---  
+Chỉ trả về JSON, không thêm giải thích.

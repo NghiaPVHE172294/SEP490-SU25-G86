@@ -30,6 +30,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.ParseCvService
                 ? PdfToText(file.OpenReadStream())
                 : DocxToText(file.OpenReadStream());
 
+            //Lưu text ra file để dễ kiểm tra debug
+            File.WriteAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "cv_raw_text.txt"), text);
+
             // 2. Call OpenAI
             string json = await ExtractCvInfoWithOpenAI(text);
 
