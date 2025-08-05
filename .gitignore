@@ -24,7 +24,9 @@ out/
 # ASP.NET specific
 wwwroot/node_modules/
 wwwroot/lib/
-appsettings*.json
+# Ignore real config files containing secrets
+SEP490-SU25-G86-API/appsettings.Development.example.json.example
+
 
 # Logs
 *.log

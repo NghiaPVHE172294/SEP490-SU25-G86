@@ -44,6 +44,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
@@ -74,7 +75,18 @@ namespace SEP490_SU25_G86_API
 	{
 		public static void Main(string[] args)
 		{
-			var builder = WebApplication.CreateBuilder(args);
+			// Ưu tiên load file cấu hình mẫu nếu tồn tại (dùng cho teamwork)
+var configBuilder = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.example.json.example", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+var configuration = configBuilder.Build();
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddConfiguration(configuration);
             // cấu hình Twilio
             // 1. Bind cấu hình từ appsettings.json
             builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
@@ -169,6 +181,10 @@ namespace SEP490_SU25_G86_API
             // SavedJob
             builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
             builder.Services.AddScoped<ISavedJobService, SavedJobService>();
+
+            //CVsubmittion
+            builder.Services.AddScoped<ICvSubmissionRepository, CvSubmissionRepository>();
+            builder.Services.AddScoped<ICvSubmissionService, CvSubmissionService>();
 
             // AccountList
             builder.Services.AddScoped<IAccountListRepository, AccountListRepository>();

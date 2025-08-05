@@ -179,7 +179,7 @@ JobCriteria: {JsonSerializer.Serialize(criteria)}";
         {
             // Ghi log ra file hoặc bảng DB tuỳ nhu cầu
             var log = $"[{DateTime.Now}] CV: {cvParsedDataId}, JobCriteria: {jobCriteriaId}\nPrompt: {prompt}\nResponse: {response}\n";
-            var logPath = _configuration["Gemini:LogFile"] ?? "GeminiLog.txt";
+            var logPath = _configuration["Gemini:LogFile"] ?? "LogAPI_AI/GeminiLog.txt";
             await System.IO.File.AppendAllTextAsync(logPath, log);
         }
     }

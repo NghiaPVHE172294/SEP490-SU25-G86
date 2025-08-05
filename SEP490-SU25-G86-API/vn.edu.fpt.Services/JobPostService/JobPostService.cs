@@ -161,6 +161,7 @@ if (candidateId.HasValue)
                 JobPostId = j.JobPostId,
                 Title = j.Title,
                 CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
+                CompanyId = j.Employer?.Company?.CompanyId,
                 Salary = (j.SalaryRange != null && j.SalaryRange.MinSalary.HasValue && j.SalaryRange.MaxSalary.HasValue)
                     ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                     : "Thỏa thuận",

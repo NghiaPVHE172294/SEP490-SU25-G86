@@ -12,6 +12,8 @@ namespace SEP490_SU25_G86_Client.Pages.Job
         [BindProperty(SupportsGet = true)]
         public int JobPostId { get; set; }
         public List<CvSubmissionForJobPostDTO> CvSubmissions { get; set; } = new();
+        [BindProperty]
+        public CVSubRecruiterNoteDTO RecruiterNoteForm { get; set; } = new();
         public string? ErrorMessage { get; set; }
         public string? JobPostTitle { get; set; }
         public string? CompanyName { get; set; }
@@ -178,5 +180,46 @@ namespace SEP490_SU25_G86_Client.Pages.Job
 
             return RedirectToPage(new { JobPostId });
         }
+        public async Task<IActionResult> OnPostUpdateNoteAsync()
+        {
+            Console.WriteLine($"SUBMISSION ID = {RecruiterNoteForm.SubmissionId}, NOTE = {RecruiterNoteForm.RecruiterNote}");
+            try
+            {
+                var client = new HttpClient();
+                var token = HttpContext.Session.GetString("jwt_token");
+                if (!string.IsNullOrEmpty(token))
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var json = JsonSerializer.Serialize(RecruiterNoteForm, options);
+                Console.WriteLine("JSON gửi lên: " + json);  // Debug JSON body
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+
+                var response = await client.PatchAsync("https://localhost:7004/api/CvSubmissions/recruiter-note", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API response: " + responseContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Cập nhật ghi chú thành công!";
+                }
+                else
+                {
+                    ErrorMessage = "Không thể cập nhật ghi chú.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi ghi chú: {ex.Message}";
+            }
+
+            return RedirectToPage(new { JobPostId });
+        }
+
     }
 }

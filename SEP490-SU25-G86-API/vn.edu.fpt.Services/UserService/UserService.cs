@@ -107,7 +107,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
         public async Task<string> UploadAvatarToFirebaseStorage(IFormFile file, int userId)
         {
             string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS")
-                ?? "D:\\Hoc_Tap\\SU25\\SEP490\\Project\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+                ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
 
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
                 ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";

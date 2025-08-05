@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
+using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AddCompanyRepository;
@@ -9,16 +10,23 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
     public class InfoCompanyService : IInfoCompanyService
     {
         private readonly IInfoCompanyRepository _repository;
+        private readonly SEP490_G86_CvMatchContext _context;
 
-        public InfoCompanyService(IInfoCompanyRepository repository)
+        public InfoCompanyService(IInfoCompanyRepository repository, SEP490_G86_CvMatchContext context)
         {
             _repository = repository;
+            _context = context;
         }
 
         public async Task<CompanyDetailDTO?> GetCompanyByAccountIdAsync(int accountId)
         {
-            var company = await _repository.GetByAccountIdAsync(accountId);
+            //var user = await _context.Users.FindAsync(accountId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null || user.CompanyId == null) return null;
+
+            var company = await _repository.GetByIdAsync(user.CompanyId.Value);
             if (company == null) return null;
+
             return MapToDetailDto(company);
         }
 
@@ -40,8 +48,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
 
         public async Task<bool> CreateCompanyAsync(int accountId, CompanyCreateUpdateDTO dto)
         {
-            var existing = await _repository.GetByAccountIdAsync(accountId);
-            if (existing != null) return false;
+            //var user = await _context.Users.FindAsync(accountId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null || user.CompanyId != null) return false;
 
             var isDuplicate = await _repository.IsDuplicateCompanyAsync(dto);
             if (isDuplicate)
@@ -71,6 +80,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
             };
 
             await _repository.CreateAsync(company);
+
+            // Gán CompanyId cho user sau khi tạo
+            user.CompanyId = company.CompanyId;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -91,9 +106,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
 
             if (dto.LogoFile != null)
             {
-                // Có thể thêm xóa logo cũ ở đây nếu muốn
                 company.LogoUrl = await UploadLogoToFirebaseStorage(dto.LogoFile, company.CreatedByUserId);
-
             }
 
             await _repository.UpdateAsync(company);
@@ -123,7 +136,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
                 ?? "D:\\FPTU\\SEP490_SUMMER25_G86\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
 
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
-                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
+                ?? "sep490-su25-g86-cvmatcher.appspot.com";
 
             string folderName = "Image_storage/CompanyAvatar";
 
