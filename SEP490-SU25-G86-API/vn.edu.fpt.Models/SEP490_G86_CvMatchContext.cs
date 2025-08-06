@@ -50,7 +50,14 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //            if (!optionsBuilder.IsConfigured)
+            //            {
+            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+            //                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
+            //            }
+
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
@@ -250,6 +257,8 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.CvTemplateName).HasMaxLength(50);
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+
+                entity.Property(e => e.UploadDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Employer)
                     .WithMany(p => p.CvTemplateOfEmployers)
@@ -605,7 +614,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A8D7800811");
+                    .HasName("PK__RolePerm__6400A1A8441ABE12");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
