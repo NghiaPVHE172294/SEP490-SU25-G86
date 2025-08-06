@@ -19,6 +19,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<AuditLog> AuditLogs { get; set; } = null!;
         public virtual DbSet<BlockedCompany> BlockedCompanies { get; set; } = null!;
+        public virtual DbSet<CareerHandbook> CareerHandbooks { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<CompanyFollower> CompanyFollowers { get; set; } = null!;
         public virtual DbSet<Cv> Cvs { get; set; } = null!;
@@ -30,6 +31,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<Cvsubmission> Cvsubmissions { get; set; } = null!;
         public virtual DbSet<EmploymentType> EmploymentTypes { get; set; } = null!;
         public virtual DbSet<ExperienceLevel> ExperienceLevels { get; set; } = null!;
+        public virtual DbSet<HandbookCategory> HandbookCategories { get; set; } = null!;
         public virtual DbSet<Industry> Industries { get; set; } = null!;
         public virtual DbSet<JobCriterion> JobCriteria { get; set; } = null!;
         public virtual DbSet<JobLevel> JobLevels { get; set; } = null!;
@@ -128,6 +130,31 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlockedCompanies_Companies");
+            });
+
+            modelBuilder.Entity<CareerHandbook>(entity =>
+            {
+                entity.HasKey(e => e.HandbookId);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Slug).HasMaxLength(200);
+
+                entity.Property(e => e.Tags).HasMaxLength(200);
+
+                entity.Property(e => e.ThumbnailUrl).HasMaxLength(500);
+
+                entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.CareerHandbooks)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CareerHandbooks_HandbookCategories");
             });
 
             modelBuilder.Entity<Company>(entity =>
@@ -375,6 +402,19 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.ExperienceLevelName).HasMaxLength(50);
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            });
+
+            modelBuilder.Entity<HandbookCategory>(entity =>
+            {
+                entity.HasKey(e => e.CategoryId);
+
+                entity.Property(e => e.CategoryName).HasMaxLength(100);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).HasMaxLength(300);
             });
 
             modelBuilder.Entity<Industry>(entity =>
