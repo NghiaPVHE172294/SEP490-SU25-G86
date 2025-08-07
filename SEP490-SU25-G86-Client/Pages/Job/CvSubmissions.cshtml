@@ -191,14 +191,6 @@
         {
             <div class="alert alert-info mt-3">Chưa có CV nào được nộp vào tin tuyển dụng này.</div>
         }
-        <style>
-            .action-disabled {
-                opacity: 0.5;
-                pointer-events: none;
-                display: flex;
-                gap: 0.25rem;
-            }
-        </style>
         <form method="post" asp-page-handler="UpdateNote">
             <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
             <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
