@@ -151,7 +151,11 @@
                 <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="fw-bold mt-1">@job.Title</h5>
-                        <div class="text-muted">@job.CompanyName</div>
+                        <div class="text-muted">
+                            <a href="/Common/CompanyDetail?companyId?@job.CompanyId" class="text-decoration-none text-muted">
+                                @job.CompanyName
+                            </a>
+                        </div>
 
                         <div class="d-flex flex-wrap mt-2 gap-3">
                             <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
@@ -161,21 +165,24 @@
                             <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <a class="btn btn-custom btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
-                        @if (job.IsApplied)
-                        {
-                            <button class="btn btn-secondary btn-sm" disabled>Đã ứng tuyển</button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                    class="btn btn-primary btn-sm btn-apply-now"
-                                    data-job-id="@job.JobPostId"
-                                    data-job-title="@job.Title">
-                                <i class="bi bi-send"></i> Ứng tuyển
-                            </button>
-                        }
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <a class="btn btn-custom btn-sm btn-fixed" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                            @if (job.IsApplied)
+                            {
+                                <button class="btn btn-custom btn-sm btn-fixed" disabled>Đã ứng tuyển</button>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="btn btn-primary btn-sm btn-apply-now btn-fixed"
+                                        data-job-id="@job.JobPostId"
+                                        data-job-title="@job.Title">
+                                    <i class="bi bi-send"></i> Ứng tuyển
+                                </button>
+                            }
+                        </div>
+                        <div class="text-muted small">@job.DaysSincePostedOrUpdated</div>
                     </div>
                 </div>
             }

@@ -1,5 +1,16 @@
-﻿@page
+@page
 @model SEP490_SU25_G86_Client.Pages.HomepageModel
+@{
+    var token = HttpContext.Request.Query["token"];
+}
+<script>
+    const urlToken = '@token';
+    if (urlToken && urlToken !== 'null' && urlToken !== '') {
+        localStorage.setItem('jwt_token', urlToken);
+        // Xóa token khỏi url bằng cách reload lại không query
+        window.location.href = window.location.pathname;
+    }
+</script>
 @{
     var selectedRegion = HttpContext.Request.Query["region"].ToString();
 

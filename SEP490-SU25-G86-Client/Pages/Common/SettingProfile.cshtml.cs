@@ -54,7 +54,6 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             {
                 return RedirectToPage("/Common/Login");
             }
-
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -76,15 +75,15 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             if (!string.IsNullOrWhiteSpace(UserUpdate.AboutMe))
                 formData.Add(new StringContent(UserUpdate.AboutMe), "AboutMe");
 
-            if (UserUpdate.AvatarFile == null || !UserUpdate.AvatarFile.ContentType.StartsWith("image/"))
-            {
-                ToastMessage = "❌ File không hợp lệ. Vui lòng chọn ảnh.";
-                ToastColor = "bg-danger";
-                return RedirectToPage(); 
-            }
-
             if (UserUpdate.AvatarFile != null && UserUpdate.AvatarFile.Length > 0)
             {
+                if (!UserUpdate.AvatarFile.ContentType.StartsWith("image/"))
+                {
+                    ToastMessage = "❌ File không hợp lệ. Vui lòng chọn ảnh.";
+                    ToastColor = "bg-danger";
+                    return RedirectToPage();
+                }
+
                 var streamContent = new StreamContent(UserUpdate.AvatarFile.OpenReadStream());
                 streamContent.Headers.ContentType = new MediaTypeHeaderValue(UserUpdate.AvatarFile.ContentType);
                 formData.Add(streamContent, "AvatarFile", UserUpdate.AvatarFile.FileName);

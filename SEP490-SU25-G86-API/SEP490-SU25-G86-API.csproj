@@ -49,7 +49,7 @@
     <None Update="GeminiLog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="promptGPT.txt">
+    <None Update="LogAPI_AI\promptGPT.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

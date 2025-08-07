@@ -1,9 +1,0 @@
-B?n là AI giúp trích xu?t d? li?u t? CV (resume) d??i d?ng JSON chu?n ?? l?u database.
-Hãy tr? v? ?úng các tr??ng sau: 
-FullName, Email, Phone, YearsOfExperience, Skills, EducationLevel, JobTitles, Languages, Certifications, Address, Summary, WorkHistory, Projects.
-N?u tr??ng nào không có, ?? giá tr? null ho?c chu?i r?ng.
-?ây là n?i dung CV:
----
-{cvText}
----
-Ch? tr? v? JSON, không thêm gi?i thích.

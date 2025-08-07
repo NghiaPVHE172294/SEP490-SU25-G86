@@ -20,13 +20,13 @@ namespace CVMatcher_IntegrationTesting.vn.edu.fpt.Controllers
         }
 
         // Helper: Authenticate and get JWT token
-        private async Task<string> AuthenticateAndGetToken(string email, string password)
+        private async Task<(string Token, int UserId)> AuthenticateAndGetTokenAndUserId(string email, string password)
         {
             var loginRequest = new { Email = email, Password = password };
             var response = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            return result.Token;
+            return (result.Token, result.UserId ?? 0);
         }
 
         // Helper: Set JWT token for HttpClient
@@ -36,103 +36,115 @@ namespace CVMatcher_IntegrationTesting.vn.edu.fpt.Controllers
         }
 
         /// <summary>
-        /// Candidate submits their CV to a job post successfully
+        /// Ứng viên gửi CV của họ vào một bài đăng công việc thành công
         /// </summary>
         [Fact(DisplayName = "Candidate submits CV to job post successfully")]
         public async Task SubmitCV_ValidCandidateAndCV_ReturnsOk()
         {
             // Đăng nhập ứng viên (điền email/password test thực tế)
-            var candidateEmail = "candidate@email.com"; // <-- điền tài khoản test
-            var candidatePassword = "password";
-            var token = await AuthenticateAndGetToken(candidateEmail, candidatePassword);
+            var candidateEmail = "huy123@gmail.com"; // <-- điền tài khoản test
+            var candidatePassword = "Huy123";
+            var (token, userId) = await AuthenticateAndGetTokenAndUserId(candidateEmail, candidatePassword);
             SetJwtToken(token);
 
             // Chuẩn bị dữ liệu test
-            var submissionDto = new { CvId = 1, JobPostId = 1 }; // <-- điền id hợp lệ
-            var response = await _client.PostAsJsonAsync("/api/cvsubmissions", submissionDto);
+            var applyDto = new { CandidateId = userId, CvId = 39, JobPostId = 2 }; // <-- điền id hợp lệ
+            var response = await _client.PostAsJsonAsync("/api/appliedjobs/apply-existing", applyDto);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[SubmitCV_ValidCandidateAndCV_ReturnsOk] Response body: {responseBody}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         /// <summary>
-        /// Candidate cannot submit the same CV to the same job post twice
+        /// Ứng viên không thể gửi cùng một CV cho cùng một bài đăng công việc hai lần
         /// </summary>
         [Fact(DisplayName = "Candidate cannot submit duplicate CV to job post")]
         public async Task SubmitCV_DuplicateSubmission_ReturnsBadRequest()
         {
-            var candidateEmail = "candidate@email.com";
-            var candidatePassword = "password";
-            var token = await AuthenticateAndGetToken(candidateEmail, candidatePassword);
+            var candidateEmail = "huy123@gmail.com";
+            var candidatePassword = "Huy123";
+            var (token, userId) = await AuthenticateAndGetTokenAndUserId(candidateEmail, candidatePassword);
             SetJwtToken(token);
 
-            var submissionDto = new { CvId = 1, JobPostId = 1 }; // <-- điền id hợp lệ
-            await _client.PostAsJsonAsync("/api/cvsubmissions", submissionDto);
-            var response = await _client.PostAsJsonAsync("/api/cvsubmissions", submissionDto);
+            var applyDto = new { CandidateId = userId, CvId = 39, JobPostId = 3 }; // <-- điền id hợp lệ
+            await _client.PostAsJsonAsync("/api/appliedjobs/apply-existing", applyDto);
+            var response = await _client.PostAsJsonAsync("/api/appliedjobs/apply-existing", applyDto);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[SubmitCV_DuplicateSubmission_ReturnsBadRequest] Response body: {responseBody}");
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         /// <summary>
-        /// Candidate cannot submit with invalid CVId or JobPostId
+        /// Ứng viên không thể nộp với CVID hoặc JobPostID không hợp lệ
         /// </summary>
         [Fact(DisplayName = "Candidate cannot submit with invalid CVId or JobPostId")]
         public async Task SubmitCV_InvalidIds_ReturnsNotFound()
         {
-            var candidateEmail = "candidate@email.com";
-            var candidatePassword = "password";
-            var token = await AuthenticateAndGetToken(candidateEmail, candidatePassword);
+            var candidateEmail = "huy123@gmail.com";
+            var candidatePassword = "Huy123";
+            var (token, userId) = await AuthenticateAndGetTokenAndUserId(candidateEmail, candidatePassword);
             SetJwtToken(token);
 
-            var submissionDto = new { CvId = -1, JobPostId = -1 };
-            var response = await _client.PostAsJsonAsync("/api/cvsubmissions", submissionDto);
+            var applyDto = new { CandidateId = userId, CvId = -1, JobPostId = 1 };
+            var response = await _client.PostAsJsonAsync("/api/appliedjobs/apply-existing", applyDto);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[SubmitCV_InvalidIds_ReturnsNotFound] Response body: {responseBody}");
             (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.BadRequest).Should().BeTrue();
         }
 
         /// <summary>
-        /// Employer cannot submit a CV to a job post (permission check)
+        /// Nhà tuyển dụng không thể gửi CV vào Job Post (Kiểm tra quyền)
         /// </summary>
         [Fact(DisplayName = "Employer cannot submit CV to job post (forbidden)")]
         public async Task SubmitCV_Employer_ReturnsForbidden()
         {
-            var employerEmail = "employer@email.com"; // <-- điền tài khoản employer test
-            var employerPassword = "password";
-            var token = await AuthenticateAndGetToken(employerEmail, employerPassword);
+            var employerEmail = "Employer123@gmail.com";
+            var employerPassword = "Test123456";
+            var (token, userId) = await AuthenticateAndGetTokenAndUserId(employerEmail, employerPassword);
             SetJwtToken(token);
 
-            var submissionDto = new { CvId = 1, JobPostId = 1 }; // <-- điền id hợp lệ
-            var response = await _client.PostAsJsonAsync("/api/cvsubmissions", submissionDto);
+            var applyDto = new { CandidateId = userId, CvId = 40, JobPostId = 1 }; // <-- điền id hợp lệ
+            var response = await _client.PostAsJsonAsync("/api/appliedjobs/apply-existing", applyDto);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[SubmitCV_Employer_ReturnsForbidden] Response body: {responseBody}");
             (response.StatusCode == HttpStatusCode.Forbidden || response.StatusCode == HttpStatusCode.Unauthorized).Should().BeTrue();
         }
 
         /// <summary>
-        /// Get all CV submissions for a job post (employer only)
+        /// Nhận tất cả các đệ trình CV cho một bài đăng công việc (chỉ với employer)
         /// </summary>
         [Fact(DisplayName = "Employer gets CV submissions for their job post")]
         public async Task GetCvSubmissions_Employer_ReturnsList()
         {
-            var employerEmail = "employer@email.com";
-            var employerPassword = "password";
-            var token = await AuthenticateAndGetToken(employerEmail, employerPassword);
+            var employerEmail = "huythi.nk@gmail.com";
+            var employerPassword = "Huy123";
+            var (token, _) = await AuthenticateAndGetTokenAndUserId(employerEmail, employerPassword);
             SetJwtToken(token);
 
             var jobPostId = 1; // <-- điền id job post hợp lệ của employer này
             var response = await _client.GetAsync($"/api/cvsubmissions/jobpost/{jobPostId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[GetCvSubmissions_Employer_ReturnsList] Response body: {responseBody}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var submissions = await response.Content.ReadFromJsonAsync<List<CvSubmissionForJobPostDTO>>();
             submissions.Should().NotBeNull();
         }
 
         /// <summary>
-        /// Candidate withdraws their submission
+        /// Ứng viên rút lại đệ trình của họ
         /// </summary>
         [Fact(DisplayName = "Candidate withdraws their CV submission")]
         public async Task WithdrawSubmission_Candidate_ReturnsOk()
         {
-            var candidateEmail = "candidate@email.com";
-            var candidatePassword = "password";
-            var token = await AuthenticateAndGetToken(candidateEmail, candidatePassword);
+            var candidateEmail = "huy123@gmail.com";
+            var candidatePassword = "Huy123";
+            var (token, userId) = await AuthenticateAndGetTokenAndUserId(candidateEmail, candidatePassword);
             SetJwtToken(token);
 
-            int submissionId = 1; // <-- điền submission id hợp lệ của candidate này
-            var response = await _client.PutAsync($"/api/cvsubmissions/withdraw/{submissionId}", null);
+            int submissionId = 39; // <-- điền submission id hợp lệ của candidate này
+            var response = await _client.DeleteAsync($"/api/appliedjobs/withdraw/{submissionId}?userId={userId}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[WithdrawSubmission_Candidate_ReturnsOk] Response body: {responseBody}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }

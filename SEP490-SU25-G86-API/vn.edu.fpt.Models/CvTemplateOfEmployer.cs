@@ -15,6 +15,8 @@ namespace SEP490_SU25_G86_API.Models
         public string? CvTemplateName { get; set; }
         public string? DocFileUrl { get; set; }
         public string? PdfFileUrl { get; set; }
+        public DateTime? UploadDate { get; set; }
+        public string? Notes { get; set; }
         public bool IsDelete { get; set; }
 
         public virtual User Employer { get; set; } = null!;

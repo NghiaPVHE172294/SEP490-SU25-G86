@@ -1,0 +1,325 @@
+[8/4/2025 10:10:15 PM] CV: 7, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":7,"CvId":36,"FullName":"Henrietta                                                                                                                                                                                               ","Email":"he@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":6,"Skills":"Operations Management, Business Development","EducationLevel":"Bachelor of Business (Honours)","JobTitles":"Operations Manager, Business Development Manager","Languages":null,"Certifications":null,"ParsedAt":"2025-07-20T21:15:00","Address":"123 Anywhere St, Any City, 12345                                                                                                                                                                        ","Summary":"Experienced operations and business development professional with a focus on optimizing organizational efficiency and growth.","WorkHistory":"[{\u0022Company\u0022: \u0022Timmerman Industries\u0022, \u0022Position\u0022: \u0022Operations Manager\u0022, \u0022Duration\u0022: \u0022Feb 2017 - Nov 2018\u0022}, \r\n{\u0022Company\u0022: \u0022Hanover and Tyke\u0022, \u0022Position\u0022: \u0022Business Development Manager\u0022, \u0022Duration\u0022: \u0022April 2013 - Feb 2017\u0022}]","Projects":"Optimized operational workflows at Timmerman Industries.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 9,\n  \"skillsScore\": 2,\n  \"educationLevelScore\": 8,\n  \"jobTitlesScore\": 7,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 0,\n  \"summaryScore\": 6,\n  \"workHistoryScore\": 7,\n  \"projectsScore\": 6,\n  \"totalScore\": 5.0\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.06264693528703115
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1407,
+    "candidatesTokenCount": 103,
+    "totalTokenCount": 1510,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1407
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 103
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "V82QaK_3K_GZ698P25qp8QE"
+}
+
+[8/4/2025 10:10:20 PM] CV: 6, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":6,"CvId":37,"FullName":"Nguyen Truong Huy                                                                                                                                                                                       ","Email":null,"Phone":null,"YearsOfExperience":0,"Skills":"Java, SQL Server","EducationLevel":"Bachelor","JobTitles":"Intern Business Analyst","Languages":"Ti?ng Anh (IELTS 5.0), Ti?ng Nh?t (N4)","Certifications":"Software Development Lifecycle Specialization, Web Design for Everybody: Basics of Web Development \u0026 Coding Specialization","ParsedAt":"2025-07-20T21:23:00","Address":null,"Summary":"Seeking an internship opportunity in IT at FPT Software, eager to learn in a friendly environment and contribute to organizational growth.","WorkHistory":"[{\u0022Company\u0022: \u0022FPT University\u0022, \u0022Position\u0022: \u0022Student\u0022, \u0022Duration\u0022: \u00222021-2024\u0022, \u0022Accomplishments\u0022: \u0022Developed personal and group projects at university.\u0022}]","Projects":"Website gia su","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10.0,\n  \"skillsScore\": 5.0,\n  \"educationLevelScore\": 10.0,\n  \"jobTitlesScore\": 10.0,\n  \"languagesScore\": 7.0,\n  \"certificationsScore\": 10.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 6.0,\n  \"totalScore\": 8.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.019859862706017872
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1329,
+    "candidatesTokenCount": 126,
+    "totalTokenCount": 1455,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1329
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 126
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "Xc2QaPnxAsaenvgPmbyUkAY"
+}
+
+[8/4/2025 10:10:25 PM] CV: 9, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":9,"CvId":38,"FullName":"Quang H\u00F9ng                                                                                                                                                                                              ","Email":"5e49e0@gvmatcher.net","Phone":"0123 456 789","YearsOfExperience":4,"Skills":"PHP, MySQL, JavaScript, Laravel, Framework, jQuery, React, Linux, Redis, MongoDB","EducationLevel":"Bachelor","JobTitles":"Front End Developer, Flutter Developer","Languages":null,"Certifications":"Nh\u00E2n vi\u00EAn xu\u1EA5t s\u1EAFc n\u0103m 2023 (NTD), Nh\u00E2n vi\u00EAn c\u1ED1ng hi\u1EBFn c\u1EE7a n\u0103m 2020 (DEF)","ParsedAt":"2025-07-27T00:52:00","Address":"Du\u1EA9n Ho\u00E0n Ki\u1EBFm, H\u00E0 N\u1ED9i","Summary":"V\u1EDBi 6 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh, mong mu\u1ED1n tr\u1EDF th\u00E0nh Senior trong 2 n\u0103m t\u1EDBi v\u00E0 ph\u00E1t tri\u1EC3n th\u00E0nh Lead gi\u1ECFi.","WorkHistory":"[{\u0022Company\u0022: \u0022C\u00F4ng ty TNHH MTV SVT\u0022, \u0022Position\u0022: \u0022Front End Developer\u0022, \u0022Duration\u0022: \u00222021-2023\u0022, \u0022Accomplishments\u0022: \u0022Qu\u1EA3n l\u00FD d\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n web, t\u1ED1i \u01B0u t\u01B0\u01A1ng th\u00EDch tr\u00ECnh duy\u1EC7t, t\u00EDch h\u1EE3p CMS, l\u1EADp tr\u00ECnh canvas HTML5.\u0022}, {\u0022Company\u0022: \u0022C\u00F4ng ty CP C\u00F4ng ngh\u1EC7 NDS\u0022, \u0022Position\u0022: \u0022Flutter Developer\u0022, \u0022Duration\u0022: \u00222023-2025\u0022, \u0022Accomplishments\u0022: \u0022Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng Mobile App, submit l\u00EAn App Store (Google \u0026 Apple).\u0022}]","Projects":"Ph\u00E1t tri\u1EC3n trang web ch\u1EE9a game tr\u1EF1c tuy\u1EBFn l\u1EDBn, t\u00EDch h\u1EE3p v\u1EDBi Facebook, Twitter, YouTube","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 6.0,\n  \"skillsScore\": 3.0,\n  \"educationLevelScore\": 10.0,\n  \"jobTitlesScore\": 4.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 2.0,\n  \"summaryScore\": 3.0,\n  \"workHistoryScore\": 5.0,\n  \"projectsScore\": 4.0,\n  \"totalScore\": 3.67\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.049995616199524424
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1952,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 2075,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1952
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "Yc2QaKjbIvGZ698P25qp8QE"
+}
+
+[8/4/2025 10:42:04 PM] CV: 7, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":7,"CvId":36,"FullName":"Henrietta                                                                                                                                                                                               ","Email":"he@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":6,"Skills":"Operations Management, Business Development","EducationLevel":"Bachelor of Business (Honours)","JobTitles":"Operations Manager, Business Development Manager","Languages":null,"Certifications":null,"ParsedAt":"2025-07-20T21:15:00","Address":"123 Anywhere St, Any City, 12345                                                                                                                                                                        ","Summary":"Experienced operations and business development professional with a focus on optimizing organizational efficiency and growth.","WorkHistory":"[{\u0022Company\u0022: \u0022Timmerman Industries\u0022, \u0022Position\u0022: \u0022Operations Manager\u0022, \u0022Duration\u0022: \u0022Feb 2017 - Nov 2018\u0022}, \r\n{\u0022Company\u0022: \u0022Hanover and Tyke\u0022, \u0022Position\u0022: \u0022Business Development Manager\u0022, \u0022Duration\u0022: \u0022April 2013 - Feb 2017\u0022}]","Projects":"Optimized operational workflows at Timmerman Industries.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10,\n  \"skillsScore\": 2,\n  \"educationLevelScore\": 8,\n  \"jobTitlesScore\": 7,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 0,\n  \"summaryScore\": 6,\n  \"workHistoryScore\": 7,\n  \"projectsScore\": 6,\n  \"totalScore\": 5.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.032812620344616121
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1407,
+    "candidatesTokenCount": 105,
+    "totalTokenCount": 1512,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1407
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 105
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "zdSQaPj0HY_Q698PvKG96QU"
+}
+
+[8/4/2025 10:53:31 PM] CV: 6, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":6,"CvId":37,"FullName":"Nguyen Truong Huy                                                                                                                                                                                       ","Email":null,"Phone":null,"YearsOfExperience":0,"Skills":"Java, SQL Server","EducationLevel":"Bachelor","JobTitles":"Intern Business Analyst","Languages":"Ti?ng Anh (IELTS 5.0), Ti?ng Nh?t (N4)","Certifications":"Software Development Lifecycle Specialization, Web Design for Everybody: Basics of Web Development \u0026 Coding Specialization","ParsedAt":"2025-07-20T21:23:00","Address":null,"Summary":"Seeking an internship opportunity in IT at FPT Software, eager to learn in a friendly environment and contribute to organizational growth.","WorkHistory":"[{\u0022Company\u0022: \u0022FPT University\u0022, \u0022Position\u0022: \u0022Student\u0022, \u0022Duration\u0022: \u00222021-2024\u0022, \u0022Accomplishments\u0022: \u0022Developed personal and group projects at university.\u0022}]","Projects":"Website gia su","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10.0,\n  \"skillsScore\": 5.0,\n  \"educationLevelScore\": 10.0,\n  \"jobTitlesScore\": 10.0,\n  \"languagesScore\": 7.0,\n  \"certificationsScore\": 9.0,\n  \"summaryScore\": 8.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 7.0,\n  \"totalScore\": 8.22\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.037667678833007812
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1329,
+    "candidatesTokenCount": 125,
+    "totalTokenCount": 1454,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1329
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 125
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "fNeQaL-DCo_Q698PvKG96QU"
+}
+

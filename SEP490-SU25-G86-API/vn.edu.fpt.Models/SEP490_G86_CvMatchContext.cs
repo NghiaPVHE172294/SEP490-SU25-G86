@@ -19,6 +19,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<AuditLog> AuditLogs { get; set; } = null!;
         public virtual DbSet<BlockedCompany> BlockedCompanies { get; set; } = null!;
+        public virtual DbSet<CareerHandbook> CareerHandbooks { get; set; } = null!;
         public virtual DbSet<Company> Companies { get; set; } = null!;
         public virtual DbSet<CompanyFollower> CompanyFollowers { get; set; } = null!;
         public virtual DbSet<Cv> Cvs { get; set; } = null!;
@@ -30,6 +31,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<Cvsubmission> Cvsubmissions { get; set; } = null!;
         public virtual DbSet<EmploymentType> EmploymentTypes { get; set; } = null!;
         public virtual DbSet<ExperienceLevel> ExperienceLevels { get; set; } = null!;
+        public virtual DbSet<HandbookCategory> HandbookCategories { get; set; } = null!;
         public virtual DbSet<Industry> Industries { get; set; } = null!;
         public virtual DbSet<JobCriterion> JobCriteria { get; set; } = null!;
         public virtual DbSet<JobLevel> JobLevels { get; set; } = null!;
@@ -50,7 +52,14 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //            if (!optionsBuilder.IsConfigured)
+            //            {
+            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+            //                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
+            //            }
+
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
@@ -121,6 +130,31 @@ namespace SEP490_SU25_G86_API.Models
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BlockedCompanies_Companies");
+            });
+
+            modelBuilder.Entity<CareerHandbook>(entity =>
+            {
+                entity.HasKey(e => e.HandbookId);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Slug).HasMaxLength(200);
+
+                entity.Property(e => e.Tags).HasMaxLength(200);
+
+                entity.Property(e => e.ThumbnailUrl).HasMaxLength(500);
+
+                entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.CareerHandbooks)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CareerHandbooks_HandbookCategories");
             });
 
             modelBuilder.Entity<Company>(entity =>
@@ -251,6 +285,8 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
+                entity.Property(e => e.UploadDate).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Employer)
                     .WithMany(p => p.CvTemplateOfEmployers)
                     .HasForeignKey(d => d.EmployerId)
@@ -366,6 +402,19 @@ namespace SEP490_SU25_G86_API.Models
                 entity.Property(e => e.ExperienceLevelName).HasMaxLength(50);
 
                 entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            });
+
+            modelBuilder.Entity<HandbookCategory>(entity =>
+            {
+                entity.HasKey(e => e.CategoryId);
+
+                entity.Property(e => e.CategoryName).HasMaxLength(100);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).HasMaxLength(300);
             });
 
             modelBuilder.Entity<Industry>(entity =>
@@ -605,7 +654,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A8D7800811");
+                    .HasName("PK__RolePerm__6400A1A8441ABE12");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
