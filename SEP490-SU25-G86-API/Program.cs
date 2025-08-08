@@ -22,6 +22,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.HandbookCategoryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
@@ -49,6 +50,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.HandbookCategoryService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
@@ -287,6 +289,10 @@ builder.Configuration.AddConfiguration(configuration);
             // CareerHandbook
             builder.Services.AddScoped<ICareerHandbookRepository, CareerHandbookRepository>();
             builder.Services.AddScoped<ICareerHandbookService, CareerHandbookService>();
+
+            // HandbookCategory
+            builder.Services.AddScoped<IHandbookCategoryRepository, HandbookCategoryRepository>();
+            builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
