@@ -11,5 +11,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CareerHandbookRepository
         Task<bool> ExistsBySlugAsync(string slug, int? excludeId = null);
         Task AddAsync(CareerHandbook handbook);
         Task UpdateAsync(CareerHandbook handbook);
+        Task SoftDeleteAsync(int id); // thêm hàm delete mềm
     }
 }

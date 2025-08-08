@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
 
         public async Task<List<CareerHandbookDetailDTO>> GetAllForAdminAsync()
         {
-            var data = await _repository.GetAllAsync(true);
+            var data = await _repository.GetAllAsync(false);
             return data.Select(MapToDetailDto).ToList();
         }
 
@@ -81,6 +81,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
             await _repository.UpdateAsync(existing);
             return true;
         }
+
+        public async Task<bool> SoftDeleteAsync(int id)
+        {
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null) return false;
+
+            await _repository.SoftDeleteAsync(id);
+            return true;
+        }
+
 
         private CareerHandbookDetailDTO MapToDetailDto(CareerHandbook h) => new()
         {

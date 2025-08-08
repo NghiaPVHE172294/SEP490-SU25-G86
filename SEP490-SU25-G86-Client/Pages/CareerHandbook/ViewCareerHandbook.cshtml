@@ -1,0 +1,22 @@
+﻿@page "{slug}"
+@model SEP490_SU25_G86_Client.Pages.CareerHandbook.ViewCareerHandbookModel
+@{
+    ViewData["Title"] = Model.Handbook?.Title ?? "Cẩm nang nghề nghiệp";
+}
+
+<div class="container my-4">
+    @if (Model.Handbook != null)
+    {
+        <h2>@Model.Handbook.Title</h2>
+        <p class="text-muted">@Model.Handbook.CategoryName - @Model.Handbook.CreatedAt.ToString("dd/MM/yyyy")</p>
+        @if (!string.IsNullOrEmpty(Model.Handbook.ThumbnailUrl))
+        {
+            <img src="@Model.Handbook.ThumbnailUrl" class="img-fluid mb-3" />
+        }
+        <div>@Html.Raw(Model.Handbook.Content)</div>
+    }
+    else
+    {
+        <p class="text-danger">Không tìm thấy bài viết.</p>
+    }
+</div>
