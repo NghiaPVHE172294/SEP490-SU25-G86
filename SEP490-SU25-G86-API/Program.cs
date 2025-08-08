@@ -16,6 +16,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminDashboardRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BanUserRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CareerHandbookRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
@@ -42,6 +43,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AdminDashboardServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BanUserService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
@@ -281,6 +283,10 @@ builder.Configuration.AddConfiguration(configuration);
             // Parse CV
             builder.Services.AddScoped<IParseCvRepository, ParseCvRepository>();
             builder.Services.AddScoped<IParseCvService, ParseCvService>();
+
+            // CareerHandbook
+            builder.Services.AddScoped<ICareerHandbookRepository, CareerHandbookRepository>();
+            builder.Services.AddScoped<ICareerHandbookService, CareerHandbookService>();
 
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
