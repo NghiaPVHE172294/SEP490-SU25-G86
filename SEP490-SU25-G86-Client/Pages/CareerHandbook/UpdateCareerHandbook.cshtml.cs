@@ -23,6 +23,12 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
             _httpClient.BaseAddress = new Uri("https://localhost:7004/");
         }
 
+        public class HandbookCategorySimpleDTO
+        {
+            public int CategoryId { get; set; }
+            public string CategoryName { get; set; } = string.Empty;
+        }
+
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var token = HttpContext.Session.GetString("jwt_token");
@@ -32,8 +38,8 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Lấy dữ liệu bài viết
-            var res = await _httpClient.GetAsync($"api/CareerHandbooks/admin/{id}");
+            // Lấy dữ liệu handbook
+            var res = await _httpClient.GetAsync($"api/CareerHandbooks/{id}");
             if (!res.IsSuccessStatusCode)
                 return RedirectToPage("/CareerHandbook/ListCareerHandbook");
 
@@ -54,18 +60,18 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
                 };
             }
 
-            // Lấy danh mục
+            // Lấy danh sách category
             var resCat = await _httpClient.GetAsync("api/HandbookCategories");
             if (resCat.IsSuccessStatusCode)
             {
                 var jsonCat = await resCat.Content.ReadAsStringAsync();
-                var categories = JsonSerializer.Deserialize<List<dynamic>>(jsonCat, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var categories = JsonSerializer.Deserialize<List<HandbookCategorySimpleDTO>>(jsonCat, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 if (categories != null)
                 {
                     CategorySelectList = categories.Select(c => new SelectListItem
                     {
-                        Value = c.categoryId.ToString(),
-                        Text = c.categoryName
+                        Value = c.CategoryId.ToString(),
+                        Text = c.CategoryName
                     }).ToList();
                 }
             }
@@ -76,14 +82,17 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
         public async Task<IActionResult> OnPostAsync(int id)
         {
             var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToPage("/Common/Login");
+
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var json = JsonSerializer.Serialize(Handbook);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var res = await _httpClient.PutAsync($"api/CareerHandbooks/admin/{id}", content);
+            var res = await _httpClient.PutAsync($"api/CareerHandbooks/{id}", content);
             if (res.IsSuccessStatusCode)
-                return RedirectToPage("/Admin/CareerHandbook/ListCareerHandbook");
+                return RedirectToPage("/CareerHandbook/ListCareerHandbook");
 
             ModelState.AddModelError(string.Empty, "Lỗi khi cập nhật cẩm nang");
             return Page();
