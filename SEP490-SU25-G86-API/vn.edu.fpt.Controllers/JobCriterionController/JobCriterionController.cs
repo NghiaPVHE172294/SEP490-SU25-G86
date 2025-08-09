@@ -101,5 +101,56 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobCriterionController
             var result = await _service.UpdateJobCriterionAsync(dto, user.UserId);
             return Ok(result);
         }
+        /// <summary>
+        /// Xóa mềm một tiêu chí công việc (set IsDelete = true).
+        /// </summary>
+        /// <param name="id">ID của JobCriterion.</param>
+        /// <returns>Kết quả của thao tác xóa.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // Thành công
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Không tìm thấy tiêu chí công việc
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] // Không xác thực
+        public async Task<IActionResult> SoftDeleteJobCriterion(int id)
+        {
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác định được tài khoản.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            var result = await _service.SoftDeleteJobCriterionAsync(id, user.UserId);
+            if (!result)
+                return NotFound("JobCriterion không tồn tại hoặc bạn không có quyền xóa.");
+
+            return NoContent(); // Thành công, trả về status 204
+        }
+
+        /// <summary>
+        /// Khôi phục một tiêu chí công việc (set IsDelete = false).
+        /// </summary>
+        /// <param name="id">ID của JobCriterion.</param>
+        /// <returns>Kết quả của thao tác khôi phục.</returns>
+        [HttpPost("{id}/restore")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // Thành công
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Không tìm thấy tiêu chí công việc
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)] // Không xác thực
+        public async Task<IActionResult> RestoreJobCriterion(int id)
+        {
+            var accountIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(accountIdStr) || !int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác định được tài khoản.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            var result = await _service.RestoreJobCriterionAsync(id, user.UserId);
+            if (!result)
+                return NotFound("JobCriterion không tồn tại hoặc bạn không có quyền khôi phục.");
+
+            return NoContent(); // Thành công, trả về status 204
+        }
     }
 }

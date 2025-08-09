@@ -34,8 +34,9 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             {
                 return RedirectToPage("/Common/Login");
             }
+
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new System.Uri("https://localhost:7004/");
+            client.BaseAddress = new Uri("https://localhost:7004/");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             // Lấy danh sách JobPost
@@ -45,6 +46,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 var jobsJson = await jobsResponse.Content.ReadAsStringAsync();
                 JobPosts = JsonSerializer.Deserialize<List<JobPostListDTO>>(jobsJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             }
+
             // Lấy danh sách JobCriteria
             var response = await client.GetAsync("api/jobcriterion/my");
             if (response.IsSuccessStatusCode)
@@ -56,10 +58,40 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             {
                 return RedirectToPage("/Common/Login");
             }
+
             // Group JobCriteria theo JobPostId
             CriteriaByJobPost = JobCriteria.GroupBy(jc => jc.JobPostId)
                 .ToDictionary(g => g.Key, g => g.ToList());
+
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int jobCriterionId)
+        {
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Common/Login");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://localhost:7004/");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Gửi yêu cầu DELETE để xóa JobCriterion
+            var response = await client.DeleteAsync($"api/JobCriterion/{jobCriterionId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Nếu xóa thành công, làm mới trang
+                return RedirectToPage();  // Hoặc bạn có thể chuyển hướng đến trang khác nếu cần
+            }
+            else
+            {
+                // Nếu có lỗi, thông báo cho người dùng
+                ModelState.AddModelError(string.Empty, "Có lỗi khi xóa tiêu chí tuyển dụng");
+                return Page();  // Trở lại trang hiện tại
+            }
         }
 
     }

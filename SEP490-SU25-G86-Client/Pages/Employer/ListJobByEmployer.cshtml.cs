@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
 using System.Text.Json;
-
+using System.Net.Http.Headers;
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
     public class ListJobByEmployerModel : PageModel
@@ -60,6 +60,41 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             }
 
             return Page();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "EMPLOYER")
+                return RedirectToPage("/NotFound");
+
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ToastError"] = "Bạn cần đăng nhập để xóa tin.";
+                return RedirectToPage(new { StatusFilter });
+            }
+
+            // Gắn Bearer token rồi gọi đúng endpoint: https://localhost:7004/api/JobPosts/{id}
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var apiResponse = await _httpClient.DeleteAsync($"api/JobPosts/{id}");
+
+            if (apiResponse.StatusCode == System.Net.HttpStatusCode.NoContent)
+                TempData["ToastSuccess"] = "Đã xóa tin tuyển dụng.";
+            else if (apiResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
+                TempData["ToastWarning"] = "Tin tuyển dụng không tồn tại hoặc đã bị xóa.";
+            else if (apiResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                TempData["ToastError"] = "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.";
+            else if (apiResponse.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                TempData["ToastError"] = "Bạn không có quyền xóa tin này.";
+            else
+            {
+                var msg = await apiResponse.Content.ReadAsStringAsync();
+                TempData["ToastError"] = string.IsNullOrWhiteSpace(msg) ? $"Xóa thất bại ({(int)apiResponse.StatusCode})" : msg;
+            }
+
+            return RedirectToPage(new { StatusFilter });
         }
     }
 }

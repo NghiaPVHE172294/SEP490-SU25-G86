@@ -36,6 +36,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         Task<(IEnumerable<JobPostListDTO> Posts, int TotalItems)> GetJobPostsByCompanyIdAsync(int companyId, int page, int pageSize);
 
         Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId);
+        Task<bool> DeleteJobPostAsync(int jobPostId, int employerUserId, bool isAdmin);
+        Task<bool> RestoreJobPostAsync(int jobPostId, int employerUserId, bool isAdmin); // (tuỳ chọn)
 
     }
 

@@ -62,6 +62,11 @@
                                                 <a class="btn btn-warning btn-sm w-100" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">
                                                     <i class="bi bi-pencil-square me-2"></i>Sửa
                                                 </a>
+                                                <form method="post" asp-page-handler="Delete" asp-route-jobCriterionId="@item.JobCriteriaId" class="mt-2" onsubmit="return confirmDelete()">
+                                                    <button type="submit" class="btn btn-danger btn-sm w-100">
+                                                        <i class="bi bi-trash me-2"></i>Xóa
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -100,5 +105,8 @@
             detailsDiv.style.display = 'none';
             toggleText.textContent = 'Xem thêm';
         }
+    }
+        function confirmDelete() {
+        return confirm("Bạn có chắc chắn muốn xóa tiêu chí tuyển dụng này?");
     }
 </script>

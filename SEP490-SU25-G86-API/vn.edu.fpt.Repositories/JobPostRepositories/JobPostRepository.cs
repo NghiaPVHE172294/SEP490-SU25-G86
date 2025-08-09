@@ -330,5 +330,44 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Where(id => id != 0)
                 .ToListAsync();
         }
+
+        public async Task<bool> SoftDeleteAsync(int jobPostId, int? employerId = null)
+        {
+            var query = _context.JobPosts.IgnoreQueryFilters().AsQueryable();
+
+            if (employerId.HasValue)
+                query = query.Where(j => j.EmployerId == employerId.Value);
+
+            var jobPost = await query.FirstOrDefaultAsync(j => j.JobPostId == jobPostId);
+            if (jobPost == null) return false;
+            if (jobPost.IsDelete) return true; // đã xóa mềm trước đó
+
+            jobPost.IsDelete = true;
+            jobPost.UpdatedDate = DateTime.UtcNow;
+
+            _context.JobPosts.Update(jobPost);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RestoreAsync(int jobPostId, int? employerId = null)
+        {
+            var query = _context.JobPosts.IgnoreQueryFilters().AsQueryable();
+
+            if (employerId.HasValue)
+                query = query.Where(j => j.EmployerId == employerId.Value);
+
+            var jobPost = await query.FirstOrDefaultAsync(j => j.JobPostId == jobPostId);
+            if (jobPost == null) return false;
+            if (!jobPost.IsDelete) return true; // chưa bị xóa mềm
+
+            jobPost.IsDelete = false;
+            jobPost.UpdatedDate = DateTime.UtcNow;
+
+            _context.JobPosts.Update(jobPost);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

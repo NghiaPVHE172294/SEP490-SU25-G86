@@ -262,6 +262,15 @@ if (candidateId.HasValue)
             var detail = await GetJobPostDetailByIdAsync(created.JobPostId);
             return detail!;
         }
+        public async Task<bool> DeleteJobPostAsync(int jobPostId, int employerUserId, bool isAdmin)
+        {
+            return await _jobPostRepo.SoftDeleteAsync(jobPostId, isAdmin ? null : employerUserId);
+        }
+
+        public async Task<bool> RestoreJobPostAsync(int jobPostId, int employerUserId, bool isAdmin)
+        {
+            return await _jobPostRepo.RestoreAsync(jobPostId, isAdmin ? null : employerUserId);
+        }
 
         public async Task<ViewDetailJobPostDTO> UpdateJobPostAsync(UpdateJobPostDTO dto, int employerId)
         {
