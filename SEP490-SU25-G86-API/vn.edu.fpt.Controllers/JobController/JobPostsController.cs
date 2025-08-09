@@ -185,5 +185,56 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
             var (posts, totalItems) = await _jobPostService.GetJobPostsByCompanyIdAsync(id, page, pageSize);
             return Ok(new { posts, totalItems });
         }
+
+        /// <summary>
+        /// Xóa mềm JobPost (IsDelete = true).
+        /// - ADMIN: xóa được tất cả
+        /// - EMPLOYER: chỉ xóa bài của mình
+        /// </summary>
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteJobPost(int id)
+        {
+            var accountIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác thực được người dùng.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            bool isAdmin = User.IsInRole("ADMIN");
+
+            var ok = await _jobPostService.DeleteJobPostAsync(id, user.UserId, isAdmin);
+            if (!ok) return NotFound("JobPost không tồn tại hoặc bạn không có quyền xóa.");
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Khôi phục JobPost đã xóa mềm (IsDelete = false).
+        /// - ADMIN: khôi phục được tất cả
+        /// - EMPLOYER: chỉ khôi phục bài của mình
+        /// </summary>
+        [HttpPost("{id}/restore")]
+        [Authorize]
+        public async Task<IActionResult> RestoreJobPost(int id)
+        {
+            var accountIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(accountIdStr, out int accountId))
+                return Unauthorized("Không xác thực được người dùng.");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.AccountId == accountId);
+            if (user == null)
+                return Unauthorized("Không tìm thấy người dùng tương ứng với tài khoản.");
+
+            bool isAdmin = User.IsInRole("ADMIN");
+
+            var ok = await _jobPostService.RestoreJobPostAsync(id, user.UserId, isAdmin);
+            if (!ok) return NotFound("JobPost không tồn tại hoặc bạn không có quyền khôi phục.");
+
+            return NoContent();
+        }
+
     }
 }

@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "List Job";
 }
+@if (TempData["ToastSuccess"] is string ok && !string.IsNullOrWhiteSpace(ok))
+{
+    <div class="alert alert-success">@ok</div>
+}
+@if (TempData["ToastWarning"] is string warn && !string.IsNullOrWhiteSpace(warn))
+{
+    <div class="alert alert-warning">@warn</div>
+}
+@if (TempData["ToastError"] is string err && !string.IsNullOrWhiteSpace(err))
+{
+    <div class="alert alert-danger">@err</div>
+}
 
 <div class="container py-5">
     <header class="text-center mb-4">
@@ -50,6 +62,9 @@
                         <th>Tiêu đề</th>
                         <th>Công ty</th>
                         <th>Địa điểm</th>
+                        <th>Ngành Nghề</th>
+                        <th>Cấp Bậc</th>
+                        <th>Trình Độ</th>
                         <th>Lương</th>
                         <th>Ngày tạo</th>
                         <th>Hết hạn</th>
@@ -78,6 +93,9 @@
                             <td>@job.Title</td>
                             <td>@job.CompanyName</td>
                             <td>@job.WorkLocation</td>
+							<td>@job.Industry</td>
+							<td>@job.JobLevel</td>
+                            <td>@job.ExperienceLevel</td>
                             <td class="text-success fw-bold">@job.Salary</td>
                             <td>@(job.CreatedDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
                             <td>@(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
@@ -91,6 +109,14 @@
                                 {
                                     <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobPost?jobPostId=@job.JobPostId">Cập nhật</a>
                                 }
+                                <form method="post" asp-page-handler="Delete" class="d-inline"
+                                      onsubmit="return confirm('Bạn chắc chắn muốn xóa: @job.Title ?');">
+                                    <input type="hidden" name="id" value="@job.JobPostId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                    @Html.AntiForgeryToken()
+                                </form>
                             </td>
                         </tr>
                     }
