@@ -45,6 +45,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                     HttpContext.Session.SetString("jwt_token", token);
                     HttpContext.Session.SetString("user_role", role);
                     HttpContext.Session.SetString("userId", userId.ToString());
+                    HttpContext.Session.SetInt32("user_id", userId);
                     // Chuyển hướng theo role
                     if (role == "ADMIN") return RedirectToPage("/Admin/AdminDashboard");
                     //if (role == "EMPLOYER") return RedirectToPage("/EmployerDashboard");

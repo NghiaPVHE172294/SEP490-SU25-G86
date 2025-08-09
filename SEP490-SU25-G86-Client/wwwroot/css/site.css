@@ -158,3 +158,27 @@ body {
 .dropdown-submenu:focus-within > .dropdown-menu {
     display: block;
 }
+
+.notification-dropdown .notif-dot {
+    position: absolute;
+    right: -2px;
+    top: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dc3545; /* đỏ */
+}
+
+.notification-item {
+    cursor: pointer;
+}
+
+    .notification-item.unread {
+        background: #f8f9fa;
+        font-weight: 500;
+    }
+
+.notification-content {
+    white-space: normal;
+    line-height: 1.2;
+}

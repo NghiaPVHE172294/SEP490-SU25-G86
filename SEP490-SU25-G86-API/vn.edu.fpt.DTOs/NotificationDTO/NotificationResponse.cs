@@ -2,7 +2,6 @@
 {
     public record NotificationResponse(
         long NotificationId,
-        long SenderUserId,
         long ReceiverUserId,
         string Content,
         string? TargetUrl,

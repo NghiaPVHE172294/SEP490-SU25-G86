@@ -6,7 +6,6 @@ namespace SEP490_SU25_G86_API.Models
     public partial class Notification
     {
         public int NotificationId { get; set; }
-        public int SenderUserId { get; set; }
         public int ReceiverUserId { get; set; }
         public string Content { get; set; } = null!;
         public string? TargetUrl { get; set; }
@@ -16,6 +15,5 @@ namespace SEP490_SU25_G86_API.Models
         public bool IsDeleted { get; set; }
 
         public virtual User ReceiverUser { get; set; } = null!;
-        public virtual User SenderUser { get; set; } = null!;
     }
 }
