@@ -25,6 +25,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.NotificationRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ParseCvRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PhoneOtpRepository;
@@ -51,6 +52,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ParseCvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PhoneOtpService;
@@ -62,6 +64,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
+using SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -86,6 +89,7 @@ var configBuilder = new ConfigurationBuilder()
 var configuration = configBuilder.Build();
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Configuration.AddConfiguration(configuration);
             // cấu hình Twilio
             // 1. Bind cấu hình từ appsettings.json
@@ -282,6 +286,13 @@ builder.Configuration.AddConfiguration(configuration);
             builder.Services.AddScoped<IParseCvRepository, ParseCvRepository>();
             builder.Services.AddScoped<IParseCvService, ParseCvService>();
 
+            //Notification
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+
+            //signalR
+            builder.Services.AddSignalR();
+
             // Đăng ký AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -292,10 +303,12 @@ builder.Configuration.AddConfiguration(configuration);
 			{
 				options.AddDefaultPolicy(policy =>
 				{
-					policy.AllowAnyOrigin()
-						  .AllowAnyHeader()
-						  .AllowAnyMethod();
-				});
+					policy
+                          .SetIsOriginAllowed(_ => true) // cho phép mọi origin
+                          .AllowAnyHeader()
+						  .AllowAnyMethod()
+                          .AllowCredentials();
+                });
 			});
 
             // New DI registrations
@@ -353,6 +366,10 @@ builder.Configuration.AddConfiguration(configuration);
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();
             app.MapControllers();
+
+            //Map SignalR hub cho Notifications
+            app.MapHub<NotificationHub>("/hubs/notifications");
+
             app.Lifetime.ApplicationStarted.Register(async () =>
             {
                 using var scope = app.Services.CreateScope();
