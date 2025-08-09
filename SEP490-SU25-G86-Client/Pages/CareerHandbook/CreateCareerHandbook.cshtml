@@ -1,0 +1,52 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.CareerHandbooks.CreateCareerHandbookModel
+@{
+    ViewData["Title"] = "Thêm Cẩm nang";
+}
+
+<div class="container my-4">
+    <h3>Thêm mới Cẩm nang</h3>
+    <form method="post" class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Handbook.Title" class="form-label">Tiêu đề</label>
+            <input asp-for="Handbook.Title" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Handbook.Slug" class="form-label">Slug</label>
+            <input asp-for="Handbook.Slug" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Handbook.CategoryId" class="form-label">Danh mục</label>
+            <select asp-for="Handbook.CategoryId" class="form-select" asp-items="Model.CategorySelectList">
+                <option value="">-- Chọn danh mục --</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Handbook.Content" class="form-label">Nội dung</label>
+            <textarea asp-for="Handbook.Content" class="form-control" rows="6"></textarea>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Handbook.ThumbnailUrl" class="form-label">URL ảnh</label>
+            <input asp-for="Handbook.ThumbnailUrl" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Handbook.Tags" class="form-label">Tags</label>
+            <input asp-for="Handbook.Tags" class="form-control" />
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Handbook.IsPublished" class="form-label">Xuất bản?</label>
+            <input asp-for="Handbook.IsPublished" type="checkbox" />
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-success">Lưu</button>
+            <a asp-page="/Admin/CareerHandbooks/ListCareerHandbook" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>

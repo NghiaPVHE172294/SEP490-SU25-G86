@@ -48,8 +48,6 @@
                                                     <p class="mb-2"><strong>Địa chỉ:</strong> @item.Address</p>
                                                     <p class="mb-2"><strong>Lịch sử làm việc:</strong> @Html.Raw(item.WorkHistory?.Replace("\n", "<br/>") ?? "")</p>
                                                     <p class="mb-2"><strong>Dự án:</strong> @item.Projects</p>
-                                                    <p class="mb-2"><strong>Khả năng nhận việc:</strong> @item.Availability</p>
-                                                    <p class="mb-2"><strong>Lương mong muốn:</strong> @item.SalaryExpectation</p>
                                                     <p class="mb-2"><strong>Ngày tạo:</strong> @item.CreatedAt?.ToString("dd/MM/yyyy")</p>
                                                 </div>
                                                 
