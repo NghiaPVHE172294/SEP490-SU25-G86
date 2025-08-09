@@ -10,6 +10,8 @@ namespace SEP490_SU25_G86_API.Models
             // Chỉ lấy JobPost chưa xóa mềm
             modelBuilder.Entity<JobPost>()
                         .HasQueryFilter(j => !j.IsDelete);
+            modelBuilder.Entity<JobCriterion>()
+                        .HasQueryFilter(j => !j.IsDelete);
         }
     }
 }

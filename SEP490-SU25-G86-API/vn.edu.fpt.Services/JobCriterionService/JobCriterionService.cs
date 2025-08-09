@@ -129,6 +129,49 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService
                 CreatedAt = result.CreatedAt
             };
         }
-// ... existing code ...
+        // ... existing code ...
+        public async Task<bool> SoftDeleteJobCriterionAsync(int id, int userId)
+        {
+            var jobCriterion = await _context.JobCriteria
+                .FirstOrDefaultAsync(jc => jc.JobCriteriaId == id && !jc.IsDelete);
+
+            if (jobCriterion == null)
+            {
+                // Nếu không tìm thấy JobCriterion
+                return false;
+            }
+
+            // Cập nhật xóa mềm
+            jobCriterion.IsDelete = true;
+            _context.JobCriteria.Update(jobCriterion);
+            await _context.SaveChangesAsync();  // Lưu thay đổi
+
+            return true;
+        }
+
+
+
+        // Restore JobCriterion
+        public async Task<bool> RestoreJobCriterionAsync(int id, int userId)
+        {
+            // Kiểm tra nếu JobCriterion đã bị xóa mềm (IsDelete = true)
+            var jobCriterion = await _context.JobCriteria
+                .FirstOrDefaultAsync(jc => jc.JobCriteriaId == id && jc.IsDelete); // Chỉ tìm JobCriterion đã bị xóa mềm
+
+            if (jobCriterion == null)
+            {
+                // Nếu không tìm thấy JobCriterion đã bị xóa mềm
+                return false; // Return false nếu không tìm thấy JobCriterion hoặc đã bị xóa hoàn toàn
+            }
+
+            // Khôi phục JobCriterion
+            jobCriterion.IsDelete = false;
+            _context.JobCriteria.Update(jobCriterion);
+            await _context.SaveChangesAsync();  // Lưu thay đổi
+
+            return true;
+        }
+
+
     }
 } 
