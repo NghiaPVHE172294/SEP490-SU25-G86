@@ -1,0 +1,26 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.CareerHandbook.CreateHandbookCategoryModel
+@{
+    ViewData["Title"] = "Tạo danh mục cẩm nang";
+}
+
+<div class="container my-4">
+    <h3>Thêm danh mục cẩm nang</h3>
+    <form method="post" class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Category.CategoryName" class="form-label">Tên danh mục</label>
+            <input asp-for="Category.CategoryName" class="form-control" />
+            <span asp-validation-for="Category.CategoryName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Category.Description" class="form-label">Mô tả</label>
+            <input asp-for="Category.Description" class="form-control" />
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-success">Tạo mới</button>
+            <a asp-page="/CareerHandbook/ListHandbookCategory" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>

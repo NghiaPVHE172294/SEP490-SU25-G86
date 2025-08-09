@@ -16,6 +16,8 @@ namespace SEP490_SU25_G86_API.Models
             JobCriteria = new HashSet<JobCriterion>();
             JobPostViews = new HashSet<JobPostView>();
             JobPosts = new HashSet<JobPost>();
+            NotificationReceiverUsers = new HashSet<Notification>();
+            NotificationSenderUsers = new HashSet<Notification>();
             RequireOfCompanies = new HashSet<RequireOfCompany>();
             SavedJobs = new HashSet<SavedJob>();
         }
@@ -47,6 +49,8 @@ namespace SEP490_SU25_G86_API.Models
         public virtual ICollection<JobCriterion> JobCriteria { get; set; }
         public virtual ICollection<JobPostView> JobPostViews { get; set; }
         public virtual ICollection<JobPost> JobPosts { get; set; }
+        public virtual ICollection<Notification> NotificationReceiverUsers { get; set; }
+        public virtual ICollection<Notification> NotificationSenderUsers { get; set; }
         public virtual ICollection<RequireOfCompany> RequireOfCompanies { get; set; }
         public virtual ICollection<SavedJob> SavedJobs { get; set; }
     }

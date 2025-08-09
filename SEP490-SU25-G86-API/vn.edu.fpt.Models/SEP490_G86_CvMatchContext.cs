@@ -39,6 +39,7 @@ namespace SEP490_SU25_G86_API.Models
         public virtual DbSet<JobPost> JobPosts { get; set; } = null!;
         public virtual DbSet<JobPostView> JobPostViews { get; set; } = null!;
         public virtual DbSet<MatchedCvandJobPost> MatchedCvandJobPosts { get; set; } = null!;
+        public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
@@ -57,7 +58,6 @@ namespace SEP490_SU25_G86_API.Models
             //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
             //                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
             //            }
-
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
             if (!optionsBuilder.IsConfigured)
@@ -410,9 +410,7 @@ namespace SEP490_SU25_G86_API.Models
 
                 entity.Property(e => e.CategoryName).HasMaxLength(100);
 
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasMaxLength(300);
             });
@@ -572,6 +570,31 @@ namespace SEP490_SU25_G86_API.Models
                     .HasConstraintName("FK_MatchedCVandJobPost_JobCriteria");
             });
 
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasIndex(e => new { e.ReceiverUserId, e.IsRead }, "IX_Notifications_IsRead");
+
+                entity.HasIndex(e => new { e.ReceiverUserId, e.CreatedAt }, "IX_Notifications_Receiver_CreatedAt");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(sysdatetime())");
+
+                entity.Property(e => e.ReadAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ReceiverUser)
+                    .WithMany(p => p.NotificationReceiverUsers)
+                    .HasForeignKey(d => d.ReceiverUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_Receiver");
+
+                entity.HasOne(d => d.SenderUser)
+                    .WithMany(p => p.NotificationSenderUsers)
+                    .HasForeignKey(d => d.SenderUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notifications_Sender");
+            });
+
             modelBuilder.Entity<PasswordResetToken>(entity =>
             {
                 entity.HasKey(e => e.TokenId);
@@ -654,7 +677,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A8441ABE12");
+                    .HasName("PK__RolePerm__6400A1A804A59C5E");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -662,13 +685,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__4D5F7D71");
+                    .HasConstraintName("FK__RolePermi__Permi__5BAD9CC8");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__4E53A1AA");
+                    .HasConstraintName("FK__RolePermi__RoleI__5CA1C101");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>
