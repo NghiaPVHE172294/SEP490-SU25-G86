@@ -1,0 +1,52 @@
+﻿@page "{slug}"
+@model SEP490_SU25_G86_Client.Pages.CareerHandbook.DetailModel
+@{
+    ViewData["Title"] = Model.CareerHandbook?.Title ?? "Chi tiết cẩm nang";
+}
+
+<section class="container my-5">
+    @if (Model.CareerHandbook == null)
+    {
+        <div class="alert alert-warning">Bài viết không tồn tại hoặc đã bị gỡ.</div>
+    }
+    else
+    {
+        <div class="mb-4">
+            <span class="badge bg-secondary">@Model.CareerHandbook.CategoryName</span>
+            <h1 class="fw-bold mt-2">@Model.CareerHandbook.Title</h1>
+            <p class="text-muted">
+                <i class="bi bi-calendar-event"></i>
+                @Model.CareerHandbook.CreatedAt.ToString("dd/MM/yyyy")
+            </p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.CareerHandbook.ThumbnailUrl))
+        {
+            <div class="mb-4 text-center">
+                <img src="@Model.CareerHandbook.ThumbnailUrl" alt="@Model.CareerHandbook.Title"
+                     class="img-fluid rounded shadow-sm" style="max-height:400px; object-fit:cover;" />
+            </div>
+        }
+
+        <div class="article-content" style="line-height:1.7; font-size:1.05rem;">
+            @Html.Raw(Model.CareerHandbook.Content)
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.CareerHandbook.Tags))
+        {
+            <div class="mt-4">
+                <strong>Tags:</strong>
+                @foreach (var tag in Model.CareerHandbook.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <span class="badge bg-light text-dark border">@tag.Trim()</span>
+                }
+            </div>
+        }
+
+        <div class="mt-5">
+            <a asp-page="/CareerHandbook/List" class="btn btn-outline-primary">
+                ← Quay lại danh sách
+            </a>
+        </div>
+    }
+</section>
