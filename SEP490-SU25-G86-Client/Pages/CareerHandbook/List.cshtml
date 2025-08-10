@@ -1,0 +1,47 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.CareerHandbook.ListModel
+@{
+    ViewData["Title"] = "Cẩm nang nghề nghiệp";
+}
+
+<section class="container my-5">
+    <h2 class="mb-4 fw-bold">Cẩm nang nghề nghiệp</h2>
+
+    @if (Model.CareerHandbooks == null || !Model.CareerHandbooks.Any())
+    {
+        <div class="alert alert-info">Chưa có bài viết nào.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var post in Model.CareerHandbooks)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
+                        {
+                            <img src="@post.ThumbnailUrl" class="card-img-top" alt="@post.Title" style="height:200px;object-fit:cover;" />
+                        }
+                        <div class="card-body">
+                            <span class="badge bg-secondary mb-2">@post.CategoryName</span>
+                            <h5 class="card-title fw-bold">
+                                <a asp-page="/CareerHandbook/Detail" asp-route-slug="@post.Slug" class="text-decoration-none text-dark">
+                                    @post.Title
+                                </a>
+                            </h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-calendar-event"></i> @post.CreatedAt.ToString("dd/MM/yyyy")
+                            </p>
+                            <p class="card-text text-truncate" style="max-height: 48px; overflow: hidden;">
+                                @Html.Raw(post.Content?.Length > 100 ? post.Content.Substring(0, 100) + "..." : post.Content)
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-page="/CareerHandbook/Detail" asp-route-slug="@post.Slug" class="btn btn-sm btn-outline-primary">Đọc tiếp</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
