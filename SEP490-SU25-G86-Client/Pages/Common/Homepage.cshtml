@@ -172,6 +172,17 @@
     const filterSelect = document.getElementById("filterSelect");
     const dynamicFilters = document.getElementById("dynamicFilters");
 
+    const selectedRegion = '@selectedRegion'; // giữ highlight khi reload
+
+    const regionButtonsHtml = `
+        <div id="regionButtons" class="d-flex gap-2 flex-wrap">
+            <a class="btn ${selectedRegion === "" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?region=">Ngẫu nhiên</a>
+            <a class="btn ${selectedRegion === "Bắc" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?region=Bắc">Miền Bắc</a>
+            <a class="btn ${selectedRegion === "Trung" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?region=Trung">Miền Trung</a>
+            <a class="btn ${selectedRegion === "Nam" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?region=Nam">Miền Nam</a>
+        </div>
+    `;
+
     const salaryOptions = [
         "Tất cả", "Dưới 10 triệu", "Từ 10-15 triệu", "Từ 15-20 triệu",
         "Từ 25-30 triệu", "Trên 30 triệu"
@@ -181,20 +192,36 @@
         "2 năm", "3 năm", "4 năm", "5 năm"
     ];
 
-    filterSelect.addEventListener("change", function () {
-        dynamicFilters.innerHTML = ""; // Clear old buttons
-        let options = [];
-
-        if (this.value === "salary") options = salaryOptions;
-        else if (this.value === "experience") options = experienceOptions;
-
-        options.forEach(opt => {
+    function renderOptionButtons(options) {
+        dynamicFilters.innerHTML = "";
+        options.forEach((opt, index) => {
             const btn = document.createElement("button");
-            btn.className = "btn btn-outline-secondary";
+            btn.className = "btn " + (index === 0 ? "btn-custom-selected" : "btn-outline-secondary");
             btn.innerText = opt;
             btn.type = "button";
+            btn.addEventListener("click", function () {
+                // Bỏ selected của tất cả nút
+                dynamicFilters.querySelectorAll("button").forEach(b => {
+                    b.classList.remove("btn-custom-selected");
+                    b.classList.add("btn-outline-secondary");
+                });
+                // Chọn nút hiện tại
+                this.classList.remove("btn-outline-secondary");
+                this.classList.add("btn-custom-selected");
+            });
             dynamicFilters.appendChild(btn);
         });
+    }
+
+    filterSelect.addEventListener("change", function () {
+        if (this.value === "region") {
+            dynamicFilters.innerHTML = regionButtonsHtml;
+        } else if (this.value === "salary") {
+            renderOptionButtons(salaryOptions);
+        } else if (this.value === "experience") {
+            renderOptionButtons(experienceOptions);
+        }
     });
 </script>
+
 </html>
