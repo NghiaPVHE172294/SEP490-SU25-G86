@@ -323,3 +323,68 @@ Response: {
   "responseId": "fNeQaL-DCo_Q698PvKG96QU"
 }
 
+[8/10/2025 4:38:22 PM] CV: 7, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":7,"CvId":36,"FullName":"Henrietta                                                                                                                                                                                               ","Email":"he@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":6,"Skills":"Operations Management, Business Development","EducationLevel":"Bachelor of Business (Honours)","JobTitles":"Operations Manager, Business Development Manager","Languages":null,"Certifications":null,"ParsedAt":"2025-07-20T21:15:00","Address":"123 Anywhere St, Any City, 12345                                                                                                                                                                        ","Summary":"Experienced operations and business development professional with a focus on optimizing organizational efficiency and growth.","WorkHistory":"[{\u0022Company\u0022: \u0022Timmerman Industries\u0022, \u0022Position\u0022: \u0022Operations Manager\u0022, \u0022Duration\u0022: \u0022Feb 2017 - Nov 2018\u0022}, \r\n{\u0022Company\u0022: \u0022Hanover and Tyke\u0022, \u0022Position\u0022: \u0022Business Development Manager\u0022, \u0022Duration\u0022: \u0022April 2013 - Feb 2017\u0022}]","Projects":"Optimized operational workflows at Timmerman Industries.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10,\n  \"skillsScore\": 2,\n  \"educationLevelScore\": 8,\n  \"jobTitlesScore\": 8,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 0,\n  \"summaryScore\": 7,\n  \"workHistoryScore\": 7,\n  \"projectsScore\": 6,\n  \"totalScore\": 5.3\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.02190344608747042
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1407,
+    "candidatesTokenCount": 104,
+    "totalTokenCount": 1511,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1407
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 104
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "jmiYaIK2Aa2knvgP4-LRoAg"
+}
+
