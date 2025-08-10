@@ -87,15 +87,31 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var json = JsonSerializer.Serialize(Handbook);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var content = new MultipartFormDataContent();
+
+            content.Add(new StringContent(Handbook.Title ?? ""), "Title");
+            content.Add(new StringContent(Handbook.Slug ?? ""), "Slug");
+            content.Add(new StringContent(Handbook.Content ?? ""), "Content");
+            content.Add(new StringContent(Handbook.ThumbnailUrl ?? ""), "ThumbnailUrl");
+            content.Add(new StringContent(Handbook.Tags ?? ""), "Tags");
+            content.Add(new StringContent(Handbook.CategoryId.ToString()), "CategoryId");
+            content.Add(new StringContent(Handbook.IsPublished.ToString()), "IsPublished");
+
+            if (Handbook.ThumbnailFile != null)
+            {
+                var fileContent = new StreamContent(Handbook.ThumbnailFile.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(Handbook.ThumbnailFile.ContentType);
+                content.Add(fileContent, "ThumbnailFile", Handbook.ThumbnailFile.FileName);
+            }
 
             var res = await _httpClient.PutAsync($"api/CareerHandbooks/{id}", content);
             if (res.IsSuccessStatusCode)
                 return RedirectToPage("/CareerHandbook/ListCareerHandbook");
 
-            ModelState.AddModelError(string.Empty, "Lỗi khi cập nhật cẩm nang");
+            var errorMsg = await res.Content.ReadAsStringAsync();
+            ModelState.AddModelError(string.Empty, $"Lỗi khi cập nhật cẩm nang: {errorMsg}");
             return Page();
         }
+
     }
 }

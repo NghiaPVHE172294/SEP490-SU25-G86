@@ -14,5 +14,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
         // User
         Task<List<CareerHandbookDetailDTO>> GetAllPublishedAsync();
         Task<CareerHandbookDetailDTO?> GetBySlugAsync(string slug);
+
+        //Task<string> UploadThumbnailAsync(IFormFile file);
     }
 }

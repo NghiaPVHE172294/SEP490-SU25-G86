@@ -9,6 +9,7 @@
         public string? Tags { get; set; }
         public int CategoryId { get; set; }
         public bool IsPublished { get; set; }
+        public IFormFile? ThumbnailFile { get; set; }
     }
 
     public class CareerHandbookUpdateDTO
@@ -20,6 +21,7 @@
         public string? Tags { get; set; }
         public int CategoryId { get; set; }
         public bool IsPublished { get; set; }
+        public IFormFile? ThumbnailFile { get; set; }
     }
 
     public class CareerHandbookDetailDTO
