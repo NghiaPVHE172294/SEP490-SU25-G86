@@ -41,28 +41,8 @@ namespace SEP490_SU25_G86_API.Services.CvTemplateService
                 source: stream
             );
             
-            // Set file thành public để Google Docs viewer có thể truy cập
-            try
-            {
-                await _storageClient.UpdateObjectAsync(new Google.Cloud.Storage.V1.Object
-                {
-                    Bucket = _bucketName,
-                    Name = fileName,
-                    Acl = new List<Google.Cloud.Storage.V1.ObjectAccessControl>
-                    {
-                        new Google.Cloud.Storage.V1.ObjectAccessControl
-                        {
-                            Entity = "allUsers",
-                            Role = "READER"
-                        }
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                // Log lỗi nhưng vẫn trả về URL (có thể Firebase Rules đã cho phép public)
-                Console.WriteLine($"Không thể set public access: {ex.Message}");
-            }
+            // Note: File sẽ được set public thông qua Firebase Storage Rules
+            // Không cần set ACL programmatically nếu Firebase Rules đã cho phép public read
             
             // Trả về public URL đúng chuẩn Firebase giống CvService
             var fileUrl = $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
