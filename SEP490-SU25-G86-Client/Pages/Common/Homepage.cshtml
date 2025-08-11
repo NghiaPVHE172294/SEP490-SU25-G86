@@ -12,7 +12,7 @@
     }
 </script>
 @{
-    var selectedRegion = HttpContext.Request.Query["region"].ToString();
+    var selectedRegion = HttpContext.Request.Query["region"].ToString()?.Trim();
 
 }
 <!DOCTYPE html>
@@ -61,7 +61,7 @@
     </section>
 
     <!-- Job Listings -->
-    <section class="bg-light py-5">
+    <section class="py-5 custom-bg">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">Việc Làm Mới Nhất</h2>
@@ -70,21 +70,25 @@
             </div>
 
             <!-- Filters -->
-            <div class="d-flex gap-2 mb-4 flex-wrap">
-                <select id="filterSelect" class="form-select" style="width: 200px; color: #6c757d; border: 1px solid #000;">
-                    <option value="region">Vị trí</option>
-                    <option value="salary">Mức lương</option>
-                    <option value="experience">Kinh nghiệm</option>
-                </select>
+            <div class="d-flex gap-2 mb-4 flex-wrap align-items-start">
+                <div class="filter-dropdown-wrapper position-relative">
+                    <button id="filterToggle" class="btn filter-btn d-flex align-items-center justify-content-between" type="button" aria-expanded="false">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-filter me-2 text-muted"></i>
+                            <span class="text-muted me-2">Lọc theo:</span>
+                            <span id="selectedFilterLabel" class="fw-semibold">Vị trí</span>
+                        </div>
+                        <i id="filterCaret" class="bi bi-chevron-down caret-icon"></i>
+                    </button>
 
-                <div id="dynamicFilters" class="d-flex flex-wrap gap-2 mt-2">
-                    <div id="regionButtons">
-                        <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
-                        <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
-                        <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
-                        <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
+                    <div id="filterMenu" class="custom-filter-menu shadow-sm" role="menu" aria-hidden="true">
+                        <button class="dropdown-item d-flex justify-content-between align-items-center" data-value="region">Địa điểm <i class="bi bi-check"></i></button>
+                        <button class="dropdown-item d-flex justify-content-between align-items-center" data-value="salary">Mức lương <i class="bi bi-check"></i></button>
+                        <button class="dropdown-item d-flex justify-content-between align-items-center" data-value="experience">Kinh nghiệm <i class="bi bi-check"></i></button>
                     </div>
                 </div>
+
+                <div id="dynamicFilters" style="min-width: 300px;"></div>
             </div>
 
             @if (!Model.JobPosts.Any())
@@ -97,9 +101,13 @@
                     @foreach (var job in Model.JobPosts)
                     {
                         <div class="col-md-4 mb-4">
-                            <div class="card shadow-sm border-0 rounded-4 p-3">
+                            <div class="card job-card shadow-sm rounded-4 p-3">
                                 <h5 class="fw-bold">@job.Title</h5>
-                                <p class="text-muted mb-1">@job.CompanyName</p>
+                                <p class="mb-1">
+                                    <a href="/Common/CompanyDetail?id=@job.CompanyId" class="text-muted text-decoration-none">
+                                        @job.CompanyName
+                                    </a>
+                                </p>
                                 <p class="text-muted mb-1">@job.Location</p>
                                 <div class="d-flex align-items-center justify-content-between mt-3">
                                     <span class="text-custom fw-bold">@job.FormattedSalary</span>
@@ -168,33 +176,119 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
+
 <script>
-    const filterSelect = document.getElementById("filterSelect");
-    const dynamicFilters = document.getElementById("dynamicFilters");
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterToggle = document.getElementById("filterToggle");
+        const filterMenu = document.getElementById("filterMenu");
+        const selectedLabel = document.getElementById("selectedFilterLabel");
+        const dynamicFilters = document.getElementById("dynamicFilters");
+        const urlParams = new URLSearchParams(window.location.search);
 
-    const salaryOptions = [
-        "Tất cả", "Dưới 10 triệu", "Từ 10-15 triệu", "Từ 15-20 triệu",
-        "Từ 25-30 triệu", "Trên 30 triệu"
-    ];
-    const experienceOptions = [
-        "Tất cả", "Không có kinh nghiệm", "Dưới 1 năm", "1 năm",
-        "2 năm", "3 năm", "4 năm", "5 năm"
-    ];
+        // Dữ liệu từ server
+        const selectedRegion = '@Html.Raw((Model.Region ?? "").Normalize())'.trim();
+        const selectedSalaryId = '@Model.SalaryRangeId';
+        const selectedExperienceId = '@Model.ExperienceLevelId';
 
-    filterSelect.addEventListener("change", function () {
-        dynamicFilters.innerHTML = ""; // Clear old buttons
-        let options = [];
+        const regionButtonsHtml = `
+            <div id="regionButtons" class="d-flex gap-2 flex-wrap">
+                <a class="btn ${selectedRegion === "" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?filter=region&region=">Ngẫu nhiên</a>
+                <a class="btn ${selectedRegion === "Bắc" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?filter=region&region=Bắc">Miền Bắc</a>
+                <a class="btn ${selectedRegion === "Trung" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?filter=region&region=Trung">Miền Trung</a>
+                <a class="btn ${selectedRegion === "Nam" ? "btn-custom-selected" : "btn-outline-secondary"}" href="?filter=region&region=Nam">Miền Nam</a>
+            </div>
+        `;
 
-        if (this.value === "salary") options = salaryOptions;
-        else if (this.value === "experience") options = experienceOptions;
+        const salaryOptions = [
+            { text: "Tất cả", value: "" },
+            { text: "Dưới 10 triệu", value: 1 },
+            { text: "Từ 10-15 triệu", value: 2 },
+            { text: "Từ 15-20 triệu", value: 3 },
+            { text: "Từ 25-30 triệu", value: 4 },
+            { text: "Trên 30 triệu", value: 5 }
+        ];
 
-        options.forEach(opt => {
-            const btn = document.createElement("button");
-            btn.className = "btn btn-outline-secondary";
-            btn.innerText = opt;
-            btn.type = "button";
-            dynamicFilters.appendChild(btn);
+        const experienceOptions = [
+            { text: "Tất cả", value: "" },
+            { text: "Không có kinh nghiệm", value: 1 },
+            { text: "Dưới 1 năm", value: 2 },
+            { text: "1 năm", value: 3 },
+            { text: "2 năm", value: 4 },
+            { text: "3 năm", value: 5 },
+            { text: "4 năm", value: 6 },
+            { text: "5 năm", value: 7 }
+        ];
+
+        function renderOptionButtons(options, paramName, selectedId) {
+            let html = `<div class="d-flex gap-2 flex-wrap">`;
+            options.forEach(opt => {
+                const isSelected = (opt.value == selectedId || (opt.value === "" && !selectedId));
+                const btnClass = isSelected ? "btn btn-custom-selected px-3" : "btn btn-outline-secondary px-3";
+
+                const params = new URLSearchParams(window.location.search);
+                if (opt.value === "") {
+                    params.delete(paramName);
+                } else {
+                    params.set(paramName, opt.value);
+                }
+
+                html += `<a class="${btnClass}" href="?${params.toString()}">${opt.text}</a>`;
+            });
+            html += `</div>`;
+            dynamicFilters.innerHTML = html;
+        }
+
+        function setActiveMenuItem(type) {
+            filterMenu.querySelectorAll('.dropdown-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.value === type);
+            });
+        }
+
+        function loadFilterArea(type) {
+            if (type === "region") {
+                dynamicFilters.innerHTML = regionButtonsHtml;
+            } else if (type === "salary") {
+                renderOptionButtons(salaryOptions, "salaryRangeId", selectedSalaryId);
+            } else if (type === "experience") {
+                renderOptionButtons(experienceOptions, "experienceLevelId", selectedExperienceId);
+            }
+        }
+
+        filterToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const isOpen = filterMenu.classList.toggle("show");
+            filterToggle.classList.toggle("open", isOpen);
         });
+
+        filterMenu.querySelectorAll(".dropdown-item").forEach(btn => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                const type = this.dataset.value;
+                selectedLabel.textContent = this.childNodes[0].textContent.trim();
+                filterMenu.classList.remove("show");
+                filterToggle.classList.remove("open");
+                setActiveMenuItem(type);
+                urlParams.set("filter", type);
+                history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
+                loadFilterArea(type);
+            });
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!filterToggle.contains(e.target) && !filterMenu.contains(e.target)) {
+                filterMenu.classList.remove("show");
+                filterToggle.classList.remove("open");
+            }
+        });
+
+        // Khởi tạo ban đầu
+        let activeFilter = urlParams.get('filter') || 'region';
+        const mapLabel = { region: 'Địa điểm', salary: 'Mức lương', experience: 'Kinh nghiệm' };
+        selectedLabel.textContent = mapLabel[activeFilter];
+        setActiveMenuItem(activeFilter);
+        loadFilterArea(activeFilter);
     });
 </script>
+
+
 </html>

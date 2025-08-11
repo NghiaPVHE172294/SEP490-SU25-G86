@@ -12,12 +12,18 @@ namespace SEP490_SU25_G86_Client.Pages
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
         public string? Region { get; set; }
+        public int? SalaryRangeId { get; set; }
+        public int? ExperienceLevelId { get; set; }
 
-        public async Task OnGetAsync([FromQuery] int page = 1, string? region = null)
+        public async Task OnGetAsync([FromQuery] int page = 1, [FromQuery] string? region = null,
+        [FromQuery] int? salaryRangeId = null,
+        [FromQuery] int? experienceLevelId = null)
         {
             int pageSize = 9;
             CurrentPage = page < 1 ? 1 : page;
             Region = region;
+            SalaryRangeId = salaryRangeId;
+            ExperienceLevelId = experienceLevelId;
 
             try
             {
@@ -49,12 +55,17 @@ namespace SEP490_SU25_G86_Client.Pages
                 var token = HttpContext.Session.GetString("jwt_token");
                 if (!string.IsNullOrEmpty(token))
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                // Gắn thêm region nếu có vào URL gọi API
+                // Gắn thêm filter nếu có vào URL gọi API
                 var url = $"https://localhost:7004/api/jobposts/homepage?page={CurrentPage}&pageSize={pageSize}";
                 if (!string.IsNullOrEmpty(region))
                 {
                     url += $"&region={region}";
                 }
+                if (salaryRangeId.HasValue)
+                    url += $"&salaryRangeId={salaryRangeId.Value}";
+
+                if (experienceLevelId.HasValue)
+                    url += $"&experienceLevelId={experienceLevelId.Value}";
 
                 var response = await client.GetAsync(url);
 
@@ -105,6 +116,7 @@ namespace SEP490_SU25_G86_Client.Pages
             public int JobPostId { get; set; }
             public string Title { get; set; }
             public string CompanyName { get; set; }
+            public int? CompanyId { get; set; }
             public string Location { get; set; }
             public string Salary { get; set; }
             public string FormattedSalary

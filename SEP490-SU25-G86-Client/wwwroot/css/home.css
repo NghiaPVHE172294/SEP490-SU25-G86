@@ -27,8 +27,11 @@
     background-color: var(--primary-color);
     color: white;
     border: 1px solid var(--primary-color);
+    border-radius: 2rem;
 }
-
+.btn-outline-secondary {
+    border-radius: 2rem;
+}
 .btn-fixed {
     min-width: 110px;
     height: 38px;
@@ -91,3 +94,116 @@
 a:hover h5 {
     text-decoration: underline;
 }
+/* wrapper button */
+.filter-dropdown-wrapper {
+    min-width: 240px;
+}
+
+.filter-btn {
+    width: 100%;
+    border: 1px solid #e6efe9;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    gap: 8px;
+    box-shadow: none;
+    color: #333;
+    justify-content: space-between;
+}
+
+    .filter-btn:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* caret rotate when open */
+    .filter-btn.open .caret-icon {
+        transform: rotate(180deg);
+    }
+
+/* menu */
+.custom-filter-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 220px;
+    border-radius: 8px;
+    background: white;
+    padding: 6px 0;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+    /* show class */
+    .custom-filter-menu.show {
+        display: block;
+    }
+
+    /* menu item */
+    .custom-filter-menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        background: transparent;
+        border: 0;
+        padding: 10px 16px;
+        color: #333;
+        text-align: left;
+        cursor: pointer;
+    }
+
+        /* hover */
+        .custom-filter-menu .dropdown-item:hover {
+            background: #f8fff9;
+            color: #0b7a63;
+        }
+
+        /* selected style (green) */
+        .custom-filter-menu .dropdown-item.active {
+            color: #0b7a63;
+            background: #f0fff8;
+            font-weight: 600;
+        }
+
+        /* check icon: hidden by default, visible for active */
+        .custom-filter-menu .dropdown-item .bi-check {
+            visibility: hidden;
+            color: #0b7a63;
+            font-size: 1rem;
+        }
+
+        .custom-filter-menu .dropdown-item.active .bi-check {
+            visibility: visible;
+        }
+
+/* small icon left */
+.filter-btn .bi-filter {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* dynamic filter buttons margin tweak */
+#dynamicFilters > .d-flex > .btn {
+    border-radius: 12px;
+}
+.custom-bg {
+    background-color: #f3f5f7;
+}
+.card.job-card {
+    transition: border-color 0.3s ease;
+    border: 1px solid transparent; /* để có border cho hover đổi màu */
+}
+
+    .card.job-card:hover {
+        border-color: #309689; /* đổi màu viền khi hover */
+    }
+
+    .card.job-card h5 {
+        transition: color 0.3s ease;
+    }
+
+    .card.job-card:hover h5 {
+        color: #309689 !important; /* chỉ đổi màu tiêu đề */
+    }

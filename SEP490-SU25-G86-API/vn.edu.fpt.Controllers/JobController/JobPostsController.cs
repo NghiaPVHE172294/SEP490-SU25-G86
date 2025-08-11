@@ -34,9 +34,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
         [HttpGet("homepage")]
         [AllowAnonymous]
         public async Task<IActionResult> GetHomeJobs(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 9,
-            [FromQuery] string? region = null)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 9,
+        [FromQuery] string? region = null,
+        [FromQuery] int? salaryRangeId = null,
+        [FromQuery] int? experienceLevelId = null)
         {
             int? candidateId = null;
             if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("CANDIDATE"))
@@ -49,7 +51,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
                         candidateId = user.UserId;
                 }
             }
-            var jobs = await _jobPostService.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
+
+            var jobs = await _jobPostService.GetPagedJobPostsAsync(
+                page, pageSize, region, salaryRangeId, experienceLevelId, candidateId);
+
             return Ok(new
             {
                 TotalItems = jobs.Item2,

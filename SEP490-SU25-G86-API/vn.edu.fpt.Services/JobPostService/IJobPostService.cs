@@ -6,7 +6,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 {
     public interface IJobPostService
     {
-        Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null);
+        Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize,
+            string? region = null,
+            int? salaryRangeId = null,
+            int? experienceLevelId = null,
+            int? candidateId = null);
 
         Task<IEnumerable<JobPostDTO>> GetAllJobPostsAsync();
 

@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             _synonymService = synonymService;
         }
 
-        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
+        public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
         {
             var query = _context.JobPosts
         .Include(j => j.Employer)
@@ -29,6 +29,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         .OrderByDescending(j => j.CreatedDate)
         .AsQueryable();
 
+            // Filter Region
             if (!string.IsNullOrWhiteSpace(region))
             {
                 query = query.Where(j =>
@@ -37,14 +38,24 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                     EF.Functions.Like(j.Province.Region, $"%{region}%"));
             }
 
+            // Filter SalaryRangeId
+            if (salaryRangeId.HasValue)
+            {
+                query = query.Where(j => j.SalaryRangeId == salaryRangeId.Value);
+            }
+
+            // Filter ExperienceLevelId
+            if (experienceLevelId.HasValue)
+            {
+                query = query.Where(j => j.ExperienceLevelId == experienceLevelId.Value);
+            }
+
             var totalItems = await query.CountAsync();
 
             var posts = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-
-          
 
             return (posts, totalItems);
         }

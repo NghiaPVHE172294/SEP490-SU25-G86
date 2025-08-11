@@ -21,10 +21,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             _context = context;
         }
         
-        public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? candidateId = null)
+        public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
         {
-            var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, candidateId);
-            
+            var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, salaryRangeId, experienceLevelId, candidateId);
+
             // Lọc bỏ job posts từ blocked companies nếu có candidateId
             if (candidateId.HasValue)
             {
@@ -34,24 +34,26 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 posts = posts.Where(j => j.Employer?.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
                 totalItems = posts.Count(); // Cập nhật lại totalItems sau khi lọc
             }
-            
-      List<int> appliedJobPostIds = new();
-if (candidateId.HasValue)
-{
-    appliedJobPostIds = await _jobPostRepo.GetAppliedJobPostIdsAsync(candidateId.Value);
-}
+
+            List<int> appliedJobPostIds = new();
+            if (candidateId.HasValue)
+            {
+                appliedJobPostIds = await _jobPostRepo.GetAppliedJobPostIdsAsync(candidateId.Value);
+            }
 
             var result = posts.Select(j => new JobPostHomeDto
             {
                 JobPostId = j.JobPostId,
                 Title = j.Title,
                 CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
+                CompanyId = j.Employer?.CompanyId,
                 Salary = j.SalaryRange != null
                          ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                          : "Thỏa thuận",
                 Location = j.Province?.ProvinceName ?? "Không xác định",
                 IsApplied = candidateId.HasValue ? appliedJobPostIds.Contains(j.JobPostId) : false
             }).ToArray();
+
             return (result, totalItems);
         }
 
