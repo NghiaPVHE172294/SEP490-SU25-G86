@@ -11,7 +11,12 @@
 <div id="session-data" data-user-id="@HttpContext.Session.GetString("userId")"></div>
 <div class="company-header">
     <div class="d-flex align-items-center">
-        <img src="@Model.Company?.LogoUrl ?? " class="img-fluid rounded me-3" style="width: 70px; height: 70px;" />
+        <div class="rounded-circle overflow-hidden me-3" style="width: 70px; height: 70px;">
+            <img src="@(Model.Company?.LogoUrl ?? "/images/default-company-logo.png")"
+                 class="img-fluid"
+                 style="width: 100%; height: 100%; object-fit: cover;"
+                 alt="Logo Công ty" />
+        </div>
         <div>
             <h4 class="mb-1">@Model.Company?.CompanyName</h4>
             <div class="d-flex flex-wrap gap-3">
