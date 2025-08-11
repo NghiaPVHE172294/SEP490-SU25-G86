@@ -323,7 +323,9 @@ builder.Configuration.AddConfiguration(configuration);
                 });
 			});
 
-            // New DI registrations
+            // Đăng ký dịch vụ lưu trữ Firebase cho upload CV Template
+builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFirebaseStorageService, SEP490_SU25_G86_API.Services.CvTemplateService.FirebaseStorageService>();
+// New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
             

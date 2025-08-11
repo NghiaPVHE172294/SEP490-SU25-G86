@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+@using System.Security.Claims
 @inject IConfiguration Config
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +30,7 @@
             {
                 <div class="nav">
                     <a asp-page="/Index">Trang chủ</a>
+                    <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
                     <a asp-page="/Common/ListJobs">Tìm việc làm</a>
                     <a asp-page="/Companies/ListCompany">Danh sách công ty</a>
                     <a asp-page="/Contact">Liên hệ</a>
@@ -121,7 +122,7 @@
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobCriteria">Chiến dịch tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobByEmployer">Danh sách bài đăng tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/ManageSubmittedCVsofJobPost">Quản lý CV đã nộp của bài đăng tuyển dụng</a></li>
-                            <li><a class="dropdown-item" asp-page="/Common/MyCVs">Quản lý CV đăng tải</a></li>
+                            <li><a class="dropdown-item" asp-page="/Employer/MyCVTemplates">Quản lý CV Template</a></li>
                             <li class="dropdown-submenu position-relative">
                                 <a class="dropdown-item dropdown-toggle" href="#" id="accountSettingDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cài đặt tài khoản</a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountSettingDropdown" style="left:auto; right:100%; top:0; min-width:200px;">

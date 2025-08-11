@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CareerHandbookDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
@@ -25,30 +24,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             var data = await _service.GetAllForAdminAsync();
             return Ok(data);
         }
-
-        //[HttpGet("admin")]
-        //[Authorize]
-        //public async Task<IActionResult> GetAllForAdmin([FromQuery] bool includeDeleted = false)
-        //{
-        //    var data = await _repository.GetAllAsync(includeDeleted);
-        //    var result = data.Select(h => new CareerHandbookDetailDTO
-        //    {
-        //        HandbookId = h.HandbookId,
-        //        Title = h.Title,
-        //        Slug = h.Slug,
-        //        Content = h.Content,
-        //        ThumbnailUrl = h.ThumbnailUrl,
-        //        Tags = h.Tags,
-        //        CategoryId = h.CategoryId,
-        //        CategoryName = h.Category.CategoryName,
-        //        IsPublished = h.IsPublished,
-        //        CreatedAt = h.CreatedAt,
-        //        UpdatedAt = h.UpdatedAt
-        //    }).ToList();
-
-        //    return Ok(result);
-        //}
-
 
         // USER: List published
         [HttpGet]
@@ -82,7 +57,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
         // ADMIN: Create
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create([FromBody] CareerHandbookCreateDTO dto)
+        [RequestSizeLimit(10 * 1024 * 1024)]
+        public async Task<IActionResult> Create([FromForm] CareerHandbookCreateDTO dto)
         {
             try
             {
@@ -95,10 +71,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             }
         }
 
+
         // ADMIN: Update
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> Update(int id, [FromBody] CareerHandbookUpdateDTO dto)
+        [RequestSizeLimit(10 * 1024 * 1024)]
+        public async Task<IActionResult> Update(int id, [FromForm] CareerHandbookUpdateDTO dto)
         {
             try
             {
@@ -112,15 +90,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
             }
         }
 
+        // ADMIN: Soft delete
         [HttpDelete("admin/{id}")]
         [Authorize]
         public async Task<IActionResult> SoftDelete(int id)
         {
             var result = await _service.SoftDeleteAsync(id);
             if (!result) return NotFound();
-
-            return NoContent(); // 204
+            return NoContent();
         }
-
     }
 }

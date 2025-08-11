@@ -30,9 +30,20 @@
         </div>
 
         <div class="col-md-6">
-            <label asp-for="Handbook.ThumbnailUrl" class="form-label">URL ảnh</label>
-            <input asp-for="Handbook.ThumbnailUrl" class="form-control" />
+            <label class="form-label">Ảnh Thumbnail hiện tại</label>
+            @if (!string.IsNullOrEmpty(Model.Handbook.ThumbnailUrl))
+            {
+                <div>
+                    <img src="@Model.Handbook.ThumbnailUrl" alt="Thumbnail" class="img-thumbnail" style="max-height:150px;" />
+                </div>
+            }
         </div>
+
+        <div class="col-md-6">
+            <label asp-for="Handbook.ThumbnailFile" class="form-label">Chọn ảnh mới</label>
+            <input asp-for="Handbook.ThumbnailFile" type="file" class="form-control" accept="image/*" />
+        </div>
+
 
         <div class="col-md-6">
             <label asp-for="Handbook.Tags" class="form-label">Tags</label>

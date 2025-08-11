@@ -49,12 +49,28 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
             try
             {
                 var created = await _companyService.CreateCompanyAsync(accountId, dto);
-                if (!created) return BadRequest("Tài khoản này đã tạo công ty.");
+                if (!created)
+                    return BadRequest("Tài khoản này đã tạo công ty.");
+
                 return Ok("Tạo công ty thành công.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                // Lỗi file credentials không tồn tại
+                return StatusCode(500, $"Lỗi cấu hình: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.Message.Contains("trùng") || ex.Message.Contains("upload ảnh"))
+                {
+                    // Lỗi nghiệp vụ hoặc upload ảnh
+                    return BadRequest(ex.Message);
+                }
+                else
+                {
+                    // Lỗi không mong muốn
+                    return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
+                }
             }
         }
 
@@ -62,9 +78,32 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
         [RequestSizeLimit(10_000_000)]
         public async Task<IActionResult> UpdateCompany(int companyId, [FromForm] CompanyCreateUpdateDTO dto)
         {
-            var updated = await _companyService.UpdateCompanyAsync(companyId, dto);
-            if (!updated) return NotFound("Không tìm thấy công ty.");
-            return Ok("Cập nhật công ty thành công.");
+            try
+            {
+                var updated = await _companyService.UpdateCompanyAsync(companyId, dto);
+                if (!updated)
+                    return NotFound("Không tìm thấy công ty để cập nhật.");
+
+                return Ok("Cập nhật công ty thành công.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                // Lỗi file credentials không tồn tại
+                return StatusCode(500, $"Lỗi cấu hình: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("trùng") || ex.Message.Contains("upload ảnh"))
+                {
+                    // Lỗi nghiệp vụ hoặc upload ảnh
+                    return BadRequest(ex.Message);
+                }
+                else
+                {
+                    // Lỗi không mong muốn
+                    return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
+                }
+            }
         }
     }
 }
