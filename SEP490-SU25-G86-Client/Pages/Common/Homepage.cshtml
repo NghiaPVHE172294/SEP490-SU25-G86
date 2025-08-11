@@ -77,15 +77,6 @@
                     <option value="experience" selected="@(Model.ExperienceLevelId != null ? "selected" : null)">Kinh nghiệm</option>
                 </select>
                 <div id="dynamicFilters"></div>
-
-                @* <div id="dynamicFilters" class="d-flex flex-wrap gap-2 mt-2">
-                    <div id="regionButtons">
-                        <a class="btn @(string.IsNullOrEmpty(selectedRegion) ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=">Ngẫu nhiên</a>
-                        <a class="btn @(selectedRegion == "Bắc" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Bắc">Miền Bắc</a>
-                        <a class="btn @(selectedRegion == "Trung" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Trung">Miền Trung</a>
-                        <a class="btn @(selectedRegion == "Nam" ? "btn-custom-selected" : "btn-outline-secondary")" href="?region=Nam">Miền Nam</a>
-                    </div>
-                </div> *@
             </div>
 
             @if (!Model.JobPosts.Any())
@@ -208,31 +199,23 @@
     ];
 
     function renderOptionButtons(options, paramName, selectedId) {
-        dynamicFilters.innerHTML = "";
+        let html = `<div class="d-flex gap-2 flex-wrap">`;
         options.forEach(opt => {
-            const isSelected = (opt.value === "" && (selectedId === "" || selectedId === null))
-                             || opt.value == selectedId;
-            const btn = document.createElement("button");
-            btn.className = "btn " + (isSelected ? "btn-custom-selected" : "btn-outline-secondary");
-            btn.innerText = opt.text;
-            btn.type = "button";
+            const isSelected = (opt.value == selectedId || (opt.value === "" && !selectedId));
+            const btnClass = isSelected ? "btn btn-custom-selected px-3" : "btn btn-outline-secondary px-3";
 
-            btn.addEventListener("click", function () {
-                dynamicFilters.querySelectorAll("button").forEach(b => {
-                    b.classList.remove("btn-custom-selected");
-                    b.classList.add("btn-outline-secondary");
-                });
-                this.classList.remove("btn-outline-secondary");
-                this.classList.add("btn-custom-selected");
-
-                const urlParams = new URLSearchParams(window.location.search);
-                urlParams.set("filter", filterSelect.value);
+            const urlParams = new URLSearchParams(window.location.search);
+            if (opt.value === "") {
+                urlParams.delete(paramName);
+            } else {
                 urlParams.set(paramName, opt.value);
-                window.location.search = urlParams.toString();
-            });
+            }
 
-            dynamicFilters.appendChild(btn);
-        });
+            html += `<a class="${btnClass}" href="?${urlParams.toString()}">${opt.text}</a>`;
+    });
+    html += `</div>`;
+
+    dynamicFilters.innerHTML = html;
     }
 
     filterSelect.addEventListener("change", function () {
