@@ -33,6 +33,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public string? EmploymentTypeName { get; set; }
         public string? CompanyName { get; set; }
 
+        // CVTemplate liên kết với JobPost
+        public int? CvTemplateId { get; set; }
+        public string? CvTemplateName { get; set; }
+        public string? DocFileUrl { get; set; }
+        public string? PdfFileUrl { get; set; }
+
         //bo sung saved job
         public bool IsSaved { get; set; }
         public int? CurrentUserId { get; set; }

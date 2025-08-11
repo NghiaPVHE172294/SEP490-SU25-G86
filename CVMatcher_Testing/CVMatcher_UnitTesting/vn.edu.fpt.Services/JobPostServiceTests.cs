@@ -91,7 +91,7 @@ namespace CVMatcher_Testing.vn.edu.fpt.Services
                 new JobPost { JobPostId = 2, Title = "Job 2" }
             };
             int totalItems = 2;
-            _jobPostRepoMock.Setup(r => r.GetPagedJobPostsAsync(page, pageSize, null, null)).ReturnsAsync((posts, totalItems));
+           // _jobPostRepoMock.Setup(r => r.GetPagedJobPostsAsync(page, pageSize, null, null)).ReturnsAsync((posts, totalItems));
 
             // Hành động
             var (result, total) = await _service.GetPagedJobPostsAsync(page, pageSize);
