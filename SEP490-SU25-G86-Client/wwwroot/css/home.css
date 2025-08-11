@@ -191,3 +191,19 @@ a:hover h5 {
 .custom-bg {
     background-color: #f3f5f7;
 }
+.card.job-card {
+    transition: border-color 0.3s ease;
+    border: 1px solid transparent; /* để có border cho hover đổi màu */
+}
+
+    .card.job-card:hover {
+        border-color: #309689; /* đổi màu viền khi hover */
+    }
+
+    .card.job-card h5 {
+        transition: color 0.3s ease;
+    }
+
+    .card.job-card:hover h5 {
+        color: #309689 !important; /* chỉ đổi màu tiêu đề */
+    }

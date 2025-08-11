@@ -116,6 +116,7 @@ namespace SEP490_SU25_G86_Client.Pages
             public int JobPostId { get; set; }
             public string Title { get; set; }
             public string CompanyName { get; set; }
+            public int? CompanyId { get; set; }
             public string Location { get; set; }
             public string Salary { get; set; }
             public string FormattedSalary

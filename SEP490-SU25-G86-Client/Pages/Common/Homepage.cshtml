@@ -101,9 +101,13 @@
                     @foreach (var job in Model.JobPosts)
                     {
                         <div class="col-md-4 mb-4">
-                            <div class="card shadow-sm border-0 rounded-4 p-3">
+                            <div class="card job-card shadow-sm rounded-4 p-3">
                                 <h5 class="fw-bold">@job.Title</h5>
-                                <p class="text-muted mb-1">@job.CompanyName</p>
+                                <p class="mb-1">
+                                    <a href="/Common/CompanyDetail?id=@job.CompanyId" class="text-muted text-decoration-none">
+                                        @job.CompanyName
+                                    </a>
+                                </p>
                                 <p class="text-muted mb-1">@job.Location</p>
                                 <div class="d-flex align-items-center justify-content-between mt-3">
                                     <span class="text-custom fw-bold">@job.FormattedSalary</span>
