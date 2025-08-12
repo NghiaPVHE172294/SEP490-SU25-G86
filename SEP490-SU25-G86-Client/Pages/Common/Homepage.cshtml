@@ -65,8 +65,8 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">Việc Làm Mới Nhất</h2>
-                <span>@Model.TotalItems jobs</span>
-                <a href="/Common/ListJobs" class="text-custom">View all</a>
+                <span>@Model.TotalItems công việc</span>
+                <a href="/Common/ListJobs" class="text-custom">Xem tất cả</a>
             </div>
 
             <!-- Filters -->
@@ -151,24 +151,16 @@
 
     <!-- Popular Categories -->
     <section class="bg-white py-5">
-        <div class="container text-center">
-            <h2 class="fw-bold mb-4">Nghề nghiệp phổ biến</h2>
-            <div class="row g-3">
-                @{
-                    var categories = new[] {
-                                "Chăm sóc khách hàng", "Marketing", "Kinh doanh - Bán hàng", "Bất động sản - Xây dựng",
-                                "Khách sạn - Du lịch", "Giáo dục", "Tài chính - Ngân hàng", "Dịch vụ"
-                                };
-                    foreach (var cat in categories)
-                    {
-                        <div class="col-6 col-md-3">
-                            <div class="border rounded py-3 bg-light fw-medium">
-                                @cat
-                            </div>
-                        </div>
-                    }
-                }
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0">Nghề nghiệp phổ biến</h2>
+                <div>
+                    <button id="prevPage" class="btn-page me-2">‹</button>
+                    <button id="nextPage" class="btn-page">›</button>
+                </div>
             </div>
+
+            <div id="industry-list" class="row g-3"></div>
         </div>
     </section>
     <!-- Bootstrap JS CDN -->
@@ -290,5 +282,55 @@
     });
 </script>
 
+<script>
+    const API_BASE = "https://localhost:7004/api/industries/with-jobcount";
+    let currentPage = 1;
+    const pageSize = 8;
+    let lastPage = false; // để xác định trang cuối
 
+    function loadIndustries(page) {
+        fetch(`${API_BASE}?page=${page}&pageSize=${pageSize}`)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById("industry-list");
+                container.innerHTML = "";
+
+                data.forEach(item => {
+                    const col = document.createElement("div");
+                    col.className = "col-6 col-md-3";
+                    col.innerHTML = `
+                    <a href="/Common/ListJobs?industryId=${item.industryId}" class="text-decoration-none">
+                        <div class="industry-card">
+                            <div class="industry-name">${item.industryName}</div>
+                            <div class="industry-count">${item.jobPostCount.toLocaleString()} việc làm</div>
+                        </div>
+                     </a>
+                    `;
+                    container.appendChild(col);
+                });
+
+                // Cập nhật trạng thái nút
+                document.getElementById("prevPage").disabled = (page === 1);
+                lastPage = data.length < pageSize;
+                document.getElementById("nextPage").disabled = lastPage;
+            })
+            .catch(err => console.error("Error loading industries:", err));
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadIndustries(currentPage);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        if (!lastPage) {
+            currentPage++;
+            loadIndustries(currentPage);
+        }
+    });
+
+    loadIndustries(currentPage);
+</script>
 </html>

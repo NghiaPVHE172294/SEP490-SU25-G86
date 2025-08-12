@@ -26,5 +26,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.IndustryRepository
         {
             return await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<(Industry Industry, int JobPostCount)>> GetIndustriesWithJobPostCount(int page, int pageSize)
+        {
+            var data = await _context.Industries
+        .OrderBy(ind => ind.IndustryName) 
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .Select(ind => new
+        {
+            Industry = ind,
+            JobPostCount = ind.JobPosts.Count(j => j.Status == "OPEN" && j.IsDelete == false &&
+                    (!j.EndDate.HasValue || j.EndDate.Value.Date >= DateTime.UtcNow.Date))
+        })
+        .ToListAsync();
+
+            return data.Select(x => (x.Industry, x.JobPostCount));
+        }
     }
 }

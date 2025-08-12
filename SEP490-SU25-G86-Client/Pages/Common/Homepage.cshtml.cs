@@ -126,7 +126,7 @@ namespace SEP490_SU25_G86_Client.Pages
                     var parts = Salary.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length >= 4)
                     {
-                        return $"{parts[0]} {parts[1]} {parts[2]} Triệu {parts[3]}";
+                        return $"{parts[0]} {parts[1]} {parts[2]} {parts[3]} {parts[4]}";
                     }
                     return Salary; 
                 }

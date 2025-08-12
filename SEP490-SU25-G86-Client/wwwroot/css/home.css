@@ -7,7 +7,10 @@
     --white: #FFFFFF;
     --border-color: #E0E0E0;
 }
-
+h2.fw-bold,
+h2.fw-bold.m-0 {
+    color: var(--primary-color);
+}
 /* Nút dùng cho trang công ty */
 .btn-custom {
     background-color: var(--primary-color);
@@ -192,18 +195,76 @@ a:hover h5 {
     background-color: #f3f5f7;
 }
 .card.job-card {
-    transition: border-color 0.3s ease;
-    border: 1px solid transparent; /* để có border cho hover đổi màu */
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
+    will-change: transform, box-shadow, border-color;
 }
 
     .card.job-card:hover {
-        border-color: #309689; /* đổi màu viền khi hover */
+        border-color: #309689;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
     }
 
     .card.job-card h5 {
-        transition: color 0.3s ease;
+        transition: color 0.3s ease-in-out;
     }
 
     .card.job-card:hover h5 {
         color: #309689 !important; /* chỉ đổi màu tiêu đề */
+    }
+
+/*css cho mục ngành nghề*/
+.industry-card {
+    background: #f3f5f7;
+    border-radius: 10px;
+    padding: 20px 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-align: center;
+}
+
+    .industry-card:hover {
+        background: #e9f5f3;
+        border-color: #309689;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+.industry-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.industry-count {
+    color: #00b14f;
+    font-size: 0.95rem;
+}
+
+.btn-page {
+    border: 1px solid #00b14f;
+    background: none;
+    color: #00b14f;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    line-height: 1;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+    .btn-page:hover:not(:disabled) {
+        background: #00b14f;
+        color: white;
+    }
+
+    .btn-page:disabled {
+        border-color: #ccc;
+        color: #ccc;
+        background: none;
+        cursor: not-allowed;
     }
