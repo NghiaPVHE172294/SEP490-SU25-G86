@@ -30,6 +30,7 @@
                 <span class="badge badge-custom">SQL</span>
                 <span class="badge badge-custom">Làm việc nhóm</span>
             </div>
+
             <div class="mb-3">
                 <span>Chia sẻ công việc:</span>
                 <a href="#" class="ms-2" title="Chia sẻ Facebook"><i class="bi bi-facebook fs-4"></i></a>
@@ -78,7 +79,38 @@
                 </form>
             </div>
         </div>
+        @* --- CVTemplate display moved to bottom --- *@
+    @* CVTemplate preview box: show below contact card, inside right column, above footer *@
+@if (Model.JobPostDetail?.CvTemplateId != null)
+{
+    <div class="row justify-content-end">
+        <div class="col-lg-4 d-flex flex-column align-items-end">
+            <div class="card shadow border-0 mt-3 mb-2 d-flex flex-row align-items-center" style="background:#f4faff; min-width:320px; max-width:370px;">
+                <div class="flex-grow-1 p-3">
+                    <div class="fw-bold mb-1">Mẫu CV dành cho ứng viên</div>
+                    <div class="mb-2 small">Tên template: <span class="fw-semibold">@Model.JobPostDetail.CvTemplateName</span></div>
+                    <div class="d-flex gap-2">
+                        @if (!string.IsNullOrEmpty(Model.JobPostDetail.PdfFileUrl))
+                        {
+                            <a href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(Model.JobPostDetail.PdfFileUrl))&embedded=true" target="_blank" class="btn btn-outline-danger btn-sm"><i class="bi bi-file-pdf"></i> Xem PDF</a>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.JobPostDetail.DocFileUrl))
+                        {
+                            <a href="@Model.JobPostDetail.DocFileUrl" download class="btn btn-outline-primary btn-sm"><i class="bi bi-file-earmark-word"></i> Tải DOC</a>
+                        }
+                    </div>
+                </div>
+                <div class="p-2 pe-3">
+                    <img src="/images/pdf_icon.png" alt="PDF Preview" style="width:54px;height:70px;object-fit:contain;" onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML='<i class=\'bi bi-file-pdf text-danger\' style=\'font-size:2.5rem;\'></i>'"> 
+                </div>
+            </div>
+        </div>
     </div>
+}
+
+
+
+</div>
 </div>
 
 <!-- Modal ứng tuyển -->

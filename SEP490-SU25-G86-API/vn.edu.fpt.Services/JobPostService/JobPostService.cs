@@ -100,6 +100,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         {
             var jobPost = await _jobPostRepo.GetJobPostByIdAsync(jobPostId);
             if (jobPost == null) return null;
+            // Lấy liên kết template (ưu tiên IsDisplay = true, hoặc lấy bản ghi đầu tiên nếu không có)
+            var cvTemplateLink = _context.CvTemplateForJobposts
+                .Where(x => x.JobPostId == jobPost.JobPostId)
+                .OrderByDescending(x => x.IsDisplay)
+                .FirstOrDefault();
+            CvTemplateOfEmployer? template = null;
+            if (cvTemplateLink != null)
+            {
+                template = _context.CvTemplateOfEmployers.FirstOrDefault(t => t.CvtemplateOfEmployerId == cvTemplateLink.CvtemplateOfEmployerId && !t.IsDelete);
+            }
+
             return new ViewDetailJobPostDTO
             {
                 JobPostId = jobPost.JobPostId,
@@ -129,7 +140,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 ExperienceLevelName = jobPost.ExperienceLevel?.ExperienceLevelName,
                 JobLevelName = jobPost.JobLevel?.JobLevelName,
                 EmploymentTypeName = jobPost.EmploymentType?.EmploymentTypeName,
-                CompanyName = jobPost.Employer?.Company?.CompanyName ?? jobPost.Employer?.FullName ?? "Không rõ"
+                CompanyName = jobPost.Employer?.Company?.CompanyName ?? jobPost.Employer?.FullName ?? "Không rõ",
+                CvTemplateId = template?.CvtemplateOfEmployerId,
+                CvTemplateName = template?.CvTemplateName,
+                DocFileUrl = template?.DocFileUrl,
+                PdfFileUrl = template?.PdfFileUrl
             };
         }
 
@@ -261,6 +276,20 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 EmployerId = employerId
             };
             var created = await _jobPostRepo.AddJobPostAsync(jobPost);
+
+            // Tạo liên kết CVTemplate nếu có
+            if (dto.CvtemplateOfEmployerId.HasValue)
+            {
+                var cvTemplateLink = new CvTemplateForJobpost
+                {
+                    CvtemplateOfEmployerId = dto.CvtemplateOfEmployerId.Value,
+                    JobPostId = created.JobPostId,
+                    IsDisplay = true
+                };
+                _context.CvTemplateForJobposts.Add(cvTemplateLink);
+                await _context.SaveChangesAsync();
+            }
+
             var detail = await GetJobPostDetailByIdAsync(created.JobPostId);
             return detail!;
         }
@@ -349,6 +378,30 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
             jobPost.UpdatedDate = DateTime.UtcNow;
 
             var updated = await _jobPostRepo.UpdateJobPostAsync(jobPost);
+
+            // Cập nhật liên kết CVTemplate nếu có
+            if (dto.CvtemplateOfEmployerId.HasValue)
+            {
+                var existingLink = _context.CvTemplateForJobposts.FirstOrDefault(x => x.JobPostId == updated.JobPostId);
+                if (existingLink != null)
+                {
+                    existingLink.CvtemplateOfEmployerId = dto.CvtemplateOfEmployerId.Value;
+                    existingLink.IsDisplay = true;
+                    _context.CvTemplateForJobposts.Update(existingLink);
+                }
+                else
+                {
+                    var cvTemplateLink = new CvTemplateForJobpost
+                    {
+                        CvtemplateOfEmployerId = dto.CvtemplateOfEmployerId.Value,
+                        JobPostId = updated.JobPostId,
+                        IsDisplay = true
+                    };
+                    _context.CvTemplateForJobposts.Add(cvTemplateLink);
+                }
+                await _context.SaveChangesAsync();
+            }
+
             var detail = await GetJobPostDetailByIdAsync(updated.JobPostId);
             return detail!;
         }

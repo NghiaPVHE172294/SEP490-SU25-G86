@@ -31,6 +31,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         public List<JobLevelDTO> JobLevels { get; set; } = new();
         public List<IndustryDTO> Industries { get; set; } = new();
         public List<SalaryRangeDTO> SalaryRanges { get; set; } = new();
+        public List<CvTemplateDTO> CvTemplates { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int jobPostId)
         {
@@ -62,6 +63,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                     JobPost.JobLevelId = detail.JobLevelId;
                     JobPost.EmploymentTypeId = detail.EmploymentTypeId;
                     JobPost.IsAienabled = detail.IsAienabled;
+                    JobPost.CvtemplateOfEmployerId = detail.CvTemplateId;
                 }
             }
             else
@@ -115,6 +117,17 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             JobLevels = await _httpClient.GetFromJsonAsync<List<JobLevelDTO>>("api/joblevels");
             Industries = await _httpClient.GetFromJsonAsync<List<IndustryDTO>>("api/industries");
             SalaryRanges = await _httpClient.GetFromJsonAsync<List<SalaryRangeDTO>>("api/salaryranges");
+            CvTemplates = new List<CvTemplateDTO>();
+            try
+            {
+                var token = HttpContext.Session.GetString("jwt_token");
+                if (!string.IsNullOrEmpty(token))
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var templates = await _httpClient.GetFromJsonAsync<List<CvTemplateDTO>>("api/employer/cv-templates");
+                if (templates != null)
+                    CvTemplates = templates;
+            }
+            catch { }
         }
     }
-} 
+}
