@@ -28,8 +28,8 @@
             </div>
         }
 
-        <div class="article-content" style="line-height:1.7; font-size:1.05rem;">
-            @Html.Raw(Model.CareerHandbook.Content)
+        <div class="article-content" style="line-height:1.7; font-size:1.05rem; white-space: pre-line;">
+            @Model.CareerHandbook.Content
         </div>
 
         @if (!string.IsNullOrEmpty(Model.CareerHandbook.Tags))
