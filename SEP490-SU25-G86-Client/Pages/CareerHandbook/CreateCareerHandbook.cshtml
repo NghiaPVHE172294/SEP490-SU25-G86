@@ -6,7 +6,7 @@
 
 <div class="container my-4">
     <h3>Thêm mới Cẩm nang</h3>
-    <form method="post" class="row g-3">
+    <form method="post" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-6">
             <label asp-for="Handbook.Title" class="form-label">Tiêu đề</label>
             <input asp-for="Handbook.Title" class="form-control" />
@@ -30,8 +30,8 @@
         </div>
 
         <div class="col-md-6">
-            <label asp-for="Handbook.ThumbnailUrl" class="form-label">URL ảnh</label>
-            <input asp-for="Handbook.ThumbnailUrl" class="form-control" />
+            <label asp-for="Handbook.ThumbnailFile" class="form-label">Chọn ảnh thumbnail</label>
+            <input asp-for="Handbook.ThumbnailFile" type="file" class="form-control" accept="image/*" />
         </div>
 
         <div class="col-md-6">

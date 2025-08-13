@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CareerHandbookDTO;
-using System.Text;
 
 namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
 {
@@ -92,7 +91,6 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
             content.Add(new StringContent(Handbook.Title ?? ""), "Title");
             content.Add(new StringContent(Handbook.Slug ?? ""), "Slug");
             content.Add(new StringContent(Handbook.Content ?? ""), "Content");
-            content.Add(new StringContent(Handbook.ThumbnailUrl ?? ""), "ThumbnailUrl");
             content.Add(new StringContent(Handbook.Tags ?? ""), "Tags");
             content.Add(new StringContent(Handbook.CategoryId.ToString()), "CategoryId");
             content.Add(new StringContent(Handbook.IsPublished.ToString()), "IsPublished");
@@ -103,6 +101,11 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue(Handbook.ThumbnailFile.ContentType);
                 content.Add(fileContent, "ThumbnailFile", Handbook.ThumbnailFile.FileName);
             }
+            else
+            {
+                // Nếu không chọn ảnh mới thì gửi URL ảnh cũ
+                content.Add(new StringContent(Handbook.ThumbnailUrl ?? ""), "ThumbnailUrl");
+            }
 
             var res = await _httpClient.PutAsync($"api/CareerHandbooks/{id}", content);
             if (res.IsSuccessStatusCode)
@@ -112,6 +115,5 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbook
             ModelState.AddModelError(string.Empty, $"Lỗi khi cập nhật cẩm nang: {errorMsg}");
             return Page();
         }
-
     }
 }

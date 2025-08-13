@@ -104,16 +104,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
 
         private async Task<string> UploadThumbnailToFirebase(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                throw new Exception("Không có file để upload");
-
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/jpg", "image/gif", "image/webp" };
-            if (string.IsNullOrEmpty(file.ContentType) || !allowedTypes.Contains(file.ContentType.ToLower()))
-                throw new Exception("Chỉ hỗ trợ các định dạng ảnh JPG, PNG, GIF, WEBP");
-
-            if (file.Length > 5 * 1024 * 1024)
-                throw new Exception("Kích thước ảnh tối đa 5MB");
-
             string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS")
                 ?? "D:\\FPTU\\SEP490_SUMMER25_G86\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
 
@@ -121,7 +111,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
                 throw new FileNotFoundException($"Không tìm thấy file Firebase credentials tại {firebaseCredentialsPath}");
 
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET")
-                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app"; // sửa lại bucket
+                ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
 
             string folderName = "Image_storage/CareerHandbookThumbnail";
 
@@ -138,7 +128,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
 
             using var stream = file.OpenReadStream();
             var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-            string objectName = $"{folderName}/{timestamp}_{file.FileName}"; // ❌ bỏ userId
+            string objectName = $"{folderName}/{timestamp}_{file.FileName}";
 
             var contentType = string.IsNullOrEmpty(file.ContentType)
                 ? "application/octet-stream"
@@ -153,6 +143,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService
 
             return $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(objectName)}?alt=media";
         }
+
 
 
         private CareerHandbookDetailDTO MapToDetailDto(CareerHandbook h) => new()
