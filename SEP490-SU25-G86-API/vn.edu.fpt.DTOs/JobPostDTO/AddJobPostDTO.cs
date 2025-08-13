@@ -5,6 +5,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
 {
     public class AddJobPostDTO
     {
+        public int? CvtemplateOfEmployerId { get; set; } // ID của CVTemplate do employer chọn
         public int? IndustryId { get; set; }
         public string? NewIndustryName { get; set; }
         public int? JobPositionId { get; set; }

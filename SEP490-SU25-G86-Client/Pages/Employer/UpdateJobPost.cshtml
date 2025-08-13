@@ -162,6 +162,16 @@
                                 </select>
                                 <input id="newEmploymentTypeInput" name="JobPost.NewEmploymentTypeName" class="form-control mt-2" style="display:none;" placeholder="Nhập loại hình mới" />
                             </div>
+                            <div class="col-md-6">
+                                <label asp-for="JobPost.CvtemplateOfEmployerId" class="form-label">CV Template cho ứng viên (tùy chọn)</label>
+                                <select asp-for="JobPost.CvtemplateOfEmployerId" class="form-select">
+                                    <option value="">-- Không sử dụng template --</option>
+                                    @foreach (var t in Model.CvTemplates)
+                                    {
+                                        <option value="@t.CvtemplateOfEmployerId" selected="@(Model.JobPost.CvtemplateOfEmployerId == t.CvtemplateOfEmployerId ? "selected" : null)">@t.CvTemplateName</option>
+                                    }
+                                </select>
+                            </div>
                             <div class="col-md-6 d-flex align-items-center">
                                 <input asp-for="JobPost.IsAienabled" class="form-check-input me-2" type="checkbox" />
                                 <label asp-for="JobPost.IsAienabled" class="form-check-label">Kích hoạt AI</label>
@@ -176,6 +186,7 @@
         </div>
     </div>
 </div>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>

@@ -40,11 +40,10 @@ namespace SEP490_SU25_G86_API.Services.CvTemplateService
                 contentType: file.ContentType,
                 source: stream
             );
-
+            
             // Note: File sẽ được set public thông qua Firebase Storage Rules
             // Không cần set ACL programmatically nếu Firebase Rules đã cho phép public read
 
-            // Trả về public URL đúng chuẩn Firebase giống CvService
             var fileUrl = $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
             return fileUrl;
         }

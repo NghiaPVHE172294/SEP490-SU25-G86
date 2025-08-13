@@ -19,6 +19,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.BlockedCompanyRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CareerHandbookRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyFollowingRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVParsedDataRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.EmploymentTypeRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ExperienceLevelRepository;
@@ -28,7 +29,6 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobLevelRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.NotificationRepository;
-using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ParseCvRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PermissionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.PhoneOtpRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.ProvinceRepository;
@@ -48,6 +48,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.BlockedCompanyService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CareerHandbookService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyFollowingService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CVParsedDataService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.EmploymentTypeService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ExperienceLevelService;
@@ -57,7 +58,6 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobLevelService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPositionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.ParseCvService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PermissionService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.PhoneOtpService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
@@ -115,8 +115,6 @@ builder.Configuration.AddConfiguration(configuration);
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(c =>
 			{
-                c.OperationFilter<FormFileOperationFilter>();
-
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -286,10 +284,6 @@ builder.Configuration.AddConfiguration(configuration);
             builder.Services.AddScoped<IPhoneOtpService, PhoneOtpService>();
             builder.Services.AddScoped<IPhoneOtpRepository, PhoneOtpRepository>();
 
-            // Parse CV
-            builder.Services.AddScoped<IParseCvRepository, ParseCvRepository>();
-            builder.Services.AddScoped<IParseCvService, ParseCvService>();
-
             // CareerHandbook
             builder.Services.AddScoped<ICareerHandbookRepository, CareerHandbookRepository>();
             builder.Services.AddScoped<ICareerHandbookService, CareerHandbookService>();
@@ -301,6 +295,14 @@ builder.Configuration.AddConfiguration(configuration);
             //Notification
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+
+            // DI-parsedCV
+            builder.Services.AddScoped<IFileTextExtractor, FileTextExtractor>();
+            builder.Services.AddScoped<PdfTextExtractor>();
+            builder.Services.AddScoped<DocxTextExtractor>();
+            builder.Services.AddScoped<IGeminiClient, GeminiClient>();
+            builder.Services.AddScoped<ICVParsedDataRepository, CVParsedDataRepository>();
+            builder.Services.AddScoped<ICvParsingService, CvParsingService>();
 
             //signalR
             builder.Services.AddSignalR();
@@ -328,30 +330,14 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
 // New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
-            
-            builder.Services.AddHttpClient("OpenAI", client =>
+
+            // Named HttpClient độc lập cho Gemini "Gemini2"
+            builder.Services.AddHttpClient("Gemini2", c =>
             {
-                client.BaseAddress = new Uri("https://api.openai.com/");
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(
-                        "Bearer",
-                        builder.Configuration["OpenAI:ApiKey"]
-                    );
-            })
-            // Cấu hình Polly để tự retry khi có lỗi mạng hoặc 429 Rate Limit
-            .AddPolicyHandler(
-                HttpPolicyExtensions
-                    .HandleTransientHttpError()
-                    .OrResult(msg => msg.StatusCode == (HttpStatusCode)429)
-                    .WaitAndRetryAsync(
-                        retryCount: 3,
-                        sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-                        onRetry: (outcome, timespan, retryAttempt, context) =>
-                        {
-                            // Có thể log ở đây
-                        }
-                    )
-            );
+                var baseUrl = builder.Configuration["Gemini2:Endpoint"];
+                c.BaseAddress = new Uri(baseUrl);
+                // Không set API key ở header vì Gemini nhận qua query ?key=
+            });
 
 
             // Gemini AI Matching
