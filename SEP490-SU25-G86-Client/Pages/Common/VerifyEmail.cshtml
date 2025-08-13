@@ -1,0 +1,10 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Common.VerifyEmailModel
+
+<div class="verify-email-result">
+    <h3>@Model.Status</h3>
+    @if (Model.IsSuccess)
+    {
+        <a href="/Common/Login">Đăng nhập</a>
+    }
+</div>

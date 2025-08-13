@@ -62,6 +62,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             if (account.Role == null)
                 return Unauthorized(new { message = "Tài khoản chưa được gán quyền." });
 
+            // Chặn đăng nhập nếu chưa xác thực email
+            if (account.IsActive == false)
+                return Unauthorized(new { message = "Tài khoản chưa được xác thực email. Vui lòng kiểm tra email để xác thực tài khoản." });
+
             // ✅ Lấy user để kiểm tra IsBan
             var user = _context.Users.FirstOrDefault(u => u.AccountId == account.AccountId);
             if (user != null && user.IsBan == true)
@@ -126,7 +130,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
                 Email = request.Email,
                 Password = hashedPassword, // Đã mã hóa MD5 ở backend
                 RoleId = role.RoleId,
-                IsActive = true,
+                IsActive = false, // Chưa xác thực email
                 CreatedDate = DateTime.Now
             };
             _context.Accounts.Add(account);
@@ -141,14 +145,115 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             };
             _context.Users.Add(user);
             _context.SaveChanges();
-            return Ok();
+
+            // Tạo token xác thực email, lưu vào PasswordResetToken
+            var verifyToken = Guid.NewGuid().ToString();
+            var expire = DateTime.Now.AddHours(2);
+            var tokenEntity = new PasswordResetToken
+            {
+                AccountId = account.AccountId,
+                Token = verifyToken,
+                ExpireAt = expire,
+                IsUsed = false,
+                CreateAt = DateTime.Now
+            };
+            _context.PasswordResetTokens.Add(tokenEntity);
+            _context.SaveChanges();
+
+            // Gửi email xác thực cho user
+            var verifyLink = $"https://localhost:7283/Common/VerifyEmail?token={verifyToken}";
+            var emailSettings = _configuration.GetSection("EmailSettings");
+            var smtpServer = emailSettings["SmtpServer"];
+            var smtpPort = int.Parse(emailSettings["SmtpPort"]);
+            var smtpUser = emailSettings["SmtpUser"];
+            var smtpPass = emailSettings["SmtpPass"];
+            var senderEmail = emailSettings["SenderEmail"];
+            var senderName = emailSettings["SenderName"];
+            var mail = new MailMessage();
+            mail.From = new MailAddress(senderEmail, senderName);
+            mail.To.Add(request.Email);
+            mail.Subject = "[CVMatcher] Xác thực tài khoản của bạn";
+            mail.Body = $"Vui lòng nhấn vào link sau để xác thực tài khoản: {verifyLink}\n\nLink sẽ hết hạn sau 2 giờ.";
+            mail.IsBodyHtml = false;
+            using (var smtp = new SmtpClient(smtpServer, smtpPort))
+            {
+                smtp.Credentials = new NetworkCredential(smtpUser, smtpPass);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+            return Ok("Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.");
+        }
+
+        [HttpGet("verify-email")]
+        public IActionResult VerifyEmail([FromQuery] string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("Thiếu token xác thực.");
+            var tokenEntity = _context.PasswordResetTokens.FirstOrDefault(t => t.Token == token);
+            if (tokenEntity == null)
+                return BadRequest("Token không hợp lệ hoặc đã hết hạn.");
+            if (tokenEntity.IsUsed == true)
+                return BadRequest("Token đã được sử dụng.");
+            if (tokenEntity.ExpireAt < DateTime.Now)
+                return BadRequest("Token đã hết hạn.");
+            var account = _context.Accounts.FirstOrDefault(a => a.AccountId == tokenEntity.AccountId);
+            if (account == null)
+                return BadRequest("Tài khoản không tồn tại.");
+            account.IsActive = true;
+            tokenEntity.IsUsed = true;
+            _context.SaveChanges();
+            return Ok("Xác thực email thành công. Bạn có thể đăng nhập.");
+        }
+
+        [HttpPost("resend-verification-email")]
+        public IActionResult ResendVerificationEmail([FromBody] string email)
+        {
+            // Kiểm tra email tồn tại
+            var account = _accountService.GetByEmail(email);
+            if (account == null)
+                return NotFound("Email không tồn tại.");
+            if (account.IsActive == true)
+                return BadRequest("Tài khoản đã được xác thực email.");
+            // Tạo token mới
+            var verifyToken = Guid.NewGuid().ToString();
+            var expire = DateTime.Now.AddHours(2);
+            var tokenEntity = new PasswordResetToken
+            {
+                AccountId = account.AccountId,
+                Token = verifyToken,
+                ExpireAt = expire,
+                IsUsed = false,
+                CreateAt = DateTime.Now
+            };
+            _context.PasswordResetTokens.Add(tokenEntity);
+            _context.SaveChanges();
+            // Gửi email xác thực
+            var verifyLink = $"https://localhost:7283/Common/VerifyEmail?token={verifyToken}";
+            var emailSettings = _configuration.GetSection("EmailSettings");
+            var smtpServer = emailSettings["SmtpServer"];
+            var smtpPort = int.Parse(emailSettings["SmtpPort"]);
+            var smtpUser = emailSettings["SmtpUser"];
+            var smtpPass = emailSettings["SmtpPass"];
+            var senderEmail = emailSettings["SenderEmail"];
+            var senderName = emailSettings["SenderName"];
+            var mail = new System.Net.Mail.MailMessage();
+            mail.From = new System.Net.Mail.MailAddress(senderEmail, senderName);
+            mail.To.Add(email);
+            mail.Subject = "[CVMatcher] Gửi lại email xác thực tài khoản";
+            mail.Body = $"Vui lòng nhấn vào link sau để xác thực tài khoản: {verifyLink}\n\nLink sẽ hết hạn sau 2 giờ.";
+            mail.IsBodyHtml = false;
+            using (var smtp = new System.Net.Mail.SmtpClient(smtpServer, smtpPort))
+            {
+                smtp.Credentials = new System.Net.NetworkCredential(smtpUser, smtpPass);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+            return Ok("Đã gửi lại email xác thực. Vui lòng kiểm tra hộp thư.");
         }
 
         [HttpPost("external-login/google")]
         public async Task<IActionResult> GoogleLogin([FromBody] ExternalLoginRequest request)
         {
-
-
             if (request.Provider != "Google" || string.IsNullOrEmpty(request.IdToken))
                 return BadRequest("Invalid request");
             GoogleJsonWebSignature.Payload payload;
