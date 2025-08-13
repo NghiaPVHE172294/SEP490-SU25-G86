@@ -51,6 +51,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
+            // Validate email format
+            var emailValidator = new System.ComponentModel.DataAnnotations.EmailAddressAttribute();
+            if (!emailValidator.IsValid(request.Email))
+                return BadRequest("Email không đúng định dạng.");
             var account = _accountService.Authenticate(request.Email, request.Password);
             if (account == null)
                 return Unauthorized(new { message = "Email hoặc mật khẩu không đúng" });
@@ -104,6 +108,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
+            // Validate email format
+            var emailValidator = new System.ComponentModel.DataAnnotations.EmailAddressAttribute();
+            if (!emailValidator.IsValid(request.Email))
+                return BadRequest("Email không đúng định dạng.");
             // Kiểm tra email đã tồn tại
             var existing = _accountService.GetByEmail(request.Email);
             if (existing != null)
