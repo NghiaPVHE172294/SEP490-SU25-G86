@@ -46,6 +46,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="GeminiLog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
