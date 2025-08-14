@@ -65,5 +65,53 @@ namespace vn.edu.fpt.Controllers.CvTemplateUpload
                 });
             }
         }
+        [HttpGet]
+        public IActionResult GetAllTemplates()
+        {
+            using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
+            {
+                var templates = db.CvTemplates
+    .Where(t => t.IsDelete != true)
+    .OrderByDescending(t => t.UploadDate)
+    .Select(t => new {
+        t.CvTemplateId,
+        t.CvTemplateName,
+        t.PdfFileUrl,
+        t.DocFileUrl,
+        t.ImgTemplate,
+        t.Notes,
+        t.UploadDate,
+        t.IndustryId,
+        t.PositionId
+    })
+    .ToList()
+    .Select(t => new {
+        t.CvTemplateId,
+        t.CvTemplateName,
+        t.PdfFileUrl,
+        t.DocFileUrl,
+        t.ImgTemplate,
+        t.Notes,
+        UploadDate = t.UploadDate != null ? t.UploadDate.Value.ToString("dd/MM/yyyy HH:mm") : "",
+        t.IndustryId,
+        t.PositionId
+    })
+    .ToList();
+                return Ok(templates);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTemplate(int id)
+        {
+            using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
+            {
+                var template = db.CvTemplates.FirstOrDefault(t => t.CvTemplateId == id && t.IsDelete != true);
+                if (template == null) return NotFound();
+                template.IsDelete = true;
+                db.SaveChanges();
+                return Ok();
+            }
+        }
     }
 }
