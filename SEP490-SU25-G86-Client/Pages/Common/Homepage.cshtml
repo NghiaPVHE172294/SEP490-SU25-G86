@@ -30,10 +30,16 @@
 </head>
 <body>
     <!-- Hero Search Section -->
-    <section class="bg-dark py-5">
-        <div class="container mt-5">
+    <section class="hero-section text-center">
+        <div class="content-wrapper">
+            <!-- Tiêu đề -->
+            <h2 class="fw-bold">
+                Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc
+            </h2>
+
+            <!-- Form tìm kiếm -->
             <form method="get" action="/Common/ListJobs" class="d-flex bg-white shadow"
-                  style="border-radius: 8px; overflow: hidden; max-width: 900px; margin: auto;">
+                  style="border-radius: 8px; overflow: hidden; max-width: 970px; margin: 40px auto 0;">
 
                 <!-- Job title input -->
                 <input name="keyword" type="text" class="form-control border-0 px-3"
@@ -42,7 +48,7 @@
                 <!-- Vertical divider -->
                 <div style="width:1px; background-color:#dee2e6;"></div>
 
-                <!-- Location dropdown (mapped to provinceId) -->
+                <!-- Location dropdown -->
                 <select class="form-select border-0 px-3" name="provinceId" style="flex: 0 0 20%;">
                     <option selected value="">Vị trí</option>
                     @foreach (var province in Model.Provinces)
@@ -57,6 +63,44 @@
                     <i class="bi bi-search me-1"></i> Tìm kiếm
                 </button>
             </form>
+
+            <!-- Categories + Slider -->
+            <div class="row mx-auto mt-5" style="max-width: 1010px; min-height: 300px;">
+                <!-- Cột ngành nghề -->
+                <div class="col-lg-3">
+                    <div class="category-list p-3 bg-white shadow">
+                        <ul id="industry-category-list" class="list-unstyled m-0"></ul>
+
+                        <!-- Pagination -->
+                        <div class="category-footer">
+                            <div class="category-pagination">
+                                <button class="prev-btn">&lsaquo;</button>
+                                <button class="next-btn">&rsaquo;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slider -->
+                <div class="col-lg-9 d-flex">
+                    <div id="jobSlider" class="carousel slide shadow custom-slider" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <a href="/Common/ListJobs">
+                                    <img src="https://i.ibb.co/wZvbPjnc/2-C1-346x-577.png"
+                                         class="d-block w-100 h-100" alt="Banner 1">
+                                </a>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#jobSlider" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#jobSlider" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -170,6 +214,7 @@
 </body>
 
 <script>
+    //script filter cho jobpost
     document.addEventListener("DOMContentLoaded", function () {
         const filterToggle = document.getElementById("filterToggle");
         const filterMenu = document.getElementById("filterMenu");
@@ -283,6 +328,7 @@
 </script>
 
 <script>
+    //script gen các ngành + số lượng
     const API_BASE = "https://localhost:7004/api/industries/with-jobcount";
     let currentPage = 1;
     const pageSize = 8;
@@ -332,5 +378,56 @@
     });
 
     loadIndustries(currentPage);
+</script>
+<script>
+    //script fill ngành ở mục chọn ngành
+        document.addEventListener("DOMContentLoaded", function () {
+        const API_BASE = "https://localhost:7004/api/industries/with-jobcount";
+        let currentPage = 1;
+        const pageSize = 6;
+        let lastPage = false;
+
+        function loadIndustryCategories(page) {
+            fetch(`${API_BASE}?page=${page}&pageSize=${pageSize}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("API data:", data);
+                    const listEl = document.getElementById("industry-category-list");
+                    listEl.innerHTML = "";
+
+                    data.forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerHTML = `
+                            <a href="/Common/ListJobs?industryId=${item.industryId}" class="text-decoration-none">
+                                <span class="category-text">${item.industryName}</span>
+                                <span class="arrow">&gt;</span>
+                            </a>
+                        `;
+                        listEl.appendChild(li);
+                    });
+
+                        document.querySelector(".prev-btn").disabled = (page === 1);
+                        lastPage = data.length < pageSize;
+                        document.querySelector(".next-btn").disabled = lastPage;
+                })
+                .catch(err => console.error("Error loading industries:", err));
+        }
+
+        document.querySelector(".prev-btn").addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadIndustryCategories(currentPage);
+            }
+        });
+
+        document.querySelector(".next-btn").addEventListener("click", () => {
+            if (!lastPage) {
+                currentPage++;
+                loadIndustryCategories(currentPage);
+            }
+        });
+
+        loadIndustryCategories(currentPage);
+    });
 </script>
 </html>
