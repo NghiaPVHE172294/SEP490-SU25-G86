@@ -38,5 +38,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository
 
             return (companies, totalCount);
         }
+        public async Task<List<Company>> GetAllCompanies()
+        {
+            return await _context.Companies.ToListAsync();
+        }
     }
 }

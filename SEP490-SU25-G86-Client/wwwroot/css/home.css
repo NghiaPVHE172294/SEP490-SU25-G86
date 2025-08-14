@@ -7,6 +7,7 @@
     --white: #FFFFFF;
     --border-color: #E0E0E0;
 }
+
 h2.fw-bold,
 h2.fw-bold.m-0 {
     color: var(--primary-color);
@@ -441,4 +442,27 @@ a:hover h5 {
         .custom-slider .carousel-control-prev-icon:hover,
         .custom-slider .carousel-control-next-icon:hover {
             background-color: rgba(0, 0, 0, 0.6);
+        }
+/*ListJob*/
+.joblist-card {
+    border-radius: 15px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+
+    .joblist-card:hover {
+        background-color: rgba(48, 150, 137, 0.05);
+        border-color: #309689 !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+        .joblist-card:hover .job-title {
+            color: #309689; /* Change title text color on hover */
         }
