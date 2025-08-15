@@ -18,23 +18,36 @@ namespace vn.edu.fpt.Controllers.CvTemplateUpload
         [HttpPost("upload")]
         public async Task<IActionResult> UploadCvTemplate([FromForm] CvTemplateUploadRequest request)
         {
-            if (request.PdfFile == null || request.DocFile == null || request.PreviewImage == null)
-                return BadRequest("Cần upload đủ cả file PDF, DOCX và ảnh minh họa.");
+            if (request.PdfFile == null || request.PreviewImage == null)
+                return BadRequest("Cần upload đủ file PDF và ảnh minh họa.");
 
             // Kiểm tra định dạng và dung lượng PDF
             if (request.PdfFile.ContentType != "application/pdf" || request.PdfFile.Length > 5 * 1024 * 1024)
                 return BadRequest("File PDF phải đúng định dạng (PDF) và dưới 5MB!");
 
-            // Kiểm tra định dạng và dung lượng DOCX
-            if ((request.DocFile.ContentType != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
-                 request.DocFile.ContentType != "application/msword") || request.DocFile.Length > 5 * 1024 * 1024)
-                return BadRequest("File DOCX phải đúng định dạng (DOCX/DOC) và dưới 5MB!");
+            // Kiểm tra định dạng và dung lượng DOC/DOCX (nếu có)
+            if (request.DocFile != null)
+            {
+                if ((!request.DocFile.FileName.EndsWith(".doc", StringComparison.OrdinalIgnoreCase) && !request.DocFile.FileName.EndsWith(".docx", StringComparison.OrdinalIgnoreCase)) || request.DocFile.Length > 5 * 1024 * 1024)
+                    return BadRequest("File DOC/DOCX phải đúng định dạng (.doc/.docx) và dưới 5MB!");
+                if ((request.DocFile.ContentType != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
+                     request.DocFile.ContentType != "application/msword"))
+                    return BadRequest("File DOCX phải đúng định dạng (DOCX/DOC)!");
+            }
 
             // Kiểm tra định dạng và dung lượng ảnh minh họa (JPEG/PNG, < 5MB)
             if ((request.PreviewImage.ContentType != "image/png" && request.PreviewImage.ContentType != "image/jpeg") || request.PreviewImage.Length > 5 * 1024 * 1024)
                 return BadRequest("Ảnh minh họa phải là PNG hoặc JPEG và dưới 5MB!");
 
-            var (pdfUrl, docUrl, imgUrl) = await _uploadService.UploadCvTemplateAsync(request.PdfFile, request.DocFile, request.PreviewImage);
+            string pdfUrl, docUrl = null, imgUrl;
+if (request.DocFile != null)
+{
+    (pdfUrl, docUrl, imgUrl) = await _uploadService.UploadCvTemplateAsync(request.PdfFile, request.DocFile, request.PreviewImage);
+}
+else
+{
+    (pdfUrl, _, imgUrl) = await _uploadService.UploadCvTemplateAsync(request.PdfFile, null, request.PreviewImage);
+}
             // Lưu vào DB (CvTemplate)
             using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
             {

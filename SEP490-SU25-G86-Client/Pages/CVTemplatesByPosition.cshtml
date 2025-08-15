@@ -1,0 +1,113 @@
+@page "/CVTemplatesByPosition"
+@model SEP490_SU25_G86_Client.Pages.CVTemplatesByPositionModel
+@{
+    ViewData["Title"] = "Mẫu CV theo vị trí ứng tuyển";
+}
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color:#218838;">Mẫu CV tiêu biểu theo vị trí ứng tuyển</h2>
+    <form method="get" class="mb-4">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Ngành nghề</label>
+                <select class="form-select" name="industryId">
+                    <option value="">Tất cả ngành</option>
+                    @{
+    var selectedIndustry = Request.Query["industryId"].ToString();
+}
+@foreach (var ind in Model.Industries)
+{
+    <option value="@ind.IndustryId" selected="@(selectedIndustry == ind.IndustryId.ToString() ? "selected" : null)">@ind.IndustryName</option>
+}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Vị trí</label>
+                <select class="form-select" name="positionId">
+                    <option value="">Tất cả vị trí</option>
+                    @{
+    var selectedPosition = Request.Query["positionId"].ToString();
+}
+@foreach (var pos in Model.Positions)
+{
+    <option value="@pos.PositionId" selected="@(selectedPosition == pos.PositionId.ToString() ? "selected" : null)">@pos.PostitionName</option>
+}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" class="form-control" name="search" value="@Request.Query["search"]" placeholder="Tên CV..." />
+            </div>
+            <div class="col-md-1 d-flex gap-1">
+    <button type="submit" class="btn btn-success w-100">Lọc</button>
+    <a href="/CVTemplatesByPosition" class="btn btn-secondary w-100">Xóa lọc</a>
+</div>
+        </div>
+    </form>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @if (Model.Templates != null && Model.Templates.Count > 0)
+        {
+            foreach (var template in Model.Templates)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@template.ImgTemplate" class="card-img-top" alt="CV Preview" style="height:340px;object-fit:cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@template.PositionName</h5>
+                            <p class="card-text">@template.CvTemplateName</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a class="btn btn-outline-success" href="@template.PdfFileUrl" target="_blank">Xem PDF</a>
+                            @if (!string.IsNullOrEmpty(template.DocFileUrl))
+{
+    <a class="btn btn-outline-primary" href="@template.DocFileUrl" target="_blank">Tải DOCX</a>
+}
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted">Chưa có mẫu CV nào.</div>
+        }
+    </div>
+    <!-- Phân trang -->
+    <div class="d-flex justify-content-center mt-4">
+        @{
+            int page = Model.Page;
+int totalCount = Model.TotalCount;
+int pageSize = Model.PageSize;
+int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        }
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(page == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?@GetPageUrl(page - 1)">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(page == i ? "active" : "")">
+                        <a class="page-link" href="?@GetPageUrl(i)">@i</a>
+                    </li>
+                }
+                <li class="page-item @(page == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?@GetPageUrl(page + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<style>
+    .card-img-top {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+</style>
+@functions {
+    public string GetPageUrl(int pageNum)
+    {
+        var query = new Dictionary<string, string>(Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString()));
+        query["page"] = pageNum.ToString();
+        return string.Join("&", query.Select(kv => $"{kv.Key}={System.Net.WebUtility.UrlEncode(kv.Value)}"));
+    }
+}
