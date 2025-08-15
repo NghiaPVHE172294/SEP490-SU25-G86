@@ -1,0 +1,15 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Common.ResendVerificationEmailModel
+
+<h3>Gửi lại email xác thực</h3>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div>@Model.Message</div>
+}
+
+<form method="post">
+    <input asp-for="Email" class="form-control" placeholder="Nhập email của bạn" />
+    <span asp-validation-for="Email" class="text-danger"></span>
+    <button class="btn btn-primary" type="submit">Gửi lại email xác thực</button>
+</form>
