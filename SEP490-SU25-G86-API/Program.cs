@@ -360,8 +360,9 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
 
 			app.UseHttpsRedirection();
 
-			
-			app.UseAuthentication();
+            app.UsePathBase("/api");
+
+            app.UseAuthentication();
             app.UseMiddleware<PermissionMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();

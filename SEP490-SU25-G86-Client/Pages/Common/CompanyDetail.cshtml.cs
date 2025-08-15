@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.IdentityModel.Tokens.Jwt;
 namespace SEP490_SU25_G86_Client.Pages.Common
 {
     public class CompanyDetailModel : PageModel

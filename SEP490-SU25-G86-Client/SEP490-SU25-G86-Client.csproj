@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,10 +6,34 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SEP490_SU25_G86_Client</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
-  </ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
+		<PackageReference Include="FirebaseAdmin" Version="3.3.0" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
+		<PackageReference Include="Google.Apis.Drive.v3" Version="1.69.0.3783" />
+		<PackageReference Include="Google.Cloud.AIPlatform.V1" Version="3.38.0" />
+		<PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
+		<PackageReference Include="Google_GenerativeAI" Version="3.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.36" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.36" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.36">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.7" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="PdfPig" Version="0.1.11" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageReference Include="Twilio" Version="7.11.5" />
+	</ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\css\NotFound.css">
