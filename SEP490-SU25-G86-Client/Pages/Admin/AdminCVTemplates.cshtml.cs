@@ -178,9 +178,15 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
             if (DocFile != null)
             {
                 var docContent = new StreamContent(DocFile.OpenReadStream());
-                docContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                // Xác định ContentType phù hợp cho .doc hoặc .docx
+                var ext = System.IO.Path.GetExtension(DocFile.FileName).ToLower();
+                if (ext == ".doc")
+                    docContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/msword");
+                else
+                    docContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
                 form.Add(docContent, "DocFile", DocFile.FileName);
             }
+// Nếu DocFile == null thì KHÔNG add field DocFile vào form, đảm bảo backend không nhận field rỗng.
             if (PreviewImage != null)
             {
                 var imgContent = new StreamContent(PreviewImage.OpenReadStream());

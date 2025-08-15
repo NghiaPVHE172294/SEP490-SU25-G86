@@ -66,13 +66,20 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(template.DocFileUrl))&embedded=true" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-file-earmark-word"></i> Xem DOC
-                                            </a>
-                                            <a href="@template.DocFileUrl" target="_blank" class="btn btn-sm btn-secondary ms-1">
-                                                <i class="bi bi-download"></i> Tải
-                                            </a>
-                                        </td>
+    @if (!string.IsNullOrEmpty(template.DocFileUrl))
+    {
+        <a href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(template.DocFileUrl))&embedded=true" target="_blank" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-file-earmark-word"></i> Xem DOC
+        </a>
+        <a href="@template.DocFileUrl" target="_blank" class="btn btn-sm btn-secondary ms-1">
+            <i class="bi bi-download"></i> Tải
+        </a>
+    }
+    else
+    {
+        <span class="text-muted">Không có</span>
+    }
+</td>
                                         <td>
                                             @if (!string.IsNullOrEmpty(template.ImgTemplate))
                                             {
