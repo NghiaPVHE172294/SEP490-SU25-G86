@@ -238,11 +238,13 @@
                     const data = await resp.json();
                     // Giả sử backend trả về totalScore, nếu không thì cần reload lại trang hoặc fetch lại từng submission
                     if (data && data.totalScore !== undefined && data.totalScore !== null) {
-                        document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
-                    } else {
-                        // Nếu không có điểm, reload trang để lấy dữ liệu mới
-                        location.reload();
-                    }
+    document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
+    // Reload lại trang để cập nhật trạng thái, ẩn nút
+    location.reload();
+} else {
+    // Nếu không có điểm, reload trang để lấy dữ liệu mới
+    location.reload();
+}
                 } catch (e) {
                     alert(e.message || "Có lỗi khi lọc AI");
                 }
