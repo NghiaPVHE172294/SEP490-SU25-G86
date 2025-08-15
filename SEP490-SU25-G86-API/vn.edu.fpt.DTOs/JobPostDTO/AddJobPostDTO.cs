@@ -10,54 +10,61 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public int? CvtemplateOfEmployerId { get; set; } // ID của CVTemplate do employer chọn
 
         public int? IndustryId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên ngành phải từ 2-255 ký tự.")]
         public string? NewIndustryName { get; set; }
 
         public int? JobPositionId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên vị trí phải từ 2-255 ký tự.")]
         public string? NewJobPositionName { get; set; }
 
         public int? SalaryRangeId { get; set; }
+        [StringLength(255, MinimumLength = 5, ErrorMessage = "Khoảng lương phải từ 5-255 ký tự.")]
         public string? NewSalaryRange { get; set; } // "min-max-currency"
 
         public int? ProvinceId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên tỉnh/thành phố phải từ 2-255 ký tự.")]
         public string? NewProvinceName { get; set; }
 
         public int? ExperienceLevelId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên cấp độ kinh nghiệm phải từ 2-255 ký tự.")]
         public string? NewExperienceLevelName { get; set; }
 
         public int? JobLevelId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên cấp bậc công việc phải từ 2-255 ký tự.")]
         public string? NewJobLevelName { get; set; }
 
         public int? EmploymentTypeId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên loại hình làm việc phải từ 2-255 ký tự.")]
         public string? NewEmploymentTypeName { get; set; }
 
         // ===== Thông tin job post bắt buộc =====
-        [Required]
-        [StringLength(255, MinimumLength = 3)]
+        [Required(ErrorMessage = "Tiêu đề là bắt buộc.")]
+        [StringLength(255, MinimumLength = 3, ErrorMessage = "Tiêu đề phải từ 3-255 ký tự.")]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ngày hết hạn là bắt buộc.")]
         public DateTime? EndDate { get; set; }
 
-        [Required]
-        [StringLength(2000, MinimumLength = 10)]
+        [Required(ErrorMessage = "Mô tả là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 10, ErrorMessage = "Mô tả phải từ 10-2000 ký tự.")]
         public string? Description { get; set; }
 
-        [Required]
-        [StringLength(2000)]
+        [Required(ErrorMessage = "Yêu cầu ứng viên là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 5, ErrorMessage = "Yêu cầu ứng viên phải từ 5-2000 ký tự.")]
         public string? CandidaterRequirements { get; set; }
 
-        [Required]
-        [StringLength(2000)]
+        [Required(ErrorMessage = "Quyền lợi là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 5, ErrorMessage = "Quyền lợi phải từ 5-2000 ký tự.")]
         public string? Interest { get; set; }
 
-        [Required]
-        [StringLength(255)]
+        [Required(ErrorMessage = "Địa điểm làm việc là bắt buộc.")]
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Địa điểm làm việc phải từ 2-255 ký tự.")]
         public string WorkLocation { get; set; }
 
         public bool IsAienabled { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Trạng thái là bắt buộc.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Trạng thái phải từ 2-50 ký tự.")]
         public string Status { get; set; }
 
         // ===== Validation logic =====
