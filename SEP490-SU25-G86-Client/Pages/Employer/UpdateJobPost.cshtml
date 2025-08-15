@@ -269,5 +269,37 @@
                 input.required = false;
             }
         }
+        function onSalaryRangeChange() {
+            var select = document.getElementById('salaryRangeSelect');
+            var group = document.getElementById('newSalaryRangeGroup');
+            var hidden = document.getElementById('newSalaryRangeHidden');
+            if (select.value === 'other') {
+                group.style.display = 'block';
+                hidden.disabled = false;
+                setTimeout(function() { select.value = ""; }, 0);
+            } else {
+                group.style.display = 'none';
+                hidden.value = '';
+                hidden.disabled = true;
+            }
+        }
+        // Gộp min-max-currency vào hidden input khi nhập mới
+        document.addEventListener('DOMContentLoaded', function () {
+            onSalaryRangeChange();
+            document.getElementById('salaryRangeSelect').addEventListener('change', onSalaryRangeChange);
+            var min = document.getElementById('minSalaryInput');
+            var max = document.getElementById('maxSalaryInput');
+            var cur = document.getElementById('currencyInput');
+            var hidden = document.getElementById('newSalaryRangeHidden');
+            [min, max, cur].forEach(function (el) {
+                el.addEventListener('input', function () {
+                    if (min.value && max.value && cur.value) {
+                        hidden.value = min.value + '-' + max.value + '-' + cur.value;
+                    } else {
+                        hidden.value = '';
+                    }
+                });
+            });
+        });
     </script>
 } 
