@@ -1,12 +1,13 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -21,7 +22,14 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         public List<JobCriterionDTO> JobCriteria { get; set; } = new();
         public List<JobPostListDTO> JobPosts { get; set; } = new();
         public Dictionary<int, List<JobCriterionDTO>> CriteriaByJobPost { get; set; } = new();
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
 
+        [BindProperty(SupportsGet = true)]
+        public int PageSize { get; set; } = 5;
+
+        public int TotalRecords { get; set; }
+        public int TotalPages => (int)Math.Ceiling((double)TotalRecords / PageSize);
         public async Task<IActionResult> OnGetAsync()
         {
             var role = HttpContext.Session.GetString("user_role");
@@ -62,7 +70,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             // Group JobCriteria theo JobPostId
             CriteriaByJobPost = JobCriteria.GroupBy(jc => jc.JobPostId)
                 .ToDictionary(g => g.Key, g => g.ToList());
-
+            //phân trang
+            TotalRecords = JobPosts.Count;
+            JobPosts = JobPosts
+                .OrderByDescending(j => j.CreatedDate) // nếu có
+                .Skip((PageIndex - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
             return Page();
         }
 

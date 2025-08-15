@@ -185,6 +185,7 @@ body, .container-cv {
         margin: 0;
         padding: 0;
     }
+
 .pagination {
     margin-top: 10px;
     --bs-pagination-active-bg: #3b82f6;
@@ -213,4 +214,16 @@ body, .container-cv {
 .text-muted {
     color: #6b7280 !important;
     font-size: 1.02em;
+}
+ul.list-unstyled > li {
+    background-color: #f8f9fa;
+    transition: all 0.2s ease-in-out;
+}
+
+    ul.list-unstyled > li:hover {
+        background-color: #eef2f7;
+        box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+td.text-center.align-middle {
+    vertical-align: middle !important;
 }
