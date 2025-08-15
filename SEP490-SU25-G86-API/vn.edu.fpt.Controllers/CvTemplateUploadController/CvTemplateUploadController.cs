@@ -136,5 +136,21 @@ public IActionResult GetAllTemplates()
                 return Ok();
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTemplate(int id, [FromBody] SEP490_SU25_G86_API.DTOs.CvTemplateDTO.UpdateCvTemplateRequest request)
+        {
+            using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
+            {
+                var template = db.CvTemplates.FirstOrDefault(t => t.CvTemplateId == id && t.IsDelete != true);
+                if (template == null) return NotFound();
+                if (!string.IsNullOrWhiteSpace(request.CvTemplateName))
+                    template.CvTemplateName = request.CvTemplateName;
+                if (request.Notes != null)
+                    template.Notes = request.Notes;
+                db.SaveChanges();
+                return Ok();
+            }
+        }
     }
 }
