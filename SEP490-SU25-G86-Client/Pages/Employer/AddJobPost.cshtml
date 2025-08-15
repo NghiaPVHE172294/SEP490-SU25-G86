@@ -23,17 +23,17 @@ else
 {
     <form method="post" class="row g-3">
         <div class="col-md-6">
-            <label asp-for="JobPost.Title" class="form-label"></label>
+            <label class="form-label">Tiêu đề công việc</label>
             <input asp-for="JobPost.Title" class="form-control" />
             <span asp-validation-for="JobPost.Title" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="JobPost.WorkLocation" class="form-label"></label>
+            <label class="form-label">Địa điểm làm việc</label>
             <input asp-for="JobPost.WorkLocation" class="form-control" />
             <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="JobPost.Status" class="form-label"></label>
+            <label class="form-label">Trạng thái bài đăng</label>
             <select asp-for="JobPost.Status" class="form-select">
                 <option value="">-- Chọn trạng thái --</option>
                 <option value="OPEN">OPEN</option>
@@ -42,22 +42,22 @@ else
             <span asp-validation-for="JobPost.Status" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="JobPost.EndDate" class="form-label"></label>
+            <label class="form-label">Ngày hết hạn tuyển dụng</label>
             <input asp-for="JobPost.EndDate" type="date" class="form-control" />
             <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
         </div>
         <div class="col-12">
-            <label asp-for="JobPost.Description" class="form-label"></label>
+            <label class="form-label">Chi tiết công việc</label>
             <textarea asp-for="JobPost.Description" class="form-control" rows="3"></textarea>
             <span asp-validation-for="JobPost.Description" class="text-danger"></span>
         </div>
         <div class="col-12">
-            <label asp-for="JobPost.CandidaterRequirements" class="form-label"></label>
+            <label class="form-label">Yêu cầu ứng viên</label>
             <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2"></textarea>
             <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
         </div>
         <div class="col-12">
-            <label asp-for="JobPost.Interest" class="form-label"></label>
+            <label asp-for="JobPost.Kỹ năng chuyên môn" class="form-label"></label>
             <textarea asp-for="JobPost.Interest" class="form-control" rows="2"></textarea>
             <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
         </div>
