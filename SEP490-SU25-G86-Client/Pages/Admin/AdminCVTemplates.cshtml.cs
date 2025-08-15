@@ -71,24 +71,30 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
         private const string ApiBase = "https://localhost:7004/";
 
         public async Task OnGetAsync()
-{
-    var client = new HttpClient();
-    var token = HttpContext.Session.GetString("jwt_token");
-    if (!string.IsNullOrEmpty(token))
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        {
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "ADMIN")
+            {
+                Response.Redirect("/NotFound");
+                return;
+            }
+            var token = HttpContext.Session.GetString("jwt_token");
+            var client = new HttpClient();
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-    // Đọc query string
-    var searchName = Request.Query["SearchName"].ToString()?.Trim();
-    var dateFromStr = Request.Query["DateFrom"].ToString();
-    var dateToStr = Request.Query["DateTo"].ToString();
-    int page = 1;
-    int.TryParse(Request.Query["page"], out page);
-    if (page < 1) page = 1;
-    PageIndex = page;
-    PageSize = 10;
+            // Đọc query string
+            var searchName = Request.Query["SearchName"].ToString()?.Trim();
+            var dateFromStr = Request.Query["DateFrom"].ToString();
+            var dateToStr = Request.Query["DateTo"].ToString();
+            int page = 1;
+            int.TryParse(Request.Query["page"], out page);
+            if (page < 1) page = 1;
+            PageIndex = page;
+            PageSize = 10;
 
-    // Load industries
-    var resIndustry = await client.GetAsync(ApiBase + "api/industries");
+            // Load industries
+            var resIndustry = await client.GetAsync(ApiBase + "api/industries");
     if (resIndustry.IsSuccessStatusCode)
     {
         var json = await resIndustry.Content.ReadAsStringAsync();
