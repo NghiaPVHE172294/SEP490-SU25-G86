@@ -38,18 +38,30 @@ namespace vn.edu.fpt.Controllers.CvTemplateUpload
             // Lưu vào DB (CvTemplate)
             using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
             {
-                var template = new SEP490_SU25_G86_API.Models.CvTemplate
-                {
-                    PdfFileUrl = pdfUrl,
-                    DocFileUrl = docUrl,
-                    ImgTemplate = imgUrl,
-                    IndustryId = request.IndustryId,
-                    PositionId = request.PositionId,
-                    CvTemplateName = request.CvTemplateName,
-                    Notes = request.Notes,
-                    UploadDate = DateTime.Now,
-                    IsDelete = false
-                };
+                // Lấy AccountId từ claim
+var accountIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+if (accountIdClaim == null)
+    return Unauthorized("Không tìm thấy thông tin tài khoản đăng nhập.");
+int accountId = int.Parse(accountIdClaim.Value);
+// Lấy UserId tương ứng
+var adminUser = db.Users.FirstOrDefault(u => u.AccountId == accountId);
+if (adminUser == null)
+    return Unauthorized("Không tìm thấy user tương ứng với tài khoản này.");
+int adminUserId = adminUser.UserId;
+
+var template = new SEP490_SU25_G86_API.Models.CvTemplate
+{
+    AdminId = adminUserId,
+    PdfFileUrl = pdfUrl,
+    DocFileUrl = docUrl,
+    ImgTemplate = imgUrl,
+    IndustryId = request.IndustryId,
+    PositionId = request.PositionId,
+    CvTemplateName = request.CvTemplateName,
+    Notes = request.Notes,
+    UploadDate = DateTime.Now,
+    IsDelete = false
+};
                 db.CvTemplates.Add(template);
                 await db.SaveChangesAsync();
                 return Ok(new {
@@ -66,40 +78,51 @@ namespace vn.edu.fpt.Controllers.CvTemplateUpload
             }
         }
         [HttpGet]
-        public IActionResult GetAllTemplates()
-        {
-            using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
-            {
-                var templates = db.CvTemplates
-    .Where(t => t.IsDelete != true)
-    .OrderByDescending(t => t.UploadDate)
-    .Select(t => new {
-        t.CvTemplateId,
-        t.CvTemplateName,
-        t.PdfFileUrl,
-        t.DocFileUrl,
-        t.ImgTemplate,
-        t.Notes,
-        t.UploadDate,
-        t.IndustryId,
-        t.PositionId
-    })
-    .ToList()
-    .Select(t => new {
-        t.CvTemplateId,
-        t.CvTemplateName,
-        t.PdfFileUrl,
-        t.DocFileUrl,
-        t.ImgTemplate,
-        t.Notes,
-        UploadDate = t.UploadDate != null ? t.UploadDate.Value.ToString("dd/MM/yyyy HH:mm") : "",
-        t.IndustryId,
-        t.PositionId
-    })
-    .ToList();
-                return Ok(templates);
-            }
-        }
+public IActionResult GetAllTemplates()
+{
+    using (var db = new SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchContext())
+    {
+        // Lấy AccountId từ claim
+        var accountIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (accountIdClaim == null)
+            return Unauthorized("Không tìm thấy thông tin tài khoản đăng nhập.");
+        int accountId = int.Parse(accountIdClaim.Value);
+        // Lấy UserId tương ứng
+        var adminUser = db.Users.FirstOrDefault(u => u.AccountId == accountId);
+        if (adminUser == null)
+            return Unauthorized("Không tìm thấy user tương ứng với tài khoản này.");
+        int adminUserId = adminUser.UserId;
+
+        var templates = db.CvTemplates
+            .Where(t => t.IsDelete != true && t.AdminId == adminUserId)
+            .OrderByDescending(t => t.UploadDate)
+            .Select(t => new {
+                t.CvTemplateId,
+                t.CvTemplateName,
+                t.PdfFileUrl,
+                t.DocFileUrl,
+                t.ImgTemplate,
+                t.Notes,
+                t.UploadDate,
+                t.IndustryId,
+                t.PositionId
+            })
+            .ToList()
+            .Select(t => new {
+                t.CvTemplateId,
+                t.CvTemplateName,
+                t.PdfFileUrl,
+                t.DocFileUrl,
+                t.ImgTemplate,
+                t.Notes,
+                UploadDate = t.UploadDate != null ? t.UploadDate.Value.ToString("dd/MM/yyyy HH:mm") : "",
+                t.IndustryId,
+                t.PositionId
+            })
+            .ToList();
+        return Ok(templates);
+    }
+}
 
         [HttpDelete("{id}")]
         public IActionResult DeleteTemplate(int id)
