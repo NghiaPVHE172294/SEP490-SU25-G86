@@ -6,7 +6,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
     {
         Task<List<CvDTO>> GetAllByUserAsync(int userId);
         Task<CvDTO?> GetByIdAsync(int cvId);
-        Task AddAsync(int userId, string roleName, AddCvDTO dto, string fileUrl);
+        Task<int> AddAsync(int userId, string roleName, AddCvDTO dto, string fileUrl);
         Task DeleteAsync(int userId, int cvId);
         Task UpdateCvNameAsync(int cvId, string newName);
         Task<string> UploadFileToFirebaseStorage(IFormFile file, int candidateId);
