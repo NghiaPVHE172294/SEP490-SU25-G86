@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.AppliedJobDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AppliedJobDTO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.CVParsedDataService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
 {
@@ -16,12 +19,38 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
     {
         private readonly IAppliedJobService _appliedJobService;
         private readonly ICvService _cvService;
+        private readonly ICvParsingService _cvParsing;
+        private readonly SEP490_G86_CvMatchContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public AppliedJobsController(IAppliedJobService appliedJobService, ICvService cvService)
+        public AppliedJobsController(
+            IAppliedJobService appliedJobService,
+            ICvService cvService,
+            ICvParsingService cvParsing,
+            SEP490_G86_CvMatchContext context,
+            IWebHostEnvironment env)
         {
             _appliedJobService = appliedJobService;
             _cvService = cvService;
+            _cvParsing = cvParsing;
+            _context = context;
+            _env = env;
         }
+
+        // ===== Prompt từ file (cache để tránh đọc lặp) =====
+        private static string? _cachedCvPrompt;
+        private string GetCvPrompt()
+        {
+            if (!string.IsNullOrEmpty(_cachedCvPrompt)) return _cachedCvPrompt!;
+
+            var path = Path.Combine(_env.ContentRootPath, "LogAPI_AI", "GeminiPromtToParsedData.txt");
+            if (!System.IO.File.Exists(path))
+                throw new FileNotFoundException($"Không tìm thấy file prompt: {path}");
+
+            _cachedCvPrompt = System.IO.File.ReadAllText(path, Encoding.UTF8);
+            return _cachedCvPrompt!;
+        }
+
 
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<AppliedJobDTO>>> GetByUserId(int userId)
@@ -52,42 +81,114 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
             return Ok(new { message = "Ứng tuyển thành công" });
         }
 
+        //[HttpPost("apply-upload")]
+        //public async Task<IActionResult> ApplyWithNewCv([FromForm] ApplyUploadCvDTO req)
+        //{
+        //    if (req.File == null || req.File.Length == 0)
+        //        return BadRequest("Vui lòng chọn file CV");
+        //    // Check if user has already applied
+        //    if (await _appliedJobService.HasUserAppliedToJobAsync(req.CandidateId, req.JobPostId))
+        //    {
+        //        return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
+        //    }
+        //    // Upload file lên Firebase Storage (thay vì Google Drive)
+        //    string fileUrl = await _cvService.UploadFileToFirebaseStorage(req.File, req.CandidateId);
+        //    var cv = new SEP490_SU25_G86_API.Models.Cv
+        //    {
+        //        CandidateId = req.CandidateId,
+        //        UploadByUserId = req.CandidateId,
+        //        FileUrl = fileUrl,
+        //        UploadDate = DateTime.UtcNow,
+        //        IsDelete = false,
+        //        Cvname = req.CVName
+        //    };
+        //    int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);
+        //    // Tạo bản ghi ứng tuyển vào jobpost (CvSubmission)
+        //    var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
+        //    {
+        //        CvId = cvId,
+        //        JobPostId = req.JobPostId,
+        //        SubmittedByUserId = req.CandidateId,
+        //        SubmissionDate = DateTime.UtcNow,
+        //        IsDelete = false,
+        //        SourceType = "UPLOAD",
+        //        Status = "Đã ứng tuyển"
+        //    };
+        //    await _appliedJobService.AddSubmissionAsync(submission);
+        //    return Ok(new { message = "Ứng tuyển thành công" });
+        //}
+
         [HttpPost("apply-upload")]
-        public async Task<IActionResult> ApplyWithNewCv([FromForm] ApplyUploadCvDTO req)
+        public async Task<IActionResult> ApplyWithNewCv([FromForm] ApplyUploadCvDTO req, CancellationToken ct)
         {
             if (req.File == null || req.File.Length == 0)
                 return BadRequest("Vui lòng chọn file CV");
-            // Check if user has already applied
+
+            // chỉ nhận PDF/DOCX
+            var ext = Path.GetExtension(req.File.FileName).ToLowerInvariant();
+            if (ext != ".pdf" && ext != ".docx")
+                return BadRequest("Chỉ hỗ trợ CV dạng PDF hoặc DOCX.");
+
+            // Không cho nộp trùng
             if (await _appliedJobService.HasUserAppliedToJobAsync(req.CandidateId, req.JobPostId))
-            {
                 return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
+
+            await using var tx = await _context.Database.BeginTransactionAsync(ct);
+            try
+            {
+                // 1) Upload file lên Firebase
+                string fileUrl = await _cvService.UploadFileToFirebaseStorage(req.File, req.CandidateId);
+
+                // 2) Tạo record trong bảng CVs
+                var cv = new SEP490_SU25_G86_API.Models.Cv
+                {
+                    CandidateId = req.CandidateId,
+                    UploadByUserId = req.CandidateId,
+                    FileUrl = fileUrl,
+                    UploadDate = DateTime.UtcNow,
+                    IsDelete = false,
+                    Cvname = string.IsNullOrWhiteSpace(req.CVName) ? Path.GetFileName(req.File.FileName) : req.CVName,
+                    Notes = req.Notes
+                };
+                int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);
+
+                // 3) Tạo record Submission
+                var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
+                {
+                    CvId = cvId,
+                    JobPostId = req.JobPostId,
+                    SubmittedByUserId = req.CandidateId,
+                    SubmissionDate = DateTime.UtcNow,
+                    IsDelete = false,
+                    SourceType = "UPLOAD",
+                    Status = "Đã ứng tuyển"
+                };
+                await _appliedJobService.AddSubmissionAsync(submission);
+
+                // 4) Parse CV đã lưu -> ghi bảng CVParsedData
+                var prompt = GetCvPrompt();
+                var parsed = await _cvParsing.ParseAndSaveFromUrlAsync(cvId, fileUrl, prompt, ct);
+
+                await tx.CommitAsync(ct);
+
+                return Ok(new
+                {
+                    message = "Ứng tuyển thành công",
+                    CvId = cvId,
+                    FileUrl = fileUrl,
+                    SubmissionId = submission.SubmissionId,
+                    CvParsedDataId = parsed.CvparsedDataId
+                });
             }
-            // Upload file lên Firebase Storage (thay vì Google Drive)
-            string fileUrl = await _cvService.UploadFileToFirebaseStorage(req.File, req.CandidateId);
-            var cv = new SEP490_SU25_G86_API.Models.Cv
+            catch (Exception ex)
             {
-                CandidateId = req.CandidateId,
-                UploadByUserId = req.CandidateId,
-                FileUrl = fileUrl,
-                UploadDate = DateTime.UtcNow,
-                IsDelete = false,
-                Cvname = req.CVName
-            };
-            int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);
-            // Tạo bản ghi ứng tuyển vào jobpost (CvSubmission)
-            var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
-            {
-                CvId = cvId,
-                JobPostId = req.JobPostId,
-                SubmittedByUserId = req.CandidateId,
-                SubmissionDate = DateTime.UtcNow,
-                IsDelete = false,
-                SourceType = "UPLOAD",
-                Status = "Đã ứng tuyển"
-            };
-            await _appliedJobService.AddSubmissionAsync(submission);
-            return Ok(new { message = "Ứng tuyển thành công" });
+                await tx.RollbackAsync(ct);
+                Console.WriteLine($"[ApplyWithNewCv] Exception: {ex}");
+                // Nếu muốn không rollback khi parse fail, có thể commit trước, rồi catch riêng lỗi parse
+                return BadRequest(new { message = "Ứng tuyển thất bại: " + ex.Message });
+            }
         }
+
 
         [HttpPut("update-cv")]
         public async Task<IActionResult> UpdateAppliedCv([FromBody] UpdateAppliedCvDTO req)
