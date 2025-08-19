@@ -25,10 +25,40 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CVParsedDataService
             var defaultPrompt = "Bạn là trình phân tích CV...";
             var jsonString = await _gemini.GenerateJsonAsync(prompt ?? defaultPrompt, textForModel, ct);
             // parse json thành entity
-            var data = JsonSerializer.Deserialize<CvparsedDatum>(jsonString, new JsonSerializerOptions
+            //var data = JsonSerializer.Deserialize<CvparsedDatum>(jsonString, new JsonSerializerOptions
+            //{
+            //    PropertyNameCaseInsensitive = true
+            //}) ?? throw new InvalidOperationException("JSON trả về không đúng schema.");
+
+            //data.CvId = cvId;
+            //data.ParsedAt = DateTime.UtcNow;
+            //data.IsDelete = false;
+
+            //await _repo.AddAsync(data, ct);
+            //return data;
+
+            if (string.IsNullOrWhiteSpace(jsonString))
+                throw new InvalidOperationException("JSON trả về không đúng schema.");
+
+            // parse json thành entity (chuẩn hoá exception)
+            CvparsedDatum data;
+            try
             {
-                PropertyNameCaseInsensitive = true
-            }) ?? throw new InvalidOperationException("JSON trả về không đúng schema.");
+                data = JsonSerializer.Deserialize<CvparsedDatum>(
+                    jsonString,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                ) ?? throw new InvalidOperationException("JSON trả về không đúng schema.");
+            }
+            catch (OperationCanceledException)
+            {
+                // tôn trọng cancellation
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                // JSON sai format/sai kiểu -> chuẩn hoá về InvalidOperationException
+                throw new InvalidOperationException("JSON trả về không đúng schema.", ex);
+            }
 
             data.CvId = cvId;
             data.ParsedAt = DateTime.UtcNow;
