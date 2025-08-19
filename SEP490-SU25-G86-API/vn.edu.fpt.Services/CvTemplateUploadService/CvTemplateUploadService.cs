@@ -13,14 +13,19 @@ namespace vn.edu.fpt.Services.CvTemplateUpload
         {
             // 1. Lưu file tạm
             var tempPdfPath = Path.GetTempFileName() + Path.GetExtension(pdfFile.FileName);
-            var tempDocPath = Path.GetTempFileName() + Path.GetExtension(docFile.FileName);
+            string tempDocPath = null;
+if (docFile != null)
+    tempDocPath = Path.GetTempFileName() + Path.GetExtension(docFile.FileName);
             var tempImgPath = Path.GetTempFileName() + Path.GetExtension(previewImage.FileName);
             using (var imgStream = new FileStream(tempImgPath, FileMode.Create))
                 await previewImage.CopyToAsync(imgStream);
             using (var pdfStream = new FileStream(tempPdfPath, FileMode.Create))
                 await pdfFile.CopyToAsync(pdfStream);
-            using (var docStream = new FileStream(tempDocPath, FileMode.Create))
-                await docFile.CopyToAsync(docStream);
+            if (docFile != null)
+{
+    using (var docStream = new FileStream(tempDocPath, FileMode.Create))
+        await docFile.CopyToAsync(docStream);
+}
 
          
 
@@ -53,17 +58,20 @@ namespace vn.edu.fpt.Services.CvTemplateUpload
                 pdfUrl = $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(pdfObjectName)}?alt=media";
             }
             // DOCX
-            string docObjectName = $"{folderName}/{timestamp}_{docFile.FileName}";
-            string docUrl;
-            using (var docUp = new FileStream(tempDocPath, FileMode.Open, FileAccess.Read))
+            string docUrl = null;
+            if (docFile != null)
             {
-                var docObj = await storage.UploadObjectAsync(
-                    bucket: bucketName,
-                    objectName: docObjectName,
-                    contentType: docFile.ContentType,
-                    source: docUp
-                );
-                docUrl = $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(docObjectName)}?alt=media";
+                string docObjectName = $"{folderName}/{timestamp}_{docFile.FileName}";
+                using (var docUp = new FileStream(tempDocPath, FileMode.Open, FileAccess.Read))
+                {
+                    var docObj = await storage.UploadObjectAsync(
+                        bucket: bucketName,
+                        objectName: docObjectName,
+                        contentType: docFile.ContentType,
+                        source: docUp
+                    );
+                    docUrl = $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(docObjectName)}?alt=media";
+                }
             }
             // IMG
             string imgObjectName = $"{folderName}/{timestamp}_preview{Path.GetExtension(previewImage.FileName)}";
@@ -81,7 +89,8 @@ namespace vn.edu.fpt.Services.CvTemplateUpload
 
             // 4. Xóa file tạm
             File.Delete(tempPdfPath);
-            File.Delete(tempDocPath);
+            if (tempDocPath != null)
+    File.Delete(tempDocPath);
             File.Delete(tempImgPath);
 
             // 5. Trả về URL

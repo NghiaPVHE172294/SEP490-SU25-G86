@@ -3,110 +3,141 @@
 @{
     ViewData["Title"] = "Chiến dịch tuyển dụng";
 }
-
-<link rel="stylesheet" href="~/css/jobcriteria.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-
-<div class="container my-5">
-    <h2 class="page-title mb-4">Chiến dịch tuyển dụng của bạn</h2>
-
-    @if (Model.JobPosts == null || !Model.JobPosts.Any())
-    {
-        <div class="alert alert-info mt-4 text-center" role="alert">
-            <i class="bi bi-info-circle me-2"></i>Bạn chưa có tin tuyển dụng nào.
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
-            @foreach (var job in Model.JobPosts)
-            {
-                <div class="col">
-                    <div class="job-card shadow-lg p-4 h-100 bg-white rounded">
-                        <h4 class="job-title mb-4">@job.Title</h4>
-
-                        @if (Model.CriteriaByJobPost.ContainsKey(job.JobPostId) && Model.CriteriaByJobPost[job.JobPostId].Any())
-                        {
-                            <div class="row row-cols-1 g-3">
-                                @foreach (var item in Model.CriteriaByJobPost[job.JobPostId])
-                                {
-                                    var collapseId = $"collapse_{item.JobCriteriaId}";
-                                    <div class="col">
-                                        <div class="card h-100 shadow-sm border-0">
-                                            <div class="card-body p-4">
-                                                <h5 class="card-title mb-3">@item.RequiredJobTitles</h5>
-                                                <p class="mb-2"><strong>Mục tiêu:</strong> @item.Summary</p>
-                                                
-                                                <div class="details-content" id="@collapseId" style="display: none;">
-                                                    <hr class="my-2">
-                                                    <p class="mb-2"><strong>Kinh nghiệm:</strong> @item.RequiredExperience</p>
-                                                    <p class="mb-2"><strong>Kỹ năng:</strong> @item.RequiredSkills</p>
-                                                    <p class="mb-2"><strong>Học vấn:</strong> @item.EducationLevel</p>
-                                                    <p class="mb-2"><strong>Ngôn ngữ:</strong> @item.PreferredLanguages</p>
-                                                    <p class="mb-2"><strong>Chứng chỉ:</strong> @item.PreferredCertifications</p>
-                                                    <p class="mb-2"><strong>Địa chỉ:</strong> @item.Address</p>
-                                                    <p class="mb-2"><strong>Lịch sử làm việc:</strong> @Html.Raw(item.WorkHistory?.Replace("\n", "<br/>") ?? "")</p>
-                                                    <p class="mb-2"><strong>Dự án:</strong> @item.Projects</p>
-                                                    <p class="mb-2"><strong>Ngày tạo:</strong> @item.CreatedAt?.ToString("dd/MM/yyyy")</p>
-                                                </div>
-                                                
-                                                <button class="btn btn-link toggle-btn w-100 text-center mt-2 p-0"
-                                                        type="button"
-                                                        onclick="toggleDetails('@collapseId')">
-                                                    <span class="toggle-text" id="text_@collapseId">Xem thêm</span>
-                                                </button>
-                                            </div>
-
-                                            <div class="card-footer bg-transparent border-top-0 p-4 pt-0">
-                                                <a class="btn btn-warning btn-sm w-100" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">
-                                                    <i class="bi bi-pencil-square me-2"></i>Sửa
-                                                </a>
-                                                <form method="post" asp-page-handler="Delete" asp-route-jobCriterionId="@item.JobCriteriaId" class="mt-2" onsubmit="return confirmDelete()">
-                                                    <button type="submit" class="btn btn-danger btn-sm w-100">
-                                                        <i class="bi bi-trash me-2"></i>Xóa
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-secondary d-flex justify-content-between align-items-center mt-3 p-3">
-                                <span>Chưa có tiêu chí tuyển dụng cho tin này.</span>
-                                <a class="btn btn-primary btn-sm px-3" href="/Employer/AddJobCriteria?jobPostId=@job.JobPostId">
-                                    <i class="bi bi-plus-circle me-2"></i>Thêm
-                                </a>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-        </div>
-    }
-</div>
-
+<link rel="stylesheet" href="~/css/Listjobcriteria.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    function toggleDetails(collapseId) {
-        var detailsDiv = document.getElementById(collapseId);
-        var toggleText = document.getElementById('text_' + collapseId);
-        
-        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-            // Hiển thị chi tiết
-            detailsDiv.style.display = 'block';
-            toggleText.textContent = 'Ẩn bớt';
-        } else {
-            // Ẩn chi tiết
-            detailsDiv.style.display = 'none';
-            toggleText.textContent = 'Xem thêm';
+<div class="container-cv">
+    <div class="cv-card d-flex justify-content-between align-items-center mb-4">
+        <h3 class="cv-title"><i class="bi bi-clipboard-data"></i> Danh sách chiến dịch tuyển dụng</h3>
+    </div>
+    <div class="cv-card">
+        @if (Model.JobPosts == null || !Model.JobPosts.Any())
+        {
+            <div class="alert alert-info text-center mt-4">
+                Bạn chưa có tin tuyển dụng nào.
+            </div>
         }
-    }
-        function confirmDelete() {
-        return confirm("Bạn có chắc chắn muốn xóa tiêu chí tuyển dụng này?");
-    }
-</script>
+        else
+        {
+            <div class="table-responsive-cv mt-3">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr class="text-center">
+                            <th>Tin tuyển dụng</th>
+                            <th>Tiêu chí</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var job in Model.JobPosts)
+                        {
+                            var criteriaList = Model.CriteriaByJobPost.ContainsKey(job.JobPostId) ? Model.CriteriaByJobPost[job.JobPostId] : null;
+                            <tr>
+                                <td class="fw-semibold text-primary">@job.Title</td>
+                                <td>
+                                    @if (criteriaList != null && criteriaList.Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var item in criteriaList)
+                                            {
+                                                <li class="mb-3 border rounded p-3">
+                                                    <div class="fw-semibold fs-6 text-primary mb-1">@item.RequiredJobTitles</div>
+                                                    <div class="text-muted small mb-2"><strong>Mục tiêu:</strong> @item.Summary</div>
+                                                    <div class="row small">
+                                                        <div class="col-md-6">
+                                                            <p><strong>Kinh nghiệm:</strong> @item.RequiredExperience</p>
+                                                            <p><strong>Kỹ năng:</strong> @item.RequiredSkills</p>
+                                                            <p><strong>Học vấn:</strong> @item.EducationLevel</p>
+                                                            <p><strong>Ngôn ngữ:</strong> @item.PreferredLanguages</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p><strong>Chứng chỉ:</strong> @item.PreferredCertifications</p>
+                                                            <p><strong>Địa chỉ:</strong> @item.Address</p>
+                                                            <p><strong>Lịch sử làm việc:</strong> @Html.Raw(item.WorkHistory?.Replace("\n", "<br/>") ?? "")</p>
+                                                            <p><strong>Dự án:</strong> @item.Projects</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có tiêu chí tuyển dụng cho tin này.</span>
+                                    }
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="d-flex flex-column align-items-center gap-2">
+                                        @if (criteriaList != null && criteriaList.Any())
+                                        {
+                                            @foreach (var item in criteriaList)
+                                            {
+                                                <div class="d-flex flex-row gap-2">
+                                                    <a class="btn btn-sm btn-warning" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">
+                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    </a>
+                                                    <form method="post" asp-page-handler="Delete" asp-route-jobCriterionId="@item.JobCriteriaId" onsubmit="return confirmDelete()">
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="bi bi-trash"></i> Xóa
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-sm btn-primary" href="/Employer/AddJobCriteria?jobPostId=@job.JobPostId">
+                                                <i class="bi bi-plus-circle"></i> Thêm tiêu chí
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.TotalPages > 1)
+                {
+                    <nav aria-label="Pagination" class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new {
+                                    PageIndex = Model.PageIndex - 1,
+                                    PageSize = Model.PageSize
+                                }, null)">
+                                    &laquo;
+                                </a>
+                            </li>
+                            @for (int p = 1; p <= Model.TotalPages; p++)
+                            {
+                                <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                                    <a class="page-link" href="@Url.Page(null, null, new {
+                                        PageIndex = p,
+                                        PageSize = Model.PageSize
+                                    }, null)">@p</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new {
+                                    PageIndex = Model.PageIndex + 1,
+                                    PageSize = Model.PageSize
+                                }, null)">
+                                    &raquo;
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="text-center text-muted mt-1">
+                        @{
+                            var start = (Model.TotalRecords == 0) ? 0 : ((Model.PageIndex - 1) * Model.PageSize + 1);
+                            var end = Math.Min(Model.PageIndex * Model.PageSize, Model.TotalRecords);
+                        }
+                        Hiển thị @start - @end trong tổng số @Model.TotalRecords chiến dịch tuyển dụng
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

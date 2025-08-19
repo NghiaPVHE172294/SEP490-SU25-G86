@@ -15,7 +15,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
         [BindProperty(SupportsGet = true)]
         public string? StatusFilter { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
 
+        [BindProperty(SupportsGet = true)]
+        public int PageSize { get; set; } = 5;
+        public int TotalRecords { get; set; }
+        public int TotalPages => (int)Math.Ceiling((double)TotalRecords / PageSize);
         public ListJobByEmployerModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -24,6 +30,7 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
         public async Task<IActionResult> OnGetAsync()
         {
+
             var role = HttpContext.Session.GetString("user_role");
             if (role != "EMPLOYER")
             {
@@ -59,6 +66,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 JobPostIdsWithCriteria = jobCriteria != null ? jobCriteria.Select(c => c.JobPostId).ToHashSet() : new();
             }
 
+            // Phân trang
+            TotalRecords = Jobs.Count;
+            Jobs = Jobs
+                .OrderByDescending(j => j.CreatedDate) // hoặc .CreatedAt tùy DTO
+                .Skip((PageIndex - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
             return Page();
         }
 

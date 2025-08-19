@@ -1,50 +1,140 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
 {
-    public class AddJobPostDTO
+    public class AddJobPostDTO : IValidatableObject
     {
+        // ===== Các nhóm field liên quan đến lựa chọn hoặc tạo mới =====
         public int? CvtemplateOfEmployerId { get; set; } // ID của CVTemplate do employer chọn
+
         public int? IndustryId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên ngành phải từ 2-255 ký tự.")]
         public string? NewIndustryName { get; set; }
+
         public int? JobPositionId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên vị trí phải từ 2-255 ký tự.")]
         public string? NewJobPositionName { get; set; }
+
         public int? SalaryRangeId { get; set; }
+        [StringLength(255, MinimumLength = 5, ErrorMessage = "Khoảng lương phải từ 5-255 ký tự.")]
         public string? NewSalaryRange { get; set; } // "min-max-currency"
+
         public int? ProvinceId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên tỉnh/thành phố phải từ 2-255 ký tự.")]
         public string? NewProvinceName { get; set; }
+
         public int? ExperienceLevelId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên cấp độ kinh nghiệm phải từ 2-255 ký tự.")]
         public string? NewExperienceLevelName { get; set; }
+
         public int? JobLevelId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên cấp bậc công việc phải từ 2-255 ký tự.")]
         public string? NewJobLevelName { get; set; }
+
         public int? EmploymentTypeId { get; set; }
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Tên loại hình làm việc phải từ 2-255 ký tự.")]
         public string? NewEmploymentTypeName { get; set; }
 
-        [Required]
-        [StringLength(255, MinimumLength = 3)]
+        // ===== Thông tin job post bắt buộc =====
+        [Required(ErrorMessage = "Tiêu đề là bắt buộc.")]
+        [StringLength(255, MinimumLength = 3, ErrorMessage = "Tiêu đề phải từ 3-255 ký tự.")]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ngày hết hạn là bắt buộc.")]
         public DateTime? EndDate { get; set; }
 
-        [Required]
-        [StringLength(2000, MinimumLength = 10)]
+        [Required(ErrorMessage = "Mô tả là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 10, ErrorMessage = "Mô tả phải từ 10-2000 ký tự.")]
         public string? Description { get; set; }
 
-        [StringLength(2000)]
+        [Required(ErrorMessage = "Yêu cầu ứng viên là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 5, ErrorMessage = "Yêu cầu ứng viên phải từ 5-2000 ký tự.")]
         public string? CandidaterRequirements { get; set; }
-        [StringLength(2000)]
+
+        [Required(ErrorMessage = "Quyền lợi là bắt buộc.")]
+        [StringLength(2000, MinimumLength = 5, ErrorMessage = "Quyền lợi phải từ 5-2000 ký tự.")]
         public string? Interest { get; set; }
 
-        [Required]
-        [StringLength(255)]
+        [Required(ErrorMessage = "Địa điểm làm việc là bắt buộc.")]
+        [StringLength(255, MinimumLength = 2, ErrorMessage = "Địa điểm làm việc phải từ 2-255 ký tự.")]
         public string WorkLocation { get; set; }
 
         public bool IsAienabled { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Trạng thái là bắt buộc.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Trạng thái phải từ 2-50 ký tự.")]
         public string Status { get; set; }
+
+        // ===== Validation logic =====
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var errors = new List<ValidationResult>();
+
+            // Rule: EndDate phải cách hiện tại ít nhất 7 ngày
+            if (EndDate.HasValue && EndDate.Value.Date < DateTime.UtcNow.Date.AddDays(7))
+            {
+                errors.Add(new ValidationResult(
+                    "EndDate phải cách ngày hiện tại ít nhất 7 ngày.",
+                    new[] { nameof(EndDate) }));
+            }
+
+            // Nếu ID null => phải nhập NewName
+            if (!IndustryId.HasValue && string.IsNullOrWhiteSpace(NewIndustryName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn IndustryId hoặc nhập NewIndustryName.",
+                    new[] { nameof(IndustryId), nameof(NewIndustryName) }));
+
+            if (!JobPositionId.HasValue && string.IsNullOrWhiteSpace(NewJobPositionName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn JobPositionId hoặc nhập NewJobPositionName.",
+                    new[] { nameof(JobPositionId), nameof(NewJobPositionName) }));
+
+            if (!SalaryRangeId.HasValue && string.IsNullOrWhiteSpace(NewSalaryRange))
+            {
+                errors.Add(new ValidationResult(
+                    "Phải chọn SalaryRangeId hoặc nhập NewSalaryRange.",
+                    new[] { nameof(SalaryRangeId), nameof(NewSalaryRange) }));
+            }
+
+            // Validate khi nhập NewSalaryRange
+            if (!string.IsNullOrWhiteSpace(NewSalaryRange))
+            {
+                var parts = NewSalaryRange.Split('-');
+                if (parts.Length < 3 ||
+                    !decimal.TryParse(parts[0], out var minSalary) ||
+                    !decimal.TryParse(parts[1], out var maxSalary) ||
+                    minSalary <= 0 || maxSalary <= 0 || minSalary > maxSalary ||
+                    string.IsNullOrWhiteSpace(parts[2]))
+                {
+                    errors.Add(new ValidationResult(
+                        "NewSalaryRange phải đúng định dạng 'min-max-currency' và min/max > 0.",
+                        new[] { nameof(NewSalaryRange) }));
+                }
+            }
+
+            if (!ProvinceId.HasValue && string.IsNullOrWhiteSpace(NewProvinceName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn ProvinceId hoặc nhập NewProvinceName.",
+                    new[] { nameof(ProvinceId), nameof(NewProvinceName) }));
+
+            if (!ExperienceLevelId.HasValue && string.IsNullOrWhiteSpace(NewExperienceLevelName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn ExperienceLevelId hoặc nhập NewExperienceLevelName.",
+                    new[] { nameof(ExperienceLevelId), nameof(NewExperienceLevelName) }));
+
+            if (!JobLevelId.HasValue && string.IsNullOrWhiteSpace(NewJobLevelName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn JobLevelId hoặc nhập NewJobLevelName.",
+                    new[] { nameof(JobLevelId), nameof(NewJobLevelName) }));
+
+            if (!EmploymentTypeId.HasValue && string.IsNullOrWhiteSpace(NewEmploymentTypeName))
+                errors.Add(new ValidationResult(
+                    "Phải chọn EmploymentTypeId hoặc nhập NewEmploymentTypeName.",
+                    new[] { nameof(EmploymentTypeId), nameof(NewEmploymentTypeName) }));
+
+            return errors;
+        }
     }
-} 
+}

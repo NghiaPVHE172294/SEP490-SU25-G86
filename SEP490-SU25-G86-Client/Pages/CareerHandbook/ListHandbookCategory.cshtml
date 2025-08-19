@@ -5,8 +5,17 @@
 }
 
 <div class="container my-4">
-    <h3 class="mb-3">Danh sách danh mục cẩm nang</h3>
-    <a asp-page="/CareerHandbook/CreateHandbookCategory" class="btn btn-success mb-3">+ Thêm mới</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Danh sách danh mục cẩm nang</h3>
+        <div>
+            <a asp-page="/CareerHandbook/ListCareerHandbook" class="btn btn-primary me-2">
+                <i class="fas fa-arrow-left"></i> Quay lại Danh sách Cẩm nang
+            </a>
+            <a asp-page="/CareerHandbook/CreateHandbookCategory" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+        </div>
+    </div>
 
     @if (TempData["Error"] != null)
     {
