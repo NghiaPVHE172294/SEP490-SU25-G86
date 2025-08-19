@@ -14,61 +14,98 @@
 else
 {
     <div class="container my-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
-                <h5 class="mb-0">Thông tin công ty</h5>
-                <a asp-page="/Companies/UpdateCompany" class="btn btn-light btn-sm">Chỉnh sửa</a>
-            </div>
-            <div class="card-body row g-3">
-                <div class="col-md-8">
-                    <h4 class="fw-bold mb-3">@Model.Company.CompanyName</h4>
-
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Ngành nghề:</div>
-                        <div class="col-7">@Model.Company.IndustryName</div>
+        @{
+            var websiteUrl = !string.IsNullOrWhiteSpace(Model.Company.Website) &&
+                             !(Model.Company.Website.StartsWith("http://") || Model.Company.Website.StartsWith("https://"))
+                ? $"https://{Model.Company.Website}"
+                : Model.Company.Website;
+        }
+        <div class="card shadow-sm border-0 overflow-hidden">
+            <div class="p-3 bg-light">
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div>
+                        @if (!string.IsNullOrEmpty(Model.Company.LogoUrl))
+                        {
+                            <img src="@Model.Company.LogoUrl" alt="Logo công ty" class="rounded-circle border bg-white" style="width: 96px; height: 96px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle border bg-white text-muted" style="width: 96px; height: 96px;">No logo</div>
+                        }
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Mã số thuế:</div>
-                        <div class="col-7">@Model.Company.TaxCode</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Email:</div>
-                        <div class="col-7">@Model.Company.Email</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Số điện thoại:</div>
-                        <div class="col-7">@Model.Company.Phone</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Địa chỉ:</div>
-                        <div class="col-7">@Model.Company.Address</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Website:</div>
-                        <div class="col-7">
-                            <a href="@Model.Company.Website" target="_blank">@Model.Company.Website</a>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1">@Model.Company.CompanyName</h3>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-info">@(!string.IsNullOrWhiteSpace(Model.Company.IndustryName) ? Model.Company.IndustryName : "Chưa cập nhật ngành nghề")</span>
+                            <span class="badge bg-secondary">@(!string.IsNullOrWhiteSpace(Model.Company.CompanySize) ? Model.Company.CompanySize : "Chưa cập nhật quy mô")</span>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-5 text-muted">Quy mô:</div>
-                        <div class="col-7">@Model.Company.CompanySize</div>
-                    </div>
-
-                    <div class="mt-3">
-                        <div class="text-muted mb-1">Mô tả:</div>
-                        <div class="text-body lh-lg">@Model.Company.Description</div>
+                    <div class="ms-auto">
+                        <a asp-page="/Companies/UpdateCompany" class="btn btn-primary">Chỉnh sửa</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-4 text-center">
-                    @if (!string.IsNullOrEmpty(Model.Company.LogoUrl))
-                    {
-                        <img src="@Model.Company.LogoUrl" alt="Logo công ty" class="img-fluid rounded border" style="max-height: 140px;" />
-                    }
-                    else
-                    {
-                        <div class="text-muted">Chưa có logo</div>
-                    }
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="text-muted">Ngành nghề</div>
+                                <div class="text-end">@(!string.IsNullOrWhiteSpace(Model.Company.IndustryName) ? Model.Company.IndustryName : "Chưa cập nhật")</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="text-muted">Mã số thuế</div>
+                                <div class="text-end">@(!string.IsNullOrWhiteSpace(Model.Company.TaxCode) ? Model.Company.TaxCode : "Chưa cập nhật")</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="text-muted">Quy mô</div>
+                                <div class="text-end">@(!string.IsNullOrWhiteSpace(Model.Company.CompanySize) ? Model.Company.CompanySize : "Chưa cập nhật")</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="text-muted">Địa chỉ</div>
+                                <div class="text-end">@(!string.IsNullOrWhiteSpace(Model.Company.Address) ? Model.Company.Address : "Chưa cập nhật")</div>
+                            </li>
+                        </ul>
+
+                        <div class="mt-4">
+                            <div class="text-muted mb-2">Mô tả</div>
+                            <div class="border rounded p-3 bg-light" style="white-space: pre-line;">
+                                @(!string.IsNullOrWhiteSpace(Model.Company.Description) ? Model.Company.Description : "Chưa có mô tả")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white">
+                                <strong>Thông tin liên hệ</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <div class="text-muted">Email</div>
+                                    <div>@(!string.IsNullOrWhiteSpace(Model.Company.Email) ? Model.Company.Email : "Chưa cập nhật")</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="text-muted">Số điện thoại</div>
+                                    <div>@(!string.IsNullOrWhiteSpace(Model.Company.Phone) ? Model.Company.Phone : "Chưa cập nhật")</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="text-muted">Website</div>
+                                    <div>
+                                        @if (!string.IsNullOrWhiteSpace(websiteUrl))
+                                        {
+                                            <a href="@websiteUrl" target="_blank" rel="noopener">@Model.Company.Website</a>
+                                        }
+                                        else
+                                        {
+                                            <span>Chưa cập nhật</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
