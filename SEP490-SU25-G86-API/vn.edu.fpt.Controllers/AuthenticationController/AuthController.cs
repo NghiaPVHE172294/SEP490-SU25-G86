@@ -87,9 +87,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 
             var claims = new[]
             {
-                //new Claim(JwtRegisteredClaimNames.Sub, account.Email),
-                new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
-                new Claim(ClaimTypes.Role, roleName)
+                    new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+                    new Claim(ClaimTypes.Role, roleName),
             };
 
             var token = new JwtSecurityToken(

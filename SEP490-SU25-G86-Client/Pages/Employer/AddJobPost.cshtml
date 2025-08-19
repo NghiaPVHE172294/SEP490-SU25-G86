@@ -3,64 +3,69 @@
 @{
     ViewData["Title"] = "Tạo bài đăng tuyển dụng";
 }
+<link rel="stylesheet" href="~/css/AddJobPost.css" />
 
-<h2>Tạo bài đăng tuyển dụng</h2>
+<div class="container py-5">
 
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
-    <div class="alert alert-danger">@Model.ErrorMessage</div>
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
 }
 
 @if (Model.JobPostId > 0)
 {
-    <div class="alert alert-success">
-        Tạo bài đăng thành công!<br />
-        <a class="btn btn-primary mt-2" href="/Employer/AddJobCriteria?jobPostId=@Model.JobPostId">Thêm tiêu chí tuyển dụng</a>
-        <a class="btn btn-outline-secondary mt-2" href="/Employer/ListJobByEmployer">Xem danh sách bài đăng</a>
-    </div>
+        <div class="alert alert-success text-center">
+            <strong>Tạo bài đăng thành công!</strong><br />
+            <div class="mt-3">
+                <a class="btn btn-primary" href="/Employer/AddJobCriteria?jobPostId=@Model.JobPostId">Thêm tiêu chí tuyển dụng</a>
+                <a class="btn btn-outline-secondary" href="/Employer/ListJobByEmployer">Xem danh sách bài đăng</a>
+            </div>
+        </div>
 }
 else
 {
-    <form method="post" class="row g-3">
-        <div class="col-md-6">
-            <label class="form-label">Tiêu đề công việc</label>
-            <input asp-for="JobPost.Title" class="form-control" />
-            <span asp-validation-for="JobPost.Title" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Địa điểm làm việc</label>
-            <input asp-for="JobPost.WorkLocation" class="form-control" />
-            <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Trạng thái bài đăng</label>
-            <select asp-for="JobPost.Status" class="form-select">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="OPEN">OPEN</option>
-                <option value="CLOSED">CLOSED</option>
-            </select>
-            <span asp-validation-for="JobPost.Status" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Ngày hết hạn tuyển dụng</label>
-            <input asp-for="JobPost.EndDate" type="date" class="form-control" />
-            <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label class="form-label">Chi tiết công việc</label>
-            <textarea asp-for="JobPost.Description" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="JobPost.Description" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label class="form-label">Yêu cầu ứng viên</label>
-            <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2"></textarea>
-            <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label class="form-label">Quyền lợi</label>
-            <textarea asp-for="JobPost.Interest" class="form-control" rows="2"></textarea>
-            <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
-        </div>
+        <form method="post" class="row g-4 form-section">
+            <h2 class="text-center">Tạo bài đăng tuyển dụng</h2>
+
+            <div class="col-md-6">
+                <label class="form-label">Tiêu đề công việc</label>
+                <input asp-for="JobPost.Title" class="form-control" placeholder="Nhập tiêu đề công việc" />
+                <span asp-validation-for="JobPost.Title" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Địa điểm làm việc</label>
+                <input asp-for="JobPost.WorkLocation" class="form-control" placeholder="Nhập địa điểm làm việc" />
+                <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Trạng thái bài đăng</label>
+                <select asp-for="JobPost.Status" class="form-select">
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option value="OPEN">Đang tuyển</option>
+                    <option value="CLOSED">Đã đóng</option>
+                </select>
+                <span asp-validation-for="JobPost.Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ngày hết hạn</label>
+                <input asp-for="JobPost.EndDate" type="date" class="form-control" />
+                <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Chi tiết công việc</label>
+                <textarea asp-for="JobPost.Description" class="form-control" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
+                <span asp-validation-for="JobPost.Description" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Yêu cầu ứng viên</label>
+                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="3" placeholder="Những yêu cầu cần có của ứng viên"></textarea>
+                <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Quyền lợi</label>
+                <textarea asp-for="JobPost.Interest" class="form-control" rows="3" placeholder="Lợi ích ứng viên nhận được khi trúng tuyển"></textarea>
+                <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
+            </div>
         <div class="col-md-6">
             <label class="form-label">Ngành nghề</label>
             <select id="industrySelect" name="JobPost.IndustryId" class="form-select" onchange="onIndustryChange()">
@@ -171,11 +176,13 @@ else
             <input asp-for="JobPost.IsAienabled" class="form-check-input me-2" type="checkbox" />
             <label asp-for="JobPost.IsAienabled" class="form-check-label"></label>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-success px-5">Tạo mới</button>
-        </div>
-    </form>
-}
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-success mt-3">Tạo mới</button>
+            </div>
+        </form>
+        }
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>

@@ -16,8 +16,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO
         public string? Summary { get; set; }
         public string? WorkHistory { get; set; }
         public string? Projects { get; set; }
-        public string? Availability { get; set; }
-        public string? SalaryExpectation { get; set; }
     }
 
     public class UpdateJobCriterionDTO
@@ -36,7 +34,5 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO
         public string? Summary { get; set; }
         public string? WorkHistory { get; set; }
         public string? Projects { get; set; }
-        public string? Availability { get; set; }
-        public string? SalaryExpectation { get; set; }
     }
 } 
