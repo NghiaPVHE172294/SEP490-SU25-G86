@@ -3,77 +3,109 @@
 @{
     ViewData["Title"] = "Thêm tiêu chí tuyển dụng";
 }
-<link rel="stylesheet" href="~/css/jobcriteria-form.css">
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="form-card p-4 shadow rounded-4 bg-white">
-                <h2 class="text-center mb-4 text-primary">Thêm tiêu chí tuyển dụng cho <span class="fw-bold">@Model.JobPostTitle</span></h2>
-                @if (!string.IsNullOrEmpty(Model.Message))
-                {
-                    <div class="alert alert-success">@Model.Message</div>
-                }
-                <form method="post" class="jobcriteria-form">
-                    <input type="hidden" asp-for="Input.JobPostId" />
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Kinh nghiệm yêu cầu</label>
-                            <input asp-for="Input.RequiredExperience" class="form-control" />
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/jobcriteria-form.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-card p-4 shadow rounded-4 bg-white">
+                    <h2 class="text-center mb-4 text-primary">
+                        Thêm tiêu chí tuyển dụng cho <span class="fw-bold">@Model.JobPostTitle</span>
+                    </h2>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @Html.Raw(Model.ErrorMessage)
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Kỹ năng yêu cầu</label>
-                            <input asp-for="Input.RequiredSkills" class="form-control" />
+                    }
+
+                    <form method="post" class="jobcriteria-form">
+                        <input type="hidden" asp-for="Input.JobPostId" />
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Kinh nghiệm yêu cầu</label>
+                                <input asp-for="Input.RequiredExperience" class="form-control" />
+                                <span asp-validation-for="Input.RequiredExperience" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Kỹ năng yêu cầu</label>
+                                <input asp-for="Input.RequiredSkills" class="form-control" />
+                                <span asp-validation-for="Input.RequiredSkills" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Trình độ học vấn</label>
+                                <input asp-for="Input.EducationLevel" class="form-control" maxlength="100" />
+                                <span asp-validation-for="Input.EducationLevel" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Vị trí công việc yêu cầu</label>
+                                <input asp-for="Input.RequiredJobTitles" class="form-control" />
+                                <span asp-validation-for="Input.RequiredJobTitles" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Ngôn ngữ ưu tiên</label>
+                                <input asp-for="Input.PreferredLanguages" class="form-control" />
+                                <span asp-validation-for="Input.PreferredLanguages" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Chứng chỉ ưu tiên</label>
+                                <input asp-for="Input.PreferredCertifications" class="form-control" />
+                                <span asp-validation-for="Input.PreferredCertifications" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Địa chỉ</label>
+                                <input asp-for="Input.Address" class="form-control" />
+                                <span asp-validation-for="Input.Address" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tóm tắt</label>
+                                <input asp-for="Input.Summary" class="form-control" />
+                                <span asp-validation-for="Input.Summary" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Lịch sử công việc</label>
+                                <textarea asp-for="Input.WorkHistory" class="form-control" rows="2"></textarea>
+                                <span asp-validation-for="Input.WorkHistory" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Dự án</label>
+                                <input asp-for="Input.Projects" class="form-control" />
+                                <span asp-validation-for="Input.Projects" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Trình độ học vấn</label>
-                            <input asp-for="Input.EducationLevel" class="form-control" />
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                + Thêm tiêu chí
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Vị trí công việc yêu cầu</label>
-                            <input asp-for="Input.RequiredJobTitles" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Ngôn ngữ ưu tiên</label>
-                            <input asp-for="Input.PreferredLanguages" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Chứng chỉ ưu tiên</label>
-                            <input asp-for="Input.PreferredCertifications" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Địa chỉ làm việc</label>
-                            <input asp-for="Input.Address" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Tóm tắt</label>
-                            <input asp-for="Input.Summary" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Lịch sử công việc</label>
-                            <textarea asp-for="Input.WorkHistory" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Dự án</label>
-                            <input asp-for="Input.Projects" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Khả năng nhận việc</label>
-                            <input asp-for="Input.Availability" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Mức lương mong muốn</label>
-                            <input asp-for="Input.SalaryExpectation" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <button type="submit" class="btn btn-primary px-5">Thêm tiêu chí</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
