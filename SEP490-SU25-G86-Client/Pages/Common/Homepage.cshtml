@@ -88,7 +88,7 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <a href="/Common/ListJobs">
-                                    <img src="https://i.ibb.co/wZvbPjnc/2-C1-346x-577.png"
+                                    <img src="https://i.ibb.co/BVxck9fJ/Slider.png"
                                          class="d-block w-100 h-100" alt="Banner 1">
                                 </a>
                             </div>
@@ -169,7 +169,7 @@
 
                                 <!-- Lương & nút Chi tiết -->
                                 <div class="d-flex align-items-center justify-content-between mt-3">
-                                    <span class="text-custom fw-bold">@job.FormattedSalary</span>
+                                    <span class="text-custom fw-bold">@job.Salary</span>
                                     <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
                                 </div>
                             </div>
@@ -418,31 +418,34 @@
         const pageSize = 6;
         let lastPage = false;
 
-        function loadIndustryCategories(page) {
-            fetch(`${API_BASE}?page=${page}&pageSize=${pageSize}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log("API data:", data);
-                    const listEl = document.getElementById("industry-category-list");
-                    listEl.innerHTML = "";
+            function loadIndustryCategories(page) {
+        fetch(`${API_BASE}?page=${page}&pageSize=${pageSize + 1}`)
+            .then(res => res.json())
+            .then(data => {
+                const listEl = document.getElementById("industry-category-list");
+                listEl.innerHTML = "";
 
-                    data.forEach(item => {
-                        const li = document.createElement("li");
-                        li.innerHTML = `
-                            <a href="/Common/ListJobs?industryId=${item.industryId}" class="text-decoration-none">
-                                <span class="category-text">${item.industryName}</span>
-                                <span class="arrow">&gt;</span>
-                            </a>
-                        `;
-                        listEl.appendChild(li);
-                    });
+                // Nếu trả về nhiều hơn pageSize thì chắc chắn có trang tiếp theo
+                lastPage = data.length <= pageSize;
 
-                        document.querySelector(".prev-btn").disabled = (page === 1);
-                        lastPage = data.length < pageSize;
-                        document.querySelector(".next-btn").disabled = lastPage;
-                })
-                .catch(err => console.error("Error loading industries:", err));
-        }
+                // render chỉ pageSize item thôi
+                data.slice(0, pageSize).forEach(item => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <a href="/Common/ListJobs?industryId=${item.industryId}" class="text-decoration-none">
+                            <span class="category-text">${item.industryName}</span>
+                            <span class="arrow">&gt;</span>
+                        </a>
+                    `;
+                    listEl.appendChild(li);
+                });
+
+                document.querySelector(".prev-btn").disabled = (page === 1);
+                document.querySelector(".next-btn").disabled = lastPage;
+            })
+            .catch(err => console.error("Error loading industries:", err));
+    }
+
 
         document.querySelector(".prev-btn").addEventListener("click", () => {
             if (currentPage > 1) {
