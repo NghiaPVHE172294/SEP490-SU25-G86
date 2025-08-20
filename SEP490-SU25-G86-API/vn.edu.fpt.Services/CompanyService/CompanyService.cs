@@ -57,5 +57,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService
 
             return (result, totalCount);
         }
+        public async Task<List<CompanyLogoDTO>> GetAllCompanyLogos()
+        {
+            var companies = await _repo.GetAllCompanies();
+
+            return companies.Select(c => new CompanyLogoDTO
+            {
+                Id = c.CompanyId,
+                LogoUrl = c.LogoUrl
+            }).ToList();
+        }
     }
 }

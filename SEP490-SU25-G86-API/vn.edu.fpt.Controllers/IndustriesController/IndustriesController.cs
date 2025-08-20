@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.IndustryDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.IndustryDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
@@ -34,6 +35,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
         {
             var id = await _industryService.AddAsync(dto);
             return Ok(id);
+        }
+        [HttpGet("with-jobcount")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<IndustryWithJobCountDTO>>> GetIndustriesWithJobCount([FromQuery] int page = 1, [FromQuery] int pageSize = 8)
+        {
+            var industries = await _industryService.GetIndustriesWithJobCount(page, pageSize);
+            return Ok(industries);
         }
     }
 }

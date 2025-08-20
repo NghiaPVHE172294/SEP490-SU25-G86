@@ -7,6 +7,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService
         Task<CompanyDTO?> GetCompanyDtoByIdAsync(int id);
 
         Task<(List<CompanyListDTO> Companies, int TotalCount)> GetPagedCompanyListWithJobPostCountAsync(int page, int pageSize);
-
+        Task<List<CompanyLogoDTO>> GetAllCompanyLogos();
     }
 }

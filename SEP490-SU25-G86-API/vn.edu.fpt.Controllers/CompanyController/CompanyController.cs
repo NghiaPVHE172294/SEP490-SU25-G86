@@ -30,5 +30,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CompanyController
             var (companies, totalCount) = await _service.GetPagedCompanyListWithJobPostCountAsync(page, pageSize);
             return Ok(new { data = companies, totalCount });
         }
+        [HttpGet("get-all-logos")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllCompanyLogos()
+        {
+            var logos = await _service.GetAllCompanyLogos();
+            return Ok(logos);
+        }
     }
 }
