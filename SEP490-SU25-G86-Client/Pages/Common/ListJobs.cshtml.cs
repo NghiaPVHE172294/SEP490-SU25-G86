@@ -55,13 +55,14 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             int? minSalary = null;
             int? maxSalary = null;
 
-            if (salary_range != null && salary_range.Any())
+            if (salary_range != null && salary_range.Any(r => !string.IsNullOrWhiteSpace(r)))
             {
                 var mins = new List<int>();
                 var maxs = new List<int>();
 
-                foreach (var r in salary_range)
+                foreach (var r in salary_range.Where(r => !string.IsNullOrWhiteSpace(r)))
                 {
+
                     var parts = r.Split('-');
                     if (parts.Length == 2 && int.TryParse(parts[0], out var min) && int.TryParse(parts[1], out var max))
                     {
@@ -183,18 +184,18 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             public bool IsApplied { get; set; }
             [JsonPropertyName("companyLogoUrl")]
             public string CompanyLogoUrl { get; set; }
-            public string FormattedSalary
-            {
-                get
-                {
-                    var parts = SalaryRange.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length >= 4)
-                    {
-                        return $"{parts[0]} {parts[1]} {parts[2]} Triệu {parts[3]}";
-                    }
-                    return SalaryRange; 
-                }
-            }
+            //public string FormattedSalary
+            //{
+            //    get
+            //    {
+            //        var parts = SalaryRange.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            //        if (parts.Length >= 4)
+            //        {
+            //            return $"{parts[0]} {parts[1]} {parts[2]} Triệu {parts[3]}";
+            //        }
+            //        return SalaryRange; 
+            //    }
+            //}
             [JsonPropertyName("daysSincePostedOrUpdated")]
             public string DaysSincePostedOrUpdated { get; set; }
             [JsonPropertyName("companyId")]
