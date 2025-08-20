@@ -9,5 +9,6 @@
         public string Salary { get; set; } = null!;
         public string Location { get; set; } = null!;
         public bool IsApplied { get; set; }
+        public string CompanyLogoUrl { get; set; } = null!;
     }
 }

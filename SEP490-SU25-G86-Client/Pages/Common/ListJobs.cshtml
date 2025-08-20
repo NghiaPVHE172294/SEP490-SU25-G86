@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
-
 <div class="container-fluid py-4">
     <div class="row">
         <!-- Filter Sidebar -->
@@ -141,30 +140,42 @@
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span>Hiển thị @Model.TotalItems kết quả</span>
-                <select class="form-select w-auto">
+                @* <select class="form-select w-auto">
                     <option selected>Sort by latest</option>
-                </select>
+                </select> *@
             </div>
 
             @foreach (var job in Model.Jobs)
             {
-                <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-bold mt-1">@job.Title</h5>
-                        <div class="text-muted">
-                            <a href="/Common/CompanyDetail?companyId?@job.CompanyId" class="text-decoration-none text-muted">
-                                @job.CompanyName
-                            </a>
-                        </div>
+                <div class="joblist-card">
+                    <!-- Logo + Thông tin -->
+                    <div class="d-flex align-items-start">
+                        <!-- Logo công ty -->
+                        <img src="@job.CompanyLogoUrl"
+                             alt="@job.CompanyName"
+                             class="rounded"
+                             style="width: 110px; height: 110px; object-fit: cover;">
 
-                        <div class="d-flex flex-wrap mt-2 gap-3">
-                            <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
-                            <span class="text-secondary"><i class="bi bi-clock"></i> @job.JobType</span>
-                            <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.FormattedSalary</span>
-                            <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.Experience</span>
-                            <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                        <!-- Phần thông tin job -->
+                        <div class="ms-3">
+                            <h5 class="fw-bold mt-1 job-title">@job.Title</h5>
+                            <div class="text-muted">
+                                <a href="/Common/CompanyDetail?id=@job.CompanyId" class="text-decoration-none text-muted">
+                                    @job.CompanyName
+                                </a>
+                            </div>
+
+                            <div class="d-flex flex-wrap mt-2 gap-3">
+                                <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
+                                <span class="text-secondary"><i class="bi bi-clock"></i> @job.JobType</span>
+                                <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.FormattedSalary</span>
+                                <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.Experience</span>
+                                <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Nút & Ngày đăng -->
                     <div class="d-flex flex-column align-items-end gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <a class="btn btn-custom btn-sm btn-fixed" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>

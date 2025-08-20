@@ -1,0 +1,88 @@
+﻿.logo-flow {
+    position: relative;
+    width: 100vw;
+    height: 360px; /* tăng chiều cao để 3 dòng logo */
+    overflow: hidden;
+    background: transparent;
+}
+
+/* Container scroll vô hạn */
+.logos {
+    display: flex;
+    flex-wrap: nowrap;
+    position: absolute;
+    right: 30%;
+    height: 100%;
+    animation: scroll 5s linear infinite;
+}
+.logo-flow:hover .logos {
+    animation-play-state: paused;
+}
+
+/* Logo */
+.hplogo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+    margin: 0 40px;
+    animation: bounce 3s ease-in-out infinite alternate;
+    border: 3px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+    .hplogo:hover {
+        border-color: #309689;
+    }
+    /* Nhấp nhô theo từng dòng */
+.logos a img.hplogo:nth-child(3n+1) {
+    margin-top: 0;
+}
+
+.logos a img.hplogo:nth-child(3n+2) {
+    margin-top: 120px;
+}
+
+.logos a img.hplogo:nth-child(3n+3) {
+    margin-top: 240px;
+}
+/* dòng 3 */
+
+/* Animation scroll */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+    /* scroll hết 1 nửa tổng width */
+}
+
+/* Nhấp nhô logo */
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Overlay gradient bên phải */
+.logo-flow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+/*    background: linear-gradient(to left, #f0fff8, transparent);*/
+    pointer-events: none;
+    z-index: 1;
+}

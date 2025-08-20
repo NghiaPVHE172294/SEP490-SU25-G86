@@ -19,7 +19,7 @@ namespace SEP490_SU25_G86_Client.Pages
         [FromQuery] int? salaryRangeId = null,
         [FromQuery] int? experienceLevelId = null)
         {
-            int pageSize = 9;
+            int pageSize = 6;
             CurrentPage = page < 1 ? 1 : page;
             Region = region;
             SalaryRangeId = salaryRangeId;
@@ -119,6 +119,7 @@ namespace SEP490_SU25_G86_Client.Pages
             public int? CompanyId { get; set; }
             public string Location { get; set; }
             public string Salary { get; set; }
+            public string CompanyLogoUrl { get; set; }
             public string FormattedSalary
             {
                 get
@@ -126,7 +127,7 @@ namespace SEP490_SU25_G86_Client.Pages
                     var parts = Salary.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length >= 4)
                     {
-                        return $"{parts[0]} {parts[1]} {parts[2]} {parts[3]}";
+                        return $"{parts[0]} {parts[1]} {parts[2]} {parts[3]} {parts[4]}";
                     }
                     return Salary; 
                 }

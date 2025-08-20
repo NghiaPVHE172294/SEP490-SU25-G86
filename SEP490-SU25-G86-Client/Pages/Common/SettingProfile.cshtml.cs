@@ -109,16 +109,24 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             else
             {
                 var msg = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Lỗi API upload avatar: " + msg); // Log ra console server hoặc local dev
+
                 try
                 {
                     var json = JsonDocument.Parse(msg);
-                    ToastMessage = $"❌ {json.RootElement.GetProperty("message").GetString()}";
+                    if (json.RootElement.TryGetProperty("message", out var messageProperty))
+                    {
+                        ToastMessage = $"❌ {messageProperty.GetString()}";
+                    }
+                    else
+                    {
+                        ToastMessage = $"❌ Lỗi không rõ: {msg}";
+                    }
                 }
                 catch
                 {
-                    ToastMessage = "❌ Cập nhật thất bại.";
+                    ToastMessage = $"❌ Lỗi không thể phân tích chi tiết: {msg}";
                 }
-                ToastColor = "bg-danger";
             }
 
             return Page();

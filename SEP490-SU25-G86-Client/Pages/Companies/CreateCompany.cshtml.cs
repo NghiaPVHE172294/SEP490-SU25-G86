@@ -5,6 +5,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.IndustryDTO;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.IO;
 
 namespace SEP490_SU25_G86_Client.Pages.Companies
 {
@@ -68,6 +69,20 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
                 await LoadIndustriesAsync();
                 TempData["Error"] = "Thông tin nhập vào không hợp lệ.";
                 return Page();
+            }
+
+            // Validate logo file is an image
+            if (Company.LogoFile != null && Company.LogoFile.Length > 0)
+            {
+                var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/svg+xml" };
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".svg" };
+                var extension = Path.GetExtension(Company.LogoFile.FileName)?.ToLowerInvariant();
+                if (!allowedContentTypes.Contains(Company.LogoFile.ContentType) || !allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Company.LogoFile", "Chỉ cho phép tải ảnh (JPG, PNG, SVG). ");
+                    await LoadIndustriesAsync();
+                    return Page();
+                }
             }
 
             // Tạo form data multipart

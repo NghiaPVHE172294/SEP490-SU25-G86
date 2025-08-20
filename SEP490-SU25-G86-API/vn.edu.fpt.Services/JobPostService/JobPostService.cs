@@ -47,6 +47,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 Title = j.Title,
                 CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 CompanyId = j.Employer?.CompanyId,
+                CompanyLogoUrl = j.Employer?.Company?.LogoUrl,
                 Salary = j.SalaryRange != null
                          ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                          : "Thỏa thuận",
@@ -179,6 +180,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 Title = j.Title,
                 CompanyName = j.Employer?.Company?.CompanyName ?? "Không rõ",
                 CompanyId = j.Employer?.Company?.CompanyId,
+                CompanyLogoUrl = j.Employer?.Company?.LogoUrl,
                 Salary = (j.SalaryRange != null && j.SalaryRange.MinSalary.HasValue && j.SalaryRange.MaxSalary.HasValue)
                     ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
                     : "Thỏa thuận",

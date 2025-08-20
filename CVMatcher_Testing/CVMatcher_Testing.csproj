@@ -42,10 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CVMatcher_UnitTesting\vn.edu.fpt.Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SEP490-SU25-G86-API\SEP490-SU25-G86-API.csproj" />
   </ItemGroup>
 

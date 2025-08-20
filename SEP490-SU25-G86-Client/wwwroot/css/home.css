@@ -8,6 +8,10 @@
     --border-color: #E0E0E0;
 }
 
+h2.fw-bold,
+h2.fw-bold.m-0 {
+    color: var(--primary-color);
+}
 /* Nút dùng cho trang công ty */
 .btn-custom {
     background-color: var(--primary-color);
@@ -192,18 +196,273 @@ a:hover h5 {
     background-color: #f3f5f7;
 }
 .card.job-card {
-    transition: border-color 0.3s ease;
-    border: 1px solid transparent; /* để có border cho hover đổi màu */
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
+    will-change: transform, box-shadow, border-color;
 }
 
     .card.job-card:hover {
-        border-color: #309689; /* đổi màu viền khi hover */
+        border-color: #309689;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
     }
 
     .card.job-card h5 {
-        transition: color 0.3s ease;
+        transition: color 0.3s ease-in-out;
     }
 
     .card.job-card:hover h5 {
         color: #309689 !important; /* chỉ đổi màu tiêu đề */
     }
+
+/*css cho mục ngành nghề*/
+.industry-card {
+    background: #f3f5f7;
+    border-radius: 10px;
+    padding: 20px 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-align: center;
+}
+
+    .industry-card:hover {
+        background: #e9f5f3;
+        border-color: #309689;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+.industry-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.industry-count {
+    color: #00b14f;
+    font-size: 0.95rem;
+}
+
+.btn-page {
+    border: 1px solid #00b14f;
+    background: none;
+    color: #00b14f;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    line-height: 1;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+    .btn-page:hover:not(:disabled) {
+        background: #00b14f;
+        color: white;
+    }
+
+    .btn-page:disabled {
+        border-color: #ccc;
+        color: #ccc;
+        background: none;
+        cursor: not-allowed;
+    }
+/*Search*/
+.hero-section {
+    width: 100vw; /* chiếm toàn bộ chiều ngang */
+    margin-left: calc(-50vw + 50%); /* phá giới hạn container */
+    background: linear-gradient( to bottom, #06130B 0%, #11362B 50%, #309689 100% );
+    padding: 3rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+    /* Tam giác hai bên */
+    .hero-section::before,
+    .hero-section::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 25%;
+        z-index: 0;
+    }
+
+    .hero-section::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.3), transparent);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .hero-section::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.3), transparent);
+        clip-path: polygon(100% 0, 0 50%, 100% 100%);
+    }
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+}
+/*Thanh chọn ngành*/
+.category-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 15px;
+}
+
+    .category-list ul li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+    }
+
+        .category-list ul li:last-child {
+            border-bottom: none;
+        }
+
+        .category-list ul li:hover {
+            background-color: #f9f9f9;
+        }
+
+            .category-list ul li:hover .category-text {
+                color: #309689;
+            }
+
+        /* Ensure the <a> tag inside <li> maintains the flex layout */
+        .category-list ul li a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+.category-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    text-align: left; /* Explicitly left-align the text */
+}
+
+.category-list .arrow {
+    color: #999;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-left: 8px;
+    text-align: right; /* Ensure arrow stays on the right */
+}
+
+.category-footer {
+    border-top: 1px solid #eee;
+    padding: 10px 15px;
+    display: flex;
+    margin-top: auto;
+}
+
+.category-pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+    .category-pagination button {
+        border: 1px solid #ddd;
+        background-color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        color: #28a745;
+        font-size: 16px;
+        line-height: 1;
+    }
+
+        .category-pagination button:hover {
+            background-color: #28a745;
+            color: white;
+        }
+        .category-pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none; 
+            background-color: #f5f5f5; 
+            color: #aaa; 
+        }
+            
+            .category-pagination button:disabled:hover {
+                background-color: #f5f5f5; 
+                color: #aaa;
+            }
+/*Slider*/
+/* Khung slider */
+.custom-slider {
+    border-radius: 12px;
+    overflow: hidden; /* để ảnh bo tròn theo khung */
+}
+
+    /* Phần nội dung slider */
+    .custom-slider .carousel-inner {
+        height: 100%;
+    }
+
+        /* Ảnh trong slider */
+        .custom-slider .carousel-inner img {
+            height: 100%;
+            object-fit: cover;
+        }
+    .custom-slider .carousel-control-prev {
+        left: 5px; /* sát hơn so với mặc định */
+    }
+
+    .custom-slider .carousel-control-next {
+        right: 5px;
+    }
+
+    /* Tùy biến hình dạng nút */
+    .custom-slider .carousel-control-prev-icon,
+    .custom-slider .carousel-control-next-icon {
+        background-size: 50% 50%;
+        background-color: rgba(0, 0, 0, 0.4); 
+        border-radius: 50%;
+        padding: 15px; 
+        transition: background-color 0.3s ease;
+    }
+        .custom-slider .carousel-control-prev-icon:hover,
+        .custom-slider .carousel-control-next-icon:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+/*ListJob*/
+.joblist-card {
+    border-radius: 15px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+
+    .joblist-card:hover {
+        background-color: rgba(48, 150, 137, 0.05);
+        border-color: #309689 !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+        .joblist-card:hover .job-title {
+            color: #309689; /* Change title text color on hover */
+        }
