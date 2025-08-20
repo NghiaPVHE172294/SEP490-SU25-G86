@@ -19,7 +19,7 @@ namespace SEP490_SU25_G86_Client.Pages
         [FromQuery] int? salaryRangeId = null,
         [FromQuery] int? experienceLevelId = null)
         {
-            int pageSize = 9;
+            int pageSize = 6;
             CurrentPage = page < 1 ? 1 : page;
             Region = region;
             SalaryRangeId = salaryRangeId;
