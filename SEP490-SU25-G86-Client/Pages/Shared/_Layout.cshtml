@@ -30,11 +30,33 @@
             {
                 <div class="nav">
                     <a asp-page="/Index">Trang chủ</a>
-                    <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
                     <a asp-page="/Common/ListJobs">Tìm việc làm</a>
+                    <a asp-page="/CVTemplatesByPosition">Mẫu CV</a>
                     <a asp-page="/Companies/ListCompany">Danh sách công ty</a>
+                    <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
                     <a asp-page="/Contact">Liên hệ</a>
                 </div>
+            }
+            else if (userRole == "ADMIN")
+            {
+                <nav class="navbar navbar-expand navbar-dark bg-primary mb-2">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/AdminDashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/ManageAccount">Quản lý tài khoản</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/ManagePermissions">Phân quyền</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/AdminCVTemplates">Quản lý CV Template</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             }
             <div class="header-actions">
                 @{
@@ -121,7 +143,6 @@
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="employerDropdown">      
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobCriteria">Chiến dịch tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobByEmployer">Danh sách bài đăng tuyển dụng</a></li>
-                            <li><a class="dropdown-item" asp-page="/Employer/ManageSubmittedCVsofJobPost">Quản lý CV đã nộp của bài đăng tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/MyCVTemplates">Quản lý CV Template</a></li>
                             <li class="dropdown-submenu position-relative">
                                 <a class="dropdown-item dropdown-toggle" href="#" id="accountSettingDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cài đặt tài khoản</a>

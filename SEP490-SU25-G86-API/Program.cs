@@ -68,6 +68,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
+using vn.edu.fpt.Services.CvTemplateUpload;
 using SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub;
 using System.Net;
 using System.Net.Http.Headers;
@@ -327,7 +328,9 @@ builder.Configuration.AddConfiguration(configuration);
 
             // Đăng ký dịch vụ lưu trữ Firebase cho upload CV Template
 builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFirebaseStorageService, SEP490_SU25_G86_API.Services.CvTemplateService.FirebaseStorageService>();
-// New DI registrations
+            // Đăng ký dịch vụ upload CVTemplate cho admin
+            builder.Services.AddScoped<ICvTemplateUploadService, CvTemplateUploadService>();
+            // New DI registrations
             builder.Services.AddScoped<ICvRepository, CvRepository>();
             builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
 

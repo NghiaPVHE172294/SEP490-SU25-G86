@@ -64,7 +64,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             if (response.IsSuccessStatusCode)
             {
                 // Đăng ký thành công, lưu thông báo vào TempData và chuyển về Login
-                TempData["RegisterSuccess"] = "Đăng ký thành công! Vui lòng đăng nhập.";
+                TempData["RegisterSuccess"] = "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.";
                 return RedirectToPage("/Common/Login");
             }
             else

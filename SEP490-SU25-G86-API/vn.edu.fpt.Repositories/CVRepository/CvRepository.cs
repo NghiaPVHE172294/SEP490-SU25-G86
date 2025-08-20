@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
@@ -21,10 +21,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CVRepository
             return await _context.Cvs.FirstOrDefaultAsync(c => c.CvId == cvId && !c.IsDelete);
         }
 
-        public async Task AddAsync(Cv cv)
+        public async Task<int> AddAsync(Cv cv)
         {
             _context.Cvs.Add(cv);
             await _context.SaveChangesAsync();
+            return cv.CvId; // EF đã gán
         }
 
         public async Task DeleteAsync(Cv cv)

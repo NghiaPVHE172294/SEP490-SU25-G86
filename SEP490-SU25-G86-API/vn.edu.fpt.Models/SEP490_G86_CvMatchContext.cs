@@ -53,17 +53,10 @@ namespace SEP490_SU25_G86_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //            if (!optionsBuilder.IsConfigured)
-            //            {
-            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-            //                optionsBuilder.UseSqlServer("server=DESKTOP-C2PDBET\\SQLEXPRESS;database= SEP490_G86_CvMatch;Integrated Security=yes;uid=sa;pwd=123;TrustServerCertificate=True;");
-            //            }
-
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=SEP490_G86_CvMatch;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
             }
         }
 
@@ -235,13 +228,17 @@ namespace SEP490_SU25_G86_API.Models
             {
                 entity.Property(e => e.CvTemplateName).HasMaxLength(30);
 
-                entity.Property(e => e.DocFileUrl).HasMaxLength(50);
-
                 entity.Property(e => e.IsDelete)
                     .HasColumnName("isDelete")
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UploadDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Admin)
+                    .WithMany(p => p.CvTemplates)
+                    .HasForeignKey(d => d.AdminId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CvTemplates_Users");
 
                 entity.HasOne(d => d.Industry)
                     .WithMany(p => p.CvTemplates)
@@ -672,7 +669,7 @@ namespace SEP490_SU25_G86_API.Models
             modelBuilder.Entity<RolePermission>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.PermissionId })
-                    .HasName("PK__RolePerm__6400A1A804A59C5E");
+                    .HasName("PK__RolePerm__6400A1A8C29AE4CD");
 
                 entity.Property(e => e.IsAuthorized).HasDefaultValueSql("((1))");
 
@@ -680,13 +677,13 @@ namespace SEP490_SU25_G86_API.Models
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__5BAD9CC8");
+                    .HasConstraintName("FK__RolePermi__Permi__367C1819");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__5CA1C101");
+                    .HasConstraintName("FK__RolePermi__RoleI__37703C52");
             });
 
             modelBuilder.Entity<SalaryRange>(entity =>

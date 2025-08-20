@@ -9,7 +9,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO
         public string CompanyName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Mã số thuế là bắt buộc.")]
-        [StringLength(50, ErrorMessage = "Mã số thuế không được vượt quá 50 ký tự.")]
+        [RegularExpression(@"^\d{10}(-\d{3})?$", ErrorMessage = "Mã số thuế phải gồm 10 số hoặc 13 ký tự (10 số + '-XXX').")]
         public string TaxCode { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Ngành nghề là bắt buộc.")]
@@ -29,8 +29,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO
         [StringLength(1000, ErrorMessage = "Mô tả không được vượt quá 1000 ký tự.")]
         public string Description { get; set; } = string.Empty;
 
-        [Url(ErrorMessage = "Website không đúng định dạng URL.")]
         [StringLength(200, ErrorMessage = "Website không được vượt quá 200 ký tự.")]
+        [RegularExpression(@"^((http|https):\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+            ErrorMessage = "Website không đúng định dạng.")]
         public string? Website { get; set; }
 
         [Required(ErrorMessage = "Quy mô công ty là bắt buộc.")]
@@ -38,13 +39,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO
         public string CompanySize { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
-        [Phone(ErrorMessage = "Số điện thoại không đúng định dạng.")]
-        [StringLength(20, ErrorMessage = "Số điện thoại không được vượt quá 20 ký tự.")]
+        [RegularExpression(@"^(0[3|5|7|8|9][0-9]{8})$", ErrorMessage = "Số điện thoại không đúng định dạng (10 số, bắt đầu bằng 03,05,07,08,09).")]
         public string Phone { get; set; } = string.Empty;
 
-        [Url(ErrorMessage = "Logo URL không đúng định dạng.")]
         [StringLength(300, ErrorMessage = "Logo URL không được vượt quá 300 ký tự.")]
+        [Url(ErrorMessage = "Logo URL không đúng định dạng.")]
         public string? LogoUrl { get; set; }
-        public IFormFile? LogoFile { get; set; } // Dùng để upload logo mới, nếu có
+
+        public IFormFile? LogoFile { get; set; }
     }
 }

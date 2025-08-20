@@ -83,7 +83,7 @@ namespace SEP490_SU25_G86_Client.Pages.CareerHandbooks
 
             var res = await _httpClient.PostAsync("api/CareerHandbooks", content);
             if (res.IsSuccessStatusCode)
-                return RedirectToPage("/CareerHandbooks/ListCareerHandbook");
+                return RedirectToPage("/CareerHandbook/ListCareerHandbook");
 
             var errorMsg = await res.Content.ReadAsStringAsync();
             ModelState.AddModelError(string.Empty, $"Lỗi khi thêm cẩm nang: {errorMsg}");

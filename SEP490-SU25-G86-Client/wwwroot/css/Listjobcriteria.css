@@ -1,0 +1,229 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body, .container-cv {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #f6f8fb;
+}
+
+.container-cv {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 0 24px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cv-card {
+    width: 100%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.05);
+    padding: 28px 28px 20px 28px;
+    margin-bottom: 32px;
+}
+
+.cv-title {
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .cv-title i {
+        color: #3b82f6;
+        font-size: 2.1rem;
+    }
+
+#cv-filter-form {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 6px rgba(60,72,88,0.06);
+    margin-bottom: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 0;
+}
+
+    #cv-filter-form label {
+        font-weight: 500;
+        color: #374151;
+    }
+
+.table-responsive-cv {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    min-width: 1100px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .table thead th {
+        background: #f1f5f9;
+        font-weight: 600;
+        color: #334155;
+        border-bottom: 2px solid #e5e7eb;
+        text-align: center;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background: #f8fafc;
+    }
+
+    .table tbody tr:hover {
+        background: #e0e7ef;
+    }
+
+    .table td, .table th {
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px;
+    }
+
+.actions-cell {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+    .actions-cell .btn {
+        min-width: 80px;
+        font-size: 0.9rem;
+        height: 32px;
+        padding: 0 10px;
+    }
+
+.cv-status-badge {
+    border-radius: 6px;
+    padding: 0.3em 0.7em;
+    font-size: 0.95em;
+    font-weight: 500;
+    color: #fff;
+}
+
+    .cv-status-badge.open {
+        background: #3b82f6;
+    }
+
+    .cv-status-badge.rejected {
+        background: #6b7280;
+    }
+
+.alert {
+    border-radius: 8px;
+    font-size: 1.05em;
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+    #cv-filter-form .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+}
+/* --- Badge Trạng thái đẹp hơn --- */
+.cv-status-badge {
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    color: #fff;
+    white-space: nowrap;
+}
+
+    .cv-status-badge.open {
+        background-color: #3b82f6;
+    }
+
+    .cv-status-badge.closed {
+        background-color: #6b7280;
+    }
+
+/* --- Nút thao tác gọn và đều --- */
+.actions-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+    min-width: 260px;
+}
+
+    .actions-cell .btn {
+        font-size: 0.85rem;
+        padding: 4px 10px;
+        height: 32px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border-radius: 8px !important;
+        font-weight: 500;
+    }
+
+        .actions-cell .btn i {
+            font-size: 1rem;
+            margin-right: 4px;
+        }
+
+    .actions-cell form {
+        margin: 0;
+        padding: 0;
+    }
+
+.pagination {
+    margin-top: 10px;
+    --bs-pagination-active-bg: #3b82f6;
+    --bs-pagination-active-border-color: #3b82f6;
+    --bs-pagination-color: #2563eb;
+    --bs-pagination-hover-bg: #e0e7ef;
+    --bs-pagination-border-radius: 8px;
+}
+
+    .pagination .page-item.active .page-link {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .pagination .page-link {
+        border-radius: 8px !important;
+        color: #2563eb;
+    }
+
+        .pagination .page-link:hover {
+            background: #e0e7ef;
+        }
+
+.text-muted {
+    color: #6b7280 !important;
+    font-size: 1.02em;
+}
+ul.list-unstyled > li {
+    background-color: #f8f9fa;
+    transition: all 0.2s ease-in-out;
+}
+
+    ul.list-unstyled > li:hover {
+        background-color: #eef2f7;
+        box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+td.text-center.align-middle {
+    vertical-align: middle !important;
+}
