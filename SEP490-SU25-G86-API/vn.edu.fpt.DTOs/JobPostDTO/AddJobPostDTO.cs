@@ -64,7 +64,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public bool IsAienabled { get; set; }
 
         [Required(ErrorMessage = "Trạng thái là bắt buộc.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Trạng thái phải từ 2-50 ký tự.")]
         public string Status { get; set; }
 
         // ===== Validation logic =====

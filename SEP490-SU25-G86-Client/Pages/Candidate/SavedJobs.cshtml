@@ -28,7 +28,7 @@
                                         <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
                                     </div>
                                     <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
-                                    <p class="mb-2 text-muted"><strong>Saved At:</strong> @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                                    <p class="mb-2 text-muted"><strong>Đã lưu vào:</strong> @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")</p>
                                     <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
                                     <form method="post" asp-page-handler="Delete" asp-route-saveJobId="@job.SaveJobId" class="d-inline">
                                         <button type="submit" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bạn có chắc muốn bỏ lưu công việc này?')">Bỏ lưu</button>
