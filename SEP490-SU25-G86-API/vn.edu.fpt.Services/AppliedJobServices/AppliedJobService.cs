@@ -40,7 +40,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
                 CvFileUrl = s.Cv?.FileUrl,
                 CvNotes = s.Cv?.Notes,
                 SourceType = s.SourceType,
-                IsDelete = s.IsDelete
+                IsDelete = s.IsDelete,
+                CompanyName = s.JobPost?.Employer?.Company?.CompanyName ?? "Không rõ",
+                CompanyLogoUrl = s.JobPost?.Employer?.Company?.LogoUrl,
+                Salary = s.JobPost?.SalaryRange != null
+                    ? ($"{s.JobPost.SalaryRange.MinSalary:N0} - {s.JobPost.SalaryRange.MaxSalary:N0} {s.JobPost.SalaryRange.Currency}")
+                    : "Thỏa thuận"
             });
         }
 

@@ -24,12 +24,20 @@
     window.jwtToken = '@jwtToken';
 </script>
 
-<section class="container py-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2 class="h5 mb-0">Danh sách việc làm đã ứng tuyển</h2>
+<section class="py-5" style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h2 class="h4 mb-1">Danh sách việc làm đã ứng tuyển</h2>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                Trang này hiển thị tất cả các công việc bạn đã ứng tuyển, cùng trạng thái xử lý hồ sơ, thông tin công ty và mức lương.
+                            </p>
+                        </div>
+                        <div class="ms-3">
                     @{
                         var statusMap = new Dictionary<string, string>
                         {
@@ -40,7 +48,7 @@
                         };
                     }
                     <form method="get" class="d-inline">
-                    <select class="form-select w-auto d-inline" name="StatusFilter" onchange="this.form.submit()">
+                    <select class="form-select" name="StatusFilter" onchange="this.form.submit()" style="min-width: 200px;">
                         <option value="">Tất cả trạng thái</option>
                         @foreach (var kv in statusMap)
                         {
@@ -55,6 +63,8 @@
                         }
                     </select>
                     </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if (filteredJobs.Any())
@@ -62,48 +72,48 @@
                         <div class="list-group">
                             @foreach (var job in filteredJobs)
                             {
-                                <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5 class="mb-0">@job.Title</h5>
-                                        @{
-                                            string badgeClass = "bg-secondary";
-                                            string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
-                                            switch (job.Status ?? "")
-                                            {
-                                                case "Đã ứng tuyển":
-                                                    badgeClass = "bg-primary";
-                                                    break;
-                                                case "ĐÃ DUYỆT":
-                                                    badgeClass = "bg-success";
-                                                    break;
-                                                case "ĐÃ TỪ CHỐI":
-                                                    badgeClass = "bg-danger";
-                                                    break;
-                                                case "Hồ sơ đã rút":
-                                                    badgeClass = "bg-dark";
-                                                    break;
-                                            }
-                                        }
-<span class="badge @badgeClass">@statusText</span>
-                                    </div>
-                                    <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
-                                    <p class="mb-2 text-muted"><strong>Ngày ứng tuyển:</strong> @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</p>
-                                    @if (job.CvId != null)
-                                    {
-                                       
-                                    }
-                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
-@if (!string.IsNullOrEmpty(job.CvFileUrl))
-{
-    <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm ms-2" target="_blank">Xem CV đã ứng tuyển</a>
-}
-else
-{
-    <span class="text-muted small ms-2">Không tìm thấy file CV</span>
-}
-                                    
-                                    <button class="btn btn-danger btn-sm ms-2" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
-                                </div>
+                                <div class="list-group-item list-group-item-action mb-3 rounded-3 p-4 job-card" style="background-color: white;">
+    <div class="d-flex align-items-center">
+        <div class="me-3 flex-shrink-0">
+            <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" 
+                 alt="Logo" 
+                 class="company-logo" 
+                 style="width: 100px; height: 100px; object-fit: contain; background: white; border: 1px solid #eee; border-radius: 8px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        </div>
+        <div class="flex-grow-1">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+                <h5 class="mb-0 fw-semibold text-truncate" style="max-width:300px;">@job.Title</h5>
+                @{
+                    string badgeClass = "bg-secondary";
+                    string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
+                    switch (job.Status ?? "")
+                    {
+                        case "Đã ứng tuyển": badgeClass = "bg-primary"; break;
+                        case "ĐÃ DUYỆT": badgeClass = "bg-success"; break;
+                        case "ĐÃ TỪ CHỐI": badgeClass = "bg-danger"; break;
+                        case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
+                    }
+                }
+                <span class="badge @badgeClass ms-2">@statusText</span>
+            </div>
+            <div class="mb-1 text-muted small"><strong>@job.CompanyName</strong> &bull; <span class="text-success">@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)</span></div>
+            <div class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> @job.WorkLocation</div>
+            <div class="mb-2 text-muted"><i class="bi bi-calendar-check"></i> Ứng tuyển: @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                @if (!string.IsNullOrEmpty(job.CvFileUrl))
+                {
+                    <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm" target="_blank">Xem CV đã ứng tuyển</a>
+                }
+                else
+                {
+                    <span class="text-muted small align-self-center">Không tìm thấy file CV</span>
+                }
+                <button class="btn btn-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
+            </div>
+        </div>
+    </div>
+</div>
                             }
                         </div>
                     }
