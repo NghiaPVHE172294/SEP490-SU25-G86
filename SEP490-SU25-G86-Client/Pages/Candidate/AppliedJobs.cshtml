@@ -20,6 +20,89 @@
     }
 }
 <script>
+    window.savedJobIds = [@(string.Join(",", Model.SavedJobs?.Select(j => j.JobPostId) ?? new List<int>()))];
+    function renderBookmarkState(jobPostId) {
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        var icon = document.getElementById('bookmark-icon-' + jobPostId);
+        var label = document.getElementById('bookmark-label-' + jobPostId);
+        if (icon && label) {
+            if (isSaved) {
+                icon.className = 'bi bi-bookmark-fill text-success';
+                label.innerText = ' Đã lưu';
+            } else {
+                icon.className = 'bi bi-bookmark';
+                label.innerText = ' Lưu';
+            }
+        }
+    }
+
+    function toggleSaveJob(btn) {
+        var jobPostId = parseInt(btn.getAttribute('data-job-id'));
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        if (!window.userId || !window.jwtToken) {
+            alert('Bạn cần đăng nhập để sử dụng chức năng này!');
+            return;
+        }
+        if (!isSaved) {
+            // Save job
+            fetch(`https://localhost:7004/api/SavedJobs/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.jwtToken
+                },
+                body: JSON.stringify({ jobPostId: jobPostId, userId: window.userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.message && data.message.includes('success')) {
+                    window.savedJobIds.push(jobPostId);
+                    renderBookmarkState(jobPostId);
+                } else {
+                    alert(data.message || 'Không thể lưu việc làm.');
+                }
+            })
+            .catch(() => alert('Lỗi khi lưu việc làm!'));
+        } else {
+            // Unsave job
+            // Cần lấy saveJobId, tạm thời gọi API xóa theo userId/jobPostId nếu backend hỗ trợ, nếu không phải lấy saveJobId từ danh sách
+            fetch(`https://localhost:7004/api/SavedJobs/user/${window.userId}`,
+                { headers: { 'Authorization': 'Bearer ' + window.jwtToken } })
+            .then(res => res.json())
+            .then(jobs => {
+                var saved = jobs.find(j => j.jobPostId === jobPostId);
+                if (saved && saved.saveJobId) {
+                    fetch(`https://localhost:7004/api/SavedJobs/${saved.saveJobId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + window.jwtToken }
+                    })
+                    .then(r => {
+                        if (r.status === 204) {
+                            window.savedJobIds = window.savedJobIds.filter(id => id !== jobPostId);
+                            renderBookmarkState(jobPostId);
+                        } else {
+                            alert('Không thể bỏ lưu việc làm!');
+                        }
+                    });
+                } else {
+                    alert('Không tìm thấy việc làm đã lưu!');
+                }
+            });
+        }
+    }
+    // Render trạng thái bookmark khi trang load
+    window.addEventListener('DOMContentLoaded', function() {
+        (window.savedJobIds || []).forEach(function(jobId) {
+            renderBookmarkState(jobId);
+        });
+        // Render cho tất cả job suggestion
+        document.querySelectorAll('.save-job-btn').forEach(function(btn) {
+            var jobId = parseInt(btn.getAttribute('data-job-id'));
+            renderBookmarkState(jobId);
+        });
+    });
+</script>
+<script>
     window.userId = '@userId';
     window.jwtToken = '@jwtToken';
 </script>
@@ -28,155 +111,209 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <h2 class="h4 mb-1">Danh sách việc làm đã ứng tuyển</h2>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                                Trang này hiển thị tất cả các công việc bạn đã ứng tuyển, cùng trạng thái xử lý hồ sơ, thông tin công ty và mức lương.
-                            </p>
-                        </div>
-                        <div class="ms-3">
-                    @{
-                        var statusMap = new Dictionary<string, string>
-                        {
-                            { "Đã ứng tuyển", "Đã ứng tuyển" },
-                            { "ĐÃ DUYỆT", "Hồ sơ phù hợp" },
-                            { "ĐÃ TỪ CHỐI", "Hồ sơ không phù hợp" },
-                            { "Hồ sơ đã rút", "Hồ sơ đã rút" }
-                        };
-                    }
-                    <form method="get" class="d-inline">
-                    <select class="form-select" name="StatusFilter" onchange="this.form.submit()" style="min-width: 200px;">
-                        <option value="">Tất cả trạng thái</option>
-                        @foreach (var kv in statusMap)
-                        {
-                            if (Model.StatusFilter == kv.Key)
-                            {
-                                @:<option value="@kv.Key" selected>@kv.Value</option>
-                            }
-                            else
-                            {
-                                @:<option value="@kv.Key">@kv.Value</option>
-                            }
-                        }
-                    </select>
-                    </form>
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h2 class="h4 mb-1">Danh sách việc làm đã ứng tuyển</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Trang này hiển thị tất cả các công việc bạn đã ứng tuyển, cùng trạng thái xử lý hồ sơ, thông tin công ty và mức lương.
+                                </p>
+                            </div>
+                            <div class="ms-3">
+                                @{
+                                    var statusMap = new Dictionary<string, string>
+                                                                {
+                                                                { "Đã ứng tuyển", "Đã ứng tuyển" },
+                                                                { "ĐÃ DUYỆT", "Hồ sơ phù hợp" },
+                                                                { "ĐÃ TỪ CHỐI", "Hồ sơ không phù hợp" },
+                                                                { "Hồ sơ đã rút", "Hồ sơ đã rút" }
+                                                                };
+                                }
+                                <form method="get" class="d-inline">
+                                    <select class="form-select" name="StatusFilter" onchange="this.form.submit()" style="min-width: 200px;">
+                                        <option value="">Tất cả trạng thái</option>
+                                        @foreach (var kv in statusMap)
+                                        {
+                                            if (Model.StatusFilter == kv.Key)
+                                            {
+                                                @:
+                                                <option value="@kv.Key" selected>@kv.Value</option>
+                                            }
+                                            else
+                                            {
+                                                @:
+                                                <option value="@kv.Key">@kv.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    @if (filteredJobs.Any())
-                    {
-                        <div class="list-group">
-                            @foreach (var job in filteredJobs)
-                            {
-                                <div class="list-group-item list-group-item-action mb-3 rounded-3 p-4 job-card" style="background-color: white;">
-    <div class="d-flex align-items-center">
-        <div class="me-3 flex-shrink-0">
-            <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" 
-                 alt="Logo" 
-                 class="company-logo" 
-                 style="width: 100px; height: 100px; object-fit: contain; background: white; border: 1px solid #eee; border-radius: 8px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        </div>
-        <div class="flex-grow-1">
-            <div class="d-flex align-items-center justify-content-between mb-1">
-                <h5 class="mb-0 fw-semibold text-truncate" style="max-width:300px;">@job.Title</h5>
-                @{
-                    string badgeClass = "bg-secondary";
-                    string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
-                    switch (job.Status ?? "")
-                    {
-                        case "Đã ứng tuyển": badgeClass = "bg-primary"; break;
-                        case "ĐÃ DUYỆT": badgeClass = "bg-success"; break;
-                        case "ĐÃ TỪ CHỐI": badgeClass = "bg-danger"; break;
-                        case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
-                    }
-                }
-                <span class="badge @badgeClass ms-2">@statusText</span>
-            </div>
-            <div class="mb-1 text-muted small"><strong>@job.CompanyName</strong> &bull; <span class="text-success">@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)</span></div>
-            <div class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> @job.WorkLocation</div>
-            <div class="mb-2 text-muted"><i class="bi bi-calendar-check"></i> Ứng tuyển: @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</div>
-            <div class="d-flex flex-wrap gap-2">
-                <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
-                @if (!string.IsNullOrEmpty(job.CvFileUrl))
-                {
-                    <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm" target="_blank">Xem CV đã ứng tuyển</a>
-                }
-                else
-                {
-                    <span class="text-muted small align-self-center">Không tìm thấy file CV</span>
-                }
-                <button class="btn btn-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
-            </div>
-        </div>
-    </div>
-</div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-5 text-muted">
-                            <p>Bạn chưa ứng tuyển công việc nào !</p>
-                            <a href="/Common/ListJobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
-                </div>
-                <div class="card-body">
-                    @if (Model.SuggestedJobs.Any())
-                    {
-                        @foreach (var job in Model.SuggestedJobs)
+                    <div class="card-body">
+                        @if (filteredJobs.Any())
                         {
-                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
-                                <div class="mb-3 p-2 border rounded d-flex align-items-center hover-shadow" style="transition:box-shadow .2s;">
-                                    <div class="bg-light p-2 rounded me-3 d-flex align-items-center justify-content-center" style="min-width:80px; min-height:50px;">
-                                        <span class="text-success fw-bold">@job.Salary</span>
+                            <div class="list-group">
+                                @foreach (var job in filteredJobs)
+                                {
+                                    <div class="list-group-item list-group-item-action mb-3 rounded-3 p-4 job-card" style="background-color: white;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3 flex-shrink-0">
+                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
+                                                     alt="Logo"
+                                                     class="company-logo"
+                                                     style="width: 100px; height: 100px; object-fit: contain; background: white; border: 1px solid #eee; border-radius: 8px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                                    <h5 class="mb-0 fw-semibold text-truncate" style="max-width:300px;">@job.Title</h5>
+                                                    @{
+                                                        string badgeClass = "bg-secondary";
+                                                        string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
+                                                        switch (job.Status ?? "")
+                                                        {
+                                                            case "Đã ứng tuyển": badgeClass = "bg-primary"; break;
+                                                            case "ĐÃ DUYỆT": badgeClass = "bg-success"; break;
+                                                            case "ĐÃ TỪ CHỐI": badgeClass = "bg-danger"; break;
+                                                            case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
+                                                        }
+                                                    }
+                                                    <span class="badge @badgeClass ms-2">@statusText</span>
+                                                </div>
+                                                <div class="mb-1 text-muted small"><strong>@job.CompanyName</strong> &bull; <span class="text-success">@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)</span></div>
+                                                <div class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> @job.WorkLocation</div>
+                                                <div class="mb-2 text-muted"><i class="bi bi-calendar-check"></i> Ứng tuyển: @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</div>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                                    @if (!string.IsNullOrEmpty(job.CvFileUrl))
+                                                    {
+                                                        <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm" target="_blank">Xem CV đã ứng tuyển</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted small align-self-center">Không tìm thấy file CV</span>
+                                                    }
+                                                    <button class="btn btn-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div style="flex:1;min-width:0;">
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5 text-muted">
+                                <p>Bạn chưa ứng tuyển công việc nào !</p>
+                                <a href="/Common/ListJobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.SuggestedJobs.Any())
+                        {
+                            @foreach (var job in Model.SuggestedJobs)
+                            {
+                                <div class="mb-3 p-2 border rounded d-flex align-items-center bg-white hover-shadow position-relative" style="transition:box-shadow .2s;">
+                                    <div class="d-flex flex-column align-items-center justify-content-center bg-light rounded me-3" style="min-width:72px; min-height:72px; width:72px; height:72px;">
+                                        <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" alt="Logo" style="width:56px; height:56px; object-fit:contain; border-radius:6px; background:#fff; border:1px solid #eee;">
+                                        <span class="text-success fw-bold mt-1" style="font-size:0.95rem;">@job.Salary</span>
+                                    </div>
+                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="flex-grow-1 text-decoration-none text-dark" style="min-width:0;">
                                         <div class="fw-bold text-truncate">@job.Title</div>
                                         <div class="text-muted small text-truncate">@job.CompanyName</div>
-                                    </div>
-                                    <span class="ms-auto text-muted small d-none d-md-inline">@job.Location</span>
+                                        <span class="text-muted small d-md-none">@job.Location</span>
+                                    </a>
+                                    <span class="ms-2 text-muted small d-none d-md-inline">@job.Location</span>
+                                    <button class="btn btn-outline-success btn-sm ms-2 save-job-btn"
+                                            data-job-id="@job.JobPostId"
+                                            onclick="toggleSaveJob(this)">
+                                        <i class="bi" id="bookmark-icon-@job.JobPostId"></i>
+                                        <span id="bookmark-label-@job.JobPostId"></span>
+                                    </button>
                                 </div>
-                            </a>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
-                    }
+                        else
+                        {
+                            <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
-<script>
-function withdrawApplication(submissionId) {
-    if (!confirm('Bạn chắc chắn muốn rút đơn ứng tuyển này?')) return;
-    // Lấy userId từ biến toàn cục hoặc session
-    fetch(`https://localhost:7004/api/AppliedJobs/withdraw/${submissionId}?userId=${window.userId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': 'Bearer ' + window.jwtToken
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">    function saveJob(jobPostId) {
+        if (!window.userId || !window.jwtToken) {
+            alert('Bạn cần đăng nhập để sử dụng chức năng này!');
+            return;
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message || 'Đã rút đơn ứng tuyển!');
-        location.reload();
-    })
-    .catch(() => alert('Lỗi khi rút đơn ứng tuyển!'));
-}
+        fetch(`https://localhost:7004/api/SavedJobs/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.jwtToken
+            },
+            body: JSON.stringify({ jobPostId: jobPostId, userId: window.userId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success || data.status === 'success') {
+                alert('Đã lưu việc làm!');
+            } else {
+                alert(data.message || 'Không thể lưu việc làm.');
+            }
+        })
+        .catch(() => alert('Lỗi khi lưu việc làm!'));
+    }
+</script>
+<script>
+    function withdrawApplication(submissionId) {
+        if (!confirm('Bạn chắc chắn muốn rút đơn ứng tuyển này?')) return;
+        // Lấy userId từ biến toàn cục hoặc session
+        fetch(`https://localhost:7004/api/AppliedJobs/withdraw/${submissionId}?userId=${window.userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + window.jwtToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message || 'Đã rút đơn ứng tuyển!');
+            location.reload();
+        })
+        .catch(() => alert('Lỗi khi rút đơn ứng tuyển!'));
+    }
+    function saveJob(jobPostId) {
+        if (!window.userId || !window.jwtToken) {
+            alert('Bạn cần đăng nhập để sử dụng chức năng này!');
+            return;
+        }
+        fetch(`https://localhost:7004/api/SavedJobs/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.jwtToken
+            },
+            body: JSON.stringify({ jobPostId: jobPostId, userId: window.userId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success || data.status === 'success') {
+                alert('Đã lưu việc làm!');
+            } else {
+                alert(data.message || 'Không thể lưu việc làm.');
+            }
+        })
+        .catch(() => alert('Lỗi khi lưu việc làm!'));
+    }
 </script> 

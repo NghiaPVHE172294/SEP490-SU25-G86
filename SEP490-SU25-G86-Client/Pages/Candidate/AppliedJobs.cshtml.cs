@@ -9,6 +9,7 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
 {
     public class AppliedJobsModel : PageModel
     {
+        public List<SEP490_SU25_G86_API.vn.edu.fpt.DTO.SavedJobDTO.SavedJobDTO> SavedJobs { get; set; } = new();
         private readonly HttpClient _httpClient;
         public List<AppliedJobDTO> AppliedJobs { get; set; } = new();
         public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
@@ -24,21 +25,34 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
 
         public async Task<IActionResult> OnGetAsync()
         {
+            // Lấy userId và token 1 lần duy nhất
+            var userIdStr = HttpContext.Session.GetString("userId");
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+            {
+                return RedirectToPage("/Common/Login");
+            }
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Lấy danh sách việc làm đã lưu
+            var savedJobsResp = await _httpClient.GetAsync($"api/SavedJobs/user/{userId}");
+            if (savedJobsResp.IsSuccessStatusCode)
+            {
+                var content = await savedJobsResp.Content.ReadAsStringAsync();
+                SavedJobs = JsonSerializer.Deserialize<List<SEP490_SU25_G86_API.vn.edu.fpt.DTO.SavedJobDTO.SavedJobDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            else
+            {
+                SavedJobs = new();
+            }
+
             var role = HttpContext.Session.GetString("user_role");
             if (role != "CANDIDATE")
             {
                 return RedirectToPage("/NotFound");
             }
 
-            var userIdStr = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
-            {
-                return RedirectToPage("/Common/Login");
-            }
-
-            var token = HttpContext.Session.GetString("jwt_token");
-            if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync($"api/AppliedJobs/user/{userId}");
 
@@ -56,7 +70,7 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
             if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái" && StatusFilter != "" && StatusFilter != "Tất cả trạng thái")
             {
                 string backendStatus = StatusFilter;
-                
+
                 if (StatusFilter == "Hồ sơ đã rút")
                 {
                     AppliedJobs = AppliedJobs.Where(j => (j.Status ?? "").Equals("Hồ sơ đã rút", StringComparison.OrdinalIgnoreCase) && j.IsDelete == true).ToList();
@@ -91,4 +105,4 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
             public List<JobPostHomeDto> Jobs { get; set; } = new();
         }
     }
-} 
+}
