@@ -102,143 +102,230 @@
         });
     });
 </script>
+<style>
+    .hover-bg-light:hover {
+        background-color: #f8f9fa !important;
+        transition: background-color 0.2s ease-in-out;
+    }
+    
+    .hover-text-primary:hover {
+        color: #0d6efd !important;
+        transition: color 0.2s ease-in-out;
+    }
+    
+    .job-card {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    .btn-sm {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 0.4em 0.8em;
+    }
+    
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
 <script>
     window.userId = '@userId';
     window.jwtToken = '@jwtToken';
 </script>
 
-<section class="py-5" style="background-color: #f8f9fa;">
+<section class="py-4" style="background-color: #f5f7fa;">
     <div class="container">
-        <div class="row">
+        <div class="row g-4">
             <div class="col-lg-8">
-                <div class="card mb-4 border-0 shadow-sm">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <h2 class="h4 mb-1">Danh sách việc làm đã ứng tuyển</h2>
-                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                                    Trang này hiển thị tất cả các công việc bạn đã ứng tuyển, cùng trạng thái xử lý hồ sơ, thông tin công ty và mức lương.
+                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                            <div class="mb-2 mb-md-0">
+                                <h1 class="h5 fw-bold mb-1 text-primary">Việc làm đã ứng tuyển</h1>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-info-circle me-1"></i> Theo dõi trạng thái hồ sơ ứng tuyển của bạn
                                 </p>
                             </div>
-                            <div class="ms-3">
-                                @{
-                                    var statusMap = new Dictionary<string, string>
-                                                                {
-                                                                { "Đã ứng tuyển", "Đã ứng tuyển" },
-                                                                { "ĐÃ DUYỆT", "Hồ sơ phù hợp" },
-                                                                { "ĐÃ TỪ CHỐI", "Hồ sơ không phù hợp" },
-                                                                { "Hồ sơ đã rút", "Hồ sơ đã rút" }
-                                                                };
-                                }
-                                <form method="get" class="d-inline">
-                                    <select class="form-select" name="StatusFilter" onchange="this.form.submit()" style="min-width: 200px;">
+                            <form method="get" class="d-flex align-items-center">
+                                <div class="input-group input-group-sm" style="width: 220px;">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-funnel"></i></span>
+                                    <select class="form-select border-start-0 ps-1" name="StatusFilter" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
-                                        @foreach (var kv in statusMap)
+                                        @foreach (var kv in Model.StatusMap)
                                         {
-                                            if (Model.StatusFilter == kv.Key)
-                                            {
-                                                @:
-                                                <option value="@kv.Key" selected>@kv.Value</option>
-                                            }
-                                            else
-                                            {
-                                                @:
-                                                <option value="@kv.Key">@kv.Value</option>
-                                            }
+                                            <option value="@kv.Key" selected="@(Model.StatusFilter == kv.Key)">@kv.Value</option>
                                         }
                                     </select>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         @if (filteredJobs.Any())
                         {
-                            <div class="list-group">
+                            <div class="list-group list-group-flush">
                                 @foreach (var job in filteredJobs)
                                 {
-                                    <div class="list-group-item list-group-item-action mb-3 rounded-3 p-4 job-card" style="background-color: white;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="me-3 flex-shrink-0">
+                                    string badgeClass = "bg-secondary";
+                                    string statusText = Model.StatusMap.ContainsKey(job.Status ?? "") ? Model.StatusMap[job.Status ?? ""] : (job.Status ?? "");
+                                    switch (job.Status ?? "")
+                                    {
+                                        case "Đã ứng tuyển": badgeClass = "bg-primary"; break;
+                                        case "ĐÃ DUYỆT": badgeClass = "bg-success"; break;
+                                        case "ĐÃ TỪ CHỐI": badgeClass = "bg-danger"; break;
+                                        case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
+                                    }
+
+                                    <div class="list-group-item border-0 p-4 hover-bg-light">
+                                        <div class="d-flex flex-column flex-md-row">
+                                            <!-- Company Logo -->
+                                            <div class="me-md-4 mb-3 mb-md-0 flex-shrink-0" style="width: 80px; height: 80px;">
                                                 <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
-                                                     alt="Logo"
-                                                     class="company-logo"
-                                                     style="width: 100px; height: 100px; object-fit: contain; background: white; border: 1px solid #eee; border-radius: 8px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                                     alt="@job.CompanyName"
+                                                     class="img-fluid rounded border"
+                                                     style="width: 100%; height: 100%; object-fit: contain; background: white; padding: 4px;">
                                             </div>
+                                            
+                                            <!-- Job Info -->
                                             <div class="flex-grow-1">
-                                                <div class="d-flex align-items-center justify-content-between mb-1">
-                                                    <h5 class="mb-0 fw-semibold text-truncate" style="max-width:300px;">@job.Title</h5>
-                                                    @{
-                                                        string badgeClass = "bg-secondary";
-                                                        string statusText = statusMap.ContainsKey(job.Status ?? "") ? statusMap[job.Status ?? ""] : (job.Status ?? "");
-                                                        switch (job.Status ?? "")
-                                                        {
-                                                            case "Đã ứng tuyển": badgeClass = "bg-primary"; break;
-                                                            case "ĐÃ DUYỆT": badgeClass = "bg-success"; break;
-                                                            case "ĐÃ TỪ CHỐI": badgeClass = "bg-danger"; break;
-                                                            case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
-                                                        }
-                                                    }
-                                                    <span class="badge @badgeClass ms-2">@statusText</span>
+                                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-2">
+                                                    <div class="me-3">
+                                                        <h5 class="mb-1 fw-semibold text-truncate" style="max-width: 100%;">
+                                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark hover-text-primary">@job.Title</a>
+                                                        </h5>
+                                                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                                            <span class="text-muted small">
+                                                                <i class="bi bi-building me-1"></i>@job.CompanyName
+                                                            </span>
+                                                            <span class="text-muted small d-none d-md-inline">•</span>
+                                                            <span class="text-success small fw-medium">
+                                                                <i class="bi bi-cash-coin me-1"></i>@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="badge @badgeClass align-self-start mb-2 mb-md-0">@statusText</span>
                                                 </div>
-                                                <div class="mb-1 text-muted small"><strong>@job.CompanyName</strong> &bull; <span class="text-success">@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)</span></div>
-                                                <div class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> @job.WorkLocation</div>
-                                                <div class="mb-2 text-muted"><i class="bi bi-calendar-check"></i> Ứng tuyển: @(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")</div>
+                                                
+                                                <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                                                    <span class="text-muted small">
+                                                        <i class="bi bi-geo-alt me-1"></i>@job.WorkLocation
+                                                    </span>
+                                                    <span class="text-muted small d-none d-md-inline">•</span>
+                                                    <span class="text-muted small">
+                                                        <i class="bi bi-calendar-check me-1"></i>@(job.SubmissionDate?.ToString("dd/MM/yyyy") ?? "N/A")
+                                                    </span>
+                                                </div>
+                                                
                                                 <div class="d-flex flex-wrap gap-2">
-                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-outline-primary btn-sm">
+                                                        <i class="bi bi-eye me-1"></i>Xem chi tiết
+                                                    </a>
                                                     @if (!string.IsNullOrEmpty(job.CvFileUrl))
                                                     {
-                                                        <a href="@job.CvFileUrl" class="btn btn-secondary btn-sm" target="_blank">Xem CV đã ứng tuyển</a>
+                                                        <a href="@job.CvFileUrl" class="btn btn-outline-secondary btn-sm" target="_blank">
+                                                            <i class="bi bi-file-earmark-pdf me-1"></i>Xem CV
+                                                        </a>
                                                     }
-                                                    else
+                                                    @if (job.Status != "Hồ sơ đã rút")
                                                     {
-                                                        <span class="text-muted small align-self-center">Không tìm thấy file CV</span>
+                                                        <button class="btn btn-outline-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">
+                                                            <i class="bi bi-x-circle me-1"></i>Rút đơn
+                                                        </button>
                                                     }
-                                                    <button class="btn btn-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">Rút đơn</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <hr class="my-0" />
+                                 
                                 }
                             </div>
                         }
                         else
                         {
-                            <div class="text-center py-5 text-muted">
-                                <p>Bạn chưa ứng tuyển công việc nào !</p>
-                                <a href="/Common/ListJobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
+                            <div class="text-center py-5 px-3">
+                                <div class="d-flex justify-content-center mb-3">
+                                    <div class="bg-light rounded-circle p-4">
+                                        <i class="bi bi-inbox text-muted" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                </div>
+                                <h5 class="mb-2">Chưa có đơn ứng tuyển nào</h5>
+                                <p class="text-muted mb-4">Bạn chưa ứng tuyển vào công việc nào. Hãy tìm kiếm và ứng tuyển ngay!</p>
+                                <a href="/Common/ListJobs" class="btn btn-primary">
+                                    <i class="bi bi-search me-2"></i>Tìm việc ngay
+                                </a>
                             </div>
                         }
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-lightbulb me-2 text-warning"></i>Gợi ý việc làm phù hợp
+                        </h5>
                     </div>
                     <div class="card-body">
                         @if (Model.SuggestedJobs.Any())
                         {
                             @foreach (var job in Model.SuggestedJobs)
                             {
-                                <div class="mb-3 p-2 border rounded d-flex align-items-center bg-white hover-shadow position-relative" style="transition:box-shadow .2s;">
-                                    <div class="d-flex flex-column align-items-center justify-content-center bg-light rounded me-3" style="min-width:72px; min-height:72px; width:72px; height:72px;">
-                                        <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" alt="Logo" style="width:56px; height:56px; object-fit:contain; border-radius:6px; background:#fff; border:1px solid #eee;">
-                                        <span class="text-success fw-bold mt-1" style="font-size:0.95rem;">@job.Salary</span>
+                                <div class="mb-3 p-3 border rounded bg-white hover-shadow" style="transition:box-shadow .2s; overflow: hidden;">
+                                    <div class="d-flex" style="width: 100%;">
+                                        <!-- Company Logo -->
+                                        <div class="flex-shrink-0 me-3" style="width: 64px;">
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 64px;">
+                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" 
+                                                     alt="@job.CompanyName" 
+                                                     class="img-fluid" 
+                                                     style="max-width: 100%; max-height: 48px; object-fit: contain; padding: 4px;">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Job Info -->
+                                        <div class="flex-grow-1" style="min-width: 0; max-width: calc(100% - 80px);">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div style="max-width: calc(100% - 90px);">
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
+                                                        <div class="fw-bold text-truncate">@job.Title</div>
+                                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2" style="width: 80px; flex-shrink: 0;">
+                                                    <button class="btn btn-outline-success btn-sm w-100 save-job-btn"
+                                                            data-job-id="@job.JobPostId"
+                                                            onclick="toggleSaveJob(this)"
+                                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                        <i class="bi" id="bookmark-icon-@job.JobPostId"></i>
+                                                        <span id="bookmark-label-@job.JobPostId">Lưu</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Location and Salary -->
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center mt-2">
+                                                <div class="text-muted small">
+                                                    <i class="bi bi-geo-alt"></i> @(job.Location ?? "N/A")
+                                                </div>
+                                                <div class="text-success fw-medium small">
+                                                    @(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="flex-grow-1 text-decoration-none text-dark" style="min-width:0;">
-                                        <div class="fw-bold text-truncate">@job.Title</div>
-                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
-                                        <span class="text-muted small d-md-none">@job.Location</span>
-                                    </a>
-                                    <span class="ms-2 text-muted small d-none d-md-inline">@job.Location</span>
-                                    <button class="btn btn-outline-success btn-sm ms-2 save-job-btn"
-                                            data-job-id="@job.JobPostId"
-                                            onclick="toggleSaveJob(this)">
-                                        <i class="bi" id="bookmark-icon-@job.JobPostId"></i>
-                                        <span id="bookmark-label-@job.JobPostId"></span>
-                                    </button>
                                 </div>
                             }
                         }
