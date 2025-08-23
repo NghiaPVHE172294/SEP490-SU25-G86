@@ -138,8 +138,13 @@
                     <div class="card-body p-0">
                         @if (filteredJobs.Any())
                         {
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                                <div class="text-muted fw-medium">
+                                    Danh sách @filteredJobs.Count việc làm đã ứng tuyển
+                                </div>
+                            </div>
                             <div class="list-group list-group-flush">
-                                @foreach (var job in filteredJobs)
+                                @foreach (var job in Model.PagedJobs)
                                 {
                                     string badgeClass = "bg-secondary";
                                     string statusText = Model.StatusMap.ContainsKey(job.Status ?? "") ? Model.StatusMap[job.Status ?? ""] : (job.Status ?? "");
@@ -164,22 +169,22 @@
                                             <!-- Job Info -->
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-start mb-2" style="gap: 1rem;">
-    <div style="flex: 1 1 0; min-width: 0;">
-        <h5 class="mb-1 fw-semibold job-title-multiline" style="max-width: 100%;">
-            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark hover-text-primary job-title-multiline" title="@job.Title">@job.Title</a>
-        </h5>
-        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
-            <span class="text-muted small">
-                <i class="bi bi-building me-1"></i>@job.CompanyName
-            </span>
-            <span class="text-muted small d-none d-md-inline">•</span>
-            <span class="text-success small fw-medium">
-                <i class="bi bi-cash-coin me-1"></i>@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
-            </span>
-        </div>
-    </div>
-    <span class="badge @badgeClass align-self-start mb-2 mb-md-0 flex-shrink-0" style="margin-left: 8px;">@statusText</span>
-</div>
+                                                    <div style="flex: 1 1 0; min-width: 0;">
+                                                        <h5 class="mb-1 fw-semibold job-title-multiline" style="max-width: 100%;">
+                                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark hover-text-primary job-title-multiline" title="@job.Title">@job.Title</a>
+                                                        </h5>
+                                                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                                            <span class="text-muted small">
+                                                                <i class="bi bi-building me-1"></i>@job.CompanyName
+                                                            </span>
+                                                            <span class="text-muted small d-none d-md-inline">•</span>
+                                                            <span class="text-success small fw-medium">
+                                                                <i class="bi bi-cash-coin me-1"></i>@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="badge @badgeClass align-self-start mb-2 mb-md-0 flex-shrink-0" style="margin-left: 8px;">@statusText</span>
+                                                </div>
                                                 
                                                 <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
                                                     <span class="text-muted small">
@@ -215,6 +220,34 @@
                                  
                                 }
                             </div>
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <nav aria-label="Pagination">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        @if (Model.Page > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page - 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @for (int i = 1; i <= Model.TotalPages; i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="?page=@i@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)">@i</a>
+                                            </li>
+                                        }
+                                        @if (Model.Page < Model.TotalPages)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page + 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
                         }
                         else
                         {
@@ -244,7 +277,7 @@
                     <div class="card-body">
                         @if (Model.SuggestedJobs.Any())
                         {
-                            @foreach (var job in Model.SuggestedJobs)
+                            @foreach (var job in Model.SuggestedJobs.Take(5))
                             {
                                 <div class="mb-3 p-3 border rounded bg-white hover-shadow" style="transition:box-shadow .2s; overflow: hidden;">
                                     <div class="d-flex" style="width: 100%;">
@@ -291,6 +324,12 @@
                                     </div>
                                 </div>
                             }
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <a href="/Common/ListJobs" class="btn btn-outline-success rounded-pill px-4">
+                                    <span class="me-2">Xem thêm việc làm</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
                         }
                         else
                         {

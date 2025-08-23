@@ -14,6 +14,12 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
         public List<AppliedJobDTO> AppliedJobs { get; set; } = new();
         public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
+        // Pagination properties
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 5;
+        public int TotalPages { get; set; }
+        public List<AppliedJobDTO> PagedJobs { get; set; } = new();
+
         [BindProperty(SupportsGet = true)]
         public string? StatusFilter { get; set; }
 
@@ -88,9 +94,11 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
                     AppliedJobs = AppliedJobs.Where(j => (j.IsDelete == false || j.IsDelete == null) && (j.Status ?? "").Equals(backendStatus, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
             }
-            // Nếu là tất cả trạng thái hoặc không filter thì trả về toàn bộ AppliedJobs (kể cả đã rút)
-            // else giữ nguyên AppliedJobs như API trả về
-
+            // Pagination logic
+            if (int.TryParse(HttpContext.Request.Query["page"], out int page))
+                Page = page > 0 ? page : 1;
+            TotalPages = (int)Math.Ceiling(AppliedJobs.Count / (double)PageSize);
+            PagedJobs = AppliedJobs.Skip((Page - 1) * PageSize).Take(PageSize).ToList();
 
             // Gợi ý việc làm (kiểu phổ thông)
             var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
