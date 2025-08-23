@@ -54,3 +54,18 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.job-applied-card {
+    border: 1px solid #e9ecef;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    margin-bottom: 1.25rem;
+    border-radius: 1rem;
+    transition: box-shadow .2s, border-color .2s, background .2s;
+}
+.job-applied-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    border-color: #0d6efd;
+    background: #f8fafd;
+    z-index: 2;
+}

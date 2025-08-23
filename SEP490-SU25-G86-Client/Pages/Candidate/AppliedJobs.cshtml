@@ -156,7 +156,7 @@
                                         case "Hồ sơ đã rút": badgeClass = "bg-dark"; break;
                                     }
 
-                                    <div class="list-group-item border-0 p-4 hover-bg-light">
+                                    <div class="list-group-item border-0 p-4 mb-3 rounded-3 shadow-sm job-applied-card" style="transition:box-shadow .2s;">
                                         <div class="d-flex flex-column flex-md-row">
                                             <!-- Company Logo -->
                                             <div class="me-md-4 mb-3 mb-md-0 flex-shrink-0" style="width: 80px; height: 80px;">
@@ -216,7 +216,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr class="my-0" />
+                                 
                                  
                                 }
                             </div>
@@ -268,6 +268,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
+                <!-- Gợi ý việc làm phù hợp -->
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h5 class="mb-0 fw-bold">
@@ -284,13 +285,13 @@
                                         <!-- Company Logo -->
                                         <div class="flex-shrink-0 me-3" style="width: 64px;">
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 64px;">
-                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)" 
-                                                     alt="@job.CompanyName" 
-                                                     class="img-fluid" 
+                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
+                                                     alt="@job.CompanyName"
+                                                     class="img-fluid"
                                                      style="max-width: 100%; max-height: 48px; object-fit: contain; padding: 4px;">
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Job Info -->
                                         <div class="flex-grow-1" style="min-width: 0; max-width: calc(100% - 80px);">
                                             <div class="d-flex justify-content-between align-items-start">
@@ -310,7 +311,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Location and Salary -->
                                             <div class="d-flex flex-wrap justify-content-between align-items-center mt-2">
                                                 <div class="text-muted small">
@@ -337,11 +338,28 @@
                         }
                     </div>
                 </div>
+     
+                <!-- Có thể bạn quan tâm: Công ty mới nhất -->
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-star me-2 text-info"></i>Có thể bạn quan tâm
+                        </h5>
+                    </div>
+                    <div class="card-body" id="latest-company-card">
+                        <div class="text-center text-muted">Đang tải...</div>
+                    </div>
+                </div>
+                       
+                    </div>
+                </div>
             </div>
         </div>
 </section>
 
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">    function saveJob(jobPostId) {
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function saveJob(jobPostId) {
         if (!window.userId || !window.jwtToken) {
             alert('Bạn cần đăng nhập để sử dụng chức năng này!');
             return;
@@ -364,6 +382,43 @@
         })
         .catch(() => alert('Lỗi khi lưu việc làm!'));
     }
+</script>
+<script>
+    // Gọi API lấy công ty mới nhất và render vào thẻ "Có thể bạn quan tâm"
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('https://localhost:7004/api/company/latest')
+            .then(res => {
+                console.log('Fetch /api/company/latest status:', res.status);
+                if (!res.ok) {
+                    res.text().then(text => console.error('API error body:', text));
+                    return null;
+                }
+                return res.json();
+            })
+            .then(company => {
+                var card = document.getElementById('latest-company-card');
+                console.log('Company latest data:', company);
+                if (!company) {
+                    card.innerHTML = '<div class="text-danger">Không tìm thấy công ty mới nhất.</div>';
+                    return;
+                }
+                card.innerHTML = `
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${company.logoUrl || '/assets/company-placeholder.png'}" alt="Logo" style="width:56px;height:56px;object-fit:contain;background:#f8f9fa;border-radius:8px;padding:4px;">
+                        <div>
+                            <a href="/Common/CompanyDetail?id=${company.companyId}" class="fw-bold text-decoration-none text-dark h6 mb-1 d-block">${company.companyName}</a>
+                            <div class="text-muted small mb-1">${company.industryName || ''}</div>
+                            <div class="text-muted small">${company.description ? company.description.substring(0, 60) + (company.description.length > 60 ? '...' : '') : ''}</div>
+                        </div>
+                    </div>
+                `;
+            })
+            .catch((err) => {
+                var card = document.getElementById('latest-company-card');
+                card.innerHTML = '<div class="text-danger">Không thể tải công ty mới nhất.</div>';
+                console.error('Fetch /api/company/latest exception:', err);
+            });
+    });
 </script>
 <script>
     function withdrawApplication(submissionId) {
