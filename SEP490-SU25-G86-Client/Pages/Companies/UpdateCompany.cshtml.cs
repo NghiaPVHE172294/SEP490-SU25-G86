@@ -153,7 +153,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
                 if (updateResponse.IsSuccessStatusCode)
                 {
-                    TempData["Success"] = "Cập nhật công ty thành công.";
+                    //TempData["Success"] = "Cập nhật công ty thành công.";
                     return RedirectToPage("/Companies/CompanyInformation");
                 }
                 else
