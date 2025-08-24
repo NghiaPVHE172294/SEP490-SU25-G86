@@ -53,7 +53,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Tên</label>
-                                <input class="form-control" name="FullName" value="@Model.UserProfile.FullName" />
+                                <input class="form-control" name="FullName"
+                                       value="@Model.UserProfile.FullName" required title="Vui lòng nhập tên" />
                             </div>
                             <div class="col-md-6">
                                 <label>Địa chỉ</label>
@@ -173,6 +174,7 @@
         });
     </script>
     <script>
+        //script validate avatar
         const preview = document.getElementById("previewAvatar");
         const input = document.querySelector("input[name='AvatarFile']");
         const error = document.getElementById("avatarError");
