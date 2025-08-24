@@ -20,13 +20,15 @@
             </p>
         </div>
 
-        @if (!string.IsNullOrEmpty(Model.CareerHandbook.ThumbnailUrl))
-        {
-            <div class="mb-4 text-center">
-                <img src="@Model.CareerHandbook.ThumbnailUrl" alt="@Model.CareerHandbook.Title"
-                     class="img-fluid rounded shadow-sm" style="max-height:400px; object-fit:cover;" />
-            </div>
-        }
+        <div class="mb-4 text-center">
+            <img src="@(string.IsNullOrEmpty(Model.CareerHandbook.ThumbnailUrl)
+                        ? Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")
+                        : Model.CareerHandbook.ThumbnailUrl)"
+                 alt="@Model.CareerHandbook.Title"
+                 class="img-fluid rounded shadow-sm"
+                 style="max-height:400px; object-fit:cover;"
+                 onerror="this.onerror=null;this.src='@Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")';" />
+        </div>
 
         <div class="article-content" style="line-height:1.7; font-size:1.05rem; white-space: pre-line;">
             @Model.CareerHandbook.Content

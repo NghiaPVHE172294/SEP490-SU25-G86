@@ -18,10 +18,14 @@
             {
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm border-0">
-                        @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
-                        {
-                            <img src="@post.ThumbnailUrl" class="card-img-top" alt="@post.Title" style="height:200px;object-fit:cover;" />
-                        }
+                        <img src="@(string.IsNullOrEmpty(post.ThumbnailUrl)
+                                    ? Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")
+                                    : post.ThumbnailUrl)"
+                             class="card-img-top"
+                             alt="@post.Title"
+                             style="height:200px;object-fit:cover;"
+                             onerror="this.onerror=null;this.src='@Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")';" />
+
                         <div class="card-body">
                             <span class="badge bg-secondary mb-2">@post.CategoryName</span>
                             <h5 class="card-title fw-bold">
