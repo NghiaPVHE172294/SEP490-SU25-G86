@@ -11,11 +11,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --teal: #309689;
+            --maroon: #963330;
+            --ink: #1f2937; /* gray-800 */
+            --muted: #9ca3af; /* gray-400 */
+            --card-bg: #ffffff;
+        }
+
         body {
             background-color: #eef7f7;
             margin: 0;
+            color: var(--ink);
         }
 
+        /* ========== Sidebar ========== */
         .sidebar {
             background-color: #fff;
             border-right: 1px solid #dee2e6;
@@ -23,15 +33,99 @@
             padding-top: 20px;
         }
 
-        .sidebar .btn {
-            background-color: #309689;
-            color: white;
+            .sidebar .btn {
+                background-color: #fff;
+                color: var(--teal);
+                border: 1px solid var(--teal);
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                margin-bottom: 8px;
+            }
+
+                .sidebar .btn:hover {
+                    background-color: var(--teal);
+                    color: #fff;
+                    box-shadow: 0 3px 8px rgba(48,150,137,.25);
+                    transform: translateY(-1px);
+                }
+
+                .sidebar .btn.active-btn {
+                    background-color: var(--maroon) !important;
+                    border-color: var(--maroon) !important;
+                    color: #fff !important;
+                    box-shadow: 0 3px 8px rgba(150,51,48,.25);
+                }
+
+        /* ========== Cards chứa chart ========== */
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
         }
 
-        .sidebar .btn.active-btn {
-            background-color: #963330 !important;
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 42vh;
+            min-height: 320px;
+        }
+
+        /* ========== Nút toggle mode (Theo Tháng / Năm) ========== */
+        .btn-outline-primary {
+            border-radius: 999px; /* pill shape */
+            padding: 6px 16px;
+            font-weight: 600;
+            color: var(--teal);
+            border-color: var(--teal);
+            background-color: #fff;
+            transition: all 0.2s ease;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: var(--teal);
+                color: #fff;
+                box-shadow: 0 3px 8px rgba(48,150,137,.25);
+                transform: translateY(-1px);
+            }
+
+            .btn-outline-primary.active,
+            .btn-outline-primary:active,
+            .btn-check:checked + .btn-outline-primary {
+                color: #fff !important;
+                background-color: var(--teal) !important;
+                border-color: var(--teal) !important;
+                box-shadow: 0 3px 8px rgba(48,150,137,.3);
+            }
+
+        /* (Nếu có Pagination sau này) */
+        .pagination .page-link {
+            color: var(--teal);
+            border-radius: 6px;
+            margin: 0 3px;
+            border-color: rgba(48,150,137,.35);
+        }
+
+            .pagination .page-link:hover {
+                color: #fff;
+                background-color: var(--teal);
+                border-color: var(--teal);
+            }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--maroon);
+            border-color: var(--maroon);
+            color: #fff;
         }
     </style>
+
 </head>
 <body>
 
@@ -50,76 +144,188 @@
 
             <!-- Main content -->
             <div class="col-md-10 p-4">
-                <h3 class="mb-4">Biểu đồ Thống Kê Bài Tuyển Dụng</h3>
-                <canvas id="jobPostChart" width="800" height="400"></canvas>
-
-                <hr />
-
-                <h3 class="mb-3">Thống Kê CV Submission Theo Công Ty</h3>
-
-                <form method="get" class="d-flex mb-3">
-                    <select name="companyId" class="form-select w-25 me-3" onchange="this.form.submit()">
-                        <option value="">Chọn Công Ty</option>
-                        @foreach (var c in Model.Companies)
-                        {
-                            <option value="@c.CompanyId" selected="@(c.CompanyId == Model.SelectedCompanyId ? "selected" : null)">@c.CompanyName</option>
-                        }
-                    </select>
-
-                    <input type="hidden" name="mode" value="@Model.CurrentMode" id="modeInput" />
-
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "month" ? "active" : "")" onclick="setMode('month')">Theo Tháng</button>
-                        <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "year" ? "active" : "")" onclick="setMode('year')">Theo Năm</button>
+                <div class="chart-card mb-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h3 class="chart-title mb-0">Biểu đồ Thống Kê Bài Tuyển Dụng</h3>
                     </div>
-                </form>
+                    <div class="chart-wrap">
+                        <canvas id="jobPostChart"></canvas>
+                    </div>
+                </div>
 
-                <canvas id="cvChart" width="800" height="400"></canvas>
+                <div class="chart-card">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h3 class="chart-title mb-0">Thống Kê CV Submission Theo Công Ty</h3>
+
+                        <form method="get" class="d-flex align-items-center gap-2">
+                            <select name="companyId" class="form-select" style="width: 240px" onchange="this.form.submit()">
+                                <option value="">Chọn Công Ty</option>
+                                @foreach (var c in Model.Companies)
+                                {
+                                    <option value="@c.CompanyId" selected="@(c.CompanyId == Model.SelectedCompanyId ? "selected" : null)">@c.CompanyName</option>
+                                }
+                            </select>
+
+                            <input type="hidden" name="mode" value="@Model.CurrentMode" id="modeInput" />
+
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "month" ? "active" : "")" onclick="setMode('month')">Theo Tháng</button>
+                                <button type="submit" class="btn btn-outline-primary @(Model.CurrentMode == "year" ? "active" : "")" onclick="setMode('year')">Theo Năm</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="chart-wrap mt-3">
+                        <canvas id="cvChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Biểu đồ Job Post
+        // ===== Helper: tạo gradient cho line (màu từ theme) =====
+        function makeGradient(ctx, colorHex, alphaTop = 0.25, alphaBottom = 0) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight || ctx.canvas.height);
+            const rgb = hexToRgb(colorHex);
+            gradient.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alphaTop})`);
+            gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alphaBottom})`);
+            return gradient;
+        }
+        function hexToRgb(hex) {
+            const m = hex.replace('#', '');
+            const bigint = parseInt(m.length === 3 ? m.split('').map(h=>h+h).join('') : m, 16);
+            return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+        }
+
+        // ====== Common options cho line chart ======
+        function baseLineOptions(titleText) {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8, color: '#374151' }
+                    },
+                    tooltip: {
+                        backgroundColor: '#111827',
+                        titleColor: '#fff',
+                        bodyColor: '#e5e7eb',
+                        borderColor: '#1f2937',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: (ctx) => {
+                                const v = ctx.raw ?? 0;
+                                return `${ctx.dataset.label}: ${v.toLocaleString()}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#6b7280', maxRotation: 0 },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#6b7280', precision: 0 },
+                        grid: { color: 'rgba(0,0,0,0.06)' }
+                    }
+                },
+                elements: {
+                    line: { tension: 0.35, borderWidth: 2 },
+                    point: {
+                        radius: 3,
+                        hoverRadius: 6,
+                        hitRadius: 10
+                    }
+                },
+                animation: {
+                    duration: 700,
+                    easing: 'easeOutQuart'
+                }
+            };
+        }
+
+        // ====== Job Post Line Chart ======
         const jobData = @Html.Raw(Json.Serialize(Model.MonthlyStats));
         const jobLabels = jobData.map(d => `${d.month}/${d.year}`);
         const jobCounts = jobData.map(d => d.count);
 
-        const ctx1 = document.getElementById('jobPostChart').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
+        const jobCtx = document.getElementById('jobPostChart').getContext('2d');
+        const jobGradient = makeGradient(jobCtx, '#309689', 0.28, 0.02); // teal
+        const jobChart = new Chart(jobCtx, {
+            type: 'line',
             data: {
                 labels: jobLabels,
                 datasets: [{
-                    label: 'Số lượng Job Posts trên tháng',
+                    label: 'Số lượng Job Posts theo tháng',
                     data: jobCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    borderColor: '#309689',
+                    backgroundColor: jobGradient,
+                    fill: true,
+                    pointBackgroundColor: '#309689',
+                    pointBorderColor: '#309689'
                 }]
-            }
+            },
+            options: baseLineOptions('Job Posts')
         });
 
-        // Biểu đồ CV Submission
+        // ====== CV Submission Line Chart ======
         const cvData = @Html.Raw(Json.Serialize(Model.CVStats));
         const currentMode = '@Model.CurrentMode';
 
-        if (cvData.length > 0) {
+        if (cvData && cvData.length > 0) {
             const cvLabels = cvData.map(d => currentMode === 'month' ? `${d.month}/${d.year}` : d.year);
             const cvCounts = cvData.map(d => d.count);
 
-            const ctx2 = document.getElementById('cvChart').getContext('2d');
-            new Chart(ctx2, {
-                type: 'bar',
+            const cvCtx = document.getElementById('cvChart').getContext('2d');
+            const cvGradient = makeGradient(cvCtx, '#963330', 0.28, 0.02); // maroon
+
+            const cvChart = new Chart(cvCtx, {
+                type: 'line',
                 data: {
                     labels: cvLabels,
                     datasets: [{
                         label: 'Số lượng CV nộp',
                         data: cvCounts,
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                        borderColor: '#963330',
+                        backgroundColor: cvGradient,
+                        fill: true,
+                        pointBackgroundColor: '#963330',
+                        pointBorderColor: '#963330'
                     }]
-                }
+                },
+                options: (function(){
+                    const opts = baseLineOptions('CV Submissions');
+                    // Tuỳ biến nhãn trục X theo mode
+                    if (currentMode === 'year') {
+                        opts.scales.x.ticks.callback = (val, idx, ticks) => cvLabels[idx]; // năm
+                    } else {
+                        // tháng/năm: rút gọn khi nhiều mốc
+                        opts.scales.x.ticks.maxTicksLimit = 10;
+                    }
+                    return opts;
+                })()
             });
+        } else {
+            // Nếu không có dữ liệu, hiển thị trạng thái nhẹ nhàng
+            const holder = document.getElementById('cvChart').parentElement;
+            holder.innerHTML = `
+                <div class="text-center text-muted py-5">
+                    <div class="fw-semibold mb-1">Chưa có dữ liệu để hiển thị</div>
+                    <div>Hãy chọn một công ty hoặc khoảng thời gian khác.</div>
+                </div>`;
         }
 
+        // ====== Form helpers ======
         function setMode(mode) {
             document.getElementById('modeInput').value = mode;
         }
