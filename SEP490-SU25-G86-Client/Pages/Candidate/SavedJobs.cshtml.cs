@@ -13,6 +13,25 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
         public List<SavedJobDTO> SavedJobs { get; set; } = new();
         public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
+        // Pagination properties
+        [BindProperty(SupportsGet = true)]
+        public int Page { get; set; } = 1;
+
+        [BindProperty(SupportsGet = true)]
+        public int PageSize { get; set; } = 5;
+
+        public int TotalPages { get; set; }
+        public List<SavedJobDTO> PagedJobs { get; set; } = new();
+
+        [BindProperty(SupportsGet = true)]
+        public string? StatusFilter { get; set; }
+
+        public Dictionary<string, string> StatusMap { get; } = new Dictionary<string, string>
+        {
+            { "OPEN", "Đang mở" },
+            { "CLOSED", "Hết hiệu lực" }
+        };
+
         public SavedJobsModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -35,21 +54,34 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
 
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+            // Lấy danh sách việc làm đã lưu
             var response = await _httpClient.GetAsync($"api/SavedJobs/user/{userId}");
-
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                SavedJobs = JsonSerializer.Deserialize<List<SavedJobDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                SavedJobs = JsonSerializer.Deserialize<List<SavedJobDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             }
             else
             {
                 SavedJobs = new List<SavedJobDTO>();
             }
 
-            // Lấy 10 job mới nhất cho gợi ý
+            // Filter theo trạng thái nếu có
+            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái")
+            {
+                SavedJobs = SavedJobs.Where(j => (j.Status ?? "").Equals(StatusFilter, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            // Pagination logic
+            TotalPages = (int)Math.Ceiling(SavedJobs.Count / (double)PageSize);
+            if (Page > TotalPages) Page = TotalPages > 0 ? TotalPages : 1;
+            if (Page < 1) Page = 1;
+
+            PagedJobs = SavedJobs.Skip((Page - 1) * PageSize).Take(PageSize).ToList();
+
+            // Gợi ý việc làm
             var suggestResponse = await _httpClient.GetAsync($"api/jobposts/homepage?page=1&pageSize=10");
             if (suggestResponse.IsSuccessStatusCode)
             {
@@ -70,9 +102,9 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var response = await _httpClient.DeleteAsync($"api/SavedJobs/{saveJobId}");
-            // Sau khi xóa, reload lại trang
-            return RedirectToPage();
+            return RedirectToPage(new { page = Page, pageSize = PageSize, statusFilter = StatusFilter });
         }
 
         private class SuggestedJobApiResponse
