@@ -13,13 +13,9 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
         public List<SavedJobDTO> SavedJobs { get; set; } = new();
         public List<JobPostHomeDto> SuggestedJobs { get; set; } = new();
 
-        // Pagination properties
-        [BindProperty(SupportsGet = true)]
+        // Pagination
         public int Page { get; set; } = 1;
-
-        [BindProperty(SupportsGet = true)]
         public int PageSize { get; set; } = 5;
-
         public int TotalPages { get; set; }
         public List<SavedJobDTO> PagedJobs { get; set; } = new();
 
@@ -69,16 +65,16 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
             }
 
             // Filter theo trạng thái nếu có
-            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái")
+            if (!string.IsNullOrEmpty(StatusFilter) && StatusFilter != "Trạng thái" && StatusFilter != "Tất cả trạng thái")
             {
                 SavedJobs = SavedJobs.Where(j => (j.Status ?? "").Equals(StatusFilter, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // Pagination logic
-            TotalPages = (int)Math.Ceiling(SavedJobs.Count / (double)PageSize);
-            if (Page > TotalPages) Page = TotalPages > 0 ? TotalPages : 1;
-            if (Page < 1) Page = 1;
+            // Pagination
+            if (int.TryParse(HttpContext.Request.Query["page"], out int page))
+                Page = page > 0 ? page : 1;
 
+            TotalPages = (int)Math.Ceiling(SavedJobs.Count / (double)PageSize);
             PagedJobs = SavedJobs.Skip((Page - 1) * PageSize).Take(PageSize).ToList();
 
             // Gợi ý việc làm
@@ -103,8 +99,9 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.DeleteAsync($"api/SavedJobs/{saveJobId}");
-            return RedirectToPage(new { page = Page, pageSize = PageSize, statusFilter = StatusFilter });
+            await _httpClient.DeleteAsync($"api/SavedJobs/{saveJobId}");
+
+            return RedirectToPage(new { page = Page, statusFilter = StatusFilter });
         }
 
         private class SuggestedJobApiResponse

@@ -18,6 +18,18 @@
                                     <i class="bi bi-bookmark me-1"></i> Quản lý các công việc bạn đã lưu
                                 </p>
                             </div>
+                            <form method="get" class="d-flex align-items-center">
+                                <div class="input-group input-group-sm" style="width: 220px;">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-funnel"></i></span>
+                                    <select class="form-select border-start-0 ps-1" name="StatusFilter" onchange="this.form.submit()">
+                                        <option value="">Tất cả trạng thái</option>
+                                        @foreach (var kv in Model.StatusMap)
+                                        {
+                                            <option value="@kv.Key" selected="@(Model.StatusFilter == kv.Key)">@kv.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -34,9 +46,9 @@
                                         case "CLOSED": badgeClass = "bg-danger"; break;
                                     }
 
-                                    <div class="list-group-item border-0 p-4 mb-3 rounded-3 shadow-sm job-applied-card">
+                                    <div class="list-group-item border-0 p-4 mb-3 rounded-3 shadow-sm">
                                         <div class="d-flex flex-column flex-md-row">
-                                            <!-- Company Logo -->
+                                            <!-- Logo -->
                                             <div class="me-md-4 mb-3 mb-md-0 flex-shrink-0" style="width: 80px; height: 80px;">
                                                 <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
                                                      alt="@job.CompanyName"
@@ -49,13 +61,12 @@
                                                 <div class="d-flex align-items-start mb-2" style="gap: 1rem;">
                                                     <div style="flex: 1 1 0; min-width: 0;">
                                                         <h5 class="mb-1 fw-semibold job-title-multiline">
-                                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark hover-text-primary" title="@job.Title">@job.Title</a>
+                                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">@job.Title</a>
                                                         </h5>
                                                         <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
                                                             <span class="text-muted small">
                                                                 <i class="bi bi-building me-1"></i>@job.CompanyName
                                                             </span>
-                                                            <span class="text-muted small d-none d-md-inline">•</span>
                                                             <span class="text-success small fw-medium">
                                                                 <i class="bi bi-cash-coin me-1"></i>@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
                                                             </span>
@@ -68,7 +79,6 @@
                                                     <span class="text-muted small">
                                                         <i class="bi bi-geo-alt me-1"></i>@job.WorkLocation
                                                     </span>
-                                                    <span class="text-muted small d-none d-md-inline">•</span>
                                                     <span class="text-muted small">
                                                         <i class="bi bi-bookmark-check me-1"></i>Đã lưu: @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")
                                                     </span>
@@ -91,16 +101,34 @@
                             </div>
 
                             <!-- Pagination -->
-                            <nav class="mt-3">
-                                <ul class="pagination justify-content-end">
-                                    @for (int i = 1; i <= Model.TotalPages; i++)
-                                    {
-                                        <li class="page-item @(i == Model.Page ? "active" : "")">
-                                            <a class="page-link" href="?page=@i&pageSize=@Model.PageSize&statusFilter=@Model.StatusFilter">@i</a>
-                                        </li>
-                                    }
-                                </ul>
-                            </nav>
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <nav aria-label="Pagination">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        @if (Model.Page > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page - 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @for (int i = 1; i <= Model.TotalPages; i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="?page=@i@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)">@i</a>
+                                            </li>
+                                        }
+                                        @if (Model.Page < Model.TotalPages)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page + 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
                         }
                         else
                         {
@@ -116,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- Gợi ý việc làm phù hợp -->
+            <!-- Gợi ý việc làm -->
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
                     <div class="card-header bg-white py-3 border-bottom">
@@ -130,17 +158,15 @@
                             @foreach (var job in Model.SuggestedJobs.Take(5))
                             {
                                 <div class="mb-3 p-3 border rounded bg-white hover-shadow">
-                                    <div class="d-flex" style="width: 100%;">
-                                        <!-- Company Logo -->
+                                    <div class="d-flex">
+                                        <!-- Logo -->
                                         <div class="flex-shrink-0 me-3" style="width: 64px;">
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 100%; height: 64px;">
-                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
-                                                     alt="@job.CompanyName"
-                                                     class="img-fluid"
-                                                     style="max-width: 100%; max-height: 48px; object-fit: contain; padding: 4px;">
-                                            </div>
+                                            <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
+                                                 alt="@job.CompanyName"
+                                                 class="img-fluid"
+                                                 style="max-width: 100%; max-height: 48px; object-fit: contain;">
                                         </div>
-                                        <div class="flex-grow-1" style="min-width: 0; max-width: calc(100% - 80px);">
+                                        <div class="flex-grow-1">
                                             <div class="fw-bold text-truncate">@job.Title</div>
                                             <div class="text-muted small text-truncate">@job.CompanyName</div>
                                             <div class="text-success fw-medium small mt-1">
