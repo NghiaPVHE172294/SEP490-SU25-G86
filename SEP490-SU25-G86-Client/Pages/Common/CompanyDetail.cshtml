@@ -30,21 +30,28 @@
         </div>
     </div>
     <div>
-        @if (Model.IsBlocked)
-        {
-            <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id" disabled>+ Theo dõi công ty</button>
-            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id" disabled>✔ Đã chặn công ty</button>
-        }
-        else if (Model.IsFollowing)
-        {
-            <button id="followButton" class="btn btn-secondary fw-bold" data-company-id="@Model.Id">✔ Đang theo dõi</button>
-            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+        @if (Model.Role == "EMPLOYER")
+    {
         }
         else
         {
-            <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id">+ Theo dõi công ty</button>
-            <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+            @if (Model.IsBlocked)
+            {
+                <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id" disabled>+ Theo dõi công ty</button>
+                <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id" disabled>✔ Đã chặn công ty</button>
+            }
+            else if (Model.IsFollowing)
+            {
+                <button id="followButton" class="btn btn-secondary fw-bold" data-company-id="@Model.Id">✔ Đang theo dõi</button>
+                <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+            }
+            else
+            {
+                <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id">+ Theo dõi công ty</button>
+                <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id">✖ Chặn công ty</button>
+            }
         }
+        
     </div>
 </div>
 

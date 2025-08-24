@@ -110,7 +110,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">Việc Làm Mới Nhất</h2>
-                <span>@Model.TotalItems công việc</span>
+                @* <span>@Model.TotalItems công việc</span> *@
                 <a href="/Common/ListJobs" class="text-custom">Xem tất cả</a>
             </div>
 
@@ -138,15 +138,15 @@
 
             @if (!Model.JobPosts.Any())
             {
-                <p class="text-muted">No job posts available.</p>
+                <p class="text-muted">Hệ thông đang cập nhật</p>
             }
             else
             {
                 <div class="row">
                     @foreach (var job in Model.JobPosts)
                     {
-                        <div class="col-md-4 mb-4">
-                            <div class="card job-card shadow-sm rounded-4 p-3">
+                        <div class="col-md-4 mb-4 d-flex">
+                            <div class="card job-card shadow-sm rounded-4 p-3 w-100">
                                 <div class="d-flex align-items-center">
                                     <!-- Logo công ty -->
                                     <img src="@job.CompanyLogoUrl"
