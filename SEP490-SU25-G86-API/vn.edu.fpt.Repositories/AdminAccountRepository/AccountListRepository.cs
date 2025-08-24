@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.AdminAccountDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AdminAccountDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
 {
@@ -12,45 +13,55 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AdminAccountRepository
             _context = context;
         }
 
-        public async Task<IEnumerable<AccountDTOForList>> GetAllAccountsAsync()
+        public async Task<PagedResponse<AccountDTOForList>> GetAccountsAsync(
+        string? roleName, string? name, int pageNumber, int pageSize, CancellationToken ct = default)
         {
-            var accounts = from a in _context.Accounts
-                           join r in _context.Roles on a.RoleId equals r.RoleId
-                           join u in _context.Users on a.AccountId equals u.AccountId
-                           where a.RoleId == 2 || a.RoleId == 3
-                           select new AccountDTOForList
-                           {
-                               AccountId = a.AccountId,
-                               Email = a.Email,
-                               RoleName = r.RoleName,
-                               FullName = u.FullName,
-                               Address = u.Address,
-                               CreatedDate = a.CreatedDate,
-                               Status = a.IsActive == true ? "Active" : "Inactive"
+            // Base query: chỉ lấy Employer/Candidate
+            var q =
+                from a in _context.Accounts.AsNoTracking()
+                join r in _context.Roles.AsNoTracking() on a.RoleId equals r.RoleId
+                join u in _context.Users.AsNoTracking() on a.AccountId equals u.AccountId
+                where a.RoleId == 2 || a.RoleId == 3
+                select new { a, r, u };
 
-                           };
+            if (!string.IsNullOrWhiteSpace(roleName) && !roleName.Equals("ALL", StringComparison.OrdinalIgnoreCase))
+            {
+                q = q.Where(x => x.r.RoleName == roleName);
+            }
 
-            return await accounts.ToListAsync();
-        }
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var nameLower = name.ToLower();
+                q = q.Where(x => x.u.FullName != null && x.u.FullName.ToLower().Contains(nameLower));
+            }
 
-        public async Task<IEnumerable<AccountDTOForList>> GetAccountsByRoleAsync(string roleName)
-        {
-            var accounts = from a in _context.Accounts
-                           join r in _context.Roles on a.RoleId equals r.RoleId
-                           join u in _context.Users on a.AccountId equals u.AccountId
-                           where r.RoleName == roleName && (a.RoleId == 2 || a.RoleId == 3)
-                           select new AccountDTOForList
-                           {
-                               AccountId = a.AccountId,
-                               Email = a.Email,
-                               RoleName = r.RoleName,
-                               FullName = u.FullName,
-                               Address = u.Address,
-                               CreatedDate = a.CreatedDate,
-                               Status = a.IsActive == true ? "Active" : "Inactive"
-                           };
+            // Sắp xếp ổn định để phân trang
+            q = q.OrderByDescending(x => x.a.CreatedDate).ThenBy(x => x.a.AccountId);
 
-            return await accounts.ToListAsync();
+            var total = await q.CountAsync(ct);
+
+            var items = await q
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new AccountDTOForList
+                {
+                    AccountId = x.a.AccountId,
+                    Email = x.a.Email,
+                    RoleName = x.r.RoleName,
+                    FullName = x.u.FullName,
+                    Address = x.u.Address,
+                    CreatedDate = x.a.CreatedDate,
+                    Status = (bool)x.a.IsActive ? "Active" : "Inactive"
+                })
+                .ToListAsync(ct);
+
+            return new PagedResponse<AccountDTOForList>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = total
+            };
         }
     }
 }

@@ -9,33 +9,56 @@
     <title>Admin - Account Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --teal: #309689;
+            --maroon: #963330;
+            --ink: #1f2937;
+        }
+
         body {
-            background-color: #eef7f7; /* màu nền từ ảnh bạn gửi */
+            background-color: #eef7f7;
             margin: 0;
+            color: var(--ink);
         }
 
-        .sidebar {
-            background-color: #fff;
-            border-right: 1px solid #dee2e6;
-            min-height: 100vh;
-            padding-top: 20px;
+        /* ============== Sidebar buttons ============== */
+        .sidebar .btn {
+            background-color: #ffffff; /* nền trắng */
+            color: var(--teal); /* chữ teal */
+            border: 1px solid var(--teal);
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: .2px;
+            transition: all .18s ease-in-out;
         }
 
-            .sidebar .btn {
-                background-color: #309689;
-                color: white;
+            .sidebar .btn:hover {
+                background-color: var(--teal);
+                color: #fff;
+                box-shadow: 0 4px 14px rgba(48,150,137,.25);
+                transform: translateY(-1px);
             }
 
-                .sidebar .btn.active-btn {
-                    background-color: #963330 !important;
-                }
+            .sidebar .btn:focus-visible {
+                outline: 3px solid rgba(48,150,137,.35);
+                outline-offset: 2px;
+            }
 
+            .sidebar .btn.active-btn {
+                background-color: var(--maroon) !important;
+                border-color: var(--maroon) !important;
+                color: #fff !important;
+                box-shadow: 0 4px 14px rgba(150,51,48,.28);
+            }
+
+        /* ============== Thẻ account ============== */
         .account-card {
             background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 18px rgba(0,0,0,.04);
         }
 
         .account-info-inline {
@@ -47,6 +70,8 @@
 
         .role-badge {
             font-size: 0.85rem;
+            border-radius: 999px;
+            padding: 4px 10px;
         }
 
         .search-area input {
@@ -54,9 +79,127 @@
         }
 
         .search-label {
-            font-weight: 500;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* ============== Nút filter (radio) dạng outline ============== */
+        /* bo tròn kiểu pill + hiệu ứng hover/active đồng bộ màu */
+        .btn-outline-dark,
+        .btn-outline-primary,
+        .btn-outline-success {
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-weight: 600;
+            transition: all .18s ease-in-out;
+        }
+        /* Dark -> dùng màu mực thay vì đen gắt */
+        .btn-outline-dark {
+            color: #374151;
+            border-color: #9ca3af;
+            background: #fff;
+        }
+
+            .btn-outline-dark:hover {
+                color: #fff;
+                background: #374151;
+                border-color: #374151;
+                box-shadow: 0 3px 10px rgba(55,65,81,.18);
+                transform: translateY(-1px);
+            }
+
+            .btn-outline-dark.active,
+            .btn-check:checked + .btn.btn-outline-dark {
+                color: #fff !important;
+                background: #374151 !important;
+                border-color: #374151 !important;
+            }
+
+        /* Primary -> dùng teal */
+        .btn-outline-primary {
+            color: var(--teal);
+            border-color: var(--teal);
+            background: #fff;
+        }
+
+            .btn-outline-primary:hover {
+                color: #fff;
+                background: var(--teal);
+                border-color: var(--teal);
+                box-shadow: 0 3px 10px rgba(48,150,137,.22);
+                transform: translateY(-1px);
+            }
+
+            .btn-outline-primary.active,
+            .btn-check:checked + .btn.btn-outline-primary {
+                color: #fff !important;
+                background: var(--teal) !important;
+                border-color: var(--teal) !important;
+            }
+
+        /* Success -> giữ xanh lá dịu */
+        .btn-outline-success {
+            color: #198754;
+            border-color: #198754;
+            background: #fff;
+        }
+
+            .btn-outline-success:hover {
+                color: #fff;
+                background: #198754;
+                border-color: #198754;
+                box-shadow: 0 3px 10px rgba(25,135,84,.22);
+                transform: translateY(-1px);
+            }
+
+            .btn-outline-success.active,
+            .btn-check:checked + .btn.btn-outline-success {
+                color: #fff !important;
+                background: #198754 !important;
+                border-color: #198754 !important;
+            }
+
+            /* ============== Nút tìm kiếm (outline primary) ============== */
+            /* nút trong ô search đang dùng .btn-outline-primary -> hưởng style trên
+               bổ sung focus-visible để dễ thấy khi tab */
+            .btn-outline-primary:focus-visible,
+            .btn-outline-dark:focus-visible,
+            .btn-outline-success:focus-visible {
+                outline: 3px solid rgba(48,150,137,.3);
+                outline-offset: 2px;
+            }
+
+        /* ============== Phân trang mềm mắt hơn ============== */
+        .pagination .page-link {
+            color: var(--teal);
+            border-radius: 8px;
+            margin: 0 3px;
+            border-color: rgba(48,150,137,.35);
+            transition: all .18s ease;
+        }
+
+            .pagination .page-link:hover {
+                color: #fff;
+                background: var(--teal);
+                border-color: var(--teal);
+                box-shadow: 0 3px 10px rgba(48,150,137,.22);
+                transform: translateY(-1px);
+            }
+
+        .pagination .page-item.active .page-link {
+            color: #fff;
+            background: var(--maroon);
+            border-color: var(--maroon);
+            box-shadow: 0 3px 10px rgba(150,51,48,.22);
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #9ca3af;
+            border-color: #e5e7eb;
+            background: #f9fafb;
         }
     </style>
+
 </head>
 <body>
 
@@ -68,6 +211,8 @@
                     <button class="btn" onclick="location.href='/Admin/AdminDashboard'">Thống Kê</button>
                     <button class="btn active-btn" onclick="activateButton(this)">Quản Lý Tài Khoản</button>
                     <button class="btn" onclick="activateButton(this)">Quản Lý Yêu Cầu</button>
+                    <button class="btn" onclick="location.href='/CareerHandbook/ListCareerHandbook'">Quản Lý Cẩm nang nghề nghiệp</button>
+                    <button class="btn" onclick="location.href='/Admin/AdminCVTemplates'">Quản lý CV Template</button>
                 </div>
             </div>
 
@@ -79,8 +224,11 @@
                     <div class="col-md-8">
                         <label class="form-label search-label">Tìm bằng tên tài khoản</label>
                         <div class="input-group">
+                            <input type="hidden" name="role" value="@(Model.CurrentRole)">
+                            <!-- reset về page 1 khi tìm -->
+                            <input type="hidden" name="pageNumber" value="1" />
                             <input type="text" name="accountName" class="form-control" placeholder="Nhập tên tài khoản..."
-                                   value="@(Request.Query["accountName"])">
+                                   value="@(Model.CurrentName)">
                             <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
                         </div>
                     </div>
@@ -88,26 +236,29 @@
 
                 <!-- Filter -->
                 <form method="get" id="roleFilterForm" class="d-flex gap-3">
+                    <input type="hidden" name="accountName" value="@(Model.CurrentName)">
+                    <!-- reset về page 1 khi đổi role -->
+                    <input type="hidden" name="pageNumber" value="1" />
+
                     <input type="radio" class="btn-check" name="role" id="role-all" value="ALL"
-                           onchange="submitRole()" @(Request.Query["role"] == "" || Request.Query["role"] == "ALL" ? "checked" : "")>
+                           onchange="submitRole()" @(Model.CurrentRole == "ALL" ? "checked" : "")>
                     <label class="btn btn-outline-dark" for="role-all">Tất Cả</label>
 
                     <input type="radio" class="btn-check" name="role" id="role-employer" value="EMPLOYER"
-                           onchange="submitRole()" @(Request.Query["role"] == "EMPLOYER" ? "checked" : "")>
+                           onchange="submitRole()" @(Model.CurrentRole == "EMPLOYER" ? "checked" : "")>
                     <label class="btn btn-outline-primary" for="role-employer">Nhà Tuyển Dụng</label>
 
                     <input type="radio" class="btn-check" name="role" id="role-candidate" value="CANDIDATE"
-                           onchange="submitRole()" @(Request.Query["role"] == "CANDIDATE" ? "checked" : "")>
+                           onchange="submitRole()" @(Model.CurrentRole == "CANDIDATE" ? "checked" : "")>
                     <label class="btn btn-outline-success" for="role-candidate">Ứng Viên</label>
                 </form>
-
 
                 <!-- Account Cards -->
                 @foreach (var acc in Model.AccountList)
                 {
                     <div class="account-card">
                         <div class="d-flex justify-content-between">
-                            <small>@acc.CreatedDate</small>
+                            <small>@acc.CreatedDate.ToString("dd/MM/yyyy")</small>
                             <a class="btn btn-sm btn-outline-secondary" href="/Admin/ProfileOfUserForAdmin?accountId=@acc.AccountId">Chi tiết</a>
                         </div>
                         <h5 class="mt-2 mb-1">
@@ -129,13 +280,69 @@
                 }
 
                 <!-- Pagination -->
-                <nav>
+                @{
+                    // Tạo window trang gọn: tối đa 5 nút quanh trang hiện tại
+                    var pageSize = 10; // hoặc bind từ query
+                    var start = Math.Max(1, Model.PageNumber - 2);
+                    var end = Math.Min(Model.TotalPages, Model.PageNumber + 2);
+                    if (end - start < 4)
+                    {
+                        if (start == 1) end = Math.Min(Model.TotalPages, start + 4);
+                        else if (end == Model.TotalPages) start = Math.Max(1, end - 4);
+                    }
+
+                    string PageHref(int page) =>
+                    Url.Page(
+                    pageName: null, // current page
+                    values: new
+                    {
+                        role = Model.CurrentRole,
+                        accountName = Model.CurrentName,
+                        pageNumber = page,
+                        pageSize = pageSize
+                    }
+                    ) ?? "#";
+                }
+
+                <nav aria-label="Pagination">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item disabled"><a class="page-link">Prev</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+
+                        <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                            <a class="page-link" href="@(Model.HasPrevious? PageHref(Model.PageNumber - 1) : "#")">Prev</a>
+                        </li>
+
+                        @if (start > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@PageHref(1)">1</a>
+                            </li>
+                            @if (start > 2)
+                            {
+                                <li class="page-item disabled"><a class="page-link">…</a></li>
+                            }
+                        }
+
+                        @for (var i = start; i <= end; i++)
+                        {
+                            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                <a class="page-link" href="@PageHref(i)">@i</a>
+                            </li>
+                        }
+
+                        @if (end < Model.TotalPages)
+                        {
+                            @if (end < Model.TotalPages - 1)
+                            {
+                                <li class="page-item disabled"><a class="page-link">…</a></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" href="@PageHref(Model.TotalPages)">@Model.TotalPages</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                            <a class="page-link" href="@(Model.HasNext? PageHref(Model.PageNumber + 1) : "#")">Next</a>
+                        </li>
                     </ul>
                 </nav>
 
@@ -146,21 +353,20 @@
     <!-- JS Functions -->
     <script>
         function activateButton(clickedBtn) {
-          document.querySelectorAll('.sidebar .btn').forEach(btn => {
-            btn.classList.remove('active-btn');
-          });
-          clickedBtn.classList.add('active-btn');
+            document.querySelectorAll('.sidebar .btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            clickedBtn.classList.add('active-btn');
         }
 
         function filterByRole(selectEl) {
-          const role = selectEl.value;
-          console.log("Filtering by role:", role);
-          // Implement logic here to filter cards by role
+            const role = selectEl.value;
+            console.log("Filtering by role:", role);
         }
 
-         function submitRole() {
-           document.getElementById('roleFilterForm').submit();
-         }
+        function submitRole() {
+            document.getElementById('roleFilterForm').submit();
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
