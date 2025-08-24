@@ -220,34 +220,8 @@
                                  
                                 }
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-4">
-                                <nav aria-label="Pagination">
-                                    <ul class="pagination pagination-sm mb-0">
-                                        @if (Model.Page > 1)
-                                        {
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page=@(Model.Page - 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </a>
-                                            </li>
-                                        }
-                                        @for (int i = 1; i <= Model.TotalPages; i++)
-                                        {
-                                            <li class="page-item @(i == Model.Page ? "active" : "")">
-                                                <a class="page-link" href="?page=@i@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)">@i</a>
-                                            </li>
-                                        }
-                                        @if (Model.Page < Model.TotalPages)
-                                        {
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page=@(Model.Page + 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </nav>
-                            </div>
+                         
+
                         }
                         else
                         {
@@ -265,6 +239,34 @@
                             </div>
                         }
                     </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center mt-4">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination pagination-sm mb-0">
+                            @if (Model.Page > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@(Model.Page - 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" href="?page=@i@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)">@i</a>
+                                </li>
+                            }
+                            @if (Model.Page < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@(Model.Page + 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
                 </div>
             </div>
             <div class="col-lg-4">
