@@ -6,7 +6,12 @@ namespace SEP490_SU25_G86_Client
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.  
+            // Add services to the container.
+            builder.Services.AddRazorPages()
+    .AddViewOptions(options =>
+    {
+        options.HtmlHelperOptions.ClientValidationEnabled = true;
+    });
             builder.Services.AddRazorPages();
             builder.Services.AddSession();
             builder.Services.AddHttpClient("API", client =>

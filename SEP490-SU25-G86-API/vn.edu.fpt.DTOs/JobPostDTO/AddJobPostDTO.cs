@@ -64,7 +64,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public bool IsAienabled { get; set; }
 
         [Required(ErrorMessage = "Trạng thái là bắt buộc.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Trạng thái phải từ 2-50 ký tự.")]
         public string Status { get; set; }
 
         // ===== Validation logic =====
@@ -79,25 +78,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
                     "EndDate phải cách ngày hiện tại ít nhất 7 ngày.",
                     new[] { nameof(EndDate) }));
             }
-
-            // Nếu ID null => phải nhập NewName
-            if (!IndustryId.HasValue && string.IsNullOrWhiteSpace(NewIndustryName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn IndustryId hoặc nhập NewIndustryName.",
-                    new[] { nameof(IndustryId), nameof(NewIndustryName) }));
-
-            if (!JobPositionId.HasValue && string.IsNullOrWhiteSpace(NewJobPositionName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn JobPositionId hoặc nhập NewJobPositionName.",
-                    new[] { nameof(JobPositionId), nameof(NewJobPositionName) }));
-
-            if (!SalaryRangeId.HasValue && string.IsNullOrWhiteSpace(NewSalaryRange))
-            {
-                errors.Add(new ValidationResult(
-                    "Phải chọn SalaryRangeId hoặc nhập NewSalaryRange.",
-                    new[] { nameof(SalaryRangeId), nameof(NewSalaryRange) }));
-            }
-
             // Validate khi nhập NewSalaryRange
             if (!string.IsNullOrWhiteSpace(NewSalaryRange))
             {
@@ -113,27 +93,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
                         new[] { nameof(NewSalaryRange) }));
                 }
             }
-
-            if (!ProvinceId.HasValue && string.IsNullOrWhiteSpace(NewProvinceName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn ProvinceId hoặc nhập NewProvinceName.",
-                    new[] { nameof(ProvinceId), nameof(NewProvinceName) }));
-
-            if (!ExperienceLevelId.HasValue && string.IsNullOrWhiteSpace(NewExperienceLevelName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn ExperienceLevelId hoặc nhập NewExperienceLevelName.",
-                    new[] { nameof(ExperienceLevelId), nameof(NewExperienceLevelName) }));
-
-            if (!JobLevelId.HasValue && string.IsNullOrWhiteSpace(NewJobLevelName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn JobLevelId hoặc nhập NewJobLevelName.",
-                    new[] { nameof(JobLevelId), nameof(NewJobLevelName) }));
-
-            if (!EmploymentTypeId.HasValue && string.IsNullOrWhiteSpace(NewEmploymentTypeName))
-                errors.Add(new ValidationResult(
-                    "Phải chọn EmploymentTypeId hoặc nhập NewEmploymentTypeName.",
-                    new[] { nameof(EmploymentTypeId), nameof(NewEmploymentTypeName) }));
-
             return errors;
         }
     }

@@ -7,21 +7,25 @@
 <section class="container my-5">
     <h2 class="mb-4 fw-bold">Cẩm nang nghề nghiệp</h2>
 
-    @if (Model.CareerHandbooks == null || !Model.CareerHandbooks.Any())
+    @if (Model.PagedHandbooks == null || !Model.PagedHandbooks.Any())
     {
         <div class="alert alert-info">Chưa có bài viết nào.</div>
     }
     else
     {
         <div class="row g-4">
-            @foreach (var post in Model.CareerHandbooks)
+            @foreach (var post in Model.PagedHandbooks)
             {
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm border-0">
-                        @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
-                        {
-                            <img src="@post.ThumbnailUrl" class="card-img-top" alt="@post.Title" style="height:200px;object-fit:cover;" />
-                        }
+                        <img src="@(string.IsNullOrEmpty(post.ThumbnailUrl)
+                                    ? Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")
+                                    : post.ThumbnailUrl)"
+                             class="card-img-top"
+                             alt="@post.Title"
+                             style="height:200px;object-fit:cover;"
+                             onerror="this.onerror=null;this.src='@Url.Content("~/assets/images/default_thumbnail_careerhandbook.png")';" />
+
                         <div class="card-body">
                             <span class="badge bg-secondary mb-2">@post.CategoryName</span>
                             <h5 class="card-title fw-bold">
@@ -43,6 +47,37 @@
                 </div>
             }
         </div>
+
+        <!-- 🔹 Pagination -->
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <nav aria-label="Pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="?page=@(Model.Page - 1)" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" href="?page=@i">@i</a>
+                        </li>
+                    }
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="?page=@(Model.Page + 1)" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
     }
 </section>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

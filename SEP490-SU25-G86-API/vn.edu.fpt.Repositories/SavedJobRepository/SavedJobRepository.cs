@@ -16,10 +16,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.SavedJobRepositories
         public async Task<IEnumerable<SavedJob>> GetByUserIdAsync(int userId)
         {
             return await _context.SavedJobs
-                .Include(x => x.JobPost)
-                .Where(x => x.UserId == userId)
+                .Include(s => s.JobPost)
+                    .ThenInclude(jp => jp.Employer)
+                        .ThenInclude(e => e.Company)     // đi qua Employer để lấy Company
+                .Include(s => s.JobPost)
+                    .ThenInclude(jp => jp.SalaryRange)   // lấy salary range
+                .Where(s => s.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync();
         }
+
+
 
         public async Task<SavedJob?> GetByUserAndJobPostAsync(int userId, int jobPostId)
         {

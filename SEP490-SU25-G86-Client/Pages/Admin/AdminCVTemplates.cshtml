@@ -291,3 +291,64 @@
     .btn-group .btn { margin-right: 5px; }
     .btn-group .btn:last-child { margin-right: 0; }
 </style>
+<script>
+    // Hàm cập nhật danh sách vị trí dựa trên ngành đã chọn trong modal upload
+    async function updatePositionsForIndustry() {
+        const industrySelect = document.getElementById('IndustryId');
+        const positionSelect = document.getElementById('PositionId');
+        const industryId = industrySelect ? industrySelect.value : '';
+        if (!positionSelect) return;
+        positionSelect.disabled = true;
+        positionSelect.innerHTML = '<option value="">Đang tải vị trí...</option>';
+        if (!industryId) {
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+            positionSelect.disabled = true;
+            return;
+        }
+        try {
+            let url = 'https://localhost:7004/api/JobPositions/by-industry/' + industryId;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Không thể tải danh sách vị trí');
+            const positions = await response.json();
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+            if (Array.isArray(positions)) {
+                positions.forEach(function(pos) {
+                    const option = document.createElement('option');
+                    option.value = pos.positionId;
+                    option.textContent = pos.postitionName;
+                    positionSelect.appendChild(option);
+                });
+            }
+            positionSelect.disabled = false;
+        } catch (e) {
+            positionSelect.innerHTML = '<option value="">Lỗi khi tải vị trí</option>';
+            positionSelect.disabled = true;
+        }
+    }
+    // Gắn sự kiện onchange cho dropdown ngành trong modal upload
+    document.addEventListener('DOMContentLoaded', function() {
+        var industrySelect = document.getElementById('IndustryId');
+        var positionSelect = document.getElementById('PositionId');
+        if (industrySelect && positionSelect) {
+            industrySelect.addEventListener('change', updatePositionsForIndustry);
+            // Nếu đã có ngành được chọn khi mở modal thì tự động load vị trí
+            if (industrySelect.value) {
+                updatePositionsForIndustry();
+            } else {
+                positionSelect.disabled = true;
+            }
+        }
+        // Reset dropdown vị trí khi mở modal upload
+        var uploadModal = document.getElementById('uploadTemplateModal');
+        if (uploadModal) {
+            uploadModal.addEventListener('show.bs.modal', function() {
+                if (industrySelect && !industrySelect.value) {
+                    positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+                    positionSelect.disabled = true;
+                } else if (industrySelect && industrySelect.value) {
+                    updatePositionsForIndustry();
+                }
+            });
+        }
+    });
+</script>

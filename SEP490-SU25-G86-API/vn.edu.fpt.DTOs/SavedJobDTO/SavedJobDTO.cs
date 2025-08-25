@@ -8,5 +8,10 @@
         public string? WorkLocation { get; set; }
         public string? Status { get; set; }
         public DateTime? SaveAt { get; set; }
+
+        // --- Thêm cho UI mới ---
+        public string? CompanyName { get; set; }
+        public string? CompanyLogoUrl { get; set; }
+        public string? Salary { get; set; }
     }
 }

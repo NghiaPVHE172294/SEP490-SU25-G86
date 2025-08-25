@@ -778,3 +778,68 @@ Response: {
   "responseId": "dlufaNOYJOqlnvgPieXNoQ4"
 }
 
+[8/20/2025 9:50:13 PM] CV: 17, JobCriteria: 5
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":17,"CvId":47,"FullName":"Dang Thi Phuong                                                                                                                                                                                         ","Email":"phuongdang@gmail.com","Phone":"0387566615","YearsOfExperience":0.5,"Skills":"Vi\u1EBFt b\u00E0i blog SEO, ch\u1EC9nh \u1EA3nh Canva, caption m\u1EA1ng x\u00E3 h\u1ED9i, nghi\u00EAn c\u1EE9u t\u1EEB kh\u00F3a, CapCut edit video","EducationLevel":"C\u1EED nh\u00E2n","JobTitles":"Th\u1EF1c t\u1EADp sinh Content Marketing, Content Intern, Freelancer Content","Languages":"Ti\u1EBFng Vi\u1EC7t, Ti\u1EBFng Anh","Certifications":"Ch\u1EE9ng ch\u1EC9 Content Marketing \u2013 HubSpot, Canva for Design Beginners, MOS Word Expert","ParsedAt":"2025-08-20T14:39:30.213","Address":"123 Tran Phu, Ha Dong, Ha Noi","Summary":"Th\u1EF1c t\u1EADp sinh s\u00E1ng t\u1EA1o n\u1ED9i dung c\u00F3 n\u1EC1n t\u1EA3ng t\u1ED1t v\u1EC1 truy\u1EC1n th\u00F4ng, kh\u1EA3 n\u0103ng vi\u1EBFt b\u00E0i \u0111\u1ECBnh h\u01B0\u1EDBng SEO, x\u00E2y d\u1EF1ng n\u1ED9i dung fanpage, Instagram v\u00E0 TikTok. \u0110\u00E3 c\u1ED9ng t\u00E1c v\u1EDBi c\u00E1c chi\u1EBFn d\u1ECBch truy\u1EC1n th\u00F4ng tr\u01B0\u1EDDng v\u00E0 l\u00E0m freelance n\u1ED9i dung cho trang th\u01B0\u01A1ng m\u1EA1i \u0111i\u1EC7n t\u1EED. Mong mu\u1ED1n ph\u00E1t tri\u1EC3n s\u1EF1 nghi\u1EC7p vi\u1EBFt content trong ng\u00E0nh FMCG ho\u1EB7c c\u00F4ng ngh\u1EC7.","WorkHistory":"6\u201312 th\u00E1ng (CLB \u002B freelance) Content Intern \u2013 Fanpage CLB Media V\u0103n Lang 02/2024 \u2013 06/2024 \u2022 L\u00EAn k\u1EBF ho\u1EA1ch n\u1ED9i dung th\u00E1ng \u2022 T\u1EA1o caption viral cho Facebook \u0026 Instagram \u2022 Ch\u1EC9nh \u1EA3nh, video b\u1EB1ng Canva v\u00E0 CapCut Freelancer Content \u2013 Shop m\u1EF9 ph\u1EA9m online 11/2023 \u2013 01/2024 \u2022 Vi\u1EBFt b\u00E0i gi\u1EDBi thi\u1EC7u s\u1EA3n ph\u1EA9m d\u01B0\u1EE1ng da \u2022 T\u1EA1o content story Instagram \u002B n\u1EC1n t\u1EA3ng Shopee","Projects":"D\u1EF1 \u00E1n \u201CCh\u1EA1m xanh\u201D \u2013 Lan t\u1ECFa l\u1ED1i s\u1ED1ng xanh trong sinh vi\u00EAn \u2022 Vi\u1EBFt b\u00E0i storytelling d\u1EF1a tr\u00EAn nh\u00E2n v\u1EADt th\u1EADt \u2022 T\u1EA1o infographic \u0111\u01A1n gi\u1EA3n \u2022 \u0110\u1EA1t h\u01A1n 2.300 t\u01B0\u01A1ng t\u00E1c \u0026 90 l\u01B0\u1EE3t b\u00ECnh lu\u1EADn chia s\u1EBB","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":5,"JobPostId":6,"RequiredExperience":2,"RequiredSkills":"JavaScript, ReactJS, HTML/CSS","EducationLevel":"string","RequiredJobTitles":"string","PreferredLanguages":"string","PreferredCertifications":"string","CreatedAt":"2025-07-08T05:15:23.337","CreatedByUserId":2,"Address":null,"Summary":null,"WorkHistory":null,"Projects":null,"IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 1,\n  \"skillsScore\": 2,\n  \"educationLevelScore\": 0,\n  \"jobTitlesScore\": 0,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 0,\n  \"summaryScore\": 0,\n  \"workHistoryScore\": 0,\n  \"projectsScore\": 0,\n  \"totalScore\": 0.33\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0019407882713354551
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1756,
+    "candidatesTokenCount": 104,
+    "totalTokenCount": 1860,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1756
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 104
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "puClaJPIIYfBz7IP8f_YkQM"
+}
+

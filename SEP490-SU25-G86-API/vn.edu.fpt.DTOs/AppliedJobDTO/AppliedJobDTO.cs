@@ -14,5 +14,9 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.AppliedJobDTO
         public string? CvNotes { get; set; }
         public string? SourceType { get; set; }
         public bool? IsDelete { get; set; }
+        // --- Thêm cho UI mới ---
+        public string? CompanyName { get; set; }
+        public string? CompanyLogoUrl { get; set; }
+        public string? Salary { get; set; }
     }
 } 

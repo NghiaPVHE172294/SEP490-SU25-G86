@@ -39,17 +39,19 @@
             </div>
             @* <button class="btn btn-save me-2"><i class="bi bi-heart"></i> Lưu tin</button> *@
             @*sửa lại nút Lưu tin  *@
-            @if (Model.CurrentUserId != null)
+            @if (Model.CurrentUserRole != "EMPLOYER")
             {
-                <button id="saveButton" class="btn btn-save me-2 @(Model.IsSaved ? "btn-secondary" : "btn-success")">
-                    <i class="bi bi-heart"></i> @(Model.IsSaved ? "Đã Lưu" : "Lưu tin")
+                @if (Model.CurrentUserId != null)
+                {
+                    <button id="saveButton" class="btn btn-save me-2 @(Model.IsSaved ? "btn-secondary" : "btn-success")">
+                        <i class="bi bi-heart"></i> @(Model.IsSaved ? "Đã Lưu" : "Lưu tin")
+                    </button>
+                }
+
+                <button class="btn btn-main ms-1" id="btnApplyNow">
+                    <i class="bi bi-send"></i> Ứng tuyển ngay
                 </button>
             }
-
-
-            <button class="btn btn-main ms-1" id="btnApplyNow">
-                <i class="bi bi-send"></i> Ứng tuyển ngay
-            </button>
         </div>
         <!-- Bên phải: Tổng quan & Liên hệ -->
         <div class="col-lg-4">
@@ -64,9 +66,6 @@
                     <li class="mb-2"><i class="bi bi-cash me-2"></i> <b>Mức lương:</b> @Model.JobPostDetail?.SalaryRangeName</li>
                     <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> <b>Địa điểm:</b> @Model.JobPostDetail?.ProvinceName</li>
                 </ul>
-                <div class="mb-2">
-                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=Hanoi,Vietnam&zoom=13&size=300x150&key=YOUR_API_KEY" alt="Bản đồ" class="img-fluid rounded" />
-                </div>
             </div>
             <div class="card card-custom p-4">
                 <h5 class="fw-bold mb-3"><i class="bi bi-envelope me-2"></i>Liên hệ với chúng tôi</h5>

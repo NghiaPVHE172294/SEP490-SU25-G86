@@ -50,8 +50,6 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 Input.Summary = item.Summary;
                 Input.WorkHistory = item.WorkHistory;
                 Input.Projects = item.Projects;
-                Input.Availability = item.Availability;
-                Input.SalaryExpectation = item.SalaryExpectation;
             }
             else
             {

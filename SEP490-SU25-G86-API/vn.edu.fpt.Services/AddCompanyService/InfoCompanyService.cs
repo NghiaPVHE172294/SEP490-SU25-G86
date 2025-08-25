@@ -145,7 +145,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService
         private async Task<string> UploadLogoToFirebaseStorage(IFormFile file, int userId)
         {
             string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS")
-                ?? "D:\\FPTU\\SEP490_SUMMER25_G86\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+                ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
 
             if (!File.Exists(firebaseCredentialsPath))
                 throw new FileNotFoundException($"Không tìm thấy file Firebase credentials tại {firebaseCredentialsPath}");

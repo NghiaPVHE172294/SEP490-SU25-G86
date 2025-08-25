@@ -17,25 +17,22 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAccounts([FromQuery] string? name)
+        public async Task<IActionResult> GetAll(
+        [FromQuery] string? role,
+        [FromQuery] string? name,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
         {
-            var accounts = await _accountService.GetAllAccountsAsync();
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+            pageSize = pageSize is < 1 or > 100 ? 10 : pageSize; // chặn pageSize quá lớn
 
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                accounts = accounts
-                            .Where(a => a.FullName != null && a.FullName.Contains(name, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-            }
-
-            return Ok(accounts);
+            var paged = await _accountService.GetAccountsAsync(role, name, pageNumber, pageSize, ct);
+            return Ok(paged);
         }
 
         [HttpGet("role/{roleName}")]
-        public async Task<IActionResult> GetByRole(string roleName)
-        {
-            var result = await _accountService.GetAccountsByRoleAsync(roleName);
-            return Ok(result);
-        }
+        public Task<IActionResult> GetByRole(string roleName, [FromQuery] string? name, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        => Task.FromResult<IActionResult>(RedirectToAction(nameof(GetAll), new { role = roleName, name, pageNumber, pageSize }));
     }
 }

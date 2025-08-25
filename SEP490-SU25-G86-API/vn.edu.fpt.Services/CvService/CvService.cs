@@ -104,8 +104,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
 
         public async Task<string> UploadFileToFirebaseStorage(IFormFile file, int candidateId)
         {
-            //string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
-            string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "C:\\Users\\ADMIN\\Downloads\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+            string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "E:\\GithubProject_SEP490\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
+            //string firebaseCredentialsPath = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS") ?? "C:\\Users\\ADMIN\\Downloads\\sep490-su25-g86-cvmatcher-25bbfc6aba06.json";
             string bucketName = Environment.GetEnvironmentVariable("FIREBASE_BUCKET") ?? "sep490-su25-g86-cvmatcher.firebasestorage.app";
             string folderName = "CV storage";
             // Khởi tạo FirebaseApp nếu chưa có

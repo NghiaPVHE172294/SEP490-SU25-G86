@@ -19,6 +19,10 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.AppliedJobRepository
         {
             return await _context.Cvsubmissions
                 .Include(s => s.JobPost)
+                    .ThenInclude(jp => jp.Employer)
+                        .ThenInclude(e => e.Company)
+                .Include(s => s.JobPost)
+                    .ThenInclude(jp => jp.SalaryRange)
                 .Include(s => s.Cv)
                 .Where(s => s.SubmittedByUserId == userId)
                 .AsNoTracking()
