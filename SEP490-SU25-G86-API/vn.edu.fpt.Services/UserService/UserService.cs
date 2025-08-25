@@ -29,7 +29,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
                 Address = user.Address,
                 Email = user.Account.Email,
                 Phone = user.Phone,
-                Dob = user.Dob?.ToString("dd/MM/yyyy"),
+                Dob = user.Dob?.ToString("yyyy-MM-dd"),
                 LinkedIn = user.LinkedIn,
                 Facebook = user.Facebook,
                 AboutMe = user.AboutMe
@@ -42,7 +42,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
             if (user == null) return false;
 
             if (!string.IsNullOrWhiteSpace(dto.FullName))
-                user.FullName = dto.FullName;
+            {
+                if (dto.FullName.Length > 30)
+                {
+                    throw new ArgumentException("Tên không được vượt quá 30 ký tự.");
+                }
+                user.FullName = dto.FullName.Trim();
+            }
 
             if (dto.Address != null)
                 user.Address = dto.Address;

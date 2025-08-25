@@ -101,7 +101,7 @@ namespace SEP490_SU25_G86_Client.Pages.SavedJobs
 
             await _httpClient.DeleteAsync($"api/SavedJobs/{saveJobId}");
 
-            return RedirectToPage(new { page = Page, statusFilter = StatusFilter });
+            return RedirectToPage();
         }
 
         private class SuggestedJobApiResponse

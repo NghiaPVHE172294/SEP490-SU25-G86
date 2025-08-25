@@ -92,6 +92,13 @@
                                          class="d-block w-100 h-100" alt="Banner 1">
                                 </a>
                             </div>
+
+                            <div class="carousel-item">
+                                <a href="/Companies/ListCompany">
+                                    <img src="https://i.ibb.co/dw5QWWmd/company-Banner.png"
+                                         class="d-block w-100 h-100" alt="Banner 1">
+                                </a>
+                            </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#jobSlider" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon"></span>
@@ -110,7 +117,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">Việc Làm Mới Nhất</h2>
-                <span>@Model.TotalItems công việc</span>
+                @* <span>@Model.TotalItems công việc</span> *@
                 <a href="/Common/ListJobs" class="text-custom">Xem tất cả</a>
             </div>
 
@@ -138,15 +145,15 @@
 
             @if (!Model.JobPosts.Any())
             {
-                <p class="text-muted">No job posts available.</p>
+                <p class="text-muted">Hệ thông đang cập nhật</p>
             }
             else
             {
                 <div class="row">
                     @foreach (var job in Model.JobPosts)
                     {
-                        <div class="col-md-4 mb-4">
-                            <div class="card job-card shadow-sm rounded-4 p-3">
+                        <div class="col-md-4 mb-4 d-flex">
+                            <div class="card job-card shadow-sm rounded-4 p-3 w-100">
                                 <div class="d-flex align-items-center">
                                     <!-- Logo công ty -->
                                     <img src="@job.CompanyLogoUrl"
@@ -242,7 +249,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
-
+@section Scripts {
 <script>
     //script filter cho jobpost
     document.addEventListener("DOMContentLoaded", function () {
@@ -511,4 +518,5 @@
         }
     });
 </script>
+}
 </html>
