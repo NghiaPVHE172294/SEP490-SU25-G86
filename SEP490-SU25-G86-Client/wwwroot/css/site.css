@@ -139,6 +139,50 @@ body {
 .footer-container .text-center {
     text-align: center;
 }
+/* cập nhật thêm Footer n */
+.footer-card {
+    border-radius: 12px;
+    color: #fff;
+    padding: 1rem;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+    .footer-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+    /* Màu pastel dạng gradient */
+    .footer-card.blue {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* xanh pastel nhạt */
+        color: #1a2a6c;
+    }
+
+    .footer-card.yellow {
+        background: linear-gradient(135deg, #fddb92, #d1fdff); /* vàng pastel */
+        color: #7b5e00;
+    }
+
+    .footer-card.pink {
+        background: linear-gradient(135deg, #fbc2eb, #a6c1ee); /* hồng tím pastel */
+        color: #5a2a5a;
+    }
+
+    .footer-card.green {
+        background: linear-gradient(135deg, #d4fc79, #96e6a1); /* xanh lá pastel */
+        color: #1b4d2e;
+    }
+
+    .footer-card a {
+        color: inherit;
+        font-weight: 600;
+    }
+
+        .footer-card a:hover {
+            text-decoration: underline;
+        }
 
 /* Dropdown submenu cho Bootstrap 5 */
 .dropdown-submenu {

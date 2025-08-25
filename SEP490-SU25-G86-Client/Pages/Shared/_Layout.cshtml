@@ -37,10 +37,13 @@
                     <a asp-page="/Contact">Liên hệ</a>
                 </div>
             }
+<<<<<<< Updated upstream
             <div class="header-actions">
                 @{
                     var isLoggedIn = !string.IsNullOrEmpty(userRole);
                 }
+=======
+>>>>>>> Stashed changes
                 @if (isLoggedIn && userRole == "CANDIDATE")
                 {
                     <!-- Notification Bell -->
@@ -185,30 +188,32 @@
             <h6 class="fw-bold mt-4 mb-3">Kênh liên hệ & dịch vụ hỗ trợ của CvMatcher</h6>
             <div class="row g-3">
                 <div class="col-md-3">
-                    <div class="bg-primary text-white rounded p-3 h-100">
+                    <div class="footer-card blue">
                         <i class="bi bi-telephone-fill me-2"></i> Hỗ trợ trực tiếp:
                         <div class="fw-bold fs-6 mt-1">0961 075 000</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-warning text-white rounded p-3 h-100">
+                    <div class="footer-card yellow">
                         <i class="bi bi-envelope-fill me-2"></i> Email CSKH:
                         <div class="fw-bold fs-6 mt-1">thandea6@gmail.com</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-info text-white rounded p-3 h-100">
+                    <div class="footer-card pink">
                         <i class="bi bi-facebook me-2"></i> Fanpage Facebook:
-                        <div><a href="https://facebook.com/cvmatcher" class="text-white text-decoration-underline">facebook.com/cvmatcher</a></div>
+                        <div><a href="https://facebook.com/cvmatcher" class="text-dark text-decoration-underline">facebook.com/cvmatcher</a></div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-success text-white rounded p-3 h-100">
+                    <div class="footer-card green">
                         <i class="bi bi-globe2 me-2"></i> Website chính thức:
-                        <div><a href="https://cvmatcher.net" class="text-white text-decoration-underline">cvmatcher.vn</a></div>
+                        <div><a href="https://cvmatcher.net" class="text-dark text-decoration-underline">cvmatcher.vn</a></div>
                     </div>
                 </div>
             </div>
+
+
 
             <!-- Bản quyền -->
             <div class="text-center mt-4 text-muted small">
