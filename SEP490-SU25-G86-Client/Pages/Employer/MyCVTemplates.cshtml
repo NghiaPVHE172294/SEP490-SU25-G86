@@ -101,32 +101,41 @@
                     </table>
                 </div>
 
-                <!-- PAGINATION -->
-                @if (Model.TotalPages > 1)
-                {
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            @if (Model.PageIndex > 1)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="?PageIndex=@(Model.PageIndex - 1)&SearchName=@Request.Query["SearchName"]&DateFrom=@Request.Query["DateFrom"]&DateTo=@Request.Query["DateTo"]">Trước</a>
-                                </li>
-                            }
-                            @for (int i = Math.Max(1, Model.PageIndex - 2); i <= Math.Min(Model.TotalPages, Model.PageIndex + 2); i++)
-                            {
-                                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                                    <a class="page-link" href="?PageIndex=@i&SearchName=@Request.Query["SearchName"]&DateFrom=@Request.Query["DateFrom"]&DateTo=@Request.Query["DateTo"]">@i</a>
-                                </li>
-                            }
-                            @if (Model.PageIndex < Model.TotalPages)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="?PageIndex=@(Model.PageIndex + 1)&SearchName=@Request.Query["SearchName"]&DateFrom=@Request.Query["DateFrom"]&DateTo=@Request.Query["DateTo"]">Sau</a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-                }
+                <nav aria-label="CV pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Page(null, null, new {
+                                SearchName = Request.Query["SearchName"],
+                                DateFrom = Request.Query["DateFrom"],
+                                DateTo = Request.Query["DateTo"],
+                                PageIndex = Model.PageIndex - 1,
+                                PageSize = Model.PageSize
+                            }, null)">&laquo;</a>
+                        </li>
+                        @for (int p = 1; p <= (Model.TotalPages > 0 ? Model.TotalPages : 1); p++)
+                        {
+                            <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new {
+                                    SearchName = Request.Query["SearchName"],
+                                    DateFrom = Request.Query["DateFrom"],
+                                    DateTo = Request.Query["DateTo"],
+                                    PageIndex = p,
+                                    PageSize = Model.PageSize
+                                }, null)">@p</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PageIndex == (Model.TotalPages > 0 ? Model.TotalPages : 1) ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Page(null, null, new {
+                                SearchName = Request.Query["SearchName"],
+                                DateFrom = Request.Query["DateFrom"],
+                                DateTo = Request.Query["DateTo"],
+                                PageIndex = Model.PageIndex + 1,
+                                PageSize = Model.PageSize
+                            }, null)">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+
             </div>
         </div>
     </div>
@@ -276,4 +285,6 @@
     .btn-group .btn:last-child {
         margin-right: 0;
     }
+
+
 </style>

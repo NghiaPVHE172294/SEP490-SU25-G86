@@ -1,0 +1,79 @@
+/* Applied Jobs Page Styles */
+.job-title-truncate {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.job-title-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2; /* For compatibility */
+  max-width: 100%;
+}
+
+
+.hover-bg-light:hover {
+    background-color: #f8f9fa !important;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.hover-text-primary:hover {
+    color: #0d6efd !important;
+    transition: color 0.2s ease-in-out;
+}
+
+.job-card {
+    transition: all 0.2s ease-in-out;
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.8em;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-applied-card {
+    border-radius: 15px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    box-shadow: none;
+}
+.job-applied-card:hover {
+    background-color: rgba(48, 150, 137, 0.05);
+    border-color: #309689 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    z-index: 2;
+}
+.job-applied-card:hover .job-title-multiline {
+    color: #309689 !important;
+}
+

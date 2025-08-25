@@ -40,12 +40,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
                 CvFileUrl = s.Cv?.FileUrl,
                 CvNotes = s.Cv?.Notes,
                 SourceType = s.SourceType,
-                IsDelete = s.IsDelete
+                IsDelete = s.IsDelete,
+                CompanyName = s.JobPost?.Employer?.Company?.CompanyName ?? "Không rõ",
+                CompanyLogoUrl = s.JobPost?.Employer?.Company?.LogoUrl,
+                Salary = s.JobPost?.SalaryRange != null
+                    ? ($"{s.JobPost.SalaryRange.MinSalary:N0} - {s.JobPost.SalaryRange.MaxSalary:N0} {s.JobPost.SalaryRange.Currency}")
+                    : "Thỏa thuận"
             });
         }
 
         public async Task AddSubmissionAsync(Cvsubmission submission)
         {
+            if (submission == null)
+                throw new ArgumentNullException(nameof(submission), "Submission không được null");
             _context.Cvsubmissions.Add(submission);
             try
             {
@@ -74,7 +81,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
         {
             // Đếm số lượng CV đã upload của ứng viên này
             int maxCv = 20;
-            int currentCount = await _context.Cvs.CountAsync(x => x.CandidateId == cv.CandidateId && !x.IsDelete);
+            var query = _context.Cvs.Where(x => x.CandidateId == cv.CandidateId && !x.IsDelete);
+            int currentCount = await query.CountAsync();
             if (currentCount >= maxCv)
                 throw new Exception($"[BR-10] Bạn đã đạt đến số lượng CV tối đa cho phép ({maxCv}).");
 
@@ -143,7 +151,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
 
         public async Task<bool> WithdrawApplicationAsync(int submissionId, int userId)
         {
-            var submission = await _context.Cvsubmissions.FirstOrDefaultAsync(s => s.SubmissionId == submissionId && s.SubmittedByUserId == userId && !s.IsDelete);
+            var query = _context.Cvsubmissions.Where(s => s.SubmissionId == submissionId && s.SubmittedByUserId == userId && !s.IsDelete);
+            var submission = await query.FirstOrDefaultAsync();
             if (submission == null)
                 return false;
             submission.IsDelete = true;
@@ -152,4 +161,4 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices
             return true;
         }
     }
-} 
+}

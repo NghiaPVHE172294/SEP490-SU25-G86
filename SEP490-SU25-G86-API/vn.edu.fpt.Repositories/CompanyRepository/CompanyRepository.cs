@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
 
@@ -41,6 +41,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository
         public async Task<List<Company>> GetAllCompanies()
         {
             return await _context.Companies.ToListAsync();
+        }
+
+        public async Task<Company?> GetLatestCompanyAsync()
+        {
+            // Use CompanyId as fallback since CreatedDate does not exist
+            return await _context.Companies
+                .Where(c => !c.IsDelete && c.Status == false)
+                .OrderByDescending(c => c.CompanyId)
+                .FirstOrDefaultAsync();
         }
     }
 }
