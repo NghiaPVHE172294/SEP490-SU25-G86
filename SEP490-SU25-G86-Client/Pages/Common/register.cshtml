@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model SEP490_SU25_G86_Client.Pages.Common.registerModel
 @{
     Layout = null;
@@ -51,12 +51,45 @@
                             <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" id="confirm-password" required>
                             <span class="toggle-password">SHOW</span>
                         </div>
-                        <div class="input-group">
-                            <select asp-for="RoleName" required class="form-select">
-                                <option value="CANDIDATE">Ứng viên</option>
-                                <option value="EMPLOYER">Nhà tuyển dụng</option>
-                            </select>
+                        <div class="role-select-group" style="display:flex; gap:10px; margin-bottom:12px; justify-content:center;">
+                            <input type="radio" id="role-candidate" name="RoleName" value="CANDIDATE" asp-for="RoleName" style="display:none;" checked="@(Model.RoleName == null || Model.RoleName == "CANDIDATE" ? "checked" : null)">
+                            <label for="role-candidate" class="role-card @(Model.RoleName == null || Model.RoleName == "CANDIDATE" ? "selected" : "")" style="cursor:pointer; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; text-align:center; min-width:70px; transition:all 0.2s; display:flex; flex-direction:column; align-items:center;">
+                                <span style="font-size:1.5rem; margin-bottom:2px;">👤</span>
+                                <div style="font-weight:500; font-size:13px;">Ứng viên</div>
+                            </label>
+                            <input type="radio" id="role-employer" name="RoleName" value="EMPLOYER" asp-for="RoleName" style="display:none;" checked="@(Model.RoleName == "EMPLOYER" ? "checked" : null)">
+                            <label for="role-employer" class="role-card @(Model.RoleName == "EMPLOYER" ? "selected" : "")" style="cursor:pointer; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; text-align:center; min-width:70px; transition:all 0.2s; display:flex; flex-direction:column; align-items:center;">
+                                <span style="font-size:1.5rem; margin-bottom:2px;">🏢</span>
+                                <div style="font-weight:500; font-size:13px;">Nhà tuyển dụng</div>
+                            </label>
                         </div>
+                        <style>
+                            .role-card.selected {
+                                border: 2px solid #218838 !important;
+                                background: #e6f9ed;
+                                box-shadow: 0 2px 8px rgba(33,136,56,0.08);
+                            }
+                            .role-card:hover {
+                                border: 2px solid #218838;
+                            }
+                            .role-card {
+                                font-size: 12px;
+                                padding: 6px 10px !important;
+                                border-radius: 8px !important;
+                                min-width: 70px !important;
+                                min-height: 50px;
+                            }
+                        </style>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.querySelectorAll('.role-card').forEach(function(card) {
+                                    card.addEventListener('click', function() {
+                                        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+                                        card.classList.add('selected');
+                                    });
+                                });
+                            });
+                        </script>
                         <div class="checkbox-group">
                             <input asp-for="AcceptTerms" type="checkbox" id="terms" required>
                             <label for="terms">Tôi đồng ý với <a href="?">Điều khoản dịch vụ</a></label>
