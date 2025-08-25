@@ -167,8 +167,25 @@
                                                  style="max-width: 100%; max-height: 48px; object-fit: contain;">
                                         </div>
                                         <div class="flex-grow-1">
-                                            <div class="fw-bold text-truncate">@job.Title</div>
-                                            <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div style="max-width: calc(100% - 90px);">
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
+                                                        <div class="fw-bold text-truncate" style="max-width: 150px; overflow:hidden; white-space:nowrap;">
+                                                            @job.Title
+                                                        </div>
+                                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2" style="width: 80px; flex-shrink: 0;">
+                                                    <button class="btn btn-outline-success btn-sm w-100 save-job-btn"
+                                                            data-job-id="@job.JobPostId"
+                                                            onclick="toggleSaveJob(this)">
+                                                        <i class="bi" id="bookmark-icon-@job.JobPostId"></i>
+                                                        <span id="bookmark-label-@job.JobPostId"> Lưu</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                             <div class="text-success fw-medium small mt-1">
                                                 @(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
                                             </div>
@@ -188,3 +205,83 @@
     </div>
 </section>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.savedJobIds = [@(string.Join(",", Model.SavedJobs?.Select(j => j.JobPostId) ?? new List<int>()))];
+    window.userId = '@HttpContext.Session.GetString("userId")';
+    window.jwtToken = '@HttpContext.Session.GetString("jwt_token")';
+
+    function renderBookmarkState(jobPostId) {
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        var icon = document.getElementById('bookmark-icon-' + jobPostId);
+        var label = document.getElementById('bookmark-label-' + jobPostId);
+        if (icon && label) {
+            if (isSaved) {
+                icon.className = 'bi bi-bookmark-fill text-success';
+                label.innerText = ' Đã lưu';
+            } else {
+                icon.className = 'bi bi-bookmark';
+                label.innerText = ' Lưu';
+            }
+        }
+    }
+
+        function toggleSaveJob(btn) {
+        var jobPostId = parseInt(btn.getAttribute('data-job-id'));
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        if (!window.userId || !window.jwtToken) {
+            alert('Bạn cần đăng nhập để sử dụng chức năng này!');
+            return;
+        }
+        if (!isSaved) {
+            // Save job
+            fetch(`https://localhost:7004/api/SavedJobs/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.jwtToken
+                },
+                body: JSON.stringify({ jobPostId: jobPostId, userId: window.userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.message && data.message.includes('success')) {
+                    location.reload(); // ✅ reload lại trang sau khi lưu thành công
+                } else {
+                    alert(data.message || 'Không thể lưu việc làm.');
+                }
+            })
+            .catch(() => alert('Lỗi khi lưu việc làm!'));
+        } else {
+            // Unsave job
+            fetch(`https://localhost:7004/api/SavedJobs/user/${window.userId}`,
+                { headers: { 'Authorization': 'Bearer ' + window.jwtToken } })
+            .then(res => res.json())
+            .then(jobs => {
+                var saved = jobs.find(j => j.jobPostId === jobPostId);
+                if (saved && saved.saveJobId) {
+                    fetch(`https://localhost:7004/api/SavedJobs/${saved.saveJobId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + window.jwtToken }
+                    })
+                    .then(r => {
+                        if (r.status === 204) {
+                            location.reload(); // ✅ reload lại trang sau khi hủy lưu
+                        } else {
+                            alert('Không thể bỏ lưu việc làm!');
+                        }
+                    });
+                } else {
+                    alert('Không tìm thấy việc làm đã lưu!');
+                }
+            })
+            .catch(() => alert('Lỗi khi bỏ lưu việc làm!'));
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        (window.savedJobIds || []).forEach(function (jobId) {
+            renderBookmarkState(jobId);
+        });
+    });
+</script>
