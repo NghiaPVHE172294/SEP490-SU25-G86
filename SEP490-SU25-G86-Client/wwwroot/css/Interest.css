@@ -1,0 +1,28 @@
+﻿.hero-section {
+    background: linear-gradient(135deg, #e9f7ef, #f0f7ff);
+}
+
+.step-dot {
+    width: 36px;
+    height: 36px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.stat-tile {
+    background: linear-gradient(145deg, #f7f9fb, #ffffff);
+    border: 1px solid rgba(0,0,0,.04);
+}
+
+.alert-success-subtle {
+    background-color: #e9f7ef;
+    color: #0a3622;
+}
+
+.placeholder-glow .placeholder {
+    height: 1rem;
+    background-color: rgba(0,0,0,.05);
+    border-radius: 0.25rem;
+}
