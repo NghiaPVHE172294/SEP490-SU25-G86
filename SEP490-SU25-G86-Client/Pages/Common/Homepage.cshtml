@@ -23,6 +23,7 @@
     <title>CVMatcher - Homepage</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 @*     <link rel="stylesheet" href="~/SEP490_SU25_G86_Client.styles.css" asp-append-version="true" /> *@
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
@@ -50,7 +51,7 @@
                 <div style="width:1px; background-color:#dee2e6;"></div>
 
                 <!-- Location dropdown -->
-                <select class="form-select border-0 px-3" name="provinceId" style="flex: 0 0 20%;">
+                <select class="form-select border-0 px-3 searchable-select" name="provinceId" style="flex: 0 0 20%; height: 40px; border-radius: 4px;">
                     <option selected value="">Vị trí</option>
                     @foreach (var province in Model.Provinces)
                     {
@@ -247,7 +248,9 @@
     <!-- Bootstrap JS CDN -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
 </body>
 @section Scripts {
 <script>
@@ -518,5 +521,17 @@
         }
     });
 </script>
+
+    <script>
+               jQuery.noConflict();
+        jQuery(document).ready(function($) {
+            $('.searchable-select').select2({
+                placeholder: "Vị trí",
+                allowClear: false,
+                dropdownCssClass: "custom-select2-dropdown"
+            });
+        });
+    </script>
+
 }
 </html>
