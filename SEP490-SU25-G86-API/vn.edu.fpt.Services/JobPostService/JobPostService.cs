@@ -167,6 +167,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 page, pageSize, provinceId, industryId, employmentTypeIds, experienceLevelIds, jobLevelId, minSalary, maxSalary, datePostedRanges, keyword, candidateId
             );
 
+            if (minSalary.HasValue && minSalary.Value < 0)
+                minSalary = null;
+
+            if (maxSalary.HasValue && maxSalary.Value < 0)
+                maxSalary = null;
 
             List<int> appliedJobPostIds = new();
             if (candidateId.HasValue)

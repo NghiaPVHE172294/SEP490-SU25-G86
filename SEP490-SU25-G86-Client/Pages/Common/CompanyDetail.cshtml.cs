@@ -26,12 +26,12 @@ namespace SEP490_SU25_G86_Client.Pages.Common
         public int Id { get; set; }
         public string? AccountId { get; set; }
         public string UserId { get; set; }
-
+        public string Role { get; set; }
 
         public async Task<IActionResult> OnGetAsync([FromQuery] int id, [FromQuery] int page = 1)
         {
             UserId = HttpContext.Session.GetString("userId");
-
+            Role = HttpContext.Session.GetString("user_role");
             if (!HttpContext.Request.Query.TryGetValue("id", out var idValue) || !int.TryParse(idValue, out var parsedId) || parsedId <= 0)
             {
                 return BadRequest("Invalid company ID");

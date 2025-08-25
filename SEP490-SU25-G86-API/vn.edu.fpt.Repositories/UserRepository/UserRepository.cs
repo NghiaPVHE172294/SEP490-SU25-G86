@@ -26,9 +26,19 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
         }
         public async Task<bool> FollowCompanyAsync(int userId, int companyId)
         {
+            // Nếu đang block thì gỡ block trước
+            var blocked = await _context.BlockedCompanies
+                .FirstOrDefaultAsync(x => x.CandidateId == userId && x.CompanyId == companyId);
+            if (blocked != null)
+            {
+                _context.BlockedCompanies.Remove(blocked);
+                await _context.SaveChangesAsync();
+            }
+
+            // Toggle follow
             var follow = await _context.CompanyFollowers
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.CompanyId == companyId);
-            Console.WriteLine("Trying to follow company with userId: " + userId);
+
             if (follow == null)
             {
                 follow = new CompanyFollower
@@ -40,34 +50,38 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
                 };
                 _context.CompanyFollowers.Add(follow);
                 await _context.SaveChangesAsync();
-                return true;
+                return true; // đang follow
             }
 
-            if (!(bool)follow.IsActive)
-            {
-                follow.IsActive = true;
-                follow.FlowedAt = DateTime.UtcNow;
-                _context.CompanyFollowers.Update(follow);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                follow.IsActive = false;
-                _context.CompanyFollowers.Update(follow);
-                await _context.SaveChangesAsync();
-                return false;
-            }
+            // Toggle trạng thái
+            follow.IsActive = !(follow.IsActive ?? false);
+            follow.FlowedAt = DateTime.UtcNow;
+            _context.CompanyFollowers.Update(follow);
+            await _context.SaveChangesAsync();
+
+            return follow.IsActive ?? false;
         }
 
         public async Task<bool> BlockCompanyAsync(int userId, int companyId, string? reason)
         {
-            var exists = await _context.BlockedCompanies
-                .AnyAsync(x => x.CandidateId == userId && x.CompanyId == companyId);
-
-            if (!exists)
+            // Nếu đang follow thì gỡ follow trước
+            var follow = await _context.CompanyFollowers.FirstOrDefaultAsync(x => x.UserId == userId
+                                                                               && x.CompanyId == companyId
+                                                                               && x.IsActive == true);
+            if (follow != null)
             {
-                var block = new BlockedCompany
+                follow.IsActive = false;
+                _context.CompanyFollowers.Update(follow);
+                await _context.SaveChangesAsync();
+            }
+
+            // Toggle block
+            var block = await _context.BlockedCompanies
+                .FirstOrDefaultAsync(x => x.CandidateId == userId && x.CompanyId == companyId);
+
+            if (block == null)
+            {
+                block = new BlockedCompany
                 {
                     CandidateId = userId,
                     CompanyId = companyId,
@@ -75,10 +89,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.UserRepository
                 };
                 _context.BlockedCompanies.Add(block);
                 await _context.SaveChangesAsync();
-                return true;
+                return true; // đang block
             }
-
-            return false;
+            else
+            {
+                _context.BlockedCompanies.Remove(block);
+                await _context.SaveChangesAsync();
+                return false; // đã unblock
+            }
         }
 
 

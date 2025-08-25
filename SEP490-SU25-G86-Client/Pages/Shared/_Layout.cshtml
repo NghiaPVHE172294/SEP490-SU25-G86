@@ -34,8 +34,53 @@
                     <a asp-page="/CVTemplatesByPosition">Mẫu CV</a>
                     <a asp-page="/Companies/ListCompany">Danh sách công ty</a>
                     <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
+
+                    <!-- Dropdown Công Cụ -->
+                    <div class="dropdown user-dropdown">
+                        <a href="#" class="dropdown-toggle d-flex align-items-center"
+                           id="userDropdown"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Công Cụ
+                        </a>
+                        <ul class="dropdown-menu mt-2" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Salary">Tính lương Gross - Net</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Tax">Tính thuế thu nhập cá nhân</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Interest">Tính lãi suất kép</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
                     <a asp-page="/Contact">Liên hệ</a>
                 </div>
+            }
+
+            else if (userRole == "ADMIN")
+            {
+                <nav class="navbar navbar-expand navbar-dark bg-primary mb-2">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/AdminDashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/ManageAccount">Quản lý tài khoản</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/ManagePermissions">Phân quyền</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/AdminCVTemplates">Quản lý CV Template</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             }
             <div class="header-actions">
                 @{

@@ -1,0 +1,244 @@
+﻿@page
+@model SalaryCalculatorModel
+@{
+    ViewData["Title"] = "Công cụ tính lương Gross ↔ Net [Chuẩn 2025]";
+}
+<link rel="stylesheet" href="~/css/Salary.css" />
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <h1>@ViewData["Title"]</h1>
+        <p class="sub-title">
+            Áp dụng quy định: <span class="highlight">Từ 01/07/2024 - 30/06/2025</span>
+        </p>
+        <p class="desc">
+            Áp dụng mức lương cơ sở mới nhất có hiệu lực từ ngày 01/07/2024
+            (Theo Nghị định số 73/2024/NĐ-CP)
+        </p>
+    </header>
+
+    <!-- FORM bắt buộc -->
+    <form method="post">
+        <!-- Form Inputs -->
+        <section class="form-section">
+            <div class="form-group">
+                <label for="Salary">Thu nhập:</label>
+                <input asp-for="Salary" type="number" placeholder="Nhập lương của bạn" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Dependents">Số người phụ thuộc:</label>
+                <input asp-for="Dependents" type="number" placeholder="0" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Region">Vùng:</label>
+                <select asp-for="Region" class="form-control">
+                    <option value="1">Vùng I</option>
+                    <option value="2">Vùng II</option>
+                    <option value="3">Vùng III</option>
+                    <option value="4">Vùng IV</option>
+                </select>
+            </div>
+
+            <!-- Mức lương đóng bảo hiểm -->
+            <div class="form-group">
+                <label>Mức lương đóng bảo hiểm:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" asp-for="InsuranceOption" value="official" id="official" checked />
+                        <label for="official">Trên lương chính thức</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" asp-for="InsuranceOption" value="custom" id="custom" />
+                        <label for="custom">Khác:</label>
+                    </div>
+                </div>
+
+                <!-- Input mức lương custom -->
+                <div class="custom-insurance" id="custom-insurance">
+                    <span class="currency-symbol">$</span>
+                    <input asp-for="CustomInsuranceSalary" type="number" placeholder="Nhập mức lương" />
+                    <span class="unit">(VNĐ)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="buttons">
+            <button type="submit" class="btn btn-primary" asp-page-handler="GrossToNet">GROSS → NET</button>
+            <button type="submit" class="btn btn-outline" asp-page-handler="NetToGross">NET → GROSS</button>
+        </section>
+    </form>
+
+    <!-- Salary Info -->
+    <section class="salary-info">
+        <div class="info-item">
+            <span>Lương cơ sở:</span>
+            <strong>@Model.BaseSalary.ToString("N0")đ</strong>
+        </div>
+        <div class="info-item">
+            <span>Giảm trừ bản thân:</span>
+            <strong>@Model.SelfDeduction.ToString("N0")đ</strong>
+        </div>
+        <div class="info-item">
+            <span>Người phụ thuộc:</span>
+            <strong>@Model.DependentDeduction.ToString("N0")đ</strong>
+        </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="result">
+        <h2>Kết quả tính toán</h2>
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div class="result-details">
+                @Html.Raw(Model.Result)
+            </div>
+        }
+        else
+        {
+            <p>Vui lòng nhập thông tin và chọn loại tính.</p>
+        }
+    </section>
+
+    </section>
+
+    <!-- Cập nhật mức lương 2025 -->
+    <section class="salary-update">
+        <h2>Cập nhật mức lương mới nhất 2025</h2>
+
+        <h3>1. Cập nhật mức lương cơ sở</h3>
+        <p>
+            Căn cứ theo <strong>Nghị định 73/2024/NĐ-CP</strong>, kể từ ngày <strong>01/07/2024</strong>,
+            mức lương cơ sở áp dụng đối với cán bộ, công chức, viên chức và lực lượng vũ trang là
+            <strong>2.340.000&nbsp;đồng/tháng</strong>.
+        </p>
+        <ul>
+            <li>Tính lương, phụ cấp và các chế độ khác theo quy định của pháp luật;</li>
+            <li>Tính mức hoạt động phí, sinh hoạt phí;</li>
+            <li>Tính các khoản trích và chế độ được hưởng theo mức lương cơ sở.</li>
+        </ul>
+        <p>
+            <em>
+                * Tính đến 06/2025, theo Nghị quyết số 159/2024/QH15, Chính phủ chưa ban hành quyết định điều chỉnh mới,
+                mức <strong>2.340.000&nbsp;đồng/tháng</strong> vẫn được giữ nguyên.
+            </em>
+        </p>
+
+        <h3>2. Cập nhật mức lương tối thiểu vùng</h3>
+        <p>
+            Từ <strong>01/07/2025</strong>, theo <strong>Nghị định 128/2025/NĐ-CP</strong>, mức lương tối thiểu vùng
+            <strong>giữ nguyên</strong> nhưng thay đổi phạm vi áp dụng: tính theo <strong>địa bàn cấp xã</strong>
+            thay vì <strong>cấp huyện</strong>.
+        </p>
+        <ul>
+            <li>Vùng I: <strong>4.960.000&nbsp;đ/tháng</strong>; <strong>23.800&nbsp;đ/giờ</strong></li>
+            <li>Vùng II: <strong>4.410.000&nbsp;đ/tháng</strong>; <strong>21.200&nbsp;đ/giờ</strong></li>
+            <li>Vùng III: <strong>3.860.000&nbsp;đ/tháng</strong>; <strong>18.600&nbsp;đ/giờ</strong></li>
+            <li>Vùng IV: <strong>3.450.000&nbsp;đ/tháng</strong>; <strong>16.600&nbsp;đ/giờ</strong></li>
+        </ul>
+        <p>
+            <em>
+                * Nếu mức lương tối thiểu mới thấp hơn so với trước thì vẫn áp dụng mức cũ,
+                doanh nghiệp không được cắt giảm lương hiện tại của người lao động.
+            </em>
+        </p>
+    </section>
+
+    <!-- Cách tính lương Gross và Net -->
+    <section class="gross-net-guide">
+        <h2>Cách tính lương Gross và lương Net</h2>
+        <p>
+            Lương <strong>Gross</strong> là tổng thu nhập trước khi trừ thuế và bảo hiểm, bao gồm:
+            lương cơ bản, phụ cấp, thưởng và các khoản thu nhập khác.
+        </p>
+        <div class="formula-box">
+            <p class="formula-title">Công thức tính lương Gross</p>
+            <code>Lương Gross = Lương cơ bản + Thưởng + Các khoản phụ cấp khác</code>
+        </div>
+        <p>
+            <strong>Ví dụ:</strong> Lương cơ bản = 10.000.000đ, phụ cấp ăn trưa = 1.000.000đ, thưởng = 3.000.000đ ⇒
+            <strong>Lương Gross = 14.000.000đ</strong>.
+        </p>
+
+        <p>
+            Lương <strong>Net</strong> là số tiền thực nhận sau khi trừ các khoản:
+            <em>thuế TNCN, BHXH, BHYT, BHTN</em>.
+        </p>
+        <div class="formula-box">
+            <p class="formula-title">Công thức tính lương Net</p>
+            <code>Lương Net = Lương Gross - (Thuế TNCN + BHXH + BHYT + BHTN + Các khoản khấu trừ khác)</code>
+        </div>
+
+        <div class="formula-box relation">
+            <p class="formula-title">Quan hệ giữa lương Gross và lương Net</p>
+            <code>Lương Gross = Lương Net + BHXH + BHYT + BHTN + Thuế TNCN + Các khoản khác</code>
+        </div>
+        <p>
+            <em>Ví dụ:</em> Lương Gross = 15.000.000đ
+            → Lương Net ≈ 13.303.750đ (đóng bảo hiểm trên lương chính thức).
+        </p>
+
+        <h3>Bảng minh họa lương Gross vs Net</h3>
+        <div class="salary-table-wrapper">
+            <table class="salary-table beautiful">
+                <thead>
+                    <tr>
+                        <th>Mức lương</th>
+                        <th>BHXH (8%)</th>
+                        <th>BHYT (1,5%)</th>
+                        <th>BHTN (1%)</th>
+                        <th>Thuế TNCN</th>
+                        <th>Lương thực nhận (Net)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>15.000.000đ</td>
+                        <td>1.200.000đ</td>
+                        <td>225.000đ</td>
+                        <td>150.000đ</td>
+                        <td>121.250đ</td>
+                        <td class="highlight-net">13.303.750đ</td>
+                    </tr>
+                    <tr>
+                        <td>20.000.000đ</td>
+                        <td>1.600.000đ</td>
+                        <td>300.000đ</td>
+                        <td>200.000đ</td>
+                        <td>395.000đ</td>
+                        <td class="highlight-net">17.505.000đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Lời khuyên khi đàm phán lương</h3>
+        <ul>
+            <li>Nếu có thể, nên đàm phán bằng <strong>lương Gross</strong> để minh bạch các khoản đóng bảo hiểm và thuế.</li>
+            <li>Nếu đàm phán bằng lương Net, hãy hỏi rõ công ty về <strong>mức đóng bảo hiểm</strong>.</li>
+            <li>Công cụ tính lương <strong>CV-Matcher</strong> hỗ trợ quy đổi Gross ↔ Net chính xác theo quy định 2025.</li>
+        </ul>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const official = document.getElementById("official");
+            const custom = document.getElementById("custom");
+            const customBox = document.getElementById("custom-insurance");
+
+            function toggleCustomInput() {
+                customBox.style.display = custom.checked ? "flex" : "none";
+            }
+
+            official.addEventListener("change", toggleCustomInput);
+            custom.addEventListener("change", toggleCustomInput);
+
+            // Gọi lần đầu để thiết lập đúng trạng thái khi load trang
+            toggleCustomInput();
+        });
+    </script>
+}
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
