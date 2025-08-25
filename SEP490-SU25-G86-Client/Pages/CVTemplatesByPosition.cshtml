@@ -80,16 +80,16 @@ int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
         <nav>
             <ul class="pagination">
                 <li class="page-item @(page == 1 ? "disabled" : "")">
-                    <a class="page-link" href="?@GetPageUrl(page - 1)">&laquo;</a>
+                    <a class="page-link" href="?@GetPageUrl(page - 1)" data-page="@(page - 1)">&laquo;</a>
                 </li>
                 @for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(page == i ? "active" : "")">
-                        <a class="page-link" href="?@GetPageUrl(i)">@i</a>
+                        <a class="page-link" href="?@GetPageUrl(i)" data-page="@i">@i</a>
                     </li>
                 }
                 <li class="page-item @(page == totalPages ? "disabled" : "")">
-                    <a class="page-link" href="?@GetPageUrl(page + 1)">&raquo;</a>
+                    <a class="page-link" href="?@GetPageUrl(page + 1)" data-page="@(page + 1)">&raquo;</a>
                 </li>
             </ul>
         </nav>
