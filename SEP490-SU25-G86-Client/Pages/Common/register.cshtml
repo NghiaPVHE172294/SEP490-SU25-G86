@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký - CVMatcher</title>
     <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/register.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -36,7 +37,7 @@
                     <h2 class="title">Chào mừng bạn đến với CVMatcher</h2>
                     <p class="subtitle">Cùng khám phá những cơ hội việc làm phù hợp nhất dành cho bạn</p>
 
-                    <form method="post" class="register-form">
+                    <form method="post" class="register-form" id="register-form">
                         <div class="input-row">
                             <input asp-for="FullName" type="text" placeholder="Full Name" required>
                         </div>
@@ -102,6 +103,24 @@
                             <div class="text-danger" style="margin-top:10px">@Model.ErrorMessage</div>
                         }
                     </form>
+
+                    <!-- Success Overlay -->
+                    <div id="register-success-overlay">
+                        <div class="register-overlay-content">
+                            <div class="register-spinner"></div>
+                            <div class="register-success-message">Đăng ký thành công!</div>
+                            <div class="register-redirect-message">Đang chuyển hướng đến trang đăng nhập...</div>
+                        </div>
+                    </div>
+<script>
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    // Nếu đã có overlay thì show luôn (phòng trường hợp submit thành công)
+    setTimeout(function() {
+        var overlay = document.getElementById('register-success-overlay');
+        if (overlay) overlay.style.display = 'flex';
+    }, 100); // delay nhẹ để tránh show khi submit lỗi
+});
+</script>
 
                     <div class="divider">Hoặc đăng nhập bằng</div>
 
