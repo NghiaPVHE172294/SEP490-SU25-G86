@@ -142,6 +142,25 @@
         </div>
     </div>
 </div>
+<!-- Modal Lí do chặn công ty -->
+<div class="modal fade" id="blockReasonModal" tabindex="-1" aria-labelledby="blockReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="blockReasonModalLabel">Lí do bạn chặn công ty</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="blockReasonInput" class="form-control" rows="3" placeholder="Nhập lý do (tùy chọn)"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                <button type="button" class="btn btn-warning" id="blockNoReasonButton">Chặn không lý do</button>
+                <button type="button" class="btn btn-danger" id="blockWithReasonButton">Chặn</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -175,7 +194,7 @@
                     console.error('Toast element not found:', toastId);
                 }
             }
-
+            // followButton
             $('#followButton').click(function () {
                 var companyId = $(this).data('company-id');
 
@@ -219,15 +238,24 @@
                     }
                 });
             });
+            //blockbutton
+                    $('#blockButton').click(function () {
+            const companyId = $(this).data('company-id');
+            const button = $(this);
+            const followButton = $('#followButton');
 
-        $('#blockButton').click(function () {
-                var companyId = $(this).data('company-id');
+            if (!accountId || !token || token === 'null' || accountId === 'null') {
+                window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent('/Common/CompanyDetail?id=' + companyId);
+                return;
+            }
 
-                if (!accountId || !token || token === 'null' || accountId === 'null') {
-                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent('/Common/CompanyDetail?id=' + companyId);
-                    return;
-                }
-
+            if (button.text().includes('Chặn công ty')) {
+                // Mở modal trước
+                $('#blockReasonInput').val(''); // xóa input cũ
+                const modal = new bootstrap.Modal(document.getElementById('blockReasonModal'));
+                modal.show();
+                $('#blockReasonModal').data('company-id', companyId);
+            } else {
                 $.ajax({
                     url: 'https://localhost:7004/api/User/block',
                     type: 'POST',
@@ -243,25 +271,57 @@
                         const button = $('#blockButton');
                         const followButton = $('#followButton');
                         // --- Xử lý block/unblock ---
-                        if (button.text().includes('Chặn công ty')) {
-                            button.removeClass('btn-light text-danger').addClass('btn-secondary');
-                            button.text('✔ Đã chặn công ty');
-                            showToast('Đã chặn công ty thành công.');
-                        } else {
                             button.removeClass('btn-secondary').addClass('btn-light text-danger');
                             button.text('✖ Chặn công ty');
                             showToast('Đã bỏ chặn công ty.');
-                        }
-                        // --- Xử lý follow ---
-                            if (followButton.text().includes('Đang theo dõi')) {
-                            followButton.removeClass('btn-secondary').addClass('btn-light text-success');
-                            followButton.text('+ Theo dõi công ty');
-                        }
                     },
                     error: function (xhr) {
                         showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
                     }
                 });
+            }
+        });
+            // --- Event cho modal---
+            function sendBlockRequest(reason) {
+            const companyId = $('#blockReasonModal').data('company-id');
+            $.ajax({
+                url: 'https://localhost:7004/api/User/block',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: { 'Authorization': 'Bearer ' + token },
+                data: JSON.stringify({
+                    userId: parseInt(accountId),
+                    companyId: parseInt(companyId),
+                    reason: reason
+                }),
+                success: function () {
+                    const button = $('#blockButton');
+                    const followButton = $('#followButton');
+
+                    button.removeClass('btn-light text-danger').addClass('btn-secondary');
+                    button.text('✔ Đã chặn công ty');
+                    showToast('Đã chặn công ty thành công.');
+
+                    if (followButton.text().includes('Đang theo dõi')) {
+                        followButton.removeClass('btn-secondary').addClass('btn-light text-success');
+                        followButton.text('+ Theo dõi công ty');
+                    }
+                },
+                error: function (xhr) {
+                    showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
+                }
+            });
+        }
+            // --- Event cho các nút trong modal // NEW ---
+            $('#blockNoReasonButton').click(function () {
+                $('#blockReasonModal').modal('hide');
+                sendBlockRequest(null);
+            });
+
+            $('#blockWithReasonButton').click(function () {
+                const reason = $('#blockReasonInput').val();
+                $('#blockReasonModal').modal('hide');
+                sendBlockRequest(reason);
             });
         });
     </script>
