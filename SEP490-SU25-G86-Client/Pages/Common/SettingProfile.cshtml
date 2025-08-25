@@ -53,7 +53,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Tên</label>
-                                <input class="form-control" name="FullName" value="@Model.UserProfile.FullName" />
+                                <input class="form-control" name="FullName"
+                                       value="@Model.UserProfile.FullName" required title="Vui lòng nhập tên" />
                             </div>
                             <div class="col-md-6">
                                 <label>Địa chỉ</label>
@@ -79,7 +80,8 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Ngày sinh</label>
-                                <input class="form-control" type="date" name="Dob" value="@Model.UserProfile.Dob" />
+                                <input class="form-control" type="date" name="Dob" 
+                                        value="@Model.UserProfile.Dob" />
                             </div>
                             <div class="col-md-6">
                                 <label>LinkedIn</label>
@@ -173,6 +175,7 @@
         });
     </script>
     <script>
+        //script validate avatar
         const preview = document.getElementById("previewAvatar");
         const input = document.querySelector("input[name='AvatarFile']");
         const error = document.getElementById("avatarError");

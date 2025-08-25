@@ -4,80 +4,284 @@
     ViewData["Title"] = "Saved Jobs";
 }
 
-<section class="container py-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2 class="h5 mb-0">Danh sách việc làm đã lưu</h2>
-                    <select class="form-select w-auto">
-                        <option>Trạng thái</option>
-                        <option>Đang mở</option>
-                        <option>Hết hiệu lực</option>
-                    </select>
-                </div>
-                <div class="card-body">
-                    @if (Model.SavedJobs.Any())
-                    {
-                        <div class="list-group">
-                            @foreach (var job in Model.SavedJobs)
-                            {
-                                <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5 class="mb-0">@job.Title</h5>
-                                        <span class="badge @(job.Status == "OPEN" ? "bg-success" : "bg-danger")">@job.Status</span>
-                                    </div>
-                                    <p class="mb-1 text-muted"><strong>Địa điểm:</strong> @job.WorkLocation</p>
-                                    <p class="mb-2 text-muted"><strong>Đã lưu vào:</strong> @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")</p>
-                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-primary btn-sm">Xem chi tiết</a>
-                                    <form method="post" asp-page-handler="Delete" asp-route-saveJobId="@job.SaveJobId" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Bạn có chắc muốn bỏ lưu công việc này?')">Bỏ lưu</button>
-                                    </form>
+<section class="py-4">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Danh sách việc làm đã lưu -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                            <div class="mb-2 mb-md-0">
+                                <h1 class="h5 fw-bold mb-1 text-primary">Việc làm đã lưu</h1>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-bookmark me-1"></i> Quản lý các công việc bạn đã lưu
+                                </p>
+                            </div>
+                            <form method="get" class="d-flex align-items-center">
+                                <div class="input-group input-group-sm" style="width: 220px;">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-funnel"></i></span>
+                                    <select class="form-select border-start-0 ps-1" name="StatusFilter" onchange="this.form.submit()">
+                                        <option value="">Tất cả trạng thái</option>
+                                        @foreach (var kv in Model.StatusMap)
+                                        {
+                                            <option value="@kv.Key" selected="@(Model.StatusFilter == kv.Key)">@kv.Value</option>
+                                        }
+                                    </select>
                                 </div>
-                            }
+                            </form>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-5 text-muted">
-                            <p>Bạn chưa lưu công việc nào !</p>
-                            <a href="/jobs" class="btn btn-success mt-3">Tìm Việc Ngay</a>
-                        </div>
-                    }
+                    </div>
+
+                    <div class="card-body p-0">
+                        @if (Model.PagedJobs.Any())
+                        {
+                            <div class="list-group list-group-flush">
+                                @foreach (var job in Model.PagedJobs)
+                                {
+                                    string badgeClass = "bg-secondary";
+                                    switch (job.Status ?? "")
+                                    {
+                                        case "OPEN": badgeClass = "bg-success"; break;
+                                        case "CLOSED": badgeClass = "bg-danger"; break;
+                                    }
+
+                                    <div class="list-group-item border-0 p-4 mb-3 rounded-3 shadow-sm">
+                                        <div class="d-flex flex-column flex-md-row">
+                                            <!-- Logo -->
+                                            <div class="me-md-4 mb-3 mb-md-0 flex-shrink-0" style="width: 80px; height: 80px;">
+                                                <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
+                                                     alt="@job.CompanyName"
+                                                     class="img-fluid rounded border"
+                                                     style="width: 100%; height: 100%; object-fit: contain; background: white; padding: 4px;">
+                                            </div>
+
+                                            <!-- Job Info -->
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-start mb-2" style="gap: 1rem;">
+                                                    <div style="flex: 1 1 0; min-width: 0;">
+                                                        <h5 class="mb-1 fw-semibold job-title-multiline">
+                                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">@job.Title</a>
+                                                        </h5>
+                                                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                                            <span class="text-muted small">
+                                                                <i class="bi bi-building me-1"></i>@job.CompanyName
+                                                            </span>
+                                                            <span class="text-success small fw-medium">
+                                                                <i class="bi bi-cash-coin me-1"></i>@(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="badge @badgeClass">@job.Status</span>
+                                                </div>
+
+                                                <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                                                    <span class="text-muted small">
+                                                        <i class="bi bi-geo-alt me-1"></i>@job.WorkLocation
+                                                    </span>
+                                                    <span class="text-muted small">
+                                                        <i class="bi bi-bookmark-check me-1"></i>Đã lưu: @(job.SaveAt?.ToString("dd/MM/yyyy") ?? "N/A")
+                                                    </span>
+                                                </div>
+
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="btn btn-outline-primary btn-sm">
+                                                        <i class="bi bi-eye me-1"></i>Xem chi tiết
+                                                    </a>
+                                                    <form method="post" asp-page-handler="Delete" asp-route-saveJobId="@job.SaveJobId" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn bỏ lưu công việc này?')">
+                                                            <i class="bi bi-x-circle me-1"></i>Bỏ lưu
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <nav aria-label="Pagination">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        @if (Model.Page > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page - 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @for (int i = 1; i <= Model.TotalPages; i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="?page=@i@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)">@i</a>
+                                            </li>
+                                        }
+                                        @if (Model.Page < Model.TotalPages)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=@(Model.Page + 1)@(string.IsNullOrEmpty(Model.StatusFilter) ? "" : "&StatusFilter=" + Model.StatusFilter)" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5 px-3">
+                                <h5 class="mb-2">Chưa có công việc nào được lưu</h5>
+                                <p class="text-muted mb-4">Bạn chưa lưu công việc nào. Hãy tìm việc và lưu ngay!</p>
+                                <a href="/Common/ListJobs" class="btn btn-success">
+                                    <i class="bi bi-search me-2"></i>Tìm việc ngay
+                                </a>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Gợi ý việc làm phù hợp</h5>
-                </div>
-                <div class="card-body">
-                    @if (Model.SuggestedJobs.Any())
-                    {
-                        @foreach (var job in Model.SuggestedJobs)
+
+            <!-- Gợi ý việc làm -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-lightbulb me-2 text-warning"></i>Gợi ý việc làm phù hợp
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.SuggestedJobs.Any())
                         {
-                            <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
-                                <div class="mb-3 p-2 border rounded d-flex align-items-center hover-shadow" style="transition:box-shadow .2s;">
-                                    <div class="bg-light p-2 rounded me-3 d-flex align-items-center justify-content-center" style="min-width:80px; min-height:50px;">
-                                        <span class="text-success fw-bold">@job.Salary</span>
+                            @foreach (var job in Model.SuggestedJobs.Take(5))
+                            {
+                                <div class="mb-3 p-3 border rounded bg-white hover-shadow">
+                                    <div class="d-flex">
+                                        <!-- Logo -->
+                                        <div class="flex-shrink-0 me-3" style="width: 64px;">
+                                            <img src="@(string.IsNullOrEmpty(job.CompanyLogoUrl) ? Url.Content("~/assets/company-placeholder.png") : job.CompanyLogoUrl)"
+                                                 alt="@job.CompanyName"
+                                                 class="img-fluid"
+                                                 style="max-width: 100%; max-height: 48px; object-fit: contain;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div style="max-width: calc(100% - 90px);">
+                                                    <a href="/Job/DetailJobPost/@job.JobPostId" class="text-decoration-none text-dark">
+                                                        <div class="fw-bold text-truncate" style="max-width: 150px; overflow:hidden; white-space:nowrap;">
+                                                            @job.Title
+                                                        </div>
+                                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2" style="width: 80px; flex-shrink: 0;">
+                                                    <button class="btn btn-outline-success btn-sm w-100 save-job-btn"
+                                                            data-job-id="@job.JobPostId"
+                                                            onclick="toggleSaveJob(this)">
+                                                        <i class="bi" id="bookmark-icon-@job.JobPostId"></i>
+                                                        <span id="bookmark-label-@job.JobPostId"> Lưu</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-success fw-medium small mt-1">
+                                                @(string.IsNullOrEmpty(job.Salary) ? "Thỏa thuận" : job.Salary)
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div style="flex:1;min-width:0;">
-                                        <div class="fw-bold text-truncate">@job.Title</div>
-                                        <div class="text-muted small text-truncate">@job.CompanyName</div>
-                                    </div>
-                                    <span class="ms-auto text-muted small d-none d-md-inline">@job.Location</span>
                                 </div>
-                            </a>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
-                    }
+                        else
+                        {
+                            <div class="text-muted">Không có gợi ý việc làm phù hợp.</div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.savedJobIds = [@(string.Join(",", Model.SavedJobs?.Select(j => j.JobPostId) ?? new List<int>()))];
+    window.userId = '@HttpContext.Session.GetString("userId")';
+    window.jwtToken = '@HttpContext.Session.GetString("jwt_token")';
+
+    function renderBookmarkState(jobPostId) {
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        var icon = document.getElementById('bookmark-icon-' + jobPostId);
+        var label = document.getElementById('bookmark-label-' + jobPostId);
+        if (icon && label) {
+            if (isSaved) {
+                icon.className = 'bi bi-bookmark-fill text-success';
+                label.innerText = ' Đã lưu';
+            } else {
+                icon.className = 'bi bi-bookmark';
+                label.innerText = ' Lưu';
+            }
+        }
+    }
+
+        function toggleSaveJob(btn) {
+        var jobPostId = parseInt(btn.getAttribute('data-job-id'));
+        var isSaved = window.savedJobIds.includes(jobPostId);
+        if (!window.userId || !window.jwtToken) {
+            alert('Bạn cần đăng nhập để sử dụng chức năng này!');
+            return;
+        }
+        if (!isSaved) {
+            // Save job
+            fetch(`https://localhost:7004/api/SavedJobs/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.jwtToken
+                },
+                body: JSON.stringify({ jobPostId: jobPostId, userId: window.userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.message && data.message.includes('success')) {
+                    location.reload(); // ✅ reload lại trang sau khi lưu thành công
+                } else {
+                    alert(data.message || 'Không thể lưu việc làm.');
+                }
+            })
+            .catch(() => alert('Lỗi khi lưu việc làm!'));
+        } else {
+            // Unsave job
+            fetch(`https://localhost:7004/api/SavedJobs/user/${window.userId}`,
+                { headers: { 'Authorization': 'Bearer ' + window.jwtToken } })
+            .then(res => res.json())
+            .then(jobs => {
+                var saved = jobs.find(j => j.jobPostId === jobPostId);
+                if (saved && saved.saveJobId) {
+                    fetch(`https://localhost:7004/api/SavedJobs/${saved.saveJobId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + window.jwtToken }
+                    })
+                    .then(r => {
+                        if (r.status === 204) {
+                            location.reload(); // ✅ reload lại trang sau khi hủy lưu
+                        } else {
+                            alert('Không thể bỏ lưu việc làm!');
+                        }
+                    });
+                } else {
+                    alert('Không tìm thấy việc làm đã lưu!');
+                }
+            })
+            .catch(() => alert('Lỗi khi bỏ lưu việc làm!'));
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        (window.savedJobIds || []).forEach(function (jobId) {
+            renderBookmarkState(jobId);
+        });
+    });
+</script>

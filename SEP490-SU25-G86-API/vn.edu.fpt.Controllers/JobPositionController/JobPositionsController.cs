@@ -23,6 +23,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobPositionController
             var list = await _service.GetAllAsync();
             return Ok(list);
         }
+
+        [HttpGet("by-industry/{industryId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIndustryId(int industryId)
+        {
+            var list = await _service.GetByIndustryIdAsync(industryId);
+            return Ok(list);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Add([FromBody] AddJobPositionDTO dto)

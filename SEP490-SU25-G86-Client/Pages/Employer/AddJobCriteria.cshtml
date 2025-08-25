@@ -17,10 +17,12 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="form-card p-4 shadow rounded-4 bg-white">
+                    <div>
                     <h2 class="text-center mb-4 text-primary">
                         Thêm tiêu chí tuyển dụng cho <span class="fw-bold">@Model.JobPostTitle</span>
                     </h2>
-
+						<p class="text-center text-muted mb-4">Vui lòng điền đầy đủ thông tin bên dưới để thêm tiêu chí tuyển dụng cho tin tuyển dụng của bạn.</p>
+					</div>
                     @if (!string.IsNullOrEmpty(Model.ErrorMessage))
                     {
                         <div class="alert alert-danger">

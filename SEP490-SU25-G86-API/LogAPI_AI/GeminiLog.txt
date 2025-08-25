@@ -843,3 +843,68 @@ Response: {
   "responseId": "puClaJPIIYfBz7IP8f_YkQM"
 }
 
+[8/25/2025 11:23:38 AM] CV: 18, JobCriteria: 8
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":18,"CvId":48,"FullName":"Nguyen Van Huy                                                                                                                                                                                          ","Email":"vanhuy2132@gmail.com","Phone":"0987 654 321","YearsOfExperience":0.5,"Skills":"Java (Basic), Node.js \u0026 Express, MySQL / PostgreSQL (basic), Git, GitHub, REST API fundamentals, Logical problem-solving","EducationLevel":"C\u1EED nh\u00E2n","JobTitles":"Backend Intern","Languages":"Vietnamese, English","Certifications":"Introduction to Java Programming \u2013 Coursera, 2023, Web Back-End Certificate \u2013 FUNiX, 2024","ParsedAt":"2025-08-25T04:22:54.29","Address":"12 Tran Duy Hung, District 1, Ho Chi Minh City","Summary":"Sinh vi\u00EAn n\u0103m cu\u1ED1i ng\u00E0nh K\u1EF9 thu\u1EADt Ph\u1EA7n m\u1EC1m n\u0103ng \u0111\u1ED9ng v\u00E0 ch\u00FA tr\u1ECDng chi ti\u1EBFt, c\u00F3 n\u1EC1n t\u1EA3ng v\u1EEFng ch\u1EAFc v\u1EC1 ph\u00E1t tri\u1EC3n backend. Th\u00E0nh th\u1EA1o Node.js, Java v\u00E0 MySQL. \u0110am m\u00EA vi\u1EBFt m\u00E3 s\u1EA1ch, c\u00F3 kh\u1EA3 n\u0103ng m\u1EDF r\u1ED9ng v\u00E0 mong mu\u1ED1n \u0111\u00F3ng g\u00F3p v\u00E0o c\u00E1c d\u1EF1 \u00E1n th\u1EF1c t\u1EBF trong m\u00F4i tr\u01B0\u1EDDng l\u00E0m vi\u1EC7c nh\u00F3m.","WorkHistory":"Backend Intern (Personal Project) L\u00E0m vi\u1EC7c t\u1EEB xa \u2014 Th\u00E1ng 1 n\u0103m 2024 \u2013 Th\u00E1ng 4 n\u0103m 2024 \u2022 X\u00E2y d\u1EF1ng API RESTful b\u1EB1ng Node.js v\u00E0 Express. \u2022 T\u00EDch h\u1EE3p MongoDB \u0111\u1EC3 l\u01B0u tr\u1EEF d\u1EEF li\u1EC7u c\u01A1 b\u1EA3n. \u2022 Tri\u1EC3n khai Render cho m\u1EE5c \u0111\u00EDch th\u1EED nghi\u1EC7m v\u00E0 demo.","Projects":"Student Management System \u2022 X\u00E2y d\u1EF1ng h\u1EC7 th\u1ED1ng d\u1EF1a tr\u00EAn Java \u0111\u1EC3 qu\u1EA3n l\u00FD h\u1ED3 s\u01A1 sinh vi\u00EAn b\u1EB1ng MySQL v\u00E0 JDBC. \u2022 Ch\u1EE9c v\u1EE5: L\u1EADp tr\u00ECnh vi\u00EAn backend Mini Blog Website \u2022 \u2022 \u0110\u01B0\u1EE3c x\u00E2y d\u1EF1ng b\u1EB1ng Node.js \u0026 Express v\u1EDBi ch\u1EE9c n\u0103ng \u0111\u0103ng nh\u1EADp/\u0111\u0103ng k\u00FD, \u0111\u0103ng CRUD, t\u00EDch h\u1EE3p MongoDB. \u2022 Ch\u1EE9c v\u1EE5: Full-stack","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":8,"JobPostId":1,"RequiredExperience":0,"RequiredSkills":"C#, ASP.NET, SQL Server","EducationLevel":"Bachelor","RequiredJobTitles":"Intern Business Analyst, Intern Developer","PreferredLanguages":"Ti\u1EBFng Anh(c\u01A1 b\u1EA3n)","PreferredCertifications":"Software Development Lifecycle Specialization,\r\nWeb Design for Everybody","CreatedAt":"2025-07-20T22:04:00","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u1EE8ng vi\u00EAn c\u1EA7n c\u00F3 tinh th\u1EA7n h\u1ECDc h\u1ECFi, s\u1EB5n s\u00E0ng l\u00E0m vi\u1EC7c nh\u00F3m v\u00E0 ph\u00E1t tri\u1EC3n k\u1EF9 n\u0103ng l\u1EADp tr\u00ECnh .NET.","WorkHistory":"C\u00F4ng ty: B\u1EA5t k\u1EF3  \r\nV\u1ECB tr\u00ED: Sinh vi\u00EAn / Th\u1EF1c t\u1EADp  \r\nTh\u1EDDi gian: 2023 - 2025  \r\nTh\u00E0nh t\u1EF1u: Tham gia d\u1EF1 \u00E1n c\u00E1 nh\u00E2n v\u00E0 l\u00E0m vi\u1EC7c nh\u00F3m, ho\u00E0n th\u00E0nh c\u00E1c b\u00E0i t\u1EADp l\u1EDBn, l\u00E0m quen quy tr\u00ECnh l\u00E0m vi\u1EC7c ph\u1EA7n m\u1EC1m.\r\n","Projects":"Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng \u0111\u01A1n gi\u1EA3n b\u1EB1ng .NET ho\u1EB7c d\u1EF1 \u00E1n nh\u00F3m t\u1EA1i tr\u01B0\u1EDDng","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 3.0,\n  \"educationLevelScore\": 10.0,\n  \"jobTitlesScore\": 6.0,\n  \"languagesScore\": 7.0,\n  \"certificationsScore\": 5.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 5.0,\n  \"projectsScore\": 6.0,\n  \"totalScore\": 6.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.047724340020156492
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2227,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 2350,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2227
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SeWraIb6KuHgz7IPtPawsQ8"
+}
+

@@ -20,12 +20,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService
             {
                 SaveJobId = s.SaveJobId,
                 JobPostId = s.JobPostId,
-                Title = s.JobPost?.Title ?? "",
+                Title = s.JobPost?.Title ?? string.Empty,
                 WorkLocation = s.JobPost?.WorkLocation,
                 Status = s.JobPost?.Status,
-                SaveAt = s.SaveAt
+                SaveAt = s.SaveAt,
+
+                // lấy qua Employer.Company
+                CompanyName = s.JobPost?.Employer?.Company?.CompanyName ?? "Không rõ",
+                CompanyLogoUrl = s.JobPost?.Employer?.Company?.LogoUrl,
+
+                Salary = s.JobPost?.SalaryRange != null
+                    ? $"{s.JobPost.SalaryRange.MinSalary:N0} - {s.JobPost.SalaryRange.MaxSalary:N0} {s.JobPost.SalaryRange.Currency}"
+                    : "Thỏa thuận"
             });
         }
+
 
         public async Task<bool> SaveJobAsync(int userId, int jobPostId)
         {

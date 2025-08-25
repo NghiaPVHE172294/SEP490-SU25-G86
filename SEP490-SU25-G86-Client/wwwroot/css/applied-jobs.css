@@ -56,16 +56,24 @@
 }
 
 .job-applied-card {
-    border: 1px solid #e9ecef;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    margin-bottom: 1.25rem;
-    border-radius: 1rem;
-    transition: box-shadow .2s, border-color .2s, background .2s;
+    border-radius: 15px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    box-shadow: none;
 }
 .job-applied-card:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
-    border-color: #0d6efd;
-    background: #f8fafd;
+    background-color: rgba(48, 150, 137, 0.05);
+    border-color: #309689 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
     z-index: 2;
 }
+.job-applied-card:hover .job-title-multiline {
+    color: #309689 !important;
+}
+

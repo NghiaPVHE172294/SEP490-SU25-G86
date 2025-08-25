@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <!-- Form tìm kiếm + chọn PageSize -->
+    <!-- Tìm kiếm + chọn PageSize -->
     <form method="get" class="d-flex align-items-center mb-3">
         <input type="text" name="search" value="@Model.Search"
                class="form-control me-2 w-50"
@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var hb in Model.Handbooks)
+                @foreach (var hb in Model.PagedHandbooks)
                 {
                     <tr>
                         <td>@hb.Title</td>
@@ -77,19 +77,44 @@
             </tbody>
         </table>
 
-        <nav>
-            <ul class="pagination justify-content-end">
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    <li class="page-item @(i == Model.Page ? "active" : "")">
-                        <a class="page-link"
-                           href="?page=@i&search=@(Model.Search ?? "")&pageSize=@Model.PageSize">
-                            @i
-                        </a>
-                    </li>
-                }
-            </ul>
-        </nav>
+        <!-- Phân trang -->
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <nav aria-label="Pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page=@(Model.Page - 1)&search=@(Model.Search ?? "")&pageSize=@Model.PageSize"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               href="?page=@i&search=@(Model.Search ?? "")&pageSize=@Model.PageSize">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page=@(Model.Page + 1)&search=@(Model.Search ?? "")&pageSize=@Model.PageSize"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
     }
     else
     {

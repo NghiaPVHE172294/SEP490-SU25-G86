@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model SEP490_SU25_G86_Client.Pages.Employer.ListJobByEmployerModel
 @{
     ViewData["Title"] = "Danh sách tin tuyển dụng";
@@ -19,9 +19,35 @@
 
 <div class="container-cv">
     <div class="cv-card d-flex justify-content-between align-items-center mb-4">
-        <h3 class="cv-title"><i class="bi bi-briefcase-fill"></i> Danh sách tin tuyển dụng</h3>
-        <a href="/Employer/AddJobPost" class="btn btn-success px-4 py-2">+ Tạo tin tuyển dụng</a>
+    <div>
+        <h3 class="cv-title">
+            <i class="bi bi-briefcase-fill"></i> Danh sách tin tuyển dụng
+        </h3>
+        <h4>
+            Danh sách những tin tuyển dụng của bạn
+        </h4>
+@if (!string.IsNullOrWhiteSpace(Model.CompanyName) && !string.IsNullOrWhiteSpace(Model.PhoneNumber))
+{
+    <a href="/Employer/AddJobPost" class="btn btn-success px-4 py-2">+ Tạo tin tuyển dụng</a>
+}
+else
+{
+    <div class="alert alert-warning mb-0 px-3 py-2">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        @if (string.IsNullOrWhiteSpace(Model.CompanyName) && string.IsNullOrWhiteSpace(Model.PhoneNumber))
+        {
+            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật thông tin công ty</a> và <a href="/Employer/Profile" class="fw-bold">số điện thoại</a> trước khi tạo tin tuyển dụng.
+        }
+        else if (string.IsNullOrWhiteSpace(Model.CompanyName))
+        {
+            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật thông tin công ty</a> trước khi tạo tin tuyển dụng.
+        }
+        else if (string.IsNullOrWhiteSpace(Model.PhoneNumber))
+        {
+            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật số điện thoại</a> trước khi tạo tin tuyển dụng.
+        }
     </div>
+}
 
     <div class="cv-card">
         <!-- Bộ lọc -->

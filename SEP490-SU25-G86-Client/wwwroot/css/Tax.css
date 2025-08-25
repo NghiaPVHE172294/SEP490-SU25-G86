@@ -1,0 +1,85 @@
+﻿/* Hero */
+.gradient-hero {
+    background: linear-gradient(135deg, #198754 0%, #34c38f 60%, #7dd3fc 100%);
+}
+
+.text-white-75 {
+    color: rgba(255,255,255,0.85);
+}
+
+/* Cards & Shadows */
+.soft-shadow {
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+}
+
+.mini-card {
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+    border-radius: 14px;
+    padding: 12px 14px;
+}
+
+.mini-card-title {
+    font-size: .9rem;
+    color: #6b7280;
+}
+
+.mini-card-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.stat-card .stat-title {
+    font-size: .9rem;
+    color: #475569;
+}
+
+.stat-card .stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: .2px;
+}
+
+.stat-card .stat-unit {
+    font-size: .85rem;
+    font-weight: 600;
+    opacity: .75;
+}
+
+/* Inputs */
+.input-group-custom .input-group-text {
+    background: #f8fafc;
+    border-color: #e5e7eb;
+}
+
+.input-group-custom .form-control {
+    border-color: #e5e7eb;
+}
+
+/* Note box */
+.note-box {
+    background: #f1f8f5;
+    border: 1px dashed #9fe0c4;
+}
+
+/* Form check custom */
+.form-check-custom .form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+/* Table */
+.table > :not(caption) > * > * {
+    background-color: #fff;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+/* Accordion tweaks */
+.accordion-button:not(.collapsed) {
+    color: #166534;
+    background-color: #ecfdf5;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.05);
+}

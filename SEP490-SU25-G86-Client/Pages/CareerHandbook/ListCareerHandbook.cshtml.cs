@@ -10,8 +10,8 @@ namespace SEP490_SU25_G86_Client.Pages.CarrerHandbook
     {
         private readonly HttpClient _httpClient;
         public List<CareerHandbookDetailDTO> Handbooks { get; set; } = new();
+        public List<CareerHandbookDetailDTO> PagedHandbooks { get; set; } = new();
 
-        // Tham số tìm kiếm & phân trang
         [BindProperty(SupportsGet = true)]
         public string? Search { get; set; }
 
@@ -42,12 +42,10 @@ namespace SEP490_SU25_G86_Client.Pages.CarrerHandbook
             if (res.IsSuccessStatusCode)
             {
                 var json = await res.Content.ReadAsStringAsync();
-                var allHandbooks = JsonSerializer.Deserialize<List<CareerHandbookDetailDTO>>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                }) ?? new();
+                var allHandbooks = JsonSerializer.Deserialize<List<CareerHandbookDetailDTO>>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
-                // Lọc theo search
+                // Lọc search
                 if (!string.IsNullOrEmpty(Search))
                 {
                     allHandbooks = allHandbooks
@@ -56,22 +54,17 @@ namespace SEP490_SU25_G86_Client.Pages.CarrerHandbook
                         .ToList();
                 }
 
-                // Validate PageSize
-                if (PageSize <= 0) PageSize = 5;
+                Handbooks = allHandbooks;
 
-                // Tính tổng số trang
-                var totalItems = allHandbooks.Count;
+                // Pagination
+                if (PageSize <= 0) PageSize = 5;
+                var totalItems = Handbooks.Count;
                 TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 
-                if (TotalPages == 0) Page = 1;
-                else
-                {
-                    if (Page < 1) Page = 1;
-                    if (Page > TotalPages) Page = TotalPages;
-                }
+                if (Page < 1) Page = 1;
+                if (Page > TotalPages && TotalPages > 0) Page = TotalPages;
 
-                // Cắt danh sách theo trang
-                Handbooks = allHandbooks
+                PagedHandbooks = Handbooks
                     .OrderByDescending(h => h.CreatedAt)
                     .Skip((Page - 1) * PageSize)
                     .Take(PageSize)

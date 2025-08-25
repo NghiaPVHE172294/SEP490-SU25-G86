@@ -74,4 +74,40 @@
 }
 .table-hover tbody tr:hover {
     background: #f1f8e9;
-} 
+}
+/* Header */
+.job-header {
+    gap: 16px;
+}
+
+    /* Cho phần text bên phải avatar có thể co lại */
+    .job-header .text-wrap {
+        flex: 1 1 auto;
+        min-width: 0; /* rất quan trọng khi dùng flex + ellipsis */
+    }
+
+/* Title: cho phép bẻ chuỗi liền, tránh tràn ngang */
+.job-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    max-width: 100%;
+    overflow-wrap: anywhere; /* ưu tiên */
+    word-break: break-word; /* fallback */
+}
+
+/* Tuỳ chọn: clamp 2 dòng + dấu … */
+.job-title--2lines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* đổi 1 nếu muốn 1 dòng */
+    overflow: hidden;
+}
+
+/* Bảo vệ các trường thông tin bên phải nếu có chuỗi dài */
+.card-custom li,
+.card-custom .mb-2,
+.company-name {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
