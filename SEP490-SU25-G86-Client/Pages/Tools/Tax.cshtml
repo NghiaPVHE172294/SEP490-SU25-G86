@@ -1,0 +1,184 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Tools.TaxModel
+@{
+    ViewData["Title"] = "Công cụ tính Thuế thu nhập cá nhân chuẩn 2025";
+}
+
+<link rel="stylesheet" href="~/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/tax.css" />
+
+<div class="tax-container container my-4 p-4 shadow rounded bg-white">
+
+    <!-- Tiêu đề -->
+    <h1 class="tax-title mb-3">
+        Công cụ tính Thuế thu nhập cá nhân chuẩn 2025
+    </h1>
+
+    <!-- Áp dụng quy định -->
+    <div class="tax-section">
+        <label class="fw-semibold me-3">Áp dụng quy định:</label>
+        <div class="tax-radio-group">
+            <input type="radio" id="phase1" name="Period" value="2024" asp-for="Period" checked="@("2024" == Model.Period)">
+            <label for="phase1">Từ 01/07/2024 - 30/06/2025</label>
+            <input type="radio" id="phase2" name="Period" value="2025" asp-for="Period" checked="@("2025" == Model.Period)">
+            <label for="phase2" class="text-success fw-bold">Từ 01/07/2025 (Mới nhất)</label>
+        </div>
+    </div>
+
+    <!-- Ghi chú -->
+    <div class="note-box p-3 rounded mb-3">
+        <ul>
+            <li>Áp dụng mức lương cơ sở mới từ 01/07/2024 (NĐ 73/2024/NĐ-CP).</li>
+            <li>Áp dụng mức lương tối thiểu vùng từ 01/07/2025 (NĐ 128/2025/NĐ-CP).</li>
+            <li>Giảm trừ gia cảnh: <b>11.000.000đ</b>/tháng cho bản thân, <b>4.400.000đ</b>/tháng cho mỗi người phụ thuộc (NQ 954/2020/UBTVQH14).</li>
+        </ul>
+    </div>
+
+    <!-- Giảm trừ gia cảnh -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-6 deduction-card">
+            <label>Giảm trừ gia cảnh bản thân</label>
+            <h4 class="text-success">@string.Format("{0:N0}đ", 11000000)</h4>
+        </div>
+        <div class="col-md-6 deduction-card">
+            <label>Người phụ thuộc</label>
+            <h4 class="text-success">@string.Format("{0:N0}đ", 4400000)</h4>
+        </div>
+    </div>
+
+    <!-- Form nhập liệu -->
+    <form method="post" class="tax-form">
+        <!-- Thu nhập -->
+        <div class="form-group mb-3">
+            <label class="fw-semibold">Thu Nhập (Gross)</label>
+            <div class="input-group">
+                <span class="input-group-text">💵</span>
+                <input type="number" class="form-control" asp-for="GrossIncome" placeholder="VD: 10,000,000" step="1000">
+                <span class="input-group-text">VND</span>
+            </div>
+        </div>
+
+        <!-- Lương đóng BHXH -->
+        <div class="form-group mb-3">
+            <label class="fw-semibold">Mức lương đóng bảo hiểm</label>
+            <div>
+                <input type="radio" asp-for="InsuranceOption" id="insuranceDefault" value="default" checked>
+                <label for="insuranceDefault">Trên lương chính thức</label>
+
+                <input type="radio" asp-for="InsuranceOption" id="insuranceCustom" value="custom">
+                <label for="insuranceCustom">Khác</label>
+            </div>
+
+            <!-- Ô nhập lương bảo hiểm, mặc định ẩn -->
+            <div id="insuranceSalaryInput" class="input-group mt-2" style="display: none;">
+                <span class="input-group-text">💵</span>
+                <input type="number" class="form-control" asp-for="InsuranceSalary" placeholder="Nhập mức lương" step="1000">
+                <span class="input-group-text">VND</span>
+            </div>
+        </div>
+
+        <!-- Chọn vùng -->
+        <div class="form-group mb-3">
+            <label class="fw-semibold">Vùng <span class="text-danger">(Giải thích)</span></label>
+            <div class="tax-radio-inline">
+                <input type="radio" asp-for="Region" value="1"> I
+                <input type="radio" asp-for="Region" value="2"> II
+                <input type="radio" asp-for="Region" value="3"> III
+                <input type="radio" asp-for="Region" value="4"> IV
+            </div>
+        </div>
+
+        <!-- Người phụ thuộc -->
+        <div class="form-group mb-3">
+            <label class="fw-semibold">Số người phụ thuộc</label>
+            <div class="input-group">
+                <span class="input-group-text">👥</span>
+                <input type="number" class="form-control" asp-for="Dependents" min="0">
+                <span class="input-group-text">Người</span>
+            </div>
+        </div>
+
+        <!-- Nút tính -->
+        <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-success px-4 py-2">Tính thuế TNCN</button>
+        </div>
+    </form>
+
+    <!-- Kết quả -->
+    @if (Model.Calculated)
+    {
+        <div class="result-box mt-4 p-3 bg-light rounded">
+            <h5 class="fw-bold text-success mb-3">Kết quả tính thuế</h5>
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Lương GROSS</th>
+                        <td>@Model.GrossIncome.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Bảo hiểm xã hội (8%)</th>
+                        <td>@Model.BHXH.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Bảo hiểm y tế (1.5%)</th>
+                        <td>@Model.BHYT.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Bảo hiểm thất nghiệp (1%)</th>
+                        <td>@Model.BHTN.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Thu nhập trước thuế</th>
+                        <td>@Model.IncomeBeforeTax.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Giảm trừ gia cảnh bản thân</th>
+                        <td>@Model.PersonalDeductionPublic.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr>
+                        <th>Giảm trừ người phụ thuộc</th>
+                        <td>@((Model.Dependents * Model.DependentDeductionPublic).ToString("N0")) VNĐ</td>
+                    </tr>
+                    <tr class="table-warning">
+                        <th>Thu nhập chịu thuế</th>
+                        <td>@Model.TaxableIncome.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr class="table-danger">
+                        <th>Thuế TNCN</th>
+                        <td>@Model.TaxAmount.ToString("N0") VNĐ</td>
+                    </tr>
+                    <tr class="table-success">
+                        <th>Thu nhập NET</th>
+                        <td>@Model.NetIncome.ToString("N0") VNĐ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const insuranceDefault = document.getElementById("insuranceDefault");
+            const insuranceCustom = document.getElementById("insuranceCustom");
+            const insuranceSalaryInput = document.getElementById("insuranceSalaryInput");
+
+            function toggleInsuranceInput() {
+                if (insuranceCustom.checked) {
+                    insuranceSalaryInput.style.display = "flex";
+                } else {
+                    insuranceSalaryInput.style.display = "none";
+                }
+            }
+
+            // Khi load trang lần đầu
+            toggleInsuranceInput();
+
+            // Khi click chọn radio
+            insuranceDefault.addEventListener("change", toggleInsuranceInput);
+            insuranceCustom.addEventListener("change", toggleInsuranceInput);
+        });
+    </script>
+    }

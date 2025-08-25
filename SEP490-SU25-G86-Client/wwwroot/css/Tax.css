@@ -1,0 +1,57 @@
+﻿.tax-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #00b14f;
+    margin-bottom: 20px;
+}
+
+.tax-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tax-radio-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.note-box {
+    background: #f4f5f5;
+    border-left: 4px solid #00b14f;
+    color: #424e5c;
+    font-size: 14px;
+}
+
+.deduction-card {
+    background-color: #f4f5f5;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+}
+
+.tax-radio-inline input {
+    margin-right: 5px;
+    margin-left: 10px;
+}
+
+.result-box {
+    border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+    .tax-container {
+        padding: 1rem;
+    }
+
+    .tax-title {
+        font-size: 20px;
+    }
+}

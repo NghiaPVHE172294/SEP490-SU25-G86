@@ -19,7 +19,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
         public List<CvDTO> MyCvs { get; set; } = new List<CvDTO>();
         public bool IsSaved { get; set; } = false; //  Trạng thái đã lưu hay chưa
         public int? CurrentUserId { get; set; } //  Lưu ID người dùng
-
+        public string? CurrentUserRole { get; set; }
         public DetailJobPostModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -32,6 +32,11 @@ namespace SEP490_SU25_G86_Client.Pages.Job
             {
                 var token = HttpContext.Session.GetString("jwt_token");
                 var userIdStr = HttpContext.Session.GetString("userId");
+                var roleStr = HttpContext.Session.GetString("user_role");
+                if (!string.IsNullOrEmpty(roleStr))
+                {
+                    CurrentUserRole = roleStr;
+                }
 
                 if (!string.IsNullOrEmpty(token))
                 {
