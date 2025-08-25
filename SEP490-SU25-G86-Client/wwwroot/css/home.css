@@ -199,8 +199,20 @@ a:hover h5 {
     border: 1px solid transparent;
     transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
     will-change: transform, box-shadow, border-color;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-
+    .card.job-card h5 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.5em;
+        max-height: 3em;
+    }
     .card.job-card:hover {
         border-color: #309689;
         transform: translateY(-4px);
@@ -444,6 +456,18 @@ a:hover h5 {
         .custom-slider .carousel-control-next-icon:hover {
             background-color: rgba(0, 0, 0, 0.6);
         }
+.custom-slider {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+    .custom-slider img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 /*ListJob*/
 .joblist-card {
     border-radius: 15px;
@@ -457,6 +481,22 @@ a:hover h5 {
     align-items: center;
     transition: all 0.25s ease;
 }
+    .joblist-card .job-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4em; 
+        max-height: calc(1.4em * 2); 
+        margin-bottom: 0.3rem; 
+    }
+
+    .joblist-card .ms-3 {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
 
     .joblist-card:hover {
         background-color: rgba(48, 150, 137, 0.05);

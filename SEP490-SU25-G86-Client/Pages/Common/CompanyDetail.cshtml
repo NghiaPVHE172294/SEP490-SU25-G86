@@ -37,8 +37,8 @@
         {
             @if (Model.IsBlocked)
             {
-                <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id" disabled>+ Theo dõi công ty</button>
-                <button id="blockButton" class="btn btn-light text-danger fw-bold" data-company-id="@Model.Id" disabled>✔ Đã chặn công ty</button>
+                <button id="followButton" class="btn btn-light text-success fw-bold" data-company-id="@Model.Id" >+ Theo dõi công ty</button>
+                <button id="blockButton" class="btn btn-secondary fw-bold" data-company-id="@Model.Id">✔ Đã chặn công ty</button>
             }
             else if (Model.IsFollowing)
             {
@@ -196,7 +196,9 @@
                         companyId: parseInt(companyId)
                     }),
                     success: function () {
+                        // --- Xử lý follow ---
                         const button = $('#followButton');
+                        const blockButton = $('#blockButton');
                         if (button.text().includes('Đang theo dõi')) {
                             button.removeClass('btn-secondary').addClass('btn-light text-success');
                             button.text('+ Theo dõi công ty');
@@ -206,6 +208,11 @@
                             button.text('✔ Đang theo dõi');
                             showToast('Đã theo dõi công ty thành công.');
                         }
+                            // --- Xử lý unblock nếu trước đó đã block ---
+                        if (blockButton.text().includes('✔ Đã chặn công ty')) {
+                            blockButton.removeClass('btn-secondary').addClass('btn-light text-danger');
+                            blockButton.text('✖ Chặn công ty');
+                        }
                     },
                     error: function (xhr) {
                         showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
@@ -213,16 +220,13 @@
                 });
             });
 
-            $('#blockButton').click(function () {
+        $('#blockButton').click(function () {
                 var companyId = $(this).data('company-id');
 
                 if (!accountId || !token || token === 'null' || accountId === 'null') {
                     window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent('/Common/CompanyDetail?id=' + companyId);
                     return;
                 }
-
-                var reason = prompt('Nhập lý do chặn công ty:');
-                if (!reason) return;
 
                 $.ajax({
                     url: 'https://localhost:7004/api/User/block',
@@ -233,18 +237,26 @@
                     },
                     data: JSON.stringify({
                         userId: parseInt(accountId),
-                        companyId: parseInt(companyId),
-                        reason: reason
+                        companyId: parseInt(companyId)
                     }),
                     success: function () {
-                        $('#blockButton')
-                            .removeClass('btn-light text-danger')
-                            .addClass('btn-light text-danger')
-                            .text('✔ Đã chặn công ty')
-                            .prop('disabled', true);
-
-                        $('#followButton').prop('disabled', true);
-                        showToast('Đã chặn công ty thành công.');
+                        const button = $('#blockButton');
+                        const followButton = $('#followButton');
+                        // --- Xử lý block/unblock ---
+                        if (button.text().includes('Chặn công ty')) {
+                            button.removeClass('btn-light text-danger').addClass('btn-secondary');
+                            button.text('✔ Đã chặn công ty');
+                            showToast('Đã chặn công ty thành công.');
+                        } else {
+                            button.removeClass('btn-secondary').addClass('btn-light text-danger');
+                            button.text('✖ Chặn công ty');
+                            showToast('Đã bỏ chặn công ty.');
+                        }
+                        // --- Xử lý follow ---
+                            if (followButton.text().includes('Đang theo dõi')) {
+                            followButton.removeClass('btn-secondary').addClass('btn-light text-success');
+                            followButton.text('+ Theo dõi công ty');
+                        }
                     },
                     error: function (xhr) {
                         showToast(xhr.responseJSON?.message || 'Không thể thực hiện hành động.', false);
