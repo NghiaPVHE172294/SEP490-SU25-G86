@@ -59,7 +59,7 @@
             <!-- Mô tả -->
             <div class="col-12">
                 <label class="form-label">Chi tiết công việc *</label>
-                <textarea asp-for="JobPost.Description" class="form-control" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
+                <textarea asp-for="JobPost.Description" class="form-control" id="descEditor" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
                 <span asp-validation-for="JobPost.Description" class="text-danger"></span>
             </div>
             <div class="col-12">
@@ -201,71 +201,89 @@
         </form>
     }
 </div>
-<script>
-    async function loadJobPositions() {
-        const industryId = document.getElementById("industrySelect").value;
-        const positionSelect = document.getElementById("positionSelect");
-
-        // Reset combobox
-        positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
-
-        if (!industryId) {
-            return; // Nếu chưa chọn ngành nghề thì không gọi API
-        }
-
-        try {
-            const response = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
-            if (!response.ok) throw new Error("Lỗi load dữ liệu");
-
-            const positions = await response.json();
-
-            // Render option vào combobox
-            positions.forEach(pos => {
-                const option = document.createElement("option");
-                option.value = pos.positionId;
-                option.textContent = pos.postitionName;
-                positionSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error("Lỗi khi tải danh sách vị trí:", error);
-        }
-    }
-</script>
-<script>
-    (function () {
-      function setError(select, show) {
-        const errSel = select.getAttribute('data-error');
-        const errEl = document.querySelector(errSel);
-        if (errEl) errEl.classList.toggle('d-none', !show);
-      }
-
-      // Check hợp lệ: không được chọn option đầu tiên (index = 0)
-      function isValidSelect(select) {
-        return select.selectedIndex > 0;
-      }
-
-      // Ẩn lỗi khi user đổi value
-      document.querySelectorAll('.required-select').forEach(sel => {
-        sel.addEventListener('change', () => {
-          if (isValidSelect(sel)) setError(sel, false);
-        });
-      });
-
-      // Validate tất cả khi submit
-      const form = document.querySelector('form');
-      if (!form) return;
-      form.addEventListener('submit', function (e) {
-        let ok = true;
-        document.querySelectorAll('.required-select').forEach(sel => {
-          const valid = isValidSelect(sel);
-          setError(sel, !valid);
-          if (!valid) ok = false;
-        });
-        if (!ok) e.preventDefault();
-      });
-    })();
-</script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/pn5ixbd7bpt9y62aygbqvcsxc1g4ih5dbq5e4ifdigp35f2z/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+          selector:'#descEditor',
+          height: 420,
+          menubar:false,
+          plugins:'lists link autoresize',
+          toolbar:'undo redo | bold italic underline | bullist numlist | link removeformat',
+          promotion:false,
+          branding:false,
+          statusbar:false,
+          // đẩy nội dung từ editor ngược lại textarea trước khi submit Razor
+          setup: (ed) => {
+            const form = document.querySelector('form');
+            if(form){ form.addEventListener('submit', () => ed.save()); }
+          }
+        });
+    </script>
+    <script>
+        async function loadJobPositions() {
+            const industryId = document.getElementById("industrySelect").value;
+            const positionSelect = document.getElementById("positionSelect");
+
+            // Reset combobox
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+
+            if (!industryId) {
+                return; // Nếu chưa chọn ngành nghề thì không gọi API
+            }
+
+            try {
+                const response = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
+                if (!response.ok) throw new Error("Lỗi load dữ liệu");
+
+                const positions = await response.json();
+
+                // Render option vào combobox
+                positions.forEach(pos => {
+                    const option = document.createElement("option");
+                    option.value = pos.positionId;
+                    option.textContent = pos.postitionName;
+                    positionSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Lỗi khi tải danh sách vị trí:", error);
+            }
+        }
+    </script>
+    <script>
+        (function () {
+          function setError(select, show) {
+            const errSel = select.getAttribute('data-error');
+            const errEl = document.querySelector(errSel);
+            if (errEl) errEl.classList.toggle('d-none', !show);
+          }
+
+          // Check hợp lệ: không được chọn option đầu tiên (index = 0)
+          function isValidSelect(select) {
+            return select.selectedIndex > 0;
+          }
+
+          // Ẩn lỗi khi user đổi value
+          document.querySelectorAll('.required-select').forEach(sel => {
+            sel.addEventListener('change', () => {
+              if (isValidSelect(sel)) setError(sel, false);
+            });
+          });
+
+          // Validate tất cả khi submit
+          const form = document.querySelector('form');
+          if (!form) return;
+          form.addEventListener('submit', function (e) {
+            let ok = true;
+            document.querySelectorAll('.required-select').forEach(sel => {
+              const valid = isValidSelect(sel);
+              setError(sel, !valid);
+              if (!valid) ok = false;
+            });
+            if (!ok) e.preventDefault();
+          });
+        })();
+    </script>
 }
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

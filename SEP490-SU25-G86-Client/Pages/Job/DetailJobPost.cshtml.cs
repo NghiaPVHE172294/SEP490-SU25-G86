@@ -1,3 +1,4 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
@@ -8,7 +9,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 namespace SEP490_SU25_G86_Client.Pages.Job
 {
     public class DetailJobPostModel : PageModel
@@ -51,7 +51,27 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     JobPostDetail = JsonSerializer.Deserialize<ViewDetailJobPostDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (JobPostDetail != null)
+                    {
+                        var sanitizer = new HtmlSanitizer();
+                        // whitelist các tag TinyMCE cơ bản
+                        sanitizer.AllowedTags.Add("p");
+                        sanitizer.AllowedTags.Add("ul");
+                        sanitizer.AllowedTags.Add("ol");
+                        sanitizer.AllowedTags.Add("li");
+                        sanitizer.AllowedTags.Add("strong");
+                        sanitizer.AllowedTags.Add("em");
+                        sanitizer.AllowedTags.Add("u");
+                        sanitizer.AllowedTags.Add("br");
+                        sanitizer.AllowedTags.Add("a");
+                        sanitizer.AllowedAttributes.Add("href");
+                        sanitizer.AllowedSchemes.Add("http");
+                        sanitizer.AllowedSchemes.Add("https");
+
+                        JobPostDetail.Description = sanitizer.Sanitize(JobPostDetail.Description ?? "");
+                    }
                 }
+
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     ErrorMessage = "Không tìm thấy tin tuyển dụng.";
