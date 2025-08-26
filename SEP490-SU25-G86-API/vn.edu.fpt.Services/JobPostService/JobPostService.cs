@@ -1,3 +1,4 @@
+using AutoMapper;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
@@ -13,12 +14,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         private readonly IJobPostRepository _jobPostRepo;
         private readonly IBlockedCompanyRepository _blockedCompanyRepo;
         private readonly SEP490_G86_CvMatchContext _context;
-
-        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context)
+        private readonly IMapper _mapper;
+        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context, IMapper mapper)
         {
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
             _context = context;
+            _mapper = mapper;
         }
         
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
@@ -75,25 +77,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         public async Task<IEnumerable<JobPostListDTO>> GetByEmployerIdAsync(int employerId)
         {
             var posts = await _jobPostRepo.GetByEmployerIdAsync(employerId);
-            return posts.Select(j => new JobPostListDTO
-            {
-                JobPostId = j.JobPostId,
-                Title = j.Title,
-                CompanyName = j.Employer?.Company?.CompanyName ?? j.Employer?.FullName ?? "Không rõ",
-                Salary = (j.SalaryRange != null && j.SalaryRange.MinSalary.HasValue && j.SalaryRange.MaxSalary.HasValue)
-                    ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
-                    : "Thỏa thuận",
-                Location = j.Province?.ProvinceName,
-                EmploymentType = j.EmploymentType?.EmploymentTypeName,
-                JobLevel = j.JobLevel?.JobLevelName,
-                ExperienceLevel = j.ExperienceLevel?.ExperienceLevelName,
-                Industry = j.Industry?.IndustryName,
-                CreatedDate = j.CreatedDate,
-                UpdatedDate = j.UpdatedDate,
-                EndDate = j.EndDate,
-                Status = j.Status,
-                WorkLocation = j.WorkLocation
-            });
+            return _mapper.Map<IEnumerable<JobPostListDTO>>(posts);
         }
 
 
@@ -112,41 +96,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 template = _context.CvTemplateOfEmployers.FirstOrDefault(t => t.CvtemplateOfEmployerId == cvTemplateLink.CvtemplateOfEmployerId && !t.IsDelete);
             }
 
-            return new ViewDetailJobPostDTO
-            {
-                JobPostId = jobPost.JobPostId,
-                IndustryId = jobPost.IndustryId,
-                JobPositionId = jobPost.JobPositionId,
-                Title = jobPost.Title,
-                SalaryRangeId = jobPost.SalaryRangeId,
-                ProvinceId = jobPost.ProvinceId,
-                ExperienceLevelId = jobPost.ExperienceLevelId,
-                JobLevelId = jobPost.JobLevelId,
-                EmploymentTypeId = jobPost.EmploymentTypeId,
-                EndDate = jobPost.EndDate,
-                Description = jobPost.Description,
-                CandidaterRequirements = jobPost.CandidaterRequirements,
-                Interest = jobPost.Interest,
-                WorkLocation = jobPost.WorkLocation,
-                IsAienabled = jobPost.IsAienabled,
-                Status = jobPost.Status,
-                CreatedDate = jobPost.CreatedDate,
-                UpdatedDate = jobPost.UpdatedDate,
-                EmployerId = jobPost.EmployerId,
-                EmployerName = jobPost.Employer?.FullName,
-                IndustryName = jobPost.Industry?.IndustryName,
-                JobPositionName = jobPost.JobPosition?.PostitionName,
-                SalaryRangeName = jobPost.SalaryRange != null ? $"{jobPost.SalaryRange.MinSalary:N0} - {jobPost.SalaryRange.MaxSalary:N0} {jobPost.SalaryRange.Currency}" : null,
-                ProvinceName = jobPost.Province?.ProvinceName,
-                ExperienceLevelName = jobPost.ExperienceLevel?.ExperienceLevelName,
-                JobLevelName = jobPost.JobLevel?.JobLevelName,
-                EmploymentTypeName = jobPost.EmploymentType?.EmploymentTypeName,
-                CompanyName = jobPost.Employer?.Company?.CompanyName ?? jobPost.Employer?.FullName ?? "Không rõ",
-                CvTemplateId = template?.CvtemplateOfEmployerId,
-                CvTemplateName = template?.CvTemplateName,
-                DocFileUrl = template?.DocFileUrl,
-                PdfFileUrl = template?.PdfFileUrl
-            };
+            // Dùng AutoMapper để map entity → DTO
+            var dto = _mapper.Map<ViewDetailJobPostDTO>(jobPost);
+
+            // Map thủ công các trường đặc biệt từ template
+            dto.CvTemplateId = template?.CvtemplateOfEmployerId;
+            dto.CvTemplateName = template?.CvTemplateName;
+            dto.DocFileUrl = template?.DocFileUrl;
+            dto.PdfFileUrl = template?.PdfFileUrl;
+
+            return dto;
         }
 
 

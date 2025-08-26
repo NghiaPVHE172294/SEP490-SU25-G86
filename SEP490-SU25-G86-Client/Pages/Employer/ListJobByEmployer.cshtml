@@ -36,15 +36,15 @@ else
         <i class="bi bi-exclamation-triangle-fill"></i>
         @if (string.IsNullOrWhiteSpace(Model.CompanyName) && string.IsNullOrWhiteSpace(Model.PhoneNumber))
         {
-            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật thông tin công ty</a> và <a href="/Employer/Profile" class="fw-bold">số điện thoại</a> trước khi tạo tin tuyển dụng.
+            @:Vui lòng <a href="/Companies/CompanyInformation" class="fw-bold">cập nhật thông tin công ty</a> và <a href="/Common/SettingProfile" class="fw-bold">số điện thoại</a> trước khi tạo tin tuyển dụng.
         }
         else if (string.IsNullOrWhiteSpace(Model.CompanyName))
         {
-            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật thông tin công ty</a> trước khi tạo tin tuyển dụng.
+            @:Vui lòng <a href="/Companies/CompanyInformation" class="fw-bold">cập nhật thông tin công ty</a> trước khi tạo tin tuyển dụng.
         }
         else if (string.IsNullOrWhiteSpace(Model.PhoneNumber))
         {
-            @:Vui lòng <a href="/Employer/Profile" class="fw-bold">cập nhật số điện thoại</a> trước khi tạo tin tuyển dụng.
+            @:Vui lòng <a href="/Common/SettingProfile" class="fw-bold">cập nhật số điện thoại</a> trước khi tạo tin tuyển dụng.
         }
     </div>
 }

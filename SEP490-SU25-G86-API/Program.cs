@@ -175,7 +175,7 @@ builder.Configuration.AddConfiguration(configuration);
 
                 };
 			});
-
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             // Dependency Injection
             // Account
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();

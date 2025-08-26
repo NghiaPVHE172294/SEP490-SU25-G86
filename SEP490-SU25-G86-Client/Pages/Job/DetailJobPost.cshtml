@@ -10,7 +10,7 @@
         <!-- Bên trái: Nội dung chính -->
         <div class="col-lg-8 mb-4">
             <div class="job-header d-flex align-items-center mb-4">
-                <img src="~/assets/images/default-avatar.png" alt="Logo công ty" style="width:60px;height:60px;object-fit:cover;border-radius:12px;" class="me-4 shadow-sm" />
+                <img src="@Model.JobPostDetail?.LogoUrl" alt="Logo công ty" style="width:60px;height:60px;object-fit:cover;border-radius:12px;" class="me-4 shadow-sm" />
                 <div class ="text-wrap">
                     <div class="job-title mb-1">@Model.JobPostDetail?.Title</div>
                     <div class="company-name">@Model.JobPostDetail?.CompanyName</div>
