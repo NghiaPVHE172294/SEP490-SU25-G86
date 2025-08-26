@@ -226,7 +226,37 @@ a:hover h5 {
     .card.job-card:hover h5 {
         color: #309689 !important; /* chỉ đổi màu tiêu đề */
     }
-
+/*css thanh search*/
+.custom-select2-dropdown .select2-dropdown {
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 4px;
+    }
+    .select2-container .select2-search__field {
+        height: 30px;
+        line-height: 30px;
+    }
+    .select2-container--default .select2-selection--single {
+        height: 40px;
+        line-height: 40px;
+        border: none;
+        border-radius: 4px;
+    }
+    .select2-container--default .select2-selection__rendered {
+        line-height: 40px; /* Căn giữa chiều cao văn bản */
+        vertical-align: middle;
+        padding-left: 8px;
+    }
+    .form-control, .form-select, .btn-custom {
+        border-radius: 0;
+    }
+    .d-flex {
+        align-items: center;
+    }
+    .searchable-select {
+        border: 1px solid #ced4da;
+        border-left: none;
+    }
 /*css cho mục ngành nghề*/
 .industry-card {
     background: #f3f5f7;
