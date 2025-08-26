@@ -34,7 +34,13 @@
             <div class="alert alert-danger">@Model.ErrorMessage</div>
         }
         @await Html.PartialAsync("_CvSubmissionFilters", Model)
-        @if (Model.CvSubmissions != null && Model.CvSubmissions.Any())
+        <div class="mb-3 text-end">
+    <button id="ai-filter-all-btn" class="btn btn-warning" type="button" onclick="aiFilterAll()">
+        <i class="bi bi-lightning-charge"></i> Lọc tất cả bằng AI
+    </button>
+    <span id="ai-filter-all-progress" class="ms-2 text-muted" style="display:none"></span>
+</div>
+@if (Model.CvSubmissions != null && Model.CvSubmissions.Any())
         {
             <div class="table-responsive-cv">
                 <table class="table table-bordered table-hover mt-3">
@@ -217,46 +223,73 @@
             </div>
         </form>
 
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId) {
-                // Ẩn điểm, hiện spinner
-                document.getElementById('score-' + submissionId).style.display = 'none';
-                document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
-                try {
-                    // Gọi API AI filter (endpoint backend đang dùng)
-                    const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
-                    const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
-                        },
-                        body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
-                    });
-                    if (!resp.ok) throw new Error("Lọc AI thất bại");
-                    const data = await resp.json();
-                    // Giả sử backend trả về totalScore, nếu không thì cần reload lại trang hoặc fetch lại từng submission
-                    if (data && data.totalScore !== undefined && data.totalScore !== null) {
-    document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
-    // Reload lại trang để cập nhật trạng thái, ẩn nút
-    location.reload();
-} else {
-    // Nếu không có điểm, reload trang để lấy dữ liệu mới
-    location.reload();
+        @await Html.PartialAsync("_MissingCriteriaPopupPartial")
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// --- AI Filter logic ---
+async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId, skipReload = false) {
+    if (!jobCriteriaId || jobCriteriaId === 'null' || jobCriteriaId === null) {
+        showMissingCriteriaModal();
+        return;
+    }
+    document.getElementById('score-' + submissionId).style.display = 'none';
+    document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
+    try {
+        const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+        const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+            },
+            body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
+        });
+        if (!resp.ok) throw new Error("Lọc AI thất bại");
+        const data = await resp.json();
+        if (data && data.totalScore !== undefined && data.totalScore !== null) {
+            document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
+            if (!skipReload) location.reload();
+        } else {
+            if (!skipReload) location.reload();
+        }
+    } catch (e) {
+        alert(e.message || "Có lỗi khi lọc AI");
+    }
+    document.getElementById('score-' + submissionId).style.display = 'inline';
+    document.getElementById('spinner-' + submissionId).style.display = 'none';
 }
-                } catch (e) {
-                    alert(e.message || "Có lỗi khi lọc AI");
-                }
-                // Hiện lại điểm, ẩn spinner
-                document.getElementById('score-' + submissionId).style.display = 'inline';
-                document.getElementById('spinner-' + submissionId).style.display = 'none';
-            }
 
-            function openNoteModal(submissionId, recruiterNote) {
-                    document.getElementById("modalSubmissionId").value = submissionId;
-                    document.getElementById("modalRecruiterNote").value = recruiterNote;
-                    const modal = new bootstrap.Modal(document.getElementById("noteModal"));
-                    modal.show();
-            }
-        </script>
+function openNoteModal(submissionId, recruiterNote) {
+    document.getElementById("modalSubmissionId").value = submissionId;
+    document.getElementById("modalRecruiterNote").value = recruiterNote;
+    const modal = new bootstrap.Modal(document.getElementById("noteModal"));
+    modal.show();
+}
+// Lọc AI tất cả submissions
+async function aiFilterAll() {
+    const btn = document.getElementById('ai-filter-all-btn');
+    const progress = document.getElementById('ai-filter-all-progress');
+    btn.disabled = true;
+    progress.style.display = 'inline';
+    progress.innerText = 'Đang lọc AI cho tất cả hồ sơ...';
+    // Lấy danh sách submission từ model (rendered trên trang)
+    const submissions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.CvSubmissions.Where(x => x.Status != "ĐÃ DUYỆT" && x.Status != "ĐÃ TỪ CHỐI" && x.Status != "Đã chấm điểm bằng AI" && x.CvParsedDataId != null && x.JobCriteriaId != null)
+            .Select(x => new { x.SubmissionId, x.CvParsedDataId, x.JobCriteriaId })
+    ));
+    let success = 0, fail = 0;
+    for (let i = 0; i < submissions.length; i++) {
+        const { SubmissionId, CvParsedDataId, JobCriteriaId } = submissions[i];
+        progress.innerText = `Đang lọc AI (${i + 1}/${submissions.length})...`;
+        try {
+            await aiFilter(SubmissionId, null, CvParsedDataId, JobCriteriaId, true);
+            success++;
+        } catch (e) {
+            fail++;
+        }
+    }
+    progress.innerText = `Hoàn thành: ${success} thành công, ${fail} thất bại.`;
+    setTimeout(() => location.reload(), 1200);
+}
+// --- END AI Filter logic ---
+</script>

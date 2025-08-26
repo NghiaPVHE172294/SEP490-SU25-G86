@@ -1,0 +1,62 @@
+<!-- Popup Modal for missing Job Criteria -->
+<div class="modal fade" id="missingCriteriaModal" tabindex="-1" aria-labelledby="missingCriteriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="missingCriteriaModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill text-danger"></i> Thiếu tiêu chí tuyển dụng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Bạn cần thêm <b>Tiêu chí tuyển dụng</b> cho tin tuyển dụng này để sử dụng chức năng lọc AI.</p>
+                <p class="mb-0">Vui lòng vào mục <b>Quản lý tiêu chí tuyển dụng</b> để bổ sung tiêu chí trước khi tiếp tục.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="/Employer/ListJobCriteria?JobPostId=@Model.JobPostId" class="btn btn-primary">Thêm tiêu chí ngay</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showMissingCriteriaModal() {
+        const modal = new bootstrap.Modal(document.getElementById('missingCriteriaModal'));
+        modal.show();
+    }
+
+    // Patch aiFilter to check for missing jobCriteriaId
+    async function aiFilter(submissionId, jobPostId, cvParsedDataId, jobCriteriaId, skipReload = false) {
+        if (!jobCriteriaId || jobCriteriaId === 'null' || jobCriteriaId === null) {
+            showMissingCriteriaModal();
+            return;
+        }
+        // original logic ...
+        document.getElementById('score-' + submissionId).style.display = 'none';
+        document.getElementById('spinner-' + submissionId).style.display = 'inline-block';
+        try {
+            const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+            const resp = await fetch('https://localhost:7004/api/AI/CompareCvWithJobCriteria', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+                },
+                body: JSON.stringify({ cvParsedDataId, jobCriteriaId })
+            });
+            if (!resp.ok) throw new Error("Lọc AI thất bại");
+            const data = await resp.json();
+            if (data && data.totalScore !== undefined && data.totalScore !== null) {
+                document.getElementById('score-' + submissionId).innerText = Number(data.totalScore).toFixed(2);
+                if (!skipReload) location.reload();
+            } else {
+                if (!skipReload) location.reload();
+            }
+        } catch (e) {
+            alert(e.message || "Có lỗi khi lọc AI");
+        }
+        document.getElementById('score-' + submissionId).style.display = 'inline';
+        document.getElementById('spinner-' + submissionId).style.display = 'none';
+    }
+</script>
