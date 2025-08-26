@@ -1,113 +1,274 @@
-/* CSS cho trang Chi tiết tin tuyển dụng */
+
+body {
+    background-color: #f4f5f5 !important; /* xám nhạt */
+}
+/* ========== HEADER (NỀN XANH) ========== */
 .job-header {
-    background: #f8fafc;
+    background: #fff; /* đổi sang xám nhạt */
     border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     padding: 24px;
     margin-bottom: 24px;
+    color: #000; /* chữ đen để dễ đọc trên nền xám */
+    gap: 16px;
 }
-.job-title {
-    font-size: 2rem;
-    font-weight: 700;
+
+    .job-header .job-title {
+        color: #212f3f; /* xanh lá nhạt */
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .job-header .text-wrap {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+/* meta pill nổi trên nền xanh */
+.meta-pill {
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 9999px;
+    padding: .25rem .6rem;
+    font-size: .9rem;
+    color: #212f3f;
+    display: inline-flex;
+    align-items: center;
+}
+/* company-name nếu còn dùng trong header => đổi sang trắng */
+.job-header .company-name {
+    color: #e6f0ff;
+}
+
+/* ========== THẺ BÊN PHẢI (NỀN XÁM NHẠT) ========== */
+.company-card, .card-custom {
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    border: none;
+}
+
+.company-title {
+    overflow-wrap: anywhere;
+}
+
+.company-address {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* cắt ngắn + … */
+    overflow: hidden;
+}
+/* màu icon + nhãn trong card xám */
+.card-custom h5,
+.company-card .company-title {
     color: #1a237e;
 }
-.company-name {
-    font-size: 1.2rem;
-    color: #607d8b;
+
+.list-unstyled li b {
+    color: #1976d2;
 }
+
+/* ========== NÚT / BADGE / FORM ========== */
 .badge-custom {
     background: #e3f2fd;
     color: #1976d2;
     border-radius: 12px;
-    font-size: 0.95rem;
+    font-size: .95rem;
     margin-right: 6px;
     margin-bottom: 4px;
     padding: 6px 14px;
-    transition: background 0.2s;
+    transition: background .2s;
 }
-.badge-custom:hover {
-    background: #1976d2;
-    color: #fff;
-}
-.card-custom {
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border: none;
-}
+
+    .badge-custom:hover {
+        background: #1976d2;
+        color: #fff;
+    }
+
 .btn-main {
     background: #1976d2;
     color: #fff;
     border-radius: 8px;
     font-weight: 600;
     padding: 10px 32px;
-    transition: background 0.2s;
+    transition: background .2s;
 }
-.btn-main:hover {
-    background: #0d47a1;
-    color: #fff;
-}
+
+    .btn-main:hover {
+        background: #0d47a1;
+        color: #fff;
+    }
+
 .btn-save {
     background: #43a047;
     color: #fff;
     border-radius: 8px;
     font-weight: 600;
     padding: 10px 32px;
-    transition: background 0.2s;
+    transition: background .2s;
 }
-.btn-save:hover {
-    background: #2e7d32;
-    color: #fff;
-}
-.list-unstyled li b {
-    color: #1976d2;
-}
-.selected {
-    background: #e3f2fd !important;
-}
+
+    .btn-save:hover {
+        background: #2e7d32;
+        color: #fff;
+    }
+
 .modal-title {
     color: #1976d2;
     font-weight: 700;
 }
+
 .form-control:focus {
     border-color: #1976d2;
-    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.15);
+    box-shadow: 0 0 0 .2rem rgba(25,118,210,.15);
 }
+
 .table-hover tbody tr:hover {
     background: #f1f8e9;
 }
-/* Header */
-.job-header {
-    gap: 16px;
-}
 
-    /* Cho phần text bên phải avatar có thể co lại */
-    .job-header .text-wrap {
-        flex: 1 1 auto;
-        min-width: 0; /* rất quan trọng khi dùng flex + ellipsis */
-    }
-
-/* Title: cho phép bẻ chuỗi liền, tránh tràn ngang */
+/* ========== CHỐNG TRÀN CHỮ ========== */
 .job-title {
+    /* giữ fallback cho nơi khác nếu dùng class này */
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.3;
     max-width: 100%;
-    overflow-wrap: anywhere; /* ưu tiên */
-    word-break: break-word; /* fallback */
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
-/* Tuỳ chọn: clamp 2 dòng + dấu … */
 .job-title--2lines {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /* đổi 1 nếu muốn 1 dòng */
+    -webkit-line-clamp: 2;
     overflow: hidden;
 }
 
-/* Bảo vệ các trường thông tin bên phải nếu có chuỗi dài */
-.card-custom li,
-.card-custom .mb-2,
-.company-name {
+.card-custom li, .card-custom .mb-2, .company-name {
     overflow-wrap: anywhere;
     word-break: break-word;
+}
+
+/* Link “Xem trang công ty” màu xanh lá nhẹ */
+.company-card a {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+    .company-card a:hover {
+        text-decoration: underline;
+    }
+/* Nền toàn trang xám nhạt */
+body {
+    background-color: #f8fafc !important;
+}
+
+/* Thẻ trắng chung (giống card bên phải) */
+.white-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border: 1px solid #eef2f7;
+}
+
+/* Nút hành động giống ảnh 2 */
+.btn-apply {
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-weight: 700;
+}
+
+    .btn-apply:hover {
+        filter: brightness(0.95);
+        color: #fff;
+    }
+
+.btn-save-outline {
+    background: #fff;
+    color: #16a34a;
+    border: 2px solid #16a34a;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-weight: 600;
+}
+
+    .btn-save-outline.active,
+    .btn-save-outline:hover {
+        background: #e8f5ee;
+        color: #11803b;
+    }
+
+/* Deadline badge */
+.deadline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    background: #eef2f7;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 600;
+}
+
+/* Header giữ nền xám nhạt + title xanh đậm */
+.job-header {
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+    .job-header .job-title {
+        color: #0f172a !important;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+/* Meta pills vẫn nhẹ nhàng trên nền xám */
+.meta-pill {
+    background: #ffffffcc;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+}
+.meta-row .meta-pill {
+    min-width: 0;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+}
+.related-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    background: #fff;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .related-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0,0,0,.06);
+        border-color: #dfe4ea;
+    }
+
+    .related-card .badge {
+        font-weight: 500;
+    }
+
+.placeholder {
+    display: inline-block;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.placeholder-glow .placeholder {
+    animation: placeholder-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes placeholder-glow {
+    50% {
+        opacity: .5;
+    }
 }

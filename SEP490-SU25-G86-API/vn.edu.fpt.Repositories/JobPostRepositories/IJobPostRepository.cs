@@ -1,4 +1,5 @@
 ﻿using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 {
@@ -41,6 +42,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
         Task<List<int>> GetAppliedJobPostIdsAsync(int candidateId);
         Task<bool> SoftDeleteAsync(int jobPostId, int? employerId = null);
         Task<bool> RestoreAsync(int jobPostId, int? employerId = null); // (tuỳ chọn)
-
+        Task<List<RelatedJobItemDTO>> GetRelatedByIndustryAsync(
+        int industryId, int take = 5, int? excludeJobPostId = null, CancellationToken ct = default);
     }
 }

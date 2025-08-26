@@ -59,6 +59,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Helpers
                            ?? "Không rõ"))
             .ForMember(dest => dest.LogoUrl,
                        opt => opt.MapFrom(src => src.Employer.Company.LogoUrl)) // ✅ Map LogoUrl
+            .ForMember(dest => dest.CompanySize,
+                       opt => opt.MapFrom(src => src.Employer.Company.CompanySize)) 
+            .ForMember(dest => dest.Address,
+                       opt => opt.MapFrom(src => src.Employer.Company.Address)) 
+            .ForMember(dest => dest.Website,
+                       opt => opt.MapFrom(src => src.Employer.Company.Website)) 
+
             .ForMember(dest => dest.CvTemplateId, opt => opt.Ignore())
             .ForMember(dest => dest.CvTemplateName, opt => opt.Ignore())
             .ForMember(dest => dest.DocFileUrl, opt => opt.Ignore())
@@ -88,7 +95,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Helpers
     .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
     .ForMember(dest => dest.WorkLocation, opt => opt.MapFrom(src => src.WorkLocation));
 
-
+            CreateMap<JobPost, RelatedJobItemDTO>()
+                .ForMember(d => d.CompanyName, o => o.MapFrom(s => s.Employer.Company.CompanyName))
+                .ForMember(d => d.ProvinceName, o => o.MapFrom(s => s.Province.ProvinceName))
+                .ForMember(d => d.MinSalary, o => o.MapFrom(s => s.SalaryRange.MinSalary))
+                .ForMember(d => d.MaxSalary, o => o.MapFrom(s => s.SalaryRange.MaxSalary))
+                .ForMember(d => d.Currency, o => o.MapFrom(s => s.SalaryRange.Currency));
         }
     }
 } 

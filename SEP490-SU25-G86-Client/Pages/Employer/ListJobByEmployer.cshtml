@@ -105,7 +105,7 @@
                                 <td>@job.Industry</td>
                                 <td>@job.JobLevel</td>
                                 <td>@job.ExperienceLevel</td>
-                                <td class="fw-bold text-success">@job.Salary</td>
+                                <td class="fw-bold text-success">@(job.Salary ?? "Thỏa Thuận")</td>
                                 <td>@(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
                                 <td>
                                     <span class="cv-status-badge @(job.Status == "OPEN" ? "open" : "closed")">@statusText</span>

@@ -481,6 +481,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
     : null,
                 SubmissionId = s.SubmissionId,
                 SubmissionDate = s.SubmissionDate,
+                CandidateId = s.SubmittedByUserId,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
                 Status = s.Status, // lấy Status mới
@@ -489,6 +490,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 MatchedCvandJobPostId = s.MatchedCvandJobPostId
             }).ToList();
         }
-    }
+        public Task<List<RelatedJobItemDTO>> GetRelatedJobsAsync(
+            int industryId,
+            int take = 5,
+            int? excludeJobPostId = null,
+            CancellationToken ct = default)
+        {
+            // guard nhỏ cho chắc
+            if (industryId <= 0) return Task.FromResult(new List<RelatedJobItemDTO>());
+            if (take <= 0) take = 5;
 
+            // repo đã trả DTO => trả thẳng
+            return _jobPostRepo.GetRelatedByIndustryAsync(industryId, take, excludeJobPostId, ct);
+        }
+    }
 }

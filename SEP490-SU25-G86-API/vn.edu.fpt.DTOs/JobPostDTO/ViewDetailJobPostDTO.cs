@@ -7,7 +7,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public int JobPostId { get; set; }
         public int? IndustryId { get; set; }
         public int? JobPositionId { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public int? SalaryRangeId { get; set; }
         public int? ProvinceId { get; set; }
         public int? ExperienceLevelId { get; set; }
@@ -31,9 +31,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO
         public string? ExperienceLevelName { get; set; }
         public string? JobLevelName { get; set; }
         public string? EmploymentTypeName { get; set; }
+        // Company liên kết với JobPost
         public string? CompanyName { get; set; }
         public string? LogoUrl { get; set; }
-
+        public string CompanySize { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        public string? Website { get; set; }
         // CVTemplate liên kết với JobPost
         public int? CvTemplateId { get; set; }
         public string? CvTemplateName { get; set; }

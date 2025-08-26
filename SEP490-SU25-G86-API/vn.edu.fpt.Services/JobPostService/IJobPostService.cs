@@ -43,6 +43,11 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         Task<bool> DeleteJobPostAsync(int jobPostId, int employerUserId, bool isAdmin);
         Task<bool> RestoreJobPostAsync(int jobPostId, int employerUserId, bool isAdmin); // (tuỳ chọn)
 
+        Task<List<RelatedJobItemDTO>> GetRelatedJobsAsync(
+     int industryId,
+     int take = 5,
+     int? excludeJobPostId = null,
+     CancellationToken ct = default);
     }
 
 }
