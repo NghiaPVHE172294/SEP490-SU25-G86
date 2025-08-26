@@ -214,3 +214,25 @@ body, .container-cv {
     color: #6b7280 !important;
     font-size: 1.02em;
 }
+.cv-card .sub-title {
+    font-size: 1rem;
+    color: #666;
+}
+
+.cv-card .alert {
+    font-size: 0.9rem;
+    max-width: 360px;
+}
+
+@media (max-width: 768px) {
+    .cv-card .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cv-card .alert,
+    .cv-card .btn {
+        margin-top: 10px;
+        width: 100%;
+    }
+}
