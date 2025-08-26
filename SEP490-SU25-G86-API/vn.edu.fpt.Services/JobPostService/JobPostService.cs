@@ -1,5 +1,8 @@
 using AutoMapper;
 using SEP490_SU25_G86_API.Models;
+using Microsoft.EntityFrameworkCore;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.NotificationDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
@@ -15,12 +18,14 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         private readonly IBlockedCompanyRepository _blockedCompanyRepo;
         private readonly SEP490_G86_CvMatchContext _context;
         private readonly IMapper _mapper;
-        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context, IMapper mapper)
+        private readonly INotificationService _notificationService;
+        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context, IMapper mapper, INotificationService notificationService)
         {
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
             _context = context;
             _mapper = mapper;
+            _notificationService = notificationService;
         }
         
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
@@ -255,10 +260,58 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 _context.CvTemplateForJobposts.Add(cvTemplateLink);
                 await _context.SaveChangesAsync();
             }
+            // Gửi thông báo cho người dùng đang theo dõi công ty khi có bài đăng mới
+            try
+            {
+                // Lấy companyId của employer
+                int? companyId = await _context.Users
+                    .Where(u => u.UserId == employerId)
+                    .Select(u => u.CompanyId)
+                    .FirstOrDefaultAsync();
+
+                if (companyId.HasValue)
+                {
+                    // Lấy tên công ty để hiển thị nội dung thông báo
+                    var companyName = await _context.Companies
+                        .Where(c => c.CompanyId == companyId.Value)
+                        .Select(c => c.CompanyName)
+                        .FirstOrDefaultAsync();
+
+                    // Lấy danh sách userId đang follow công ty
+                    var followerUserIds = await _context.CompanyFollowers
+                        .Where(cf => cf.CompanyId == companyId.Value && cf.IsActive == true)
+                        .Join(_context.Users, cf => cf.UserId, u => u.UserId, (cf, u) => u)
+                        .Join(_context.Accounts, u => u.AccountId, a => a.AccountId, (u, a) => new { u, a })
+                        .Join(_context.Roles, ua => ua.a.RoleId, r => r.RoleId, (ua, r) => new { ua.u, r })
+                        .Where(x => x.r.RoleName.ToLower() == "candidate")
+                        .Select(x => x.u.UserId)
+                        .ToListAsync();
+
+                    if (followerUserIds.Count > 0)
+                    {
+                        string title = created.Title ?? "Tin tuyển dụng mới";
+                        string company = string.IsNullOrWhiteSpace(companyName) ? "Công ty" : companyName!;
+                        string content = $"{company} vừa đăng tin tuyển dụng: {title}";
+                        string targetUrl = $"/Job/DetailJobPost/{created.JobPostId}"; // điều hướng tới chi tiết job post
+
+                        foreach (var receiverUserId in followerUserIds)
+                        {
+                            await _notificationService.SendAsync(new CreateNotificationRequest(receiverUserId, content, targetUrl));
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Nuốt lỗi để tránh làm hỏng luồng tạo bài đăng; có thể log nếu cần
+            }
+
+
 
             var detail = await GetJobPostDetailByIdAsync(created.JobPostId);
             return detail!;
         }
+
         public async Task<bool> DeleteJobPostAsync(int jobPostId, int employerUserId, bool isAdmin)
         {
             return await _jobPostRepo.SoftDeleteAsync(jobPostId, isAdmin ? null : employerUserId);
