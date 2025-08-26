@@ -80,11 +80,6 @@
                                                     <a class="btn btn-sm btn-warning" href="/Employer/UpdateJobCriterion?id=@item.JobCriteriaId">
                                                         <i class="bi bi-pencil-square"></i> Sửa
                                                     </a>
-                                                    <form method="post" asp-page-handler="Delete" asp-route-jobCriterionId="@item.JobCriteriaId" onsubmit="return confirmDelete()">
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            <i class="bi bi-trash"></i> Xóa
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             }
                                         }

@@ -114,5 +114,20 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             }
             catch { }
         }
+        public async Task<IActionResult> OnGetGetPositionsByIndustryAsync(int industryId)
+        {
+            try
+            {
+                var positions = await _httpClient.GetFromJsonAsync<List<JobPositionDTO>>(
+                    $"api/jobpositions/by-industry/{industryId}");
+
+                return new JsonResult(positions);
+            }
+            catch
+            {
+                return new JsonResult(new List<JobPositionDTO>());
+            }
+        }
+
     }
 }

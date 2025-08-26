@@ -31,19 +31,19 @@
 
             <!-- Tiêu đề & Địa điểm -->
             <div class="col-md-6">
-                <label class="form-label">Tiêu đề công việc</label>
+                <label class="form-label">Tiêu đề công việc *</label>
                 <input asp-for="JobPost.Title" class="form-control" placeholder="Nhập tiêu đề công việc" />
                 <span asp-validation-for="JobPost.Title" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Địa điểm làm việc</label>
+                <label class="form-label">Địa điểm làm việc *</label>
                 <input asp-for="JobPost.WorkLocation" class="form-control" placeholder="Nhập địa điểm làm việc" />
                 <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
             </div>
 
             <!-- Trạng thái & Hết hạn -->
             <div class="col-md-6">
-                <label class="form-label">Trạng thái bài đăng</label>
+                <label class="form-label">Trạng thái bài đăng *</label>
                 <select asp-for="JobPost.Status" class="form-select">
                     <option value="">-- Chọn trạng thái --</option>
                     <option value="OPEN">Đang tuyển</option>
@@ -52,24 +52,24 @@
                 <span asp-validation-for="JobPost.Status" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Ngày hết hạn</label>
+                <label class="form-label">Ngày hết hạn *</label>
                 <input asp-for="JobPost.EndDate" type="date" class="form-control" />
                 <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
             </div>
 
             <!-- Mô tả -->
             <div class="col-12">
-                <label class="form-label">Chi tiết công việc</label>
+                <label class="form-label">Chi tiết công việc *</label>
                 <textarea asp-for="JobPost.Description" class="form-control" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
                 <span asp-validation-for="JobPost.Description" class="text-danger"></span>
             </div>
             <div class="col-12">
-                <label class="form-label">Yêu cầu ứng viên</label>
+                <label class="form-label">Yêu cầu ứng viên *</label>
                 <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="3" placeholder="Những yêu cầu cần có của ứng viên"></textarea>
                 <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
             </div>
             <div class="col-12">
-                <label class="form-label">Quyền lợi</label>
+                <label class="form-label">Quyền lợi *</label>
                 <textarea asp-for="JobPost.Interest" class="form-control" rows="3" placeholder="Lợi ích ứng viên nhận được khi trúng tuyển"></textarea>
                 <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
             </div>
@@ -77,7 +77,7 @@
             <!-- Ngành nghề & Vị trí -->
             <div class="col-md-6">
                 <label class="form-label">Ngành nghề</label>
-                <select name="JobPost.IndustryId" class="form-select">
+                <select id="industrySelect" name="JobPost.IndustryId" class="form-select" onchange="loadJobPositions()">
                     <option value="">-- Chọn ngành nghề --</option>
                     @foreach (var industry in Model.Industries)
                     {
@@ -85,9 +85,10 @@
                     }
                 </select>
             </div>
+
             <div class="col-md-6">
                 <label class="form-label">Vị trí công việc</label>
-                <select name="JobPost.JobPositionId" class="form-select">
+                <select id="positionSelect" name="JobPost.JobPositionId" class="form-select">
                     <option value="">-- Chọn vị trí --</option>
                     @foreach (var pos in Model.JobPositions)
                     {
@@ -178,6 +179,37 @@
         </form>
     }
 </div>
+<script>
+    async function loadJobPositions() {
+        const industryId = document.getElementById("industrySelect").value;
+        const positionSelect = document.getElementById("positionSelect");
+
+        // Reset combobox
+        positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+
+        if (!industryId) {
+            return; // Nếu chưa chọn ngành nghề thì không gọi API
+        }
+
+        try {
+            const response = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
+            if (!response.ok) throw new Error("Lỗi load dữ liệu");
+
+            const positions = await response.json();
+
+            // Render option vào combobox
+            positions.forEach(pos => {
+                const option = document.createElement("option");
+                option.value = pos.positionId;
+                option.textContent = pos.postitionName;
+                positionSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách vị trí:", error);
+        }
+    }
+</script>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
