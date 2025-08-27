@@ -207,7 +207,7 @@ namespace SEP490_SU25_G86_Client.Pages.Admin
                 UploadError = $"Upload thất bại: {error}<br><pre>{debugLog}</pre>";
                 return RedirectToPage();
             }
-            UploadError = $"Upload thành công!<br><pre>{debugLog}</pre>";
+            // KHÔNG set UploadError khi thành công
             return RedirectToPage();
         }
 
