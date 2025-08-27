@@ -76,29 +76,53 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 await LoadComboboxDataAsync();
                 return Page();
             }
-            // NEW: Giới hạn độ dài để né người dùng dán quá nhiều HTML
-            if (!string.IsNullOrEmpty(JobPost.Description) && JobPost.Description.Length > 20000)
+            // ===== 0) Chuẩn hoá input trước =====
+            JobPost.Title = JobPost.Title?.Trim();
+            JobPost.WorkLocation = JobPost.WorkLocation?.Trim();
+            JobPost.Description = JobPost.Description ?? "";
+            JobPost.CandidaterRequirements = JobPost.CandidaterRequirements ?? "";
+            JobPost.Interest = JobPost.Interest ?? "";
+
+            // ===== 1) Tạo sanitizer =====
+            var richSanitizer = new HtmlSanitizer();
+            // whitelist cho nội dung dài (TinyMCE)
+            richSanitizer.AllowedTags.UnionWith(new[] { "p", "ul", "ol", "li", "strong", "em", "u", "br", "a" });
+            richSanitizer.AllowedAttributes.Add("href");
+            richSanitizer.AllowedSchemes.UnionWith(new[] { "http", "https" });
+
+            // plain = xoá hết tag (chỉ giữ text)
+            var plainSanitizer = new HtmlSanitizer();
+            plainSanitizer.AllowedTags.Clear();
+            plainSanitizer.AllowedAttributes.Clear();
+            plainSanitizer.AllowedSchemes.Clear();
+
+            // ===== 2) Sanitize theo loại field =====
+            // Text-only (Title/WorkLocation): giữ chữ, loại bỏ HTML
+            JobPost.Title = plainSanitizer.Sanitize(JobPost.Title ?? "");
+            JobPost.WorkLocation = plainSanitizer.Sanitize(JobPost.WorkLocation ?? "");
+
+            // Rich-text (các textarea có TinyMCE)
+            JobPost.Description = richSanitizer.Sanitize(JobPost.Description);
+            JobPost.CandidaterRequirements = richSanitizer.Sanitize(JobPost.CandidaterRequirements);
+            JobPost.Interest = richSanitizer.Sanitize(JobPost.Interest);
+
+            // ===== 3) Validate độ dài sau khi sanitize =====
+            int MaxHtmlLen = 20000;
+            if (JobPost.Description.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.Description", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+            if (JobPost.CandidaterRequirements.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.CandidaterRequirements", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+            if (JobPost.Interest.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.Interest", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("JobPost.Description", "Nội dung quá dài (tối đa 20.000 ký tự).");
+                ErrorMessage = "Vui lòng nhập đầy đủ thông tin bắt buộc.";
                 await LoadComboboxDataAsync();
                 return Page();
             }
 
-            // NEW: Sanitize HTML trước khi gửi API
-            var sanitizer = new HtmlSanitizer();
-            sanitizer.AllowedTags.Add("p");
-            sanitizer.AllowedTags.Add("ul");
-            sanitizer.AllowedTags.Add("ol");
-            sanitizer.AllowedTags.Add("li");
-            sanitizer.AllowedTags.Add("strong");
-            sanitizer.AllowedTags.Add("em");
-            sanitizer.AllowedTags.Add("u");
-            sanitizer.AllowedTags.Add("a");
-            sanitizer.AllowedAttributes.Add("href");
-            sanitizer.AllowedSchemes.Add("http");
-            sanitizer.AllowedSchemes.Add("https");
 
-            JobPost.Description = sanitizer.Sanitize(JobPost.Description ?? "");
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
             {
