@@ -6,6 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AppliedJobDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.AppliedJobServices;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CVParsedDataService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,19 +23,22 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
         private readonly ICvParsingService _cvParsing;
         private readonly SEP490_G86_CvMatchContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly INotificationService _notificationService;
 
         public AppliedJobsController(
             IAppliedJobService appliedJobService,
             ICvService cvService,
             ICvParsingService cvParsing,
             SEP490_G86_CvMatchContext context,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            INotificationService notificationService)
         {
             _appliedJobService = appliedJobService;
             _cvService = cvService;
             _cvParsing = cvParsing;
             _context = context;
             _env = env;
+            _notificationService = notificationService;
         }
 
         // ===== Prompt từ file (cache để tránh đọc lặp) =====
@@ -78,45 +82,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
                 Status = "Đã ứng tuyển"
             };
             await _appliedJobService.AddSubmissionAsync(submission);
+
+            // Gửi notification cho ứng viên
+            await _notificationService.SendAsync(new SEP490_SU25_G86_API.vn.edu.fpt.DTOs.NotificationDTO.CreateNotificationRequest(
+                ReceiverUserId: req.CandidateId,
+                Content: "Bạn đã nộp hồ sơ ứng tuyển thành công, vui lòng truy cập vào trang 'việc làm đã ứng tuyển' để cập nhật trạng thái hồ sơ.",
+                TargetUrl: "https://localhost:7283/Candidate/AppliedJobs"
+            ));
+
             return Ok(new { message = "Ứng tuyển thành công" });
         }
-
-        //[HttpPost("apply-upload")]
-        //public async Task<IActionResult> ApplyWithNewCv([FromForm] ApplyUploadCvDTO req)
-        //{
-        //    if (req.File == null || req.File.Length == 0)
-        //        return BadRequest("Vui lòng chọn file CV");
-        //    // Check if user has already applied
-        //    if (await _appliedJobService.HasUserAppliedToJobAsync(req.CandidateId, req.JobPostId))
-        //    {
-        //        return BadRequest(new { message = "Bạn đã ứng tuyển công việc này rồi!" });
-        //    }
-        //    // Upload file lên Firebase Storage (thay vì Google Drive)
-        //    string fileUrl = await _cvService.UploadFileToFirebaseStorage(req.File, req.CandidateId);
-        //    var cv = new SEP490_SU25_G86_API.Models.Cv
-        //    {
-        //        CandidateId = req.CandidateId,
-        //        UploadByUserId = req.CandidateId,
-        //        FileUrl = fileUrl,
-        //        UploadDate = DateTime.UtcNow,
-        //        IsDelete = false,
-        //        Cvname = req.CVName
-        //    };
-        //    int cvId = await _appliedJobService.AddCvAndGetIdAsync(cv);
-        //    // Tạo bản ghi ứng tuyển vào jobpost (CvSubmission)
-        //    var submission = new SEP490_SU25_G86_API.Models.Cvsubmission
-        //    {
-        //        CvId = cvId,
-        //        JobPostId = req.JobPostId,
-        //        SubmittedByUserId = req.CandidateId,
-        //        SubmissionDate = DateTime.UtcNow,
-        //        IsDelete = false,
-        //        SourceType = "UPLOAD",
-        //        Status = "Đã ứng tuyển"
-        //    };
-        //    await _appliedJobService.AddSubmissionAsync(submission);
-        //    return Ok(new { message = "Ứng tuyển thành công" });
-        //}
 
         [HttpPost("apply-upload")]
         public async Task<IActionResult> ApplyWithNewCv([FromForm] ApplyUploadCvDTO req, CancellationToken ct)
@@ -170,6 +145,13 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AppliedJobController
                 var parsed = await _cvParsing.ParseAndSaveFromUrlAsync(cvId, fileUrl, prompt, ct);
 
                 await tx.CommitAsync(ct);
+
+                // Gửi notification cho ứng viên
+                await _notificationService.SendAsync(new SEP490_SU25_G86_API.vn.edu.fpt.DTOs.NotificationDTO.CreateNotificationRequest(
+                    ReceiverUserId: req.CandidateId,
+                    Content: "Bạn đã nộp hồ sơ ứng tuyển thành công, vui lòng truy cập vào trang 'việc làm đã ứng tuyển' để cập nhật trạng thái hồ sơ.",
+                    TargetUrl: "https://localhost:7283/Candidate/AppliedJobs"
+                ));
 
                 return Ok(new
                 {

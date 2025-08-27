@@ -1,5 +1,9 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SEP490_SU25_G86_API.Models;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.ComponentModel.Design;
 using System.Linq;
@@ -10,11 +14,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
     {
         private readonly SEP490_G86_CvMatchContext _context;
         private readonly ISynonymService _synonymService;
-
-        public JobPostRepository(SEP490_G86_CvMatchContext context, ISynonymService synonymService)
+        private readonly AutoMapper.IConfigurationProvider _mapperCfg;
+        public JobPostRepository(SEP490_G86_CvMatchContext context, ISynonymService synonymService, IMapper mapper)
         {
             _context = context;
             _synonymService = synonymService;
+            _mapperCfg = mapper.ConfigurationProvider;
         }
 
         public async Task<(IEnumerable<JobPost> Posts, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
@@ -379,6 +384,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<RelatedJobItemDTO>> GetRelatedByIndustryAsync(
+            int industryId, int take = 5, int? excludeJobPostId = null, CancellationToken ct = default)
+        {
+            var q = _context.JobPosts
+                .AsNoTracking()
+                .Where(j => j.IndustryId == industryId);
 
+            if (excludeJobPostId.HasValue)
+                q = q.Where(j => j.JobPostId != excludeJobPostId.Value);
+
+            return await q
+                .OrderByDescending(j => j.CreatedDate)
+                .ProjectTo<RelatedJobItemDTO>(_mapperCfg) // <- JOIN + select đúng cột
+                .Take(take)
+                .ToListAsync(ct);
+        }
     }
 }

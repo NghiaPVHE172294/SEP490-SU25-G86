@@ -1,10 +1,12 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using static SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO.OptionComboboxJobPostDTO;
-using System.Net.Http.Json;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -34,10 +36,28 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
         public List<SalaryRangeDTO> SalaryRanges { get; set; } = new();
         public List<CvTemplateDTO> CvTemplates { get; set; } = new();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            // Check quyền trước
+            var role = HttpContext.Session.GetString("user_role");
+            if (role != "EMPLOYER")
+            {
+                return RedirectToPage("/NotFound");
+            }
+
+            // Set token nếu có
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+
+            // Chỉ load dữ liệu nếu có quyền
             await LoadComboboxDataAsync();
+            return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -56,7 +76,29 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 await LoadComboboxDataAsync();
                 return Page();
             }
+            // NEW: Giới hạn độ dài để né người dùng dán quá nhiều HTML
+            if (!string.IsNullOrEmpty(JobPost.Description) && JobPost.Description.Length > 20000)
+            {
+                ModelState.AddModelError("JobPost.Description", "Nội dung quá dài (tối đa 20.000 ký tự).");
+                await LoadComboboxDataAsync();
+                return Page();
+            }
 
+            // NEW: Sanitize HTML trước khi gửi API
+            var sanitizer = new HtmlSanitizer();
+            sanitizer.AllowedTags.Add("p");
+            sanitizer.AllowedTags.Add("ul");
+            sanitizer.AllowedTags.Add("ol");
+            sanitizer.AllowedTags.Add("li");
+            sanitizer.AllowedTags.Add("strong");
+            sanitizer.AllowedTags.Add("em");
+            sanitizer.AllowedTags.Add("u");
+            sanitizer.AllowedTags.Add("a");
+            sanitizer.AllowedAttributes.Add("href");
+            sanitizer.AllowedSchemes.Add("http");
+            sanitizer.AllowedSchemes.Add("https");
+
+            JobPost.Description = sanitizer.Sanitize(JobPost.Description ?? "");
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
             {
@@ -114,5 +156,20 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             }
             catch { }
         }
+        public async Task<IActionResult> OnGetGetPositionsByIndustryAsync(int industryId)
+        {
+            try
+            {
+                var positions = await _httpClient.GetFromJsonAsync<List<JobPositionDTO>>(
+                    $"api/jobpositions/by-industry/{industryId}");
+
+                return new JsonResult(positions);
+            }
+            catch
+            {
+                return new JsonResult(new List<JobPositionDTO>());
+            }
+        }
+
     }
 }

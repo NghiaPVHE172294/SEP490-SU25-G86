@@ -1,4 +1,8 @@
+using AutoMapper;
 using SEP490_SU25_G86_API.Models;
+using Microsoft.EntityFrameworkCore;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.NotificationDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
@@ -13,12 +17,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         private readonly IJobPostRepository _jobPostRepo;
         private readonly IBlockedCompanyRepository _blockedCompanyRepo;
         private readonly SEP490_G86_CvMatchContext _context;
-
-        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context)
+        private readonly IMapper _mapper;
+        private readonly INotificationService _notificationService;
+        public JobPostService(IJobPostRepository jobPostRepo, IBlockedCompanyRepository blockedCompanyRepo, SEP490_G86_CvMatchContext context, IMapper mapper, INotificationService notificationService)
         {
             _jobPostRepo = jobPostRepo;
             _blockedCompanyRepo = blockedCompanyRepo;
             _context = context;
+            _mapper = mapper;
+            _notificationService = notificationService;
         }
         
         public async Task<(IEnumerable<JobPostHomeDto>, int TotalItems)> GetPagedJobPostsAsync(int page, int pageSize, string? region = null, int? salaryRangeId = null, int? experienceLevelId = null, int? candidateId = null)
@@ -75,25 +82,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         public async Task<IEnumerable<JobPostListDTO>> GetByEmployerIdAsync(int employerId)
         {
             var posts = await _jobPostRepo.GetByEmployerIdAsync(employerId);
-            return posts.Select(j => new JobPostListDTO
-            {
-                JobPostId = j.JobPostId,
-                Title = j.Title,
-                CompanyName = j.Employer?.Company?.CompanyName ?? j.Employer?.FullName ?? "Không rõ",
-                Salary = (j.SalaryRange != null && j.SalaryRange.MinSalary.HasValue && j.SalaryRange.MaxSalary.HasValue)
-                    ? $"{j.SalaryRange.MinSalary:N0} - {j.SalaryRange.MaxSalary:N0} {j.SalaryRange.Currency}"
-                    : "Thỏa thuận",
-                Location = j.Province?.ProvinceName,
-                EmploymentType = j.EmploymentType?.EmploymentTypeName,
-                JobLevel = j.JobLevel?.JobLevelName,
-                ExperienceLevel = j.ExperienceLevel?.ExperienceLevelName,
-                Industry = j.Industry?.IndustryName,
-                CreatedDate = j.CreatedDate,
-                UpdatedDate = j.UpdatedDate,
-                EndDate = j.EndDate,
-                Status = j.Status,
-                WorkLocation = j.WorkLocation
-            });
+            return _mapper.Map<IEnumerable<JobPostListDTO>>(posts);
         }
 
 
@@ -112,41 +101,16 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 template = _context.CvTemplateOfEmployers.FirstOrDefault(t => t.CvtemplateOfEmployerId == cvTemplateLink.CvtemplateOfEmployerId && !t.IsDelete);
             }
 
-            return new ViewDetailJobPostDTO
-            {
-                JobPostId = jobPost.JobPostId,
-                IndustryId = jobPost.IndustryId,
-                JobPositionId = jobPost.JobPositionId,
-                Title = jobPost.Title,
-                SalaryRangeId = jobPost.SalaryRangeId,
-                ProvinceId = jobPost.ProvinceId,
-                ExperienceLevelId = jobPost.ExperienceLevelId,
-                JobLevelId = jobPost.JobLevelId,
-                EmploymentTypeId = jobPost.EmploymentTypeId,
-                EndDate = jobPost.EndDate,
-                Description = jobPost.Description,
-                CandidaterRequirements = jobPost.CandidaterRequirements,
-                Interest = jobPost.Interest,
-                WorkLocation = jobPost.WorkLocation,
-                IsAienabled = jobPost.IsAienabled,
-                Status = jobPost.Status,
-                CreatedDate = jobPost.CreatedDate,
-                UpdatedDate = jobPost.UpdatedDate,
-                EmployerId = jobPost.EmployerId,
-                EmployerName = jobPost.Employer?.FullName,
-                IndustryName = jobPost.Industry?.IndustryName,
-                JobPositionName = jobPost.JobPosition?.PostitionName,
-                SalaryRangeName = jobPost.SalaryRange != null ? $"{jobPost.SalaryRange.MinSalary:N0} - {jobPost.SalaryRange.MaxSalary:N0} {jobPost.SalaryRange.Currency}" : null,
-                ProvinceName = jobPost.Province?.ProvinceName,
-                ExperienceLevelName = jobPost.ExperienceLevel?.ExperienceLevelName,
-                JobLevelName = jobPost.JobLevel?.JobLevelName,
-                EmploymentTypeName = jobPost.EmploymentType?.EmploymentTypeName,
-                CompanyName = jobPost.Employer?.Company?.CompanyName ?? jobPost.Employer?.FullName ?? "Không rõ",
-                CvTemplateId = template?.CvtemplateOfEmployerId,
-                CvTemplateName = template?.CvTemplateName,
-                DocFileUrl = template?.DocFileUrl,
-                PdfFileUrl = template?.PdfFileUrl
-            };
+            // Dùng AutoMapper để map entity → DTO
+            var dto = _mapper.Map<ViewDetailJobPostDTO>(jobPost);
+
+            // Map thủ công các trường đặc biệt từ template
+            dto.CvTemplateId = template?.CvtemplateOfEmployerId;
+            dto.CvTemplateName = template?.CvTemplateName;
+            dto.DocFileUrl = template?.DocFileUrl;
+            dto.PdfFileUrl = template?.PdfFileUrl;
+
+            return dto;
         }
 
 
@@ -296,10 +260,58 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 _context.CvTemplateForJobposts.Add(cvTemplateLink);
                 await _context.SaveChangesAsync();
             }
+            // Gửi thông báo cho người dùng đang theo dõi công ty khi có bài đăng mới
+            try
+            {
+                // Lấy companyId của employer
+                int? companyId = await _context.Users
+                    .Where(u => u.UserId == employerId)
+                    .Select(u => u.CompanyId)
+                    .FirstOrDefaultAsync();
+
+                if (companyId.HasValue)
+                {
+                    // Lấy tên công ty để hiển thị nội dung thông báo
+                    var companyName = await _context.Companies
+                        .Where(c => c.CompanyId == companyId.Value)
+                        .Select(c => c.CompanyName)
+                        .FirstOrDefaultAsync();
+
+                    // Lấy danh sách userId đang follow công ty
+                    var followerUserIds = await _context.CompanyFollowers
+                        .Where(cf => cf.CompanyId == companyId.Value && cf.IsActive == true)
+                        .Join(_context.Users, cf => cf.UserId, u => u.UserId, (cf, u) => u)
+                        .Join(_context.Accounts, u => u.AccountId, a => a.AccountId, (u, a) => new { u, a })
+                        .Join(_context.Roles, ua => ua.a.RoleId, r => r.RoleId, (ua, r) => new { ua.u, r })
+                        .Where(x => x.r.RoleName.ToLower() == "candidate")
+                        .Select(x => x.u.UserId)
+                        .ToListAsync();
+
+                    if (followerUserIds.Count > 0)
+                    {
+                        string title = created.Title ?? "Tin tuyển dụng mới";
+                        string company = string.IsNullOrWhiteSpace(companyName) ? "Công ty" : companyName!;
+                        string content = $"{company} vừa đăng tin tuyển dụng: {title}";
+                        string targetUrl = $"/Job/DetailJobPost/{created.JobPostId}"; // điều hướng tới chi tiết job post
+
+                        foreach (var receiverUserId in followerUserIds)
+                        {
+                            await _notificationService.SendAsync(new CreateNotificationRequest(receiverUserId, content, targetUrl));
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Nuốt lỗi để tránh làm hỏng luồng tạo bài đăng; có thể log nếu cần
+            }
+
+
 
             var detail = await GetJobPostDetailByIdAsync(created.JobPostId);
             return detail!;
         }
+
         public async Task<bool> DeleteJobPostAsync(int jobPostId, int employerUserId, bool isAdmin)
         {
             return await _jobPostRepo.SoftDeleteAsync(jobPostId, isAdmin ? null : employerUserId);
@@ -469,6 +481,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
     : null,
                 SubmissionId = s.SubmissionId,
                 SubmissionDate = s.SubmissionDate,
+                CandidateId = s.SubmittedByUserId,
                 CandidateName = s.SubmittedByUser != null ? s.SubmittedByUser.FullName : string.Empty,
                 CvFileUrl = s.Cv != null ? s.Cv.FileUrl : string.Empty,
                 Status = s.Status, // lấy Status mới
@@ -477,6 +490,18 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
                 MatchedCvandJobPostId = s.MatchedCvandJobPostId
             }).ToList();
         }
-    }
+        public Task<List<RelatedJobItemDTO>> GetRelatedJobsAsync(
+            int industryId,
+            int take = 5,
+            int? excludeJobPostId = null,
+            CancellationToken ct = default)
+        {
+            // guard nhỏ cho chắc
+            if (industryId <= 0) return Task.FromResult(new List<RelatedJobItemDTO>());
+            if (take <= 0) take = 5;
 
+            // repo đã trả DTO => trả thẳng
+            return _jobPostRepo.GetRelatedByIndustryAsync(industryId, take, excludeJobPostId, ct);
+        }
+    }
 }

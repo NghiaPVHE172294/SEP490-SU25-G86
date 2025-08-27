@@ -26,6 +26,7 @@ namespace SEP490_SU25_G86_Client.Pages.AppliedJobs
         public Dictionary<string, string> StatusMap { get; } = new Dictionary<string, string>
         {
             { "Đã ứng tuyển", "Đã ứng tuyển" },
+            {"Đã chấm điểm bằng AI", "Hồ sơ đang được xử lý"},
             { "ĐÃ DUYỆT", "Hồ sơ phù hợp" },
             { "ĐÃ TỪ CHỐI", "Hồ sơ không phù hợp" },
             { "Hồ sơ đã rút", "Hồ sơ đã rút" }

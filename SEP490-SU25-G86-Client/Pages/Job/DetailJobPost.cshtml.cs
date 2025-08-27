@@ -1,13 +1,14 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
-
+using System.Text.Json;
+using System.Threading.Tasks;
 namespace SEP490_SU25_G86_Client.Pages.Job
 {
     public class DetailJobPostModel : PageModel
@@ -20,6 +21,7 @@ namespace SEP490_SU25_G86_Client.Pages.Job
         public bool IsSaved { get; set; } = false; //  Trạng thái đã lưu hay chưa
         public int? CurrentUserId { get; set; } //  Lưu ID người dùng
         public string? CurrentUserRole { get; set; }
+        public List<RelatedJobItemDTO> RelatedJobs { get; set; } = new();
         public DetailJobPostModel(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -49,7 +51,27 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     JobPostDetail = JsonSerializer.Deserialize<ViewDetailJobPostDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (JobPostDetail != null)
+                    {
+                        var sanitizer = new HtmlSanitizer();
+                        // whitelist các tag TinyMCE cơ bản
+                        sanitizer.AllowedTags.Add("p");
+                        sanitizer.AllowedTags.Add("ul");
+                        sanitizer.AllowedTags.Add("ol");
+                        sanitizer.AllowedTags.Add("li");
+                        sanitizer.AllowedTags.Add("strong");
+                        sanitizer.AllowedTags.Add("em");
+                        sanitizer.AllowedTags.Add("u");
+                        sanitizer.AllowedTags.Add("br");
+                        sanitizer.AllowedTags.Add("a");
+                        sanitizer.AllowedAttributes.Add("href");
+                        sanitizer.AllowedSchemes.Add("http");
+                        sanitizer.AllowedSchemes.Add("https");
+
+                        JobPostDetail.Description = sanitizer.Sanitize(JobPostDetail.Description ?? "");
+                    }
                 }
+
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     ErrorMessage = "Không tìm thấy tin tuyển dụng.";
@@ -85,6 +107,19 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                             IsSaved = value.GetBoolean();
                         }
                     }
+                }
+                if (JobPostDetail?.IndustryId is int industryId && industryId > 0)
+                {
+                    var relatedRes = await _httpClient.GetAsync(
+                        $"api/JobPosts/related-jobs/{industryId}?take=6&excludeJobPostId={id}");
+
+                    if (relatedRes.IsSuccessStatusCode)
+                    {
+                        var raw = await relatedRes.Content.ReadAsStringAsync();
+                        RelatedJobs = JsonSerializer.Deserialize<List<RelatedJobItemDTO>>(
+                            raw, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+                    }
+                    // lỗi thì cứ để trống, không cần báo
                 }
             }
             catch (System.Exception ex)
