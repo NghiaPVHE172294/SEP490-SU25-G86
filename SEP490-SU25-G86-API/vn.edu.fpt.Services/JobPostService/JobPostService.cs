@@ -32,16 +32,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
         {
             var (posts, totalItems) = await _jobPostRepo.GetPagedJobPostsAsync(page, pageSize, region, salaryRangeId, experienceLevelId, candidateId);
 
-            // Lọc bỏ job posts từ blocked companies nếu có candidateId
-            if (candidateId.HasValue)
-            {
-                var blockedCompanies = await _blockedCompanyRepo.GetBlockedCompaniesByCandidateIdAsync(candidateId.Value);
-                var blockedCompanyIds = blockedCompanies.Select(bc => bc.CompanyId).ToHashSet();
-                
-                posts = posts.Where(j => j.Employer?.CompanyId == null || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
-                totalItems = posts.Count(); // Cập nhật lại totalItems sau khi lọc
-            }
-
             List<int> appliedJobPostIds = new();
             if (candidateId.HasValue)
             {

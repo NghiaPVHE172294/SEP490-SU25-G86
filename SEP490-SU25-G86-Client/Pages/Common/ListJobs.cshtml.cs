@@ -79,6 +79,9 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             CurrentPage = page < 1 ? 1 : page;
 
             using var client = new HttpClient();
+            var token = HttpContext.Session.GetString("jwt_token");
+            if (!string.IsNullOrEmpty(token))
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var url = $"https://localhost:7004/api/jobposts/viewall?page={page}&pageSize={pageSize}";
             //Add thêm filter nếu có
             if (!string.IsNullOrWhiteSpace(Keyword))
