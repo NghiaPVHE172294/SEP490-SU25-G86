@@ -5,8 +5,6 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.UserDTO;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService;
-using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
