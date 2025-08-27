@@ -43,11 +43,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService
 
             if (!string.IsNullOrWhiteSpace(dto.FullName))
             {
-                if (dto.FullName.Length > 30)
+                var fullName = dto.FullName.Trim();
+                if (fullName.Length > 30)
                 {
                     throw new ArgumentException("Tên không được vượt quá 30 ký tự.");
                 }
-                user.FullName = dto.FullName.Trim();
+                user.FullName = fullName;
             }
 
             if (dto.Address != null)
