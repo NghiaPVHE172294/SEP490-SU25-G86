@@ -30,34 +30,38 @@
             {
                 <div class="nav">
                     <a asp-page="/Index">Trang chủ</a>
-                    <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
                     <a asp-page="/Common/ListJobs">Tìm việc làm</a>
+                    <a asp-page="/CVTemplatesByPosition">Mẫu CV</a>
                     <a asp-page="/Companies/ListCompany">Danh sách công ty</a>
-                    <a asp-page="/Contact">Liên hệ</a>
-                </div>
-            }
-            else if (userRole == "ADMIN")
-            {
-                <nav class="navbar navbar-expand navbar-dark bg-primary mb-2">
-                    <div class="container-fluid">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Admin/AdminDashboard">Dashboard</a>
+                    <a asp-page="/CareerHandbook/List">Cẩm nang nghề nghiệp</a>
+
+                    <!-- Dropdown Công Cụ -->
+                    <div class="dropdown user-dropdown">
+                        <a href="#" class="dropdown-toggle d-flex align-items-center"
+                           id="userDropdown"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Công Cụ
+                        </a>
+                        <ul class="dropdown-menu mt-2" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Salary">Tính lương Gross - Net</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Admin/ManageAccount">Quản lý tài khoản</a>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Tax">Tính thuế thu nhập cá nhân</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Admin/ManagePermissions">Phân quyền</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Admin/AdminCVTemplates">Quản lý CV Template</a>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Tools/Interest">Tính lãi suất kép</a>
                             </li>
                         </ul>
                     </div>
-                </nav>
+
+
+                    <a asp-page="/Common/Contact">Liên hệ</a>
+                </div>
             }
-            <div class="header-actions">
+
+            <div class="header-actions" >
                 @{
                     var isLoggedIn = !string.IsNullOrEmpty(userRole);
                 }
@@ -91,7 +95,7 @@
 
                     <div class="dropdown user-dropdown">
                         <a href="#" class="d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                            <img id="userAvatar" src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown">
                             
@@ -137,12 +141,11 @@
 
                     <div class="dropdown user-dropdown">
                         <a href="#" class="d-flex align-items-center" id="employerDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                            <img id="userAvatar" src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="employerDropdown">      
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobCriteria">Chiến dịch tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobByEmployer">Danh sách bài đăng tuyển dụng</a></li>
-                            <li><a class="dropdown-item" asp-page="/Employer/ManageSubmittedCVsofJobPost">Quản lý CV đã nộp của bài đăng tuyển dụng</a></li>
                             <li><a class="dropdown-item" asp-page="/Employer/MyCVTemplates">Quản lý CV Template</a></li>
                             <li class="dropdown-submenu position-relative">
                                 <a class="dropdown-item dropdown-toggle" href="#" id="accountSettingDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cài đặt tài khoản</a>
@@ -197,8 +200,9 @@
                 <div class="col-md-4 text-center">
                     <img src="/images/qr-cvmatcher.png" alt="QR Code" width="120" class="mb-2" />
                     <p><a href="https://cvmatcher.net" class="text-primary fw-semibold text-decoration-none">cvmatcher.vn</a></p>
-                    <p><a href="/Common/About" class="text-primary fw-semibold text-decoration-none">About us</a></p>
-                    <p><a href="/Common/Contact" class="text-primary fw-semibold text-decoration-none">Contact us</a></p>
+                    <p><a href="/Common/About" class="text-primary fw-semibold text-decoration-none">Giới thiệu</a></p>
+                    <p><a href="/Common/Contact" class="text-primary fw-semibold text-decoration-none">Liên hệ</a></p>
+                    <p><a href="/Common/TermsOfService" class="text-primary fw-semibold text-decoration-none">Điều khoản dịch vụ</a></p>
                 </div>
             </div>
 
@@ -206,27 +210,27 @@
             <h6 class="fw-bold mt-4 mb-3">Kênh liên hệ & dịch vụ hỗ trợ của CvMatcher</h6>
             <div class="row g-3">
                 <div class="col-md-3">
-                    <div class="bg-primary text-white rounded p-3 h-100">
+                    <div class="footer-card blue">
                         <i class="bi bi-telephone-fill me-2"></i> Hỗ trợ trực tiếp:
                         <div class="fw-bold fs-6 mt-1">0961 075 000</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-warning text-white rounded p-3 h-100">
+                    <div class="footer-card yellow">
                         <i class="bi bi-envelope-fill me-2"></i> Email CSKH:
                         <div class="fw-bold fs-6 mt-1">thandea6@gmail.com</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-info text-white rounded p-3 h-100">
+                    <div class="footer-card pink">
                         <i class="bi bi-facebook me-2"></i> Fanpage Facebook:
-                        <div><a href="https://facebook.com/cvmatcher" class="text-white text-decoration-underline">facebook.com/cvmatcher</a></div>
+                        <div><a href="https://facebook.com/cvmatcher" class="text-dark text-decoration-underline">facebook.com/cvmatcher</a></div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="bg-success text-white rounded p-3 h-100">
+                    <div class="footer-card green">
                         <i class="bi bi-globe2 me-2"></i> Website chính thức:
-                        <div><a href="https://cvmatcher.net" class="text-white text-decoration-underline">cvmatcher.vn</a></div>
+                        <div><a href="https://cvmatcher.net" class="text-dark text-decoration-underline">cvmatcher.vn</a></div>
                     </div>
                 </div>
             </div>
@@ -245,7 +249,7 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>s
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
     <script>
         (function(){
@@ -350,9 +354,60 @@
           function formatDate(d){ try{ return new Date(d).toLocaleString(); }catch{ return ''; } }
           function escapeHtml(s){ return (s??'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
         })();
+        
     </script>
+    <script>
+ (async function () {
+    const wrap = document.querySelector('.notification-dropdown');
+    if (!wrap) {
+        console.warn("Notification dropdown element not found.");
+        return;
+    }
 
+    const apiBase = (wrap.dataset.api || '').replace(/\/+$/, '');
+    const bearer = wrap.dataset.token || null;
+    if (!apiBase || !bearer) {
+        console.warn("API base URL or token missing.");
+        return;
+    }
+
+    const userAvatar = document.getElementById("userAvatar");
+    if (!userAvatar) {
+        console.warn("Avatar image element not found.");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiBase}/api/User/profile`, {
+            headers: { 'Authorization': `Bearer ${bearer}` }
+        });
+        if (!res.ok) throw new Error(`Failed to load profile: ${res.status}`);
+
+        const profile = await res.json();
+        console.log("Profile data:", profile);
+
+        if (profile?.avatar) {
+            console.log("Attempting to load avatar:", profile.avatar);
+            userAvatar.src = profile.avatar;
+            userAvatar.onerror = () => {
+                console.warn("Failed to load avatar image, using default.");
+                userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+            };
+        } else {
+            console.log("No avatar URL, using default.");
+            userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+        }
+    } catch (e) {
+        console.warn("Error fetching profile:", e);
+        userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+    }
+})();
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 </html>

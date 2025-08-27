@@ -1,10 +1,12 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTO.JobPostDTO;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using static SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO.OptionComboboxJobPostDTO;
-using System.Net.Http.Json;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -81,6 +83,49 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                 await LoadComboboxDataAsync();
                 return Page();
             }
+            // ===== 0) Chuẩn hoá input =====
+            JobPost.Title = JobPost.Title?.Trim();
+            JobPost.WorkLocation = JobPost.WorkLocation?.Trim();
+            JobPost.Description = JobPost.Description ?? "";
+            JobPost.CandidaterRequirements = JobPost.CandidaterRequirements ?? "";
+            JobPost.Interest = JobPost.Interest ?? "";
+
+            // ===== 1) Tạo sanitizer =====
+            var richSanitizer = new HtmlSanitizer();
+            richSanitizer.AllowedTags.UnionWith(new[] { "p", "ul", "ol", "li", "strong", "em", "u", "br", "a" });
+            richSanitizer.AllowedAttributes.Add("href");
+            richSanitizer.AllowedSchemes.UnionWith(new[] { "http", "https" });
+
+            // Text-only: strip hết tag (nếu ai đó dán HTML vào tiêu đề/địa điểm)
+            JobPost.Title = StripHtml(JobPost.Title);
+            JobPost.WorkLocation = StripHtml(JobPost.WorkLocation);
+
+            // Rich-text: giữ format nhưng an toàn
+            JobPost.Description = richSanitizer.Sanitize(JobPost.Description);
+            JobPost.CandidaterRequirements = richSanitizer.Sanitize(JobPost.CandidaterRequirements);
+            JobPost.Interest = richSanitizer.Sanitize(JobPost.Interest);
+
+            // ===== 2) Validate sau khi sanitize/strip =====
+            if (JobPost.Title.Length is < 2 or > 255)
+                ModelState.AddModelError("JobPost.Title", "Tiêu đề phải 2–255 ký tự.");
+            if (JobPost.WorkLocation.Length is < 2 or > 255)
+                ModelState.AddModelError("JobPost.WorkLocation", "Địa điểm phải 2–255 ký tự.");
+
+            const int MaxHtmlLen = 20000;
+            if (JobPost.Description.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.Description", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+            if (JobPost.CandidaterRequirements.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.CandidaterRequirements", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+            if (JobPost.Interest.Length > MaxHtmlLen)
+                ModelState.AddModelError("JobPost.Interest", $"Nội dung quá dài (tối đa {MaxHtmlLen:N0} ký tự).");
+
+            if (!ModelState.IsValid)
+            {
+                ErrorMessage = "Vui lòng nhập đầy đủ thông tin bắt buộc.";
+                await LoadComboboxDataAsync();
+                return Page();
+            }
+
             var token = HttpContext.Session.GetString("jwt_token");
             if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -128,6 +173,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
                     CvTemplates = templates;
             }
             catch { }
+        }
+        private static string StripHtml(string? html)
+        {
+            if (string.IsNullOrWhiteSpace(html)) return "";
+            var text = Regex.Replace(html, "<.*?>", string.Empty);
+            text = System.Net.WebUtility.HtmlDecode(text);
+            return text.Trim();
         }
     }
 }

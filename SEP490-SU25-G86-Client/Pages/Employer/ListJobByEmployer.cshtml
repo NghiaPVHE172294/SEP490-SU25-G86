@@ -1,8 +1,9 @@
-﻿@page
+@page
 @model SEP490_SU25_G86_Client.Pages.Employer.ListJobByEmployerModel
 @{
-    ViewData["Title"] = "List Job";
+    ViewData["Title"] = "Danh sách tin tuyển dụng";
 }
+<link rel="stylesheet" href="~/css/listjob.css" />
 @if (TempData["ToastSuccess"] is string ok && !string.IsNullOrWhiteSpace(ok))
 {
     <div class="alert alert-success">@ok</div>
@@ -16,114 +17,171 @@
     <div class="alert alert-danger">@err</div>
 }
 
-<div class="container py-5">
-    <header class="text-center mb-4">
-        <h1 class="fw-bold text-primary border-bottom pb-3">Danh sách tin tuyển dụng</h1>
-        <a href="/Employer/AddJobPost" class="btn btn-success mt-2 mb-4 px-4 py-2 fs-5 shadow-sm">+ Tạo tin tuyển dụng</a>
-    </header>
+<div class="container-cv">
+    <div class="cv-card mb-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h3 class="cv-title mb-1">
+                    <i class="bi bi-briefcase-fill"></i> Danh sách tin tuyển dụng
+                </h3>
+                <h4 class="sub-title mb-0">
+                    Danh sách những tin tuyển dụng của bạn
+                </h4>
+            </div>
 
-    <!-- Bộ lọc trạng thái -->
-    <form method="get" class="mb-4 row justify-content-center">
-        <div class="col-md-4">
-            <select name="StatusFilter" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Lọc theo trạng thái --</option>
-
-                @if (Model.StatusFilter == "OPEN")
+            <div class="d-flex align-items-center mt-1">
+                @if (!string.IsNullOrWhiteSpace(Model.CompanyName) && !string.IsNullOrWhiteSpace(Model.PhoneNumber))
                 {
-                    <option value="OPEN" selected>Đang tuyển dụng</option>
+                    <a href="/Employer/AddJobPost" class="btn btn-success px-4 py-2">
+                        + Tạo tin tuyển dụng
+                    </a>
                 }
                 else
                 {
-                    <option value="OPEN">Đang tuyển dụng</option>
+                    <div class="alert alert-warning mb-0 px-3 py-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        @if (string.IsNullOrWhiteSpace(Model.CompanyName) && string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                        {
+                            @:Vui lòng <a href="/Companies/CompanyInformation" class="fw-bold">cập nhật thông tin công ty</a> và <a href="/Common/SettingProfile" class="fw-bold">số điện thoại</a> trước khi tạo tin tuyển dụng.
+                        }
+                        else if (string.IsNullOrWhiteSpace(Model.CompanyName))
+                        {
+                            @:Vui lòng <a href="/Companies/CompanyInformation" class="fw-bold">cập nhật thông tin công ty</a> trước khi tạo tin tuyển dụng.
+                        }
+                        else if (string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                        {
+                            @:Vui lòng <a href="/Common/SettingProfile" class="fw-bold">cập nhật số điện thoại</a> trước khi tạo tin tuyển dụng.
+                        }
+                    </div>
                 }
-
-                @if (Model.StatusFilter == "CLOSED")
-                {
-                    <option value="CLOSED" selected>Đã đóng</option>
-                }
-                else
-                {
-                    <option value="CLOSED">Đã đóng</option>
-                }
-            </select>
+            </div>
         </div>
-    </form>
+    <div class="cv-card">
+        <!-- Bộ lọc -->
+        <form method="get" id="cv-filter-form" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Lọc theo trạng thái</label>
+                <select name="StatusFilter" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="OPEN" selected="@(Model.StatusFilter == "OPEN")">Đang tuyển dụng</option>
+                    <option value="CLOSED" selected="@(Model.StatusFilter == "CLOSED")">Đã đóng</option>
+                </select>
+            </div>
+        </form>
 
-    @if (Model.Jobs == null || !Model.Jobs.Any())
-    {
-        <div class="alert alert-info text-center">Bạn chưa có tin tuyển dụng nào.</div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center shadow-sm">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Tiêu đề</th>
-                        <th>Công ty</th>
-                        <th>Địa điểm</th>
-                        <th>Ngành Nghề</th>
-                        <th>Cấp Bậc</th>
-                        <th>Trình Độ</th>
-                        <th>Lương</th>
-                        <th>Ngày tạo</th>
-                        <th>Hết hạn</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var job in Model.Jobs)
-                    {
-                        var statusText = job.Status switch
-                        {
-                            "OPEN" => "Đang tuyển dụng",
-                            "CLOSED" => "Đã đóng",
-                            _ => "Không xác định"
-                        };
-
-                        var badgeClass = job.Status switch
-                        {
-                            "OPEN" => "bg-success",
-                            "CLOSED" => "bg-secondary",
-                            _ => "bg-dark"
-                        };
-
-                        <tr>
-                            <td>@job.Title</td>
-                            <td>@job.CompanyName</td>
-                            <td>@job.WorkLocation</td>
-							<td>@job.Industry</td>
-							<td>@job.JobLevel</td>
-                            <td>@job.ExperienceLevel</td>
-                            <td class="text-success fw-bold">@job.Salary</td>
-                            <td>@(job.CreatedDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
-                            <td>@(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
-                            <td>
-                                <span class="badge @badgeClass px-3 py-2">@statusText</span>
-                            </td>
-                            <td class="d-flex flex-wrap justify-content-center gap-2">
-                                <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
-                                <a class="btn btn-outline-secondary btn-sm" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">Danh sách CV</a>
-                                @if (job.Status != "CLOSED")
-                                {
-                                    <a class="btn btn-warning btn-sm" href="/Employer/UpdateJobPost?jobPostId=@job.JobPostId">Cập nhật</a>
-                                }
-                                <form method="post" asp-page-handler="Delete" class="d-inline"
-                                      onsubmit="return confirm('Bạn chắc chắn muốn xóa: @job.Title ?');">
-                                    <input type="hidden" name="id" value="@job.JobPostId" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Xóa
-                                    </button>
-                                    @Html.AntiForgeryToken()
-                                </form>
-                            </td>
+        @if (Model.Jobs == null || !Model.Jobs.Any())
+        {
+            <div class="alert alert-info text-center mt-4">Bạn chưa có tin tuyển dụng nào.</div>
+        }
+        else
+        {
+            <div class="table-responsive-cv mt-3">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr class="text-center">
+                            <th>Tiêu đề</th>
+                            <th>Địa điểm</th>
+                            <th>Ngành nghề</th>
+                            <th>Cấp bậc</th>
+                            <th>Trình độ</th>
+                            <th>Lương</th>
+                            <th>Hết hạn</th>
+                            <th>Trạng thái</th>
+                            <th class="actions-col">Thao tác</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+                    </thead>
+                    <tbody>
+                        @foreach (var job in Model.Jobs)
+                        {
+                            var statusText = job.Status switch
+                            {
+                                "OPEN" => "Đang tuyển dụng",
+                                "CLOSED" => "Đã đóng",
+                                _ => "Không xác định"
+                            };
+                            <tr>
+                                <td class="fw-semibold text-primary">@job.Title</td>
+                                <td>@job.WorkLocation</td>
+                                <td>@job.Industry</td>
+                                <td>@job.JobLevel</td>
+                                <td>@job.ExperienceLevel</td>
+                                <td class="fw-bold text-success">@(job.Salary ?? "Thỏa Thuận")</td>
+                                <td>@(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                <td>
+                                    <span class="cv-status-badge @(job.Status == "OPEN" ? "open" : "closed")">@statusText</span>
+                                </td>
+                                <td class="actions-cell">
+                                    <a class="btn btn-sm btn-primary" href="/Job/DetailJobPost/@job.JobPostId">
+                                        <i class="bi bi-info-circle"></i> Chi tiết
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">
+                                        <i class="bi bi-person-lines-fill"></i> CV đã nộp
+                                    </a>
+                                    @if (job.Status != "CLOSED")
+                                    {
+                                        <a class="btn btn-sm btn-warning" href="/Employer/UpdateJobPost?jobPostId=@job.JobPostId">
+                                            <i class="bi bi-pencil-square"></i> Cập nhật
+                                        </a>
+                                    }
+                                    <form method="post" asp-page-handler="Delete" class="d-inline"
+                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa: @job.Title ?');">
+                                        <input type="hidden" name="id" value="@job.JobPostId" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </button>
+                                        @Html.AntiForgeryToken()
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.TotalPages > 1)
+                {
+                    <nav aria-label="Pagination" class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new {
+                                    StatusFilter = Model.StatusFilter,
+                                    PageIndex = Model.PageIndex - 1,
+                                    PageSize = Model.PageSize
+                                }, null)">
+                                    &laquo;
+                                </a>
+                            </li>
+                            @for (int p = 1; p <= Model.TotalPages; p++)
+                            {
+                                <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                                    <a class="page-link" href="@Url.Page(null, null, new {
+                                        StatusFilter = Model.StatusFilter,
+                                        PageIndex = p,
+                                        PageSize = Model.PageSize
+                                    }, null)">@p</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new {
+                                    StatusFilter = Model.StatusFilter,
+                                    PageIndex = Model.PageIndex + 1,
+                                    PageSize = Model.PageSize
+                                }, null)">
+                                    &raquo;
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="text-center text-muted mt-1">
+                        @{
+                            var start = (Model.TotalRecords == 0) ? 0 : ((Model.PageIndex - 1) * Model.PageSize + 1);
+                            var end = Math.Min(Model.PageIndex * Model.PageSize, Model.TotalRecords);
+                        }
+                        Hiển thị @start - @end trong tổng số @Model.TotalRecords tin tuyển dụng
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

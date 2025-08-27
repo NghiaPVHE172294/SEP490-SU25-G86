@@ -42,7 +42,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             }
             if (!IsValidPassword(Password))
             {
-                ErrorMessage = "Mật khẩu phải có chữ hoa, chữ thường và số.";
+                ErrorMessage = "Mật khẩu mới phải có ít nhất 1 chữ hoa, 1 chữ thường, 1 số và tối thiểu 6 ký tự.";
                 return Page();
             }
             // Kiểm tra email trùng bằng gọi API

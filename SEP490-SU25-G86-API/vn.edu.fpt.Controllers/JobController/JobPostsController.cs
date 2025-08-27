@@ -240,6 +240,26 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 
             return NoContent();
         }
+        /// <summary>
+        /// Lấy danh sách việc làm liên quan theo IndustryId.
+        /// </summary>
+        /// <param name="industryId">Id ngành</param>
+        /// <param name="take">Số lượng tối đa (mặc định 5)</param>
+        /// <param name="excludeJobPostId">Loại trừ JobPost hiện tại (optional)</param>
+        [HttpGet("related-jobs/{industryId:int}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<RelatedJobItemDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRelatedJobs(
+            [FromRoute] int industryId,
+            [FromQuery] int take = 5,
+            [FromQuery] int? excludeJobPostId = null,
+            CancellationToken ct = default)
+        {
+            if (industryId <= 0) return BadRequest("industryId invalid.");
 
+            var items = await _jobPostService.GetRelatedJobsAsync(industryId, take, excludeJobPostId, ct);
+            // Trả 200 kèm mảng rỗng nếu không có gì – frontend xử lý hiển thị.
+            return Ok(items);
+        }
     }
 }

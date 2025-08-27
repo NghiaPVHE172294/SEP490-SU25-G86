@@ -1,0 +1,346 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Tools.InterestModel
+@{
+    ViewData["Title"] = "Công cụ tính lãi kép";
+}
+
+<!-- ===== Hero / Page Header ===== -->
+<section class="position-relative overflow-hidden hero-section">
+    <div class="container py-5 py-md-6">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h1 class="fw-bold text-success display-6 mb-2 d-flex align-items-center gap-2">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    Công cụ tính Lãi Kép
+                </h1>
+                <p class="text-secondary fs-5 mb-0">Tính nhanh giá trị tương lai, tổng lợi nhuận và trực quan hóa tăng trưởng theo thời gian.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-semibold">
+                    <i class="bi bi-shield-check me-1"></i>Không lưu dữ liệu cá nhân
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- ===== Form Card ===== -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h2 class="h5 fw-bold text-success mb-1">
+                        <i class="bi bi-sliders2-vertical me-2"></i>Thông số tính toán
+                    </h2>
+                    <p class="text-muted mb-0">Nhập số liệu cơ bản để bắt đầu.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="row g-4" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+                        <!-- Bước 1: Đầu tư ban đầu -->
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="step-dot bg-success-subtle text-success-emphasis">1</span>
+                                <h3 class="h6 fw-bold mb-0">Đầu tư ban đầu</h3>
+                            </div>
+                            <label class="form-label">Số tiền gốc ban đầu</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">VNĐ</span>
+                                <input asp-for="Principal" type="number" min="0" step="1000" inputmode="numeric" class="form-control" placeholder="VD: 10,000,000" required>
+                            </div>
+                            <span class="form-text">Gợi ý: bắt đầu với số tròn để dễ đọc biểu đồ.</span>
+                            <span asp-validation-for="Principal" class="text-danger small d-block"></span>
+                        </div>
+
+                        <!-- Bước 2: Khoản đóng góp -->
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="step-dot bg-success-subtle text-success-emphasis">2</span>
+                                <h3 class="h6 fw-bold mb-0">Khoản đóng góp</h3>
+                            </div>
+                            <label class="form-label">Số tiền đóng góp mỗi tháng (không bắt buộc)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">VNĐ</span>
+                                <input asp-for="ContributionPerMonth" type="number" min="0" step="1000" inputmode="numeric" class="form-control" placeholder="VD: 5,000,000">
+                            </div>
+                            <span asp-validation-for="ContributionPerMonth" class="text-danger small d-block"></span>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-12">
+                                    <label class="form-label mt-2">Thời gian gửi (năm)</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                        <input asp-for="Years" type="number" min="1" max="60" step="1" class="form-control" placeholder="VD: 10" required>
+                                    </div>
+                                    <span asp-validation-for="Years" class="text-danger small d-block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bước 3: Lãi suất -->
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="step-dot bg-success-subtle text-success-emphasis">3</span>
+                                <h3 class="h6 fw-bold mb-0">Lãi suất</h3>
+                            </div>
+                            <label class="form-label">Lãi suất (%/năm)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text"><i class="bi bi-percent"></i></span>
+                                <input asp-for="InterestRate" type="number" step="0.01" min="0" max="100" class="form-control" placeholder="VD: 8" required>
+                            </div>
+                            <span asp-validation-for="InterestRate" class="text-danger small d-block"></span>
+                        </div>
+
+                        <div class="col-12 d-grid mt-2">
+                            <button type="submit" class="btn btn-success btn-lg rounded-3 py-3 fw-semibold">
+                                <i class="bi bi-calculator me-2"></i>Tính lãi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="alert alert-success-subtle border-0 mt-3 rounded-4 p-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-lightbulb fs-4 text-success"></i>
+                    <div>
+                        <div class="fw-semibold">Mẹo nhỏ</div>
+                        <div class="small text-muted">Tăng thời gian hoặc lãi suất sẽ làm đường tăng trưởng cong hơn nhờ hiệu ứng lãi kép.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Results & Chart ===== -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold text-success mb-3">
+                        <i class="bi bi-bar-chart-line me-2"></i>Kết quả & Biểu đồ
+                    </h2>
+
+                    @if (Model.FutureValue.HasValue)
+                    {
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6">
+                                <div class="stat-tile rounded-4 p-3 h-100">
+                                    <div class="text-muted small">Giá trị tương lai</div>
+                                    <div class="fs-4 fw-bold text-success">@Model.FutureValue.Value.ToString("N0") <span class="fs-6 text-muted">VNĐ</span></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="stat-tile rounded-4 p-3 h-100">
+                                    <div class="text-muted small">Tổng lợi nhuận</div>
+                                    <div class="fs-4 fw-bold">@Model.TotalProfit.Value.ToString("N0") <span class="fs-6 text-muted">VNĐ</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ratio ratio-21x9 mb-2">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                        <p class="small text-muted text-center mb-0">
+                            Sau <strong>@Model.Years</strong> năm, ước tính bạn sẽ có <strong>@Model.FutureValue.Value.ToString("N0") VNĐ</strong>.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="placeholder-glow">
+                            <div class="placeholder col-8 mb-2"></div>
+                            <div class="placeholder col-6 mb-2"></div>
+                            <div class="placeholder col-10"></div>
+                        </div>
+                        <p class="text-muted small mt-2">Nhập số liệu và nhấn <strong>Tính lãi</strong> để xem kết quả.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm rounded-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-bookmark-check text-success"></i>
+                        <h3 class="h6 fw-bold mb-0 text-success">Tóm tắt nhanh công thức</h3>
+                    </div>
+                    <div class="bg-body-tertiary rounded-4 p-3 small">
+                        <code>FV = P × (1 + r/n)<sup>n×t</sup> + PMT × [((1 + r/n)<sup>n×t</sup> − 1) / (r/n)]</code>
+                    </div>
+                    <ul class="small text-muted mb-0">
+                        <li><strong>P</strong>: tiền gốc; <strong>PMT</strong>: đóng góp tháng; <strong>r</strong>: lãi %/năm; <strong>n</strong>: số lần ghép lãi/năm; <strong>t</strong>: năm.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== About Compound Interest ===== -->
+    <div class="row g-4 mt-1">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-success d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-journal-text"></i> Giới thiệu về Lãi Kép
+                    </h3>
+                    <p class="text-muted mb-3">
+                        Lãi kép (compound interest) là hiện tượng <strong>“lãi sinh ra lãi”</strong>. Khác với lãi đơn chỉ tính trên số vốn ban đầu,
+                        lãi kép tính cả trên phần lãi đã cộng dồn từ trước. Đây chính là “hiệu ứng tuyết lăn” trong tài chính: bắt đầu nhỏ bé,
+                        nhưng càng về sau, tốc độ tăng trưởng càng mạnh mẽ.
+                    </p>
+
+                    <h4 class="h6 fw-bold text-success mt-3">Vì sao lãi kép quan trọng?</h4>
+                    <ul class="text-muted small mb-3">
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Giúp gia tăng tài sản nhanh hơn so với lãi đơn.</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Càng để lâu, hiệu quả càng lớn – thời gian là yếu tố quyết định.</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Thường được ứng dụng trong tiết kiệm, đầu tư dài hạn, bảo hiểm nhân thọ, quỹ hưu trí...</li>
+                    </ul>
+
+                    <h4 class="h6 fw-bold text-success mt-3">Nguyên tắc vàng để tận dụng lãi kép</h4>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 p-3 text-center">
+                                <i class="bi bi-clock-history text-success fs-3 mb-2"></i>
+                                <div class="fw-semibold">Bắt đầu sớm</div>
+                                <div class="small text-muted">Thời gian càng dài, sức mạnh lãi kép càng phát huy rõ rệt.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 p-3 text-center">
+                                <i class="bi bi-piggy-bank text-success fs-3 mb-2"></i>
+                                <div class="fw-semibold">Đều đặn</div>
+                                <div class="small text-muted">Đóng góp thêm mỗi tháng giúp tổng giá trị tăng trưởng bền vững.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 p-3 text-center">
+                                <i class="bi bi-shield-lock text-success fs-3 mb-2"></i>
+                                <div class="fw-semibold">Kỷ luật</div>
+                                <div class="small text-muted">Không rút vốn giữa chừng để tối đa hóa hiệu ứng lãi kép.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📌 Thêm phần công thức -->
+                    <h4 class="h6 fw-bold text-success mt-3">Một số công thức lãi kép</h4>
+                    <div class="bg-body-tertiary rounded-4 p-3 small mb-3">
+                        <p class="mb-2">
+                            <strong>1. Lãi kép cơ bản:</strong><br>
+                            <code>FV = P × (1 + r/n)<sup>n×t</sup></code>
+                        </p>
+                        <p class="mb-2">
+                            <strong>2. Có thêm khoản đóng góp hàng tháng:</strong><br>
+                            <code>FV = P × (1 + r/n)<sup>n×t</sup> + PMT × [((1 + r/n)<sup>n×t</sup> − 1) / (r/n)]</code>
+                        </p>
+                        <p class="mb-0">
+                            <strong>3. Tổng lợi nhuận:</strong><br>
+                            <code>Profit = FV − (P + PMT × 12 × t)</code>
+                        </p>
+                        <ul class="small text-muted mb-3">
+                            <li><strong>P</strong>: số tiền gốc ban đầu.</li>
+                            <li><strong>PMT</strong>: khoản đóng góp định kỳ (tháng).</li>
+                            <li><strong>r</strong>: lãi suất năm (dạng thập phân, ví dụ 8% = 0.08).</li>
+                            <li><strong>n</strong>: số lần ghép lãi trong năm (thông thường: 12 với lãi hàng tháng).</li>
+                            <li><strong>t</strong>: tổng thời gian đầu tư (năm).</li>
+                            <li><strong>FV</strong>: giá trị tương lai (Future Value) – tổng số tiền tích lũy sau t năm.</li>
+                            <li><strong>Profit</strong>: lợi nhuận thực tế sau khi trừ vốn gốc và đóng góp.</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning d-flex align-items-start gap-3 rounded-4 mt-4">
+                        <i class="bi bi-exclamation-triangle fs-4 text-warning"></i>
+                        <div>
+                            <div class="fw-semibold">Lưu ý</div>
+                            <div class="small mb-1">Lãi suất cao đi kèm rủi ro cao. Hãy cân nhắc lựa chọn kênh đầu tư an toàn và phù hợp với mục tiêu tài chính cá nhân.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- ===== Scripts ===== -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/Interest.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@if (Model.FutureValue.HasValue)
+{
+    <script>
+        (function(){
+          const labels = @Html.Raw(Json.Serialize(Model.ChartLabels));
+          const dataPrincipal = @Html.Raw(Json.Serialize(Model.ChartPrincipal));
+          const dataFuture = @Html.Raw(Json.Serialize(Model.ChartFuture));
+
+          const ctx = document.getElementById('growthChart').getContext('2d');
+
+          // Gradient for nicer line fill
+          const gradFuture = ctx.createLinearGradient(0, 0, 0, 300);
+          gradFuture.addColorStop(0, 'rgba(0, 123, 255, .25)');
+          gradFuture.addColorStop(1, 'rgba(0, 123, 255, 0)');
+
+          const gradPrincipal = ctx.createLinearGradient(0, 0, 0, 300);
+          gradPrincipal.addColorStop(0, 'rgba(0, 177, 79, .25)');
+          gradPrincipal.addColorStop(1, 'rgba(0, 177, 79, 0)');
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: 'Tiền gốc (VNĐ)',
+                  data: dataPrincipal,
+                  borderColor: '#00B14F',
+                  backgroundColor: gradPrincipal,
+                  fill: true,
+                  tension: 0.3,
+                  pointRadius: 0,
+                  borderWidth: 2
+                },
+                {
+                  label: 'Giá trị tương lai (VNĐ)',
+                  data: dataFuture,
+                  borderColor: '#007BFF',
+                  backgroundColor: gradFuture,
+                  fill: true,
+                  tension: 0.3,
+                  pointRadius: 0,
+                  borderWidth: 2
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                  callbacks: {
+                    label: function(context){
+                      const v = (context.raw ?? 0).toLocaleString('vi-VN');
+                      return context.dataset.label + ': ' + v + ' VNĐ';
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value){ return Number(value).toLocaleString('vi-VN') + ' VNĐ'; }
+                  },
+                  grid: { color: 'rgba(0,0,0,.06)' }
+                },
+                x: {
+                  grid: { display: false }
+                }
+              }
+            }
+          });
+        })();
+    </script>
+}
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

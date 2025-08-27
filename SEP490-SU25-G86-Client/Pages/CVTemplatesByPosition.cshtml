@@ -1,0 +1,198 @@
+@page "/CVTemplatesByPosition"
+@model SEP490_SU25_G86_Client.Pages.CVTemplatesByPositionModel
+@{
+    ViewData["Title"] = "Mẫu CV theo vị trí ứng tuyển";
+}
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color:#218838;">Mẫu CV tiêu biểu theo vị trí ứng tuyển</h2>
+    <form method="get" class="mb-4" id="filterForm">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Ngành nghề</label>
+                <select class="form-select" name="industryId" id="industrySelect" onchange="updatePositions()">
+                    <option value="">Tất cả ngành</option>
+                    @foreach (var ind in Model.Industries)
+                    {
+                        var isSelected = Model.SelectedIndustryId.HasValue && Model.SelectedIndustryId.Value == ind.IndustryId;
+                        <option value="@ind.IndustryId" selected="@(isSelected ? "selected" : null)">@ind.IndustryName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Vị trí</label>
+                <select class="form-select" name="positionId" id="positionSelect">
+                    <option value="">Tất cả vị trí</option>
+                    @foreach (var pos in Model.Positions)
+                    {
+                        var isSelected = Model.SelectedPositionId.HasValue && Model.SelectedPositionId.Value == pos.PositionId;
+                        <option value="@pos.PositionId" data-industry="@pos.IndustryId" 
+                                selected="@(isSelected ? "selected" : null)">@pos.PostitionName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" class="form-control" name="search" value="@Model.SearchTerm" placeholder="Tên CV..." />
+            </div>
+            <div class="col-md-1 d-flex flex-column align-items-stretch" style="min-width:120px;">
+                <button type="submit" class="btn btn-success mb-2" style="width:100%; min-width:110px;">Lọc</button>
+                <a href="/CVTemplatesByPosition" class="btn btn-secondary" style="width:100%; min-width:110px;">Xóa lọc</a>
+            </div>
+        </div>
+        <input type="hidden" name="page" value="1" id="pageInput" />
+    </form>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @if (Model.Templates != null && Model.Templates.Count > 0)
+        {
+            foreach (var template in Model.Templates)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@template.ImgTemplate" class="card-img-top" alt="CV Preview" style="width:100%;max-height:340px;object-fit:contain;background:#f8f9fa;">
+                        <div class="card-body">
+                            <h5 class="card-title">@template.PositionName</h5>
+                            <p class="card-text">@template.CvTemplateName</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a class="btn btn-outline-success" href="@template.PdfFileUrl" target="_blank">Xem PDF</a>
+                            @if (!string.IsNullOrEmpty(template.DocFileUrl))
+{
+    <a class="btn btn-outline-primary" href="@template.DocFileUrl" target="_blank">Tải DOCX</a>
+}
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted">Chưa có mẫu CV nào.</div>
+        }
+    </div>
+    <!-- Phân trang -->
+    <div class="d-flex justify-content-center mt-4">
+        @{
+            int page = Model.Page;
+int totalCount = Model.TotalCount;
+int pageSize = Model.PageSize;
+int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        }
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(page == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?@GetPageUrl(page - 1)" data-page="@(page - 1)">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(page == i ? "active" : "")">
+                        <a class="page-link" href="?@GetPageUrl(i)" data-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(page == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?@GetPageUrl(page + 1)" data-page="@(page + 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<style>
+    .card-img-top {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+</style>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Hàm cập nhật danh sách vị trí dựa trên ngành nghề đã chọn
+    async function updatePositions() {
+        const industrySelect = document.getElementById('industrySelect');
+        const positionSelect = document.getElementById('positionSelect');
+        const industryId = industrySelect ? industrySelect.value : '';
+        
+        if (!positionSelect) return;
+        
+        // Hiển thị trạng thái đang tải
+        positionSelect.disabled = true;
+        positionSelect.innerHTML = '<option value="">Đang tải vị trí...</option>';
+        
+        try {
+            let url = 'https://localhost:7004/api/JobPositions';
+            if (industryId) {
+                url += `/by-industry/${industryId}`;
+            }
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Không thể tải danh sách vị trí');
+            }
+            
+            const positions = await response.json();
+            
+            // Cập nhật danh sách vị trí
+            positionSelect.innerHTML = '<option value="">Tất cả vị trí</option>';
+            
+            if (Array.isArray(positions)) {
+                positions.forEach(position => {
+                    const option = document.createElement('option');
+                    option.value = position.positionId;
+                    option.textContent = position.postitionName;
+                    positionSelect.appendChild(option);
+                });
+            }
+            
+            // Chọn lại vị trí đã chọn trước đó (nếu có)
+            const selectedPosition = document.querySelector('input[name="positionId"]');
+            if (selectedPosition && selectedPosition.value) {
+                positionSelect.value = selectedPosition.value;
+            }
+            
+        } catch (error) {
+            console.error('Lỗi khi tải vị trí:', error);
+            positionSelect.innerHTML = '<option value="">Lỗi khi tải vị trí</option>';
+        } finally {
+            positionSelect.disabled = false;
+        }
+    }
+    
+    // Xử lý khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        const industrySelect = document.getElementById('industrySelect');
+        const positionSelect = document.getElementById('positionSelect');
+        const form = document.getElementById('filterForm');
+        const pageInput = document.getElementById('pageInput');
+        
+        if (!industrySelect || !positionSelect || !form) return;
+        
+        // Xử lý khi chọn trang phân trang
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                if (page && pageInput) {
+                    pageInput.value = page;
+                    form.submit();
+                }
+            });
+        });
+        
+        // Xử lý khi thay đổi ngành nghề
+        industrySelect.addEventListener('change', function() {
+            updatePositions();
+        });
+        
+        // Tự động tải lại danh sách vị trí nếu có ngành được chọn
+        if (industrySelect.value) {
+            updatePositions();
+        }
+        
+    });
+</script>
+
+@functions {
+    public string GetPageUrl(int pageNum)
+    {
+        var query = new Dictionary<string, string>(Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString()));
+        query["page"] = pageNum.ToString();
+        return string.Join("&", query.Select(kv => $"{kv.Key}={System.Net.WebUtility.UrlEncode(kv.Value)}"));
+    }
+}

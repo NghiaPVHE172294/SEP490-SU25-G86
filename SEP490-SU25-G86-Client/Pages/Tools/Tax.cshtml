@@ -1,0 +1,380 @@
+﻿@page
+@model SEP490_SU25_G86_Client.Pages.Tools.TaxModel
+@{
+    ViewData["Title"] = "Công cụ tính Thuế thu nhập cá nhân chuẩn 2025";
+}
+
+<link rel="stylesheet" href="~/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/tax.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<div class="tax-hero gradient-hero py-4 mb-3">
+    <div class="container d-flex align-items-center justify-content-between gap-3">
+        <div>
+            <h1 class="h3 mb-2 text-white fw-semibold">
+                <i class="bi bi-calculator"></i> Công cụ tính Thuế thu nhập cá nhân chuẩn 2025
+            </h1>
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <span class="badge bg-light text-dark">Cập nhật biểu thuế & giảm trừ</span>
+                <span class="badge bg-success-subtle text-white-75 border border-white-25">
+                    <i class="bi bi-shield-check"></i> Chính xác – Dễ hiểu – Minh bạch
+                </span>
+            </div>
+        </div>
+        <div class="text-end d-none d-md-block">
+            <div class="hero-cta text-white-75 small">
+                <i class="bi bi-info-circle"></i> Chọn giai đoạn áp dụng & vùng, nhập lương để tính
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-4">
+    <div class="row g-4">
+        <!-- LEFT: FORM -->
+        <div class="col-lg-5">
+            <div class="card border-0 soft-shadow rounded-3 overflow-hidden">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="fw-semibold"><i class="bi bi-sliders2"></i> Thông tin tính thuế</span>
+                        <span class="text-muted small">~ 1 phút</span>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <!-- Áp dụng quy định -->
+                    <div class="mb-3">
+                        <label class="fw-semibold d-block mb-2">Áp dụng quy định</label>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-check form-check-custom">
+                                <input class="form-check-input" type="radio" id="phase2" name="Period" value="2025" asp-for="Period" checked="@("2025" == Model.Period)">
+                                <label class="form-check-label text-success fw-semibold" for="phase2">
+                                    <i class="bi bi-stars"></i> Từ 01/07/2025 (Mới nhất)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú nhanh -->
+                    <div class="note-box rounded-3 p-3 mb-3">
+                        <ul class="mb-0 small">
+                            <li>Áp dụng mức lương cơ sở từ 01/07/2024 (NĐ 73/2024/NĐ-CP).</li>
+                            <li>Áp dụng lương tối thiểu vùng từ 01/07/2025 (NĐ 128/2025/NĐ-CP).</li>
+                            <li>Giảm trừ gia cảnh: <b>11.000.000đ</b>/tháng (bản thân), <b>4.400.000đ</b>/tháng/người phụ thuộc.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Form -->
+                    <form method="post" class="tax-form">
+
+                        <!-- Thu nhập -->
+                        <div class="mb-3">
+                            <label class="fw-semibold mb-1" for="GrossIncome">Thu Nhập (Gross)</label>
+                            <div class="input-group input-group-custom">
+                                <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+                                <input type="number" class="form-control" id="GrossIncome" asp-for="GrossIncome" placeholder="VD: 10,000,000" step="1000">
+                                <span class="input-group-text">VND</span>
+                            </div>
+                            <div class="form-text">Nhập lương trước thuế và trước bảo hiểm.</div>
+                        </div>
+
+                        <!-- Lương đóng BHXH -->
+                        <div class="mb-3">
+                            <label class="fw-semibold mb-1 d-block">Mức lương đóng bảo hiểm</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" asp-for="InsuranceOption" id="insuranceDefault" value="default" type="radio" checked>
+                                    <label class="form-check-label" for="insuranceDefault">Theo lương chính thức</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" asp-for="InsuranceOption" id="insuranceCustom" value="custom" type="radio">
+                                    <label class="form-check-label" for="insuranceCustom">Tùy chỉnh</label>
+                                </div>
+                            </div>
+                            <div id="insuranceSalaryInput" class="input-group input-group-custom mt-2" style="display:none;">
+                                <span class="input-group-text"><i class="bi bi-piggy-bank"></i></span>
+                                <input type="number" class="form-control" asp-for="InsuranceSalary" placeholder="Nhập mức lương đóng BH" step="1000">
+                                <span class="input-group-text">VND</span>
+                            </div>
+                            <div class="form-text">Nếu DN đóng BH trên mức khác lương chính, hãy chọn “Tùy chỉnh”.</div>
+                        </div>
+
+                        <!-- Chọn vùng -->
+                        <div class="mb-3">
+                            <label class="fw-semibold mb-1">Vùng <span class="text-danger small">(Giải thích)</span></label>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="Region" type="radio" value="1" id="region1">
+                                    <label class="form-check-label" for="region1">I</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="Region" type="radio" value="2" id="region2">
+                                    <label class="form-check-label" for="region2">II</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="Region" type="radio" value="3" id="region3">
+                                    <label class="form-check-label" for="region3">III</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="Region" type="radio" value="4" id="region4">
+                                    <label class="form-check-label" for="region4">IV</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Người phụ thuộc -->
+                        <div class="mb-4">
+                            <label class="fw-semibold mb-1" for="Dependents">Số người phụ thuộc</label>
+                            <div class="input-group input-group-custom">
+                                <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                <input type="number" class="form-control" id="Dependents" asp-for="Dependents" min="0" placeholder="0">
+                                <span class="input-group-text">người</span>
+                            </div>
+                        </div>
+
+                        <!-- Giảm trừ gia cảnh -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <div class="d-flex gap-3 flex-wrap">
+                                    <div class="mini-card flex-fill">
+                                        <div class="mini-card-title">Giảm trừ bản thân</div>
+                                        <div class="mini-card-value text-success">@string.Format("{0:N0}đ", 11000000)</div>
+                                    </div>
+                                    <div class="mini-card flex-fill">
+                                        <div class="mini-card-title">Người phụ thuộc</div>
+                                        <div class="mini-card-value text-success">@string.Format("{0:N0}đ", 4400000)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nút tính -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-3">
+                                <i class="bi bi-cpu"></i> Tính thuế TNCN
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: RESULT + GUIDE -->
+        <div class="col-lg-7">
+            <!-- Kết quả -->
+            @if (Model.Calculated)
+            {
+                <div class="card border-0 soft-shadow rounded-3 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-semibold text-success"><i class="bi bi-clipboard-check"></i> Kết quả tính thuế</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Summary Cards -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-4">
+                                <div class="stat-card border-0 rounded-3 p-3 h-100 bg-success-subtle">
+                                    <div class="stat-title">Thu nhập NET</div>
+                                    <div class="stat-value">@Model.NetIncome.ToString("N0") <span class="stat-unit">VNĐ</span></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="stat-card border-0 rounded-3 p-3 h-100 bg-danger-subtle">
+                                    <div class="stat-title">Thuế TNCN</div>
+                                    <div class="stat-value">@Model.TaxAmount.ToString("N0") <span class="stat-unit">VNĐ</span></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="stat-card border-0 rounded-3 p-3 h-100 bg-warning-subtle">
+                                    <div class="stat-title">Thu nhập chịu thuế</div>
+                                    <div class="stat-value">@Model.TaxableIncome.ToString("N0") <span class="stat-unit">VNĐ</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Breakdown Table -->
+                        <div class="table-responsive rounded-3 overflow-hidden">
+                            <table class="table table-sm table-bordered align-middle mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th class="w-40">Lương GROSS</th>
+                                        <td>@Model.GrossIncome.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bảo hiểm xã hội (8%)</th>
+                                        <td>@Model.BHXH.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bảo hiểm y tế (1.5%)</th>
+                                        <td>@Model.BHYT.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bảo hiểm thất nghiệp (1%)</th>
+                                        <td>@Model.BHTN.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Thu nhập trước thuế</th>
+                                        <td>@Model.IncomeBeforeTax.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Giảm trừ gia cảnh bản thân</th>
+                                        <td>@Model.PersonalDeductionPublic.ToString("N0") VNĐ</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Giảm trừ người phụ thuộc</th>
+                                        <td>@((Model.Dependents * Model.DependentDeductionPublic).ToString("N0")) VNĐ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Hướng dẫn/FAQ (Accordion) -->
+            <div class="card border-0 soft-shadow rounded-3">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0 fw-semibold"><i class="bi bi-journal-text"></i> Hướng dẫn & Câu hỏi thường gặp</h5>
+                        <span class="small text-muted">Tài liệu rút gọn</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="tncnGuide">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g0">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c0" aria-expanded="true" aria-controls="c0">
+                                    Thuế thu nhập cá nhân là gì?
+                                </button>
+                            </h2>
+                            <div id="c0" class="accordion-collapse collapse show" aria-labelledby="g0" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Thuế thu nhập cá nhân (Personal income tax) là khoản trích từ lương và các nguồn thu hợp pháp khác sau khi đã áp dụng các khoản giảm trừ theo luật định; là nguồn thu ngân sách và công cụ điều tiết thu nhập xã hội.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g1">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1" aria-expanded="false" aria-controls="c1">
+                                    Xác định cá nhân cư trú và không cư trú
+                                </button>
+                            </h2>
+                            <div id="c1" class="accordion-collapse collapse" aria-labelledby="g1" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    <ul class="mb-0">
+                                        <li><b>Cư trú:</b> Có nơi ở thường xuyên tại VN hoặc hiện diện ≥ 183 ngày trong 1 năm/12 tháng liên tục.</li>
+                                        <li><b>Không cư trú:</b> Không đáp ứng điều kiện cư trú theo Luật Thuế TNCN.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2" aria-expanded="false" aria-controls="c2">
+                                    Cách tính thuế cho cá nhân cư trú (HĐLĐ ≥ 03 tháng)
+                                </button>
+                            </h2>
+                            <div id="c2" class="accordion-collapse collapse" aria-labelledby="g2" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    <p class="mb-2"><b>Thuế phải nộp = Thu nhập tính thuế × Thuế suất lũy tiến từng phần</b></p>
+                                    <ul>
+                                        <li>Thu nhập tính thuế = Thu nhập chịu thuế − (Giảm trừ bản thân + phụ thuộc + BH bắt buộc + khoản được trừ theo luật).</li>
+                                        <li>Biểu thuế: 5% → 35% theo các bậc thuế.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3" aria-expanded="false" aria-controls="c3">
+                                    Thu nhập bao nhiêu thì bắt đầu nộp thuế?
+                                </button>
+                            </h2>
+                            <div id="c3" class="accordion-collapse collapse" aria-labelledby="g3" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Không có người phụ thuộc: nộp thuế khi <b>thu nhập > 11 triệu đồng/tháng</b> sau khi đã trừ BH bắt buộc và các khoản được trừ hợp lệ.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g4">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4" aria-expanded="false" aria-controls="c4">
+                                    HĐLĐ < 3 tháng hoặc không ký HĐLĐ, thuế tạm khấu trừ thế nào?
+                                </button>
+                            </h2>
+                            <div id="c4" class="accordion-collapse collapse" aria-labelledby="g4" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Khấu trừ <b>10%</b> trên mỗi lần chi trả từ <b>2.000.000đ</b> trở lên, trừ trường hợp đủ điều kiện làm cam kết theo quy định.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g5">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c5" aria-expanded="false" aria-controls="c5">
+                                    Cá nhân không cư trú
+                                </button>
+                            </h2>
+                            <div id="c5" class="accordion-collapse collapse" aria-labelledby="g5" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Thuế = <b>20%</b> × thu nhập chịu thuế (không được giảm trừ gia cảnh). Nếu làm việc cả ở VN và nước ngoài, xác định phần thu nhập phát sinh tại VN theo số ngày làm việc/có mặt.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g6">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c6" aria-expanded="false" aria-controls="c6">
+                                    Làm thêm giờ, làm đêm có chịu thuế?
+                                </button>
+                            </h2>
+                            <div id="c6" class="accordion-collapse collapse" aria-labelledby="g6" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Miễn phần <b>cao hơn</b> so với mức trả giờ hành chính/ban ngày theo Bộ luật Lao động (chỉ phần chênh được miễn).
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="g7">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c7" aria-expanded="false" aria-controls="c7">
+                                    Các khoản phụ cấp/trợ cấp không tính thuế
+                                </button>
+                            </h2>
+                            <div id="c7" class="accordion-collapse collapse" aria-labelledby="g7" data-bs-parent="#tncnGuide">
+                                <div class="accordion-body">
+                                    Bao gồm: ưu đãi người có công; quốc phòng, an ninh; độc hại, nguy hiểm; khu vực/thu hút; thai sản; TNLĐ/BNN; thôi việc/mất việc/thất nghiệp; bảo trợ xã hội; chuyển vùng một lần theo quy định; phụ cấp đặc thù ngành nghề… (xem chi tiết tại TT 111/2013/TT-BTC & TT 92/2015/TT-BTC).
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /RIGHT -->
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const insuranceDefault = document.getElementById("insuranceDefault");
+            const insuranceCustom = document.getElementById("insuranceCustom");
+            const insuranceSalaryInput = document.getElementById("insuranceSalaryInput");
+
+            function toggleInsuranceInput() {
+                insuranceSalaryInput.style.display = insuranceCustom.checked ? "flex" : "none";
+            }
+
+            toggleInsuranceInput();
+            insuranceDefault?.addEventListener("change", toggleInsuranceInput);
+            insuranceCustom?.addEventListener("change", toggleInsuranceInput);
+        });
+    </script>
+}
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

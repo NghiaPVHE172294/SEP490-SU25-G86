@@ -1,0 +1,354 @@
+@page
+@model SEP490_SU25_G86_Client.Pages.Admin.AdminCVTemplatesModel
+@{
+    ViewData["Title"] = "Quản lý CV Template (Admin)";
+}
+<div class="container-cv">
+    @if (TempData["UploadError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["UploadError"]</div>
+    }
+    <div class="cv-card">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">CV Template đã upload (Admin)</h4>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadTemplateModal" id="btnUploadTemplate">
+                    <i class="bi bi-upload"></i> Tải CV Template lên
+                </button>
+            </div>
+            <div class="card-body">
+                <form method="get" id="template-filter-form" class="cv-filter-form row g-2 align-items-end mb-3">
+    <div class="col-md-4">
+        <label for="SearchName" class="form-label">Tìm kiếm tên Template</label>
+        <input type="text" class="form-control" id="SearchName" name="SearchName" value="@Request.Query["SearchName"]" placeholder="Nhập tên template...">
+    </div>
+    <div class="col-md-3">
+        <label for="DateFrom" class="form-label">Ngày tải lên (từ)</label>
+        <input type="date" class="form-control" id="DateFrom" name="DateFrom" value="@Request.Query["DateFrom"]">
+    </div>
+    <div class="col-md-3">
+        <label for="DateTo" class="form-label">Ngày tải lên (đến)</label>
+        <input type="date" class="form-control" id="DateTo" name="DateTo" value="@Request.Query["DateTo"]">
+    </div>
+    <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-100">Lọc</button>
+        <a href="@Url.Page(null, null, null)" class="btn btn-outline-secondary w-100">Xóa lọc</a>
+    </div>
+</form>
+                <div class="table-responsive-cv">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>TÊN TEMPLATE</th>
+                                <th>FILE PDF</th>
+                                <th>FILE DOC/DOCX</th>
+                                <th>ẢNH MINH HỌA</th>
+                                <th>NGÀY TẢI LÊN</th>
+                                <th>NGÀNH</th>
+                                <th>VỊ TRÍ</th>
+                                <th>GHI CHÚ</th>
+                                <th>HÀNH ĐỘNG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Templates != null && Model.Templates.Count > 0)
+                            {
+                                foreach (var template in Model.Templates)
+                                {
+                                    <tr>
+                                        <td>@template.CvTemplateName</td>
+                                        <td>
+                                            <a href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(template.PdfFileUrl))&embedded=true" target="_blank" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-file-earmark-pdf"></i> Xem PDF
+                                            </a>
+                                            <a href="@template.PdfFileUrl" target="_blank" class="btn btn-sm btn-secondary ms-1">
+                                                <i class="bi bi-download"></i> Tải
+                                            </a>
+                                        </td>
+                                        <td>
+    @if (!string.IsNullOrEmpty(template.DocFileUrl))
+    {
+        <a href="https://docs.google.com/gview?url=@(Uri.EscapeDataString(template.DocFileUrl))&embedded=true" target="_blank" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-file-earmark-word"></i> Xem DOC
+        </a>
+        <a href="@template.DocFileUrl" target="_blank" class="btn btn-sm btn-secondary ms-1">
+            <i class="bi bi-download"></i> Tải
+        </a>
+    }
+    else
+    {
+        <span class="text-muted">Không có</span>
+    }
+</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(template.ImgTemplate))
+                                            {
+                                                <img src="@template.ImgTemplate" alt="Ảnh minh họa" style="max-width: 80px; max-height: 80px; border-radius: 8px;" />
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Không có</span>
+                                            }
+                                        </td>
+                                        <td>@(template.UploadDateParsed?.ToString("dd/MM/yyyy HH:mm") ?? template.UploadDate ?? "")</td>
+                                        <td>@template.IndustryName</td>
+                                        <td>@template.PositionName</td>
+                                        <td>
+    @if (string.IsNullOrEmpty(template.Notes) || template.Notes == "Không có")
+    {
+        <span>Không có</span>
+    }
+    else
+    {
+        <span style="max-width: 180px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;" title="@template.Notes">
+            @template.Notes
+        </span>
+    }
+</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editTemplateModal" onclick="editTemplate(@template.CvTemplateId, '@template.CvTemplateName', '@template.Notes')">
+                                                    <i class="bi bi-pencil"></i> Sửa
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTemplateModal" onclick="deleteTemplate(@template.CvTemplateId, '@template.CvTemplateName')">
+                                                    <i class="bi bi-trash"></i> Xóa
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">Chưa có CV template nào được tải lên.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Page(null, null, new { SearchName = Request.Query["SearchName"], DateFrom = Request.Query["DateFrom"], DateTo = Request.Query["DateTo"], page = Model.PageIndex - 1 }, null)">&laquo;</a>
+                        </li>
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Page(null, null, new { SearchName = Request.Query["SearchName"], DateFrom = Request.Query["DateFrom"], DateTo = Request.Query["DateTo"], page = i }, null)">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Page(null, null, new { SearchName = Request.Query["SearchName"], DateFrom = Request.Query["DateFrom"], DateTo = Request.Query["DateTo"], page = Model.PageIndex + 1 }, null)">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="text-center mt-2 mb-2">
+                    Hiển thị @(((Model.PageIndex-1)*Model.PageSize)+1) - @(Math.Min(Model.PageIndex*Model.PageSize, Model.TotalCount)) trong tổng số @Model.TotalCount CV
+                </div>
+                @* Pagination và các modal upload/edit/delete tương tự employer *@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- UPLOAD TEMPLATE MODAL -->
+<div class="modal fade" id="uploadTemplateModal" tabindex="-1" aria-labelledby="uploadTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadTemplateModalLabel">Tải CV Template lên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="CvTemplateName" class="form-label">Tên Template <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="CvTemplateName" name="CvTemplateName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PdfFile" class="form-label">File PDF (CV mẫu) <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="PdfFile" name="PdfFile" accept=".pdf" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DocFile" class="form-label">File DOC/DOCX (Template)</label>
+                        <input type="file" class="form-control" id="DocFile" name="DocFile" accept=".doc,.docx">
+                    </div>
+                    <div class="mb-3">
+                        <label for="PreviewImage" class="form-label">Ảnh minh họa (PNG/JPEG) <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="PreviewImage" name="PreviewImage" accept=".png,.jpg,.jpeg" required>
+                    </div>
+                    <div class="mb-3">
+    <label for="IndustryId" class="form-label">Ngành <span class="text-danger">*</span></label>
+    <select class="form-select" id="IndustryId" name="IndustryId" required @(Model.Industries.Count == 0 ? "disabled" : null)>
+        <option value="">-- Chọn ngành --</option>
+        @foreach (var industry in Model.Industries)
+        {
+            <option value="@industry.IndustryId">@industry.IndustryName</option>
+        }
+    </select>
+</div>
+<div class="mb-3">
+    <label for="PositionId" class="form-label">Vị trí <span class="text-danger">*</span></label>
+    <select class="form-select" id="PositionId" name="PositionId" required @(Model.Positions.Count == 0 ? "disabled" : null)>
+        <option value="">-- Chọn vị trí --</option>
+        @foreach (var pos in Model.Positions)
+        {
+            <option value="@pos.PositionId">@pos.PostitionName</option>
+        }
+    </select>
+</div>
+                    <div class="mb-3">
+                        <label for="Notes" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="Notes" name="Notes" rows="3" placeholder="Mô tả về template này..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-upload"></i> Tải lên
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- EDIT TEMPLATE MODAL -->
+<div class="modal fade" id="editTemplateModal" tabindex="-1" aria-labelledby="editTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Edit">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTemplateModalLabel">Chỉnh sửa Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="EditTemplateId" name="TemplateId">
+                    <div class="mb-3">
+                        <label for="EditCvTemplateName" class="form-label">Tên Template <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="EditCvTemplateName" name="CvTemplateName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditNotes" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="EditNotes" name="Notes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- DELETE TEMPLATE MODAL -->
+<div class="modal fade" id="deleteTemplateModal" tabindex="-1" aria-labelledby="deleteTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Delete">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTemplateModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="DeleteTemplateId" name="TemplateId">
+                    <p>Bạn có chắc chắn muốn xóa template "<span id="DeleteTemplateName"></span>" không?</p>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Hành động này không thể hoàn tác!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Xóa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal và style có thể reuse từ employer -->
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function editTemplate(id, name, notes) {
+        document.getElementById('EditTemplateId').value = id;
+        document.getElementById('EditCvTemplateName').value = name;
+        document.getElementById('EditNotes').value = notes || '';
+    }
+    function deleteTemplate(id, name) {
+        document.getElementById('DeleteTemplateId').value = id;
+        document.getElementById('DeleteTemplateName').textContent = name;
+    }
+</script>
+<style>
+    .container-cv { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .cv-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .table-responsive-cv { border-radius: 8px; overflow: hidden; }
+    .cv-filter-form { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .btn-group .btn { margin-right: 5px; }
+    .btn-group .btn:last-child { margin-right: 0; }
+</style>
+<script>
+    // Hàm cập nhật danh sách vị trí dựa trên ngành đã chọn trong modal upload
+    async function updatePositionsForIndustry() {
+        const industrySelect = document.getElementById('IndustryId');
+        const positionSelect = document.getElementById('PositionId');
+        const industryId = industrySelect ? industrySelect.value : '';
+        if (!positionSelect) return;
+        positionSelect.disabled = true;
+        positionSelect.innerHTML = '<option value="">Đang tải vị trí...</option>';
+        if (!industryId) {
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+            positionSelect.disabled = true;
+            return;
+        }
+        try {
+            let url = 'https://localhost:7004/api/JobPositions/by-industry/' + industryId;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Không thể tải danh sách vị trí');
+            const positions = await response.json();
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+            if (Array.isArray(positions)) {
+                positions.forEach(function(pos) {
+                    const option = document.createElement('option');
+                    option.value = pos.positionId;
+                    option.textContent = pos.postitionName;
+                    positionSelect.appendChild(option);
+                });
+            }
+            positionSelect.disabled = false;
+        } catch (e) {
+            positionSelect.innerHTML = '<option value="">Lỗi khi tải vị trí</option>';
+            positionSelect.disabled = true;
+        }
+    }
+    // Gắn sự kiện onchange cho dropdown ngành trong modal upload
+    document.addEventListener('DOMContentLoaded', function() {
+        var industrySelect = document.getElementById('IndustryId');
+        var positionSelect = document.getElementById('PositionId');
+        if (industrySelect && positionSelect) {
+            industrySelect.addEventListener('change', updatePositionsForIndustry);
+            // Nếu đã có ngành được chọn khi mở modal thì tự động load vị trí
+            if (industrySelect.value) {
+                updatePositionsForIndustry();
+            } else {
+                positionSelect.disabled = true;
+            }
+        }
+        // Reset dropdown vị trí khi mở modal upload
+        var uploadModal = document.getElementById('uploadTemplateModal');
+        if (uploadModal) {
+            uploadModal.addEventListener('show.bs.modal', function() {
+                if (industrySelect && !industrySelect.value) {
+                    positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+                    positionSelect.disabled = true;
+                } else if (industrySelect && industrySelect.value) {
+                    updatePositionsForIndustry();
+                }
+            });
+        }
+    });
+</script>

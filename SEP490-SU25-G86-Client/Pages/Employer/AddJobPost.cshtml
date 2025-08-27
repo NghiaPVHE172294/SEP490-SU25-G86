@@ -3,294 +3,285 @@
 @{
     ViewData["Title"] = "Tạo bài đăng tuyển dụng";
 }
+<link rel="stylesheet" href="~/css/AddJobPost.css" />
 
-<h2>Tạo bài đăng tuyển dụng</h2>
+<div class="container py-5">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
 
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <div class="alert alert-danger">@Model.ErrorMessage</div>
-}
-
-@if (Model.JobPostId > 0)
-{
-    <div class="alert alert-success">
-        Tạo bài đăng thành công!<br />
-        <a class="btn btn-primary mt-2" href="/Employer/AddJobCriteria?jobPostId=@Model.JobPostId">Thêm tiêu chí tuyển dụng</a>
-        <a class="btn btn-outline-secondary mt-2" href="/Employer/ListJobByEmployer">Xem danh sách bài đăng</a>
-    </div>
-}
-else
-{
-    <form method="post" class="row g-3">
-        <div class="col-md-6">
-            <label asp-for="JobPost.Title" class="form-label"></label>
-            <input asp-for="JobPost.Title" class="form-control" />
-            <span asp-validation-for="JobPost.Title" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label asp-for="JobPost.WorkLocation" class="form-label"></label>
-            <input asp-for="JobPost.WorkLocation" class="form-control" />
-            <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label asp-for="JobPost.Status" class="form-label"></label>
-            <select asp-for="JobPost.Status" class="form-select">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="OPEN">OPEN</option>
-                <option value="CLOSED">CLOSED</option>
-            </select>
-            <span asp-validation-for="JobPost.Status" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label asp-for="JobPost.EndDate" class="form-label"></label>
-            <input asp-for="JobPost.EndDate" type="date" class="form-control" />
-            <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label asp-for="JobPost.Description" class="form-label"></label>
-            <textarea asp-for="JobPost.Description" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="JobPost.Description" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label asp-for="JobPost.CandidaterRequirements" class="form-label"></label>
-            <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2"></textarea>
-            <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
-        </div>
-        <div class="col-12">
-            <label asp-for="JobPost.Interest" class="form-label"></label>
-            <textarea asp-for="JobPost.Interest" class="form-control" rows="2"></textarea>
-            <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Ngành nghề</label>
-            <select id="industrySelect" name="JobPost.IndustryId" class="form-select" onchange="onIndustryChange()">
-                <option value="">-- Chọn ngành nghề --</option>
-                @foreach (var industry in Model.Industries)
-                {
-                    <option value="@industry.IndustryId">@industry.IndustryName</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <input id="newIndustryInput" name="JobPost.NewIndustryName" class="form-control mt-2" style="display:none;" placeholder="Nhập ngành nghề mới" />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Vị trí công việc</label>
-            <select id="jobPositionSelect" name="JobPost.JobPositionId" class="form-select" onchange="onJobPositionChange()">
-                <option value="">-- Chọn vị trí --</option>
-                @foreach (var pos in Model.JobPositions)
-                {
-                    <option value="@pos.PositionId">@pos.PostitionName</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <input id="newJobPositionInput" name="JobPost.NewJobPositionName" class="form-control mt-2" style="display:none;" placeholder="Nhập vị trí mới" />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Mức lương</label>
-            <select id="salaryRangeSelect" name="JobPost.SalaryRangeId" class="form-select" onchange="onSalaryRangeChange()">
-                <option value="">-- Chọn mức lương --</option>
-                @foreach (var s in Model.SalaryRanges)
-                {
-                    <option value="@s.SalaryRangeId">@((s.MinSalary.HasValue && s.MaxSalary.HasValue) ? ($"{s.MinSalary:N0} - {s.MaxSalary:N0} {s.Currency}") : "Thỏa thuận")</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <div id="newSalaryRangeGroup" style="display:none;" class="mt-2">
-                <div class="row g-2">
-                    <div class="col">
-                        <input id="minSalaryInput" class="form-control" placeholder="Lương tối thiểu" type="number" min="0" />
-                    </div>
-                    <div class="col">
-                        <input id="maxSalaryInput" class="form-control" placeholder="Lương tối đa" type="number" min="0" />
-                    </div>
-                    <div class="col">
-                        <input id="currencyInput" class="form-control" placeholder="Tiền tệ (VD: VND)" maxlength="10" />
-                    </div>
-                </div>
-                <input type="hidden" id="newSalaryRangeHidden" name="JobPost.NewSalaryRange" />
+    @if (Model.JobPostId > 0)
+    {
+        <div class="alert alert-success text-center">
+            <strong>Tạo bài đăng thành công!</strong><br />
+            <div class="mt-3">
+                <a class="btn btn-primary" href="/Employer/AddJobCriteria?jobPostId=@Model.JobPostId">Thêm tiêu chí tuyển dụng</a>
+                <a class="btn btn-outline-secondary" href="/Employer/ListJobByEmployer">Xem danh sách bài đăng</a>
             </div>
         </div>
-        <div class="col-md-6">
-            <label class="form-label">Tỉnh/Thành phố</label>
-            <select id="provinceSelect" name="JobPost.ProvinceId" class="form-select">
-                <option value="">-- Chọn tỉnh/thành --</option>
-                @foreach (var province in Model.Provinces)
-                {
-                    <option value="@province.ProvinceId">@province.ProvinceName</option>
-                }
-            </select>
-            <span asp-validation-for="JobPost.ProvinceId" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Trình độ kinh nghiệm</label>
-            <select id="experienceLevelSelect" name="JobPost.ExperienceLevelId" class="form-select" onchange="onExperienceLevelChange()">
-                <option value="">-- Chọn trình độ --</option>
-                @foreach (var exp in Model.ExperienceLevels)
-                {
-                    <option value="@exp.ExperienceLevelId">@exp.ExperienceLevelName</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <input id="newExperienceLevelInput" name="JobPost.NewExperienceLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập trình độ mới" />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Cấp bậc</label>
-            <select id="jobLevelSelect" name="JobPost.JobLevelId" class="form-select" onchange="onJobLevelChange()">
-                <option value="">-- Chọn cấp bậc --</option>
-                @foreach (var jl in Model.JobLevels)
-                {
-                    <option value="@jl.JobLevelId">@jl.JobLevelName</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <input id="newJobLevelInput" name="JobPost.NewJobLevelName" class="form-control mt-2" style="display:none;" placeholder="Nhập cấp bậc mới" />
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Loại hình làm việc</label>
-            <select id="employmentTypeSelect" name="JobPost.EmploymentTypeId" class="form-select" onchange="onEmploymentTypeChange()">
-                <option value="">-- Chọn loại hình --</option>
-                @foreach (var et in Model.EmploymentTypes)
-                {
-                    <option value="@et.EmploymentTypeId">@et.EmploymentTypeName</option>
-                }
-                <option value="other">Khác...</option>
-            </select>
-            <input id="newEmploymentTypeInput" name="JobPost.NewEmploymentTypeName" class="form-control mt-2" style="display:none;" placeholder="Nhập loại hình mới" />
-        </div>
-        <div class="col-md-6">
-            <label asp-for="JobPost.CvtemplateOfEmployerId" class="form-label">CV Template cho ứng viên (tùy chọn)</label>
-            <select asp-for="JobPost.CvtemplateOfEmployerId" class="form-select">
-                <option value="">-- Không sử dụng template --</option>
-                @foreach (var t in Model.CvTemplates)
-                {
-                    <option value="@t.CvtemplateOfEmployerId">@t.CvTemplateName</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-6 d-flex align-items-center">
-            <input asp-for="JobPost.IsAienabled" class="form-check-input me-2" type="checkbox" />
-            <label asp-for="JobPost.IsAienabled" class="form-check-label"></label>
-        </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-success px-5">Tạo mới</button>
-        </div>
-    </form>
-}
+    }
+    else
+    {
+        <form method="post" class="row g-4 form-section">
+            <div>
+                <h2 class="text-center">Tạo bài đăng tuyển dụng</h2>
+                <p class="text-center mb-4">Điền thông tin chi tiết về công việc bạn muốn tuyển dụng</p>
+            </div>
+
+            <!-- Tiêu đề & Địa điểm -->
+            <div class="col-md-6">
+                <label class="form-label">Tiêu đề công việc *</label>
+                <textarea asp-for="JobPost.Title" class="form-control" rows="2" placeholder="Nhập tiêu đề công việc"></textarea>
+                <span asp-validation-for="JobPost.Title" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Địa điểm làm việc *</label>
+                <textarea asp-for="JobPost.WorkLocation" class="form-control" rows="2" placeholder="Nhập địa điểm làm việc"></textarea>
+                <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
+            </div>
+
+            <!-- Trạng thái & Hết hạn -->
+            <div class="col-md-6">
+                <label class="form-label">Trạng thái bài đăng *</label>
+                <select asp-for="JobPost.Status" class="form-select">
+                    <option value="OPEN">Đang tuyển</option>
+                    <option value="CLOSED">Đã đóng</option>
+                </select>
+                <span asp-validation-for="JobPost.Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ngày hết hạn *</label>
+                <input asp-for="JobPost.EndDate" type="date" class="form-control" />
+                <span asp-validation-for="JobPost.EndDate" class="text-danger"></span>
+            </div>
+
+            <!-- Mô tả -->
+            <div class="col-12">
+                <label class="form-label">Chi tiết công việc *</label>
+                <textarea asp-for="JobPost.Description" class="form-control tinymce" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
+                <span asp-validation-for="JobPost.Description" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Yêu cầu ứng viên *</label>
+                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control tinymce" rows="3" placeholder="Những yêu cầu cần có của ứng viên"></textarea>
+                <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Quyền lợi *</label>
+                <textarea asp-for="JobPost.Interest" class="form-control tinymce" rows="3" placeholder="Lợi ích ứng viên nhận được khi trúng tuyển"></textarea>
+                <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
+            </div>
+
+            <!-- Ngành nghề & Vị trí -->
+            <div class="col-md-6">
+                <label class="form-label">Lĩnh Vực</label>
+                <select id="industrySelect"
+                        name="JobPost.IndustryId"
+                        class="form-select required-select"
+                        data-error="#industryError">
+                    <option value="" disabled selected>-- Chọn Lĩnh Vực --</option>
+                    @foreach (var industry in Model.Industries)
+                    {
+                        <option value="@industry.IndustryId">@industry.IndustryName</option>
+                    }
+                    <option value="">-- Khác --</option> <!-- vẫn để rỗng -->
+                </select>
+                <span id="industryError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Vị trí công việc</label>
+                <select id="positionSelect"
+                        name="JobPost.JobPositionId"
+                        class="form-select required-select"
+                        data-error="#positionError">
+                    <option value="" disabled selected>-- Chọn vị trí công việc --</option>
+                    @foreach (var pos in Model.JobPositions)
+                    {
+                        <option value="@pos.PositionId">@pos.PostitionName</option>
+                    }
+                    <option value="">-- Khác --</option> <!-- vẫn để rỗng -->
+                </select>
+                <span id="positionError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+
+
+            <!-- Mức lương -->
+            <div class="col-md-6">
+                <label class="form-label">Mức lương</label>
+                <select name="JobPost.SalaryRangeId" class="form-select required-select"
+                        data-error="#salaryRangeError">
+                    <option value="">Chọn Mức Lương</option>
+                    @foreach (var s in Model.SalaryRanges)
+                    {
+                        <option value="@s.SalaryRangeId">
+                            @((s.MinSalary.HasValue && s.MaxSalary.HasValue) ?
+                                                $"{s.MinSalary:N0} - {s.MaxSalary:N0} {s.Currency}" :
+                                                "Thỏa thuận")
+                </option>
+                                }
+                    <option value="">-- Mức lương thương lượng --</option>
+                </select>
+                <span id="salaryRangeError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+
+            <!-- Tỉnh/Thành phố -->
+            <div class="col-md-6">
+                <label class="form-label">Tỉnh/Thành phố</label>
+                <select name="JobPost.ProvinceId" class="form-select">
+                    <option value="">-- Chọn tỉnh/thành --</option>
+                    @foreach (var province in Model.Provinces)
+                    {
+                        <option value="@province.ProvinceId">@province.ProvinceName</option>
+                    }
+                </select>
+                <span asp-validation-for="JobPost.ProvinceId" class="text-danger"></span>
+            </div>
+
+            <!-- Trình độ & Cấp bậc -->
+            <div class="col-md-6">
+                <label class="form-label">Trình độ kinh nghiệm</label>
+                <select name="JobPost.ExperienceLevelId" class="form-select required-select"
+                        data-error="#experienceLevelError">
+                    <option value="">-- Chọn trình độ --</option>
+                    @foreach (var exp in Model.ExperienceLevels)
+                    {
+                        <option value="@exp.ExperienceLevelId">@exp.ExperienceLevelName</option>
+                    }
+                    <option value="">-- Khác --</option>
+                </select>
+                <span id="experienceLevelError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Cấp bậc</label>
+                <select name="JobPost.JobLevelId" class="form-select required-select"
+                        data-error="#jobLevelError">
+                    <option value="">-- Chọn cấp bậc --</option>
+                    @foreach (var jl in Model.JobLevels)
+                    {
+                        <option value="@jl.JobLevelId">@jl.JobLevelName</option>
+                    }
+                    <option value="">-- Khác --</option>
+                </select>
+                <span id="jobLevelError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+
+            <!-- Loại hình -->
+            <div class="col-md-6">
+                <label class="form-label">Loại hình làm việc</label>
+                <select name="JobPost.EmploymentTypeId" class="form-select required-select"
+                        data-error="#employmentTypeError">
+                    <option value="">-- Chọn loại hình --</option>
+                    @foreach (var et in Model.EmploymentTypes)
+                    {
+                        <option value="@et.EmploymentTypeId">@et.EmploymentTypeName</option>
+                    }
+                    <option value="">-- Khác --</option>
+                </select>
+                <span id="employmentTypeError" class="text-danger d-none">Chọn giá trị hợp lệ hoặc -- Khác --</span>
+            </div>
+
+            <!-- CV Template -->
+            <div class="col-md-6">
+                <label asp-for="JobPost.CvtemplateOfEmployerId" class="form-label">CV Template cho ứng viên (tùy chọn)</label>
+                <select asp-for="JobPost.CvtemplateOfEmployerId" class="form-select">
+                    <option value="">-- Không sử dụng template --</option>
+                    @foreach (var t in Model.CvTemplates)
+                    {
+                        <option value="@t.CvtemplateOfEmployerId">@t.CvTemplateName</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Submit -->
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-success mt-3">Tạo mới</button>
+            </div>
+        </form>
+    }
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/pn5ixbd7bpt9y62aygbqvcsxc1g4ih5dbq5e4ifdigp35f2z/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
-        function toggleInput(selectId, inputId) {
-            var select = document.getElementById(selectId);
-            var input = document.getElementById(inputId);
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-        function onIndustryChange() {
-            var select = document.getElementById('industrySelect');
-            var input = document.getElementById('newIndustryInput');
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-                select.value = "";
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-        function onJobPositionChange() {
-            var select = document.getElementById('jobPositionSelect');
-            var input = document.getElementById('newJobPositionInput');
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-                select.value = "";
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-        function onProvinceChange() { toggleInput('provinceSelect', 'newProvinceInput'); }
-        function onExperienceLevelChange() {
-            var select = document.getElementById('experienceLevelSelect');
-            var input = document.getElementById('newExperienceLevelInput');
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-                select.value = "";
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-        function onJobLevelChange() {
-            var select = document.getElementById('jobLevelSelect');
-            var input = document.getElementById('newJobLevelInput');
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-                select.value = "";
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-        function onEmploymentTypeChange() {
-            var select = document.getElementById('employmentTypeSelect');
-            var input = document.getElementById('newEmploymentTypeInput');
-            if (select.value === 'other') {
-                input.style.display = 'block';
-                input.required = true;
-                select.value = "";
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-                input.required = false;
-            }
-        }
-
-        // Lương
-        function onSalaryRangeChange() {
-            var select = document.getElementById('salaryRangeSelect');
-            var group = document.getElementById('newSalaryRangeGroup');
-            var hidden = document.getElementById('newSalaryRangeHidden');
-            if (select.value === 'other') {
-                group.style.display = 'block';
-                hidden.disabled = false;
-                setTimeout(function() { select.value = ""; }, 0);
-            } else {
-                group.style.display = 'none';
-                hidden.value = '';
-                hidden.disabled = true;
-            }
-        }
-        // Gộp min-max-currency vào hidden input khi nhập mới
-        document.addEventListener('DOMContentLoaded', function () {
-            onSalaryRangeChange();
-            document.getElementById('salaryRangeSelect').addEventListener('change', onSalaryRangeChange);
-            var min = document.getElementById('minSalaryInput');
-            var max = document.getElementById('maxSalaryInput');
-            var cur = document.getElementById('currencyInput');
-            var hidden = document.getElementById('newSalaryRangeHidden');
-            [min, max, cur].forEach(function (el) {
-                el.addEventListener('input', function () {
-                    if (min.value && max.value && cur.value) {
-                        hidden.value = min.value + '-' + max.value + '-' + cur.value;
-                    } else {
-                        hidden.value = '';
-                    }
-                });
-            });
+        tinymce.init({
+          selector: 'textarea.tinymce',
+          height: 380,
+          menubar: false,
+          statusbar: false,
+          promotion: false,
+          branding: false,
+          plugins: 'lists link autoresize',
+          toolbar: 'undo redo | bold italic underline | bullist numlist | link removeformat',
         });
+
+        document.querySelector('form')?.addEventListener('submit', () => tinymce.triggerSave());
+
     </script>
-} 
+    <script>
+        async function loadJobPositions() {
+            const industryId = document.getElementById("industrySelect").value;
+            const positionSelect = document.getElementById("positionSelect");
+
+            // Reset combobox
+            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+
+            if (!industryId) {
+                return; // Nếu chưa chọn ngành nghề thì không gọi API
+            }
+
+            try {
+                const response = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
+                if (!response.ok) throw new Error("Lỗi load dữ liệu");
+
+                const positions = await response.json();
+
+                // Render option vào combobox
+                positions.forEach(pos => {
+                    const option = document.createElement("option");
+                    option.value = pos.positionId;
+                    option.textContent = pos.postitionName;
+                    positionSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Lỗi khi tải danh sách vị trí:", error);
+            }
+        }
+    </script>
+    <script>
+        (function () {
+          function setError(select, show) {
+            const errSel = select.getAttribute('data-error');
+            const errEl = document.querySelector(errSel);
+            if (errEl) errEl.classList.toggle('d-none', !show);
+          }
+
+          // Check hợp lệ: không được chọn option đầu tiên (index = 0)
+          function isValidSelect(select) {
+            return select.selectedIndex > 0;
+          }
+
+          // Ẩn lỗi khi user đổi value
+          document.querySelectorAll('.required-select').forEach(sel => {
+            sel.addEventListener('change', () => {
+              if (isValidSelect(sel)) setError(sel, false);
+            });
+          });
+
+          // Validate tất cả khi submit
+          const form = document.querySelector('form');
+          if (!form) return;
+          form.addEventListener('submit', function (e) {
+            let ok = true;
+            document.querySelectorAll('.required-select').forEach(sel => {
+              const valid = isValidSelect(sel);
+              setError(sel, !valid);
+              if (!valid) ok = false;
+            });
+            if (!ok) e.preventDefault();
+          });
+        })();
+    </script>
+}
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

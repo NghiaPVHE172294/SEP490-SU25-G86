@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AccountDTO;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -54,6 +55,26 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             {
                 return RedirectToPage("/Common/Login");
             }
+            // Load lại profile để giữ dữ liệu từ DB khi cập nhật fail
+            if (!string.IsNullOrEmpty(UserUpdate.FullName) && UserUpdate.FullName.Length > 30)
+            {
+                var clientRefresh = _httpClientFactory.CreateClient();
+                clientRefresh.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var getRes = await clientRefresh.GetAsync("https://localhost:7004/api/user/profile");
+                if (getRes.IsSuccessStatusCode)
+                {
+                    var json = await getRes.Content.ReadAsStringAsync();
+                    var profile = JsonSerializer.Deserialize<UserProfileDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (profile != null)
+                        UserProfile = profile;
+                }
+
+                ToastMessage = "❌ Tên không được vượt quá 30 ký tự.";
+                ToastColor = "bg-danger";
+                return Page();
+            }
+
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -109,16 +130,24 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             else
             {
                 var msg = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Lỗi API upload avatar: " + msg); // Log ra console server hoặc local dev
+
                 try
                 {
                     var json = JsonDocument.Parse(msg);
-                    ToastMessage = $"❌ {json.RootElement.GetProperty("message").GetString()}";
+                    if (json.RootElement.TryGetProperty("message", out var messageProperty))
+                    {
+                        ToastMessage = $"❌ {messageProperty.GetString()}";
+                    }
+                    else
+                    {
+                        ToastMessage = $"❌ Lỗi không rõ: {msg}";
+                    }
                 }
                 catch
                 {
-                    ToastMessage = "❌ Cập nhật thất bại.";
+                    ToastMessage = $"❌ Lỗi không thể phân tích chi tiết: {msg}";
                 }
-                ToastColor = "bg-danger";
             }
 
             return Page();

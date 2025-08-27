@@ -1,4 +1,4 @@
-﻿using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
+using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CompanyDTO;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.CompanyRepository;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService
@@ -56,6 +56,36 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CompanyService
             }).ToList();
 
             return (result, totalCount);
+        }
+        public async Task<List<CompanyLogoDTO>> GetAllCompanyLogos()
+        {
+            var companies = await _repo.GetAllCompanies();
+
+            return companies.Select(c => new CompanyLogoDTO
+            {
+                Id = c.CompanyId,
+                LogoUrl = c.LogoUrl
+            }).ToList();
+        }
+
+        public async Task<CompanyDTO?> GetLatestCompanyDtoAsync()
+        {
+            var company = await _repo.GetLatestCompanyAsync();
+            if (company == null) return null;
+            return new CompanyDTO
+            {
+                CompanyId = company.CompanyId,
+                CompanyName = company.CompanyName,
+                Website = company.Website,
+                CompanySize = company.CompanySize,
+                Email = company.Email,
+                Phone = company.Phone,
+                Address = company.Address,
+                Description = company.Description,
+                LogoUrl = company.LogoUrl,
+                IndustryName = company.Industry?.IndustryName,
+                FollowersCount = company.CompanyFollowers?.Count ?? 0
+            };
         }
     }
 }

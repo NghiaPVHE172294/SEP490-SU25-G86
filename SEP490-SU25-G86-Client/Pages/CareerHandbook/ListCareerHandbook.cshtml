@@ -5,8 +5,34 @@
 }
 
 <div class="container my-4">
-    <h3 class="mb-3">Danh sách Cẩm nang nghề nghiệp</h3>
-    <a asp-page="/CareerHandbook/CreateCareerHandbook" class="btn btn-success mb-3">+ Thêm mới</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Danh sách Cẩm nang nghề nghiệp</h3>
+        <div>
+            <a asp-page="/CareerHandbook/ListHandbookCategory" class="btn btn-info me-2">
+                <i class="fas fa-list"></i> Quản lý Danh mục
+            </a>
+            <a asp-page="/CareerHandbook/CreateCareerHandbook" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Tìm kiếm + chọn PageSize -->
+    <form method="get" class="d-flex align-items-center mb-3">
+        <input type="text" name="search" value="@Model.Search"
+               class="form-control me-2 w-50"
+               placeholder="Tìm theo tiêu đề hoặc danh mục..." />
+
+        @Html.DropDownList("pageSize", new List<SelectListItem>
+        {
+        new SelectListItem { Text = "5", Value = "5", Selected = (Model.PageSize == 5) },
+        new SelectListItem { Text = "10", Value = "10", Selected = (Model.PageSize == 10) },
+        new SelectListItem { Text = "15", Value = "15", Selected = (Model.PageSize == 15) },
+        new SelectListItem { Text = "20", Value = "20", Selected = (Model.PageSize == 20) }
+        }, new { @class = "form-select form-select-sm w-auto me-2", onchange = "this.form.submit()" })
+
+        <button type="submit" class="btn btn-sm btn-primary">Áp dụng</button>
+    </form>
 
     @if (Model.Handbooks != null && Model.Handbooks.Any())
     {
@@ -21,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var hb in Model.Handbooks)
+                @foreach (var hb in Model.PagedHandbooks)
                 {
                     <tr>
                         <td>@hb.Title</td>
@@ -35,6 +61,9 @@
                             <form method="post"
                                   asp-page-handler="Delete"
                                   asp-route-id="@hb.HandbookId"
+                                  asp-route-search="@Model.Search"
+                                  asp-route-page="@Model.Page"
+                                  asp-route-pageSize="@Model.PageSize"
                                   style="display:inline;">
                                 <button type="submit"
                                         class="btn btn-sm btn-danger"
@@ -47,6 +76,45 @@
                 }
             </tbody>
         </table>
+
+        <!-- Phân trang -->
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <nav aria-label="Pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page=@(Model.Page - 1)&search=@(Model.Search ?? "")&pageSize=@Model.PageSize"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               href="?page=@i&search=@(Model.Search ?? "")&pageSize=@Model.PageSize">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page=@(Model.Page + 1)&search=@(Model.Search ?? "")&pageSize=@Model.PageSize"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
     }
     else
     {

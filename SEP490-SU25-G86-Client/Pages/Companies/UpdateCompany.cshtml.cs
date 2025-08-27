@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http.Headers;
+using System.IO;
 
 
 namespace SEP490_SU25_G86_Client.Pages.Companies
@@ -110,6 +111,23 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
                 if (companyDetail == null)
                     return RedirectToPage("/NotFound");
 
+                // Đảm bảo có LogoUrl để hiển thị preview khi trả về trang lỗi
+                Company.LogoUrl = companyDetail.LogoUrl;
+
+                // Validate logo file is an image
+                if (Company.LogoFile != null && Company.LogoFile.Length > 0)
+                {
+                    var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/svg+xml" };
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".svg" };
+                    var extension = Path.GetExtension(Company.LogoFile.FileName)?.ToLowerInvariant();
+                    if (!allowedContentTypes.Contains(Company.LogoFile.ContentType) || !allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("Company.LogoFile", "Chỉ cho phép tải ảnh (JPG, PNG, SVG).");
+                        await LoadIndustriesAsync();
+                        return Page();
+                    }
+                }
+
                 // Form-data
                 var formData = new MultipartFormDataContent
         {
@@ -135,7 +153,7 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
 
                 if (updateResponse.IsSuccessStatusCode)
                 {
-                    TempData["Success"] = "Cập nhật công ty thành công.";
+                    //TempData["Success"] = "Cập nhật công ty thành công.";
                     return RedirectToPage("/Companies/CompanyInformation");
                 }
                 else
@@ -152,6 +170,20 @@ namespace SEP490_SU25_G86_Client.Pages.Companies
             }
         }
 
-
+        private async Task LoadIndustriesAsync()
+        {
+            var industryResponse = await _httpClient.GetAsync("api/Industries");
+            if (industryResponse.IsSuccessStatusCode)
+            {
+                var industryJson = await industryResponse.Content.ReadAsStringAsync();
+                Industries = JsonSerializer.Deserialize<List<IndustryDTO>>(industryJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+                IndustrySelectList = Industries.Select(i => new SelectListItem
+                {
+                    Text = i.IndustryName,
+                    Value = i.IndustryId.ToString(),
+                    Selected = (i.IndustryId == Company.IndustryId)
+                }).ToList();
+            }
+        }
     }
 }

@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
-
 <div class="container-fluid py-4">
     <div class="row">
         <!-- Filter Sidebar -->
@@ -106,7 +105,7 @@
                 <!-- Salary -->
                 <h6 class="fw-bold">Mức lương</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="salary_range" value="0-0">
+                        <input class="form-check-input" type="checkbox" name="salary_range" value=" ">
                         <label class="form-check-label">Tất cả</label>
                     </div>
                     <div class="form-check">
@@ -125,14 +124,18 @@
                         <input class="form-check-input" type="checkbox" name="salary_range" value="20-30">
                         <label class="form-check-label">20–30 triệu VND</label>
                     </div>
-                       <!--Input salary -->
+                    <!-- Input salary -->
                     <div class="d-flex align-items-center mb-2">
-                        <input type="number" class="form-control form-control-sm me-2" placeholder="Từ" name="salary_min" style="width: 80px;" value="@Model.MinSalaryInput" />
+                        <input type="number" id="salary_min" class="form-control form-control-sm me-2"
+                               placeholder="Từ" name="salary_min" style="width: 80px;"
+                               value="@Model.MinSalaryInput" min="1" />
                         <span class="me-2">-</span>
-                        <input type="number" class="form-control form-control-sm me-2" placeholder="Đến" name="salary_max" style="width: 80px;" value="@Model.MaxSalaryInput" />
+                        <input type="number" id="salary_max" class="form-control form-control-sm me-2"
+                               placeholder="Đến" name="salary_max" style="width: 80px;"
+                               value="@Model.MaxSalaryInput" min="1" />
                         <span>Triệu</span>
                     </div>
-                    <button type="submit" class="btn btn-success w-100 mt-3">Áp dụng</button>
+                    <button id="applyBtn" type="submit" class="btn btn-success w-100 mt-3">Áp dụng</button>
                 </form>
             </div>
         </div>
@@ -140,31 +143,43 @@
         <!-- Job Listing -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <span>Hiển thị @Model.TotalItems kết quả</span>
-                <select class="form-select w-auto">
+                @* <span>Hiển thị @Model.TotalItems kết quả</span> *@
+                @* <select class="form-select w-auto">
                     <option selected>Sort by latest</option>
-                </select>
+                </select> *@
             </div>
 
             @foreach (var job in Model.Jobs)
             {
-                <div class="bg-white border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-bold mt-1">@job.Title</h5>
-                        <div class="text-muted">
-                            <a href="/Common/CompanyDetail?companyId?@job.CompanyId" class="text-decoration-none text-muted">
-                                @job.CompanyName
-                            </a>
-                        </div>
+                <div class="joblist-card">
+                    <!-- Logo + Thông tin -->
+                    <div class="d-flex align-items-start">
+                        <!-- Logo công ty -->
+                        <img src="@job.CompanyLogoUrl"
+                             alt="@job.CompanyName"
+                             class="rounded"
+                             style="width: 110px; height: 110px; object-fit: cover;">
 
-                        <div class="d-flex flex-wrap mt-2 gap-3">
-                            <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
-                            <span class="text-secondary"><i class="bi bi-clock"></i> @job.JobType</span>
-                            <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.FormattedSalary</span>
-                            <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.Experience</span>
-                            <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                        <!-- Phần thông tin job -->
+                        <div class="ms-3">
+                            <h5 class="fw-bold mt-1 job-title">@job.Title</h5>
+                            <div class="text-muted">
+                                <a href="/Common/CompanyDetail?id=@job.CompanyId" class="text-decoration-none text-muted">
+                                    @job.CompanyName
+                                </a>
+                            </div>
+
+                            <div class="d-flex flex-wrap mt-2 gap-3">
+                                <span class="text-secondary"><i class="bi bi-building"></i> @job.Category</span>
+                                <span class="text-secondary"><i class="bi bi-clock"></i> @job.JobType</span>
+                                <span class="text-secondary"><i class="bi bi-currency-dollar"></i> @job.SalaryRange</span>
+                                <span class="text-secondary"><i class="bi bi-person-workspace"></i> @job.Experience</span>
+                                <span class="text-secondary"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Nút & Ngày đăng -->
                     <div class="d-flex flex-column align-items-end gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <a class="btn btn-custom btn-sm btn-fixed" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
@@ -445,5 +460,60 @@
                 });
             }
         });
+    </script>
+    <script>
+        //script validate trường salary
+        const minInput = document.getElementById("salary_min");
+        const maxInput = document.getElementById("salary_max");
+        const applyBtn = document.getElementById("applyBtn");
+
+            function blockInvalidInput(e) {
+            // Chặn nhập dấu trừ
+            if (e.key === "-" || e.key === "e") {
+                e.preventDefault();
+            }
+        }
+
+        function validateSalary() {
+            const minVal = parseInt(minInput.value) || 0;
+            const maxVal = parseInt(maxInput.value) || 0;
+
+            let valid = true;
+
+            // Reset trạng thái
+            minInput.classList.remove("is-invalid");
+            maxInput.classList.remove("is-invalid");
+
+            // Nếu nhập 0 thì xóa luôn
+            if (minVal === 0) minInput.value = "";
+            if (maxVal === 0) maxInput.value = "";
+
+            // Check điều kiện: không được <= 0
+            if (minVal <= 0 && minInput.value) {
+                minInput.classList.add("is-invalid");
+                valid = false;
+            }
+            if (maxVal <= 0 && maxInput.value) {
+                maxInput.classList.add("is-invalid");
+                valid = false;
+            }
+
+            // Check min > max
+            if (minVal > 0 && maxVal > 0 && minVal > maxVal) {
+                minInput.classList.add("is-invalid");
+                maxInput.classList.add("is-invalid");
+                valid = false;
+            }
+
+            // Disable/Enable button
+            applyBtn.disabled = !valid;
+        }
+
+            // Gắn event
+        minInput.addEventListener("keypress", blockInvalidInput);
+        maxInput.addEventListener("keypress", blockInvalidInput);
+
+        minInput.addEventListener("input", validateSalary);
+        maxInput.addEventListener("input", validateSalary);
     </script>
 }

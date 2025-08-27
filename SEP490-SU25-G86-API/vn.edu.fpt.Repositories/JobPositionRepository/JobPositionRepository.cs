@@ -24,5 +24,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPositionRepository
         {
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<List<JobPosition>> GetByIndustryIdAsync(int industryId)
+        {
+            return await _context.JobPositions
+                .Where(jp => jp.IndustryId == industryId)
+                .ToListAsync();
+        }
     }
 } 
