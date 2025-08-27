@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.EmploymentTypesController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class EmploymentTypesController : ControllerBase
     {
         private readonly IEmploymentTypeService _service;

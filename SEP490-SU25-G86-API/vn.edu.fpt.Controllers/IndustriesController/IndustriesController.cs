@@ -7,7 +7,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.IndustryService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.IndustriesController
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class IndustriesController : ControllerBase
     {

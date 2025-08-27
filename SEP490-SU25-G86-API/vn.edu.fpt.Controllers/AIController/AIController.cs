@@ -7,7 +7,7 @@ using vn.edu.fpt.DTOs.GeminiDTO;
 namespace SEP490_SU25_G86_API.Controllers.AIController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class AIController : ControllerBase
     {

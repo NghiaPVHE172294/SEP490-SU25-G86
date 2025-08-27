@@ -95,19 +95,20 @@ var configuration = configBuilder.Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddConfiguration(configuration);
-            // cấu hình Twilio
-            // 1. Bind cấu hình từ appsettings.json
-            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
+            // sau khi builder đã tạo
+            var twilioSection = builder.Configuration.GetSection("Twilio");
+            var accountSid = twilioSection["AccountSid"];
 
-            // 2. Lấy AuthToken từ biến môi trường
-            var authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+            // Ưu tiên đọc từ appsettings: Twilio:AuthToken; nếu null thì fallback ENV
+            var authToken = twilioSection["AuthToken"]
+                            ?? Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
 
-            // 3. Khởi tạo Twilio Client
-            TwilioClient.Init(
-                builder.Configuration["Twilio:AccountSid"],
-                authToken
-            );
+            // (khuyến nghị) kiểm tra đủ cấu hình
+            if (string.IsNullOrWhiteSpace(accountSid) || string.IsNullOrWhiteSpace(authToken))
+                throw new InvalidOperationException("Twilio is not configured.");
+
+            Twilio.TwilioClient.Init(accountSid, authToken);
+
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -352,7 +353,7 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
 
             var app = builder.Build();
 
-            app.UseCors();
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -362,12 +363,11 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
 			}
 
 			app.UseHttpsRedirection();
-
-            app.UsePathBase("/api");
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseMiddleware<PermissionMiddleware>();
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();
             app.MapControllers();
 

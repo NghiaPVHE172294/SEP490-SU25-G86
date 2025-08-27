@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.HandbookCategoryService;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class HandbookCategoriesController : ControllerBase
     {
         private readonly IHandbookCategoryService _service;

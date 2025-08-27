@@ -13,7 +13,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobCriterionController
     /// Controller xử lý các API liên quan đến tiêu chí công việc (Job Criteria) của người dùng.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class JobCriterionController : ControllerBase
     {

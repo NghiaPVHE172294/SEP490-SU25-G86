@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.CVParsedDataService;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CvParseController
 {
     [ApiController]
-    [Route("api/cv")]
+    [Route("cv")]
     [AllowAnonymous]
     public class CvParseController : ControllerBase
     {

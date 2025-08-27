@@ -9,7 +9,7 @@ using static SEP490_SU25_G86_API.vn.edu.fpt.DTOs.UserDTO.UserFollow;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.UserController
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase

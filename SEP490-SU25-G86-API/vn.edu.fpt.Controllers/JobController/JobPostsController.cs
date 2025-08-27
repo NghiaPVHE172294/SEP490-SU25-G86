@@ -10,7 +10,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobPostDTO;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class JobPostsController : ControllerBase
     {
         private readonly IJobPostService _jobPostService;

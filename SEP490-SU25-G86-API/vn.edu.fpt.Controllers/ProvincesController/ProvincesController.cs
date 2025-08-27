@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.ProvinceServices;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.ProvincesController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProvincesController : ControllerBase
     {
         private readonly IProvinceService _provinceService;

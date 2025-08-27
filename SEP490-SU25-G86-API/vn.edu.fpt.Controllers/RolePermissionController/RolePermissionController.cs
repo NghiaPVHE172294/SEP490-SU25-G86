@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.RolePermissionController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class RolePermissionController : Controller
     {

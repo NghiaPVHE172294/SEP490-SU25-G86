@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.BlockedCompanyController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class BlockedCompaniesController : ControllerBase
     {

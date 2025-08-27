@@ -10,7 +10,7 @@ using SEP490_G86_CvMatchContext = SEP490_SU25_G86_API.Models.SEP490_G86_CvMatchC
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CvTemplateController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize(Roles = "EMPLOYER")]
     public class EmployerController : ControllerBase
     {

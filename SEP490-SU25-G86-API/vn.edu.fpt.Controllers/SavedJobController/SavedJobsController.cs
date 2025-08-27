@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTO.SavedJobDTO;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.SavedJobController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class SavedJobsController : ControllerBase
     {

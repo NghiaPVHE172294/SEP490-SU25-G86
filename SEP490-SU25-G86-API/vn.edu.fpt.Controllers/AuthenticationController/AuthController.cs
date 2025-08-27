@@ -17,7 +17,7 @@ using System.Text;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [AllowAnonymous]
     public class AuthController : ControllerBase
     {

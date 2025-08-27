@@ -8,7 +8,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.CvTemplateController
     
     [ApiController]
     [AllowAnonymous]
-    [Route("api/public/cv-templates")]
+    [Route("public/cv-templates")]
     public class PublicCvTemplateController : ControllerBase
     {
         [HttpGet]

@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.NotificationService;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.NotificationController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [AllowAnonymous]
     public class NotificationsController : ControllerBase
     {

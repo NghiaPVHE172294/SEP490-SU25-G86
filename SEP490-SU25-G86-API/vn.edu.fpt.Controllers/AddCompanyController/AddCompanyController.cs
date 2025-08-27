@@ -7,7 +7,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.AddCompanyService;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AddCompanyController
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AddCompanyController : ControllerBase
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.ExperienceLevelsController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ExperienceLevelsController : ControllerBase
     {
         private readonly IExperienceLevelService _service;

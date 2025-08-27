@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.SalaryRangeController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class SalaryRangesController : ControllerBase
     {
         private readonly ISalaryRangeService _service;

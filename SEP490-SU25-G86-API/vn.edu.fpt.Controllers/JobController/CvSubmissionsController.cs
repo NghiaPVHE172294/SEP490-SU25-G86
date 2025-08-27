@@ -11,7 +11,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.JobController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CvSubmissionsController : ControllerBase
     {
         private readonly IJobPostService _jobPostService;

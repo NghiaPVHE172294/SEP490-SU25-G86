@@ -6,7 +6,7 @@ using vn.edu.fpt.Services.CvTemplateUpload;
 namespace vn.edu.fpt.Controllers.CvTemplateUpload
 {
     [ApiController]
-    [Route("api/admin/cv-templates")] // Chuẩn RESTful cho quản lý template
+    [Route("admin/cv-templates")] // Chuẩn RESTful cho quản lý template
     public class CvTemplateUploadController : ControllerBase
     {
         private readonly ICvTemplateUploadService _uploadService;

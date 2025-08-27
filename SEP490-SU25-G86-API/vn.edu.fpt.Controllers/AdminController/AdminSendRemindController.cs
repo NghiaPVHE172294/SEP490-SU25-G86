@@ -6,7 +6,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.RemindService;
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AdminController
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     //[Authorize]
     [AllowAnonymous]
     public class AdminSendRemindController : Controller
