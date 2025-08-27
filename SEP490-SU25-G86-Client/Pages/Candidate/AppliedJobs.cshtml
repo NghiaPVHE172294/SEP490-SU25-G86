@@ -207,7 +207,7 @@
                                                             <i class="bi bi-file-earmark-pdf me-1"></i>Xem CV
                                                         </a>
                                                     }
-                                                    @if (job.Status != "Hồ sơ đã rút")
+                                                    @if (job.Status == "Đã ứng tuyển" || job.Status == "Hồ sơ đang được xử lý")
                                                     {
                                                         <button class="btn btn-outline-danger btn-sm" onclick="withdrawApplication(@job.SubmissionId)">
                                                             <i class="bi bi-x-circle me-1"></i>Rút đơn

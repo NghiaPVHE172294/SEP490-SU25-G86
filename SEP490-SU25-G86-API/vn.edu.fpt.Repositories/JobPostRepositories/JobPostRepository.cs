@@ -7,6 +7,7 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Helpers;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
 {
@@ -53,6 +54,21 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             if (experienceLevelId.HasValue)
             {
                 query = query.Where(j => j.ExperienceLevelId == experienceLevelId.Value);
+            }
+            // Lọc bỏ job posts từ blocked companies nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var blockedCompanyIds = await _context.BlockedCompanies
+                    .Where(bc => bc.CandidateId == candidateId.Value)
+                    .Select(bc => bc.CompanyId)
+                    .ToListAsync();
+
+                if (blockedCompanyIds.Any())
+                {
+                    query = query.Where(j => j.Employer == null
+                                          || j.Employer.CompanyId == null
+                                          || !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
+                }
             }
 
             var totalItems = await query.CountAsync();
@@ -132,7 +148,22 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                         !j.IsDelete)
                 .OrderByDescending(j => j.CreatedDate)
                 .AsQueryable();
+            //Lọc bỏ job posts từ blocked companies nếu có candidateId
+            if (candidateId.HasValue)
+            {
+                var blockedCompanyIds = await _context.BlockedCompanies
+                    .Where(bc => bc.CandidateId == candidateId.Value)
+                    .Select(bc => bc.CompanyId)
+                    .ToListAsync();
 
+                if (blockedCompanyIds.Any())
+                {
+                    query = query.Where(j =>
+                        j.Employer != null &&
+                        j.Employer.CompanyId.HasValue &&
+                        !blockedCompanyIds.Contains(j.Employer.CompanyId.Value));
+                }
+            }
             if (provinceId.HasValue)
                 query = query.Where(j => j.ProvinceId == provinceId.Value);
             if (industryId.HasValue)
@@ -166,30 +197,17 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
             // Lọc theo keyword
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                //query = query.Where(j => j.Title.Contains(keyword) || (j.Employer != null && j.Employer.FullName.Contains(keyword)));
-                if (!string.IsNullOrWhiteSpace(keyword))
+                var terms = _synonymService.ExpandKeywords(keyword);
+                //Dynamic Predicate
+                Expression<Func<JobPost, bool>> predicate = j => false; 
+                foreach (var term in terms)
                 {
-                    var terms = _synonymService.ExpandKeywords(keyword);
-                    var allPosts = await query.ToListAsync();
-
-                    var filteredResult = allPosts.Where(j =>
-                        terms.Any(k =>
-                            j.Title != null &&
-                            j.Title.Contains(k, StringComparison.OrdinalIgnoreCase)
-                        )
-                    ).ToList();
-
-                    var totalItems = filteredResult.Count;
-
-                  
-
-                    var paged = filteredResult
-                        .Skip((page - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
-
-                    return (paged, totalItems);
+                    var pattern = $"%{term}%";
+                    predicate = predicate.Or(j =>
+                        EF.Functions.Like(j.Title, pattern) ||
+                        (j.Employer != null && EF.Functions.Like(j.Employer.FullName, pattern)));
                 }
+                query = query.Where(predicate);
             }
 
             var total = await query.CountAsync();
@@ -198,8 +216,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobPostRepositories
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-
-          
 
             return (posts, total);
         }

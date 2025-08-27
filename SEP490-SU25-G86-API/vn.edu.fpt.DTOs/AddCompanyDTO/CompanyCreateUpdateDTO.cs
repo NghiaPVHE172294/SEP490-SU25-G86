@@ -39,7 +39,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.AddCompanyDTO
         public string CompanySize { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
-        [RegularExpression(@"^(0[3|5|7|8|9][0-9]{8})$", ErrorMessage = "Số điện thoại không đúng định dạng (10 số, bắt đầu bằng 03,05,07,08,09).")]
+        //[RegularExpression(@"^(0[3|5|7|8|9][0-9]{8})$", ErrorMessage = "Số điện thoại không đúng định dạng (10 số, bắt đầu bằng 03,05,07,08,09).")]
         public string Phone { get; set; } = string.Empty;
 
         [StringLength(300, ErrorMessage = "Logo URL không được vượt quá 300 ký tự.")]

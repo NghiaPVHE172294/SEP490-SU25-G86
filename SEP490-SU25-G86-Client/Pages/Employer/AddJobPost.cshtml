@@ -79,8 +79,9 @@
                 <select id="industrySelect"
                         name="JobPost.IndustryId"
                         class="form-select required-select"
-                        data-error="#industryError">
-                    <option value="" disabled selected>-- Chọn Lĩnh Vực --</option>
+                        data-error="#industryError"
+                        onchange="loadJobPositions()">
+                    <option value="" disabled selected hidden>-- Chọn Lĩnh Vực --</option>
                     @foreach (var industry in Model.Industries)
                     {
                         <option value="@industry.IndustryId">@industry.IndustryName</option>
@@ -96,7 +97,7 @@
                         name="JobPost.JobPositionId"
                         class="form-select required-select"
                         data-error="#positionError">
-                    <option value="" disabled selected>-- Chọn vị trí công việc --</option>
+                    <option value="" disabled selected hidden>-- Chọn vị trí công việc --</option>
                     @foreach (var pos in Model.JobPositions)
                     {
                         <option value="@pos.PositionId">@pos.PostitionName</option>
@@ -109,10 +110,10 @@
 
             <!-- Mức lương -->
             <div class="col-md-6">
-                <label class="form-label">Mức lương</label>
+                <label class="form-label">-- Mức lương --</label>
                 <select name="JobPost.SalaryRangeId" class="form-select required-select"
                         data-error="#salaryRangeError">
-                    <option value="">Chọn Mức Lương</option>
+                    <option value="" disabled selected hidden>Chọn Mức Lương</option>
                     @foreach (var s in Model.SalaryRanges)
                     {
                         <option value="@s.SalaryRangeId">
@@ -130,7 +131,7 @@
             <div class="col-md-6">
                 <label class="form-label">Tỉnh/Thành phố</label>
                 <select name="JobPost.ProvinceId" class="form-select">
-                    <option value="">-- Chọn tỉnh/thành --</option>
+                    <option value="" disabled selected hidden>-- Chọn tỉnh/thành --</option>
                     @foreach (var province in Model.Provinces)
                     {
                         <option value="@province.ProvinceId">@province.ProvinceName</option>
@@ -144,7 +145,7 @@
                 <label class="form-label">Trình độ kinh nghiệm</label>
                 <select name="JobPost.ExperienceLevelId" class="form-select required-select"
                         data-error="#experienceLevelError">
-                    <option value="">-- Chọn trình độ --</option>
+                    <option value="" disabled selected hidden>-- Chọn trình độ --</option>
                     @foreach (var exp in Model.ExperienceLevels)
                     {
                         <option value="@exp.ExperienceLevelId">@exp.ExperienceLevelName</option>
@@ -157,7 +158,7 @@
                 <label class="form-label">Cấp bậc</label>
                 <select name="JobPost.JobLevelId" class="form-select required-select"
                         data-error="#jobLevelError">
-                    <option value="">-- Chọn cấp bậc --</option>
+                    <option value="" disabled selected hidden>-- Chọn cấp bậc --</option>
                     @foreach (var jl in Model.JobLevels)
                     {
                         <option value="@jl.JobLevelId">@jl.JobLevelName</option>
@@ -172,7 +173,7 @@
                 <label class="form-label">Loại hình làm việc</label>
                 <select name="JobPost.EmploymentTypeId" class="form-select required-select"
                         data-error="#employmentTypeError">
-                    <option value="">-- Chọn loại hình --</option>
+                    <option value="" disabled selected hidden>-- Chọn loại hình --</option>
                     @foreach (var et in Model.EmploymentTypes)
                     {
                         <option value="@et.EmploymentTypeId">@et.EmploymentTypeName</option>
@@ -221,34 +222,67 @@
     </script>
     <script>
         async function loadJobPositions() {
-            const industryId = document.getElementById("industrySelect").value;
-            const positionSelect = document.getElementById("positionSelect");
+          const industryId   = document.getElementById("industrySelect").value;
+          const positionSelect = document.getElementById("positionSelect");
 
-            // Reset combobox
-            positionSelect.innerHTML = '<option value="">-- Chọn vị trí --</option>';
+          // reset
+          positionSelect.innerHTML = '';
+          positionSelect.disabled  = true;
 
-            if (!industryId) {
-                return; // Nếu chưa chọn ngành nghề thì không gọi API
+          // Nếu Lĩnh vực = "Khác" (value rỗng) -> Vị trí = "Khác"
+          if (!industryId) {
+            positionSelect.innerHTML = '<option value="">-- Khác --</option>';
+            positionSelect.selectedIndex = 0;
+            positionSelect.disabled = false;
+            positionSelect.dispatchEvent(new Event('change'));
+            return;
+          }
+
+          try {
+            const res = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
+            if (!res.ok) throw new Error("Lỗi load dữ liệu");
+            const positions = await res.json();
+
+            // Không có vị trí -> chỉ còn "Khác"
+            if (!positions || positions.length === 0) {
+              positionSelect.innerHTML = '<option value="">-- Khác --</option>';
+              positionSelect.selectedIndex = 0;
+              positionSelect.disabled = false;
+              positionSelect.dispatchEvent(new Event('change'));
+              return;
             }
 
-            try {
-                const response = await fetch(`/Employer/AddJobPost?handler=GetPositionsByIndustry&industryId=${industryId}`);
-                if (!response.ok) throw new Error("Lỗi load dữ liệu");
+            // Có vị trí -> placeholder + list + "Khác"
+            const frag = document.createDocumentFragment();
 
-                const positions = await response.json();
+            const ph = document.createElement('option');
+            ph.value = '';
+            ph.textContent = '-- Chọn vị trí công việc --';
+            ph.disabled = true; ph.selected = true; ph.hidden = true;
+            frag.appendChild(ph);
 
-                // Render option vào combobox
-                positions.forEach(pos => {
-                    const option = document.createElement("option");
-                    option.value = pos.positionId;
-                    option.textContent = pos.postitionName;
-                    positionSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error("Lỗi khi tải danh sách vị trí:", error);
-            }
+            positions.forEach(pos => {
+              const opt = document.createElement('option');
+              opt.value = pos.positionId;
+              opt.textContent = pos.postitionName;
+              frag.appendChild(opt);
+            });
+
+            const other = document.createElement('option');
+            other.value = '';
+            other.textContent = '-- Khác --';
+            frag.appendChild(other);
+
+            positionSelect.appendChild(frag);
+            positionSelect.disabled = false;
+          } catch (err) {
+            console.error("Lỗi khi tải danh sách vị trí:", err);
+            positionSelect.innerHTML = '<option value="">-- Khác --</option>';
+            positionSelect.disabled = false;
+          }
         }
     </script>
+
     <script>
         (function () {
           function setError(select, show) {
@@ -257,19 +291,28 @@
             if (errEl) errEl.classList.toggle('d-none', !show);
           }
 
-          // Check hợp lệ: không được chọn option đầu tiên (index = 0)
           function isValidSelect(select) {
-            return select.selectedIndex > 0;
+            const idx = select.selectedIndex;
+            if (idx < 0) return false;
+            const opt = select.options[idx];
+
+            // ✅ Trường hợp đặc biệt cho position:
+            // nếu combobox chỉ có đúng 1 option và option đó là "-- Khác --" (value = ""),
+            // coi như HỢP LỆ (do không có vị trí nào trong ngành)
+            if (select.id === 'positionSelect' &&
+                select.options.length === 1 &&
+                select.options[0].value === '') {
+              return true;
+            }
+
+            // còn lại: hợp lệ khi option đang chọn không bị disabled
+            return opt && !opt.disabled;
           }
 
-          // Ẩn lỗi khi user đổi value
           document.querySelectorAll('.required-select').forEach(sel => {
-            sel.addEventListener('change', () => {
-              if (isValidSelect(sel)) setError(sel, false);
-            });
+            sel.addEventListener('change', () => setError(sel, !isValidSelect(sel)));
           });
 
-          // Validate tất cả khi submit
           const form = document.querySelector('form');
           if (!form) return;
           form.addEventListener('submit', function (e) {
@@ -283,5 +326,6 @@
           });
         })();
     </script>
+
 }
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
