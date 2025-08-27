@@ -212,6 +212,7 @@ a:hover h5 {
         text-overflow: ellipsis;
         line-height: 1.5em;
         max-height: 3em;
+        word-break: break-word;
     }
     .card.job-card:hover {
         border-color: #309689;
@@ -517,9 +518,10 @@ a:hover h5 {
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1.4em; 
-        max-height: calc(1.4em * 2); 
-        margin-bottom: 0.3rem; 
+        line-height: 1.4em;
+        max-height: calc(1.4em * 2);
+        margin-bottom: 0.3rem;
+        word-break: break-word;
     }
 
     .joblist-card .ms-3 {

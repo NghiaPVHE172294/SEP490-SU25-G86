@@ -61,7 +61,7 @@
                 </div>
             }
 
-            <div class="header-actions">
+            <div class="header-actions" >
                 @{
                     var isLoggedIn = !string.IsNullOrEmpty(userRole);
                 }
@@ -95,7 +95,7 @@
 
                     <div class="dropdown user-dropdown">
                         <a href="#" class="d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                            <img id="userAvatar" src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown">
                             
@@ -141,7 +141,7 @@
 
                     <div class="dropdown user-dropdown">
                         <a href="#" class="d-flex align-items-center" id="employerDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                            <img id="userAvatar" src="~/assets/images/default-avatar.png" alt="Avatar" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="employerDropdown">      
                             <li><a class="dropdown-item" asp-page="/Employer/ListJobCriteria">Chiến dịch tuyển dụng</a></li>
@@ -354,8 +354,55 @@
           function formatDate(d){ try{ return new Date(d).toLocaleString(); }catch{ return ''; } }
           function escapeHtml(s){ return (s??'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
         })();
+        
     </script>
+    <script>
+ (async function () {
+    const wrap = document.querySelector('.notification-dropdown');
+    if (!wrap) {
+        console.warn("Notification dropdown element not found.");
+        return;
+    }
 
+    const apiBase = (wrap.dataset.api || '').replace(/\/+$/, '');
+    const bearer = wrap.dataset.token || null;
+    if (!apiBase || !bearer) {
+        console.warn("API base URL or token missing.");
+        return;
+    }
+
+    const userAvatar = document.getElementById("userAvatar");
+    if (!userAvatar) {
+        console.warn("Avatar image element not found.");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiBase}/api/User/profile`, {
+            headers: { 'Authorization': `Bearer ${bearer}` }
+        });
+        if (!res.ok) throw new Error(`Failed to load profile: ${res.status}`);
+
+        const profile = await res.json();
+        console.log("Profile data:", profile);
+
+        if (profile?.avatar) {
+            console.log("Attempting to load avatar:", profile.avatar);
+            userAvatar.src = profile.avatar;
+            userAvatar.onerror = () => {
+                console.warn("Failed to load avatar image, using default.");
+                userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+            };
+        } else {
+            console.log("No avatar URL, using default.");
+            userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+        }
+    } catch (e) {
+        console.warn("Error fetching profile:", e);
+        userAvatar.src = "/assets/images/default-avatar.png"; // Adjust path as needed
+    }
+})();
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

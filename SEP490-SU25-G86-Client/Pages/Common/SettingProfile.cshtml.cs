@@ -56,7 +56,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
                 return RedirectToPage("/Common/Login");
             }
             // Load lại profile để giữ dữ liệu từ DB khi cập nhật fail
-            if (!ModelState.IsValid)
+            if (!string.IsNullOrEmpty(UserUpdate.FullName) && UserUpdate.FullName.Length > 30)
             {
                 var clientRefresh = _httpClientFactory.CreateClient();
                 clientRefresh.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

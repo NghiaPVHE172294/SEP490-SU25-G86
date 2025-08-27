@@ -251,7 +251,7 @@
 
             if (button.text().includes('Chặn công ty')) {
                 // Mở modal trước
-                $('#blockReasonInput').val(''); // xóa input cũ
+                $('#blockReasonInput').val('');
                 const modal = new bootstrap.Modal(document.getElementById('blockReasonModal'));
                 modal.show();
                 $('#blockReasonModal').data('company-id', companyId);
@@ -312,7 +312,7 @@
                 }
             });
         }
-            // --- Event cho các nút trong modal // NEW ---
+            // --- Event cho các nút trong modal ---
             $('#blockNoReasonButton').click(function () {
                 $('#blockReasonModal').modal('hide');
                 sendBlockRequest(null);
