@@ -5,9 +5,35 @@
 }
 <div class="container-cv">
     @if (TempData["UploadError"] != null)
-    {
-        <div class="alert alert-danger">@TempData["UploadError"]</div>
-    }
+{
+    <div id="uploadErrorModal" class="modal fade" tabindex="-1" aria-labelledby="uploadErrorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="uploadErrorModalLabel"><i class="bi bi-exclamation-triangle me-2"></i> Lỗi upload CV Template</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    @(
+                        TempData["UploadError"].ToString().Contains("PDF") ?
+                        "File PDF không hợp lệ. Vui lòng chọn file đúng định dạng PDF và dung lượng dưới 5MB." :
+                        "Đã xảy ra lỗi khi tải lên. Vui lòng thử lại hoặc liên hệ quản trị viên nếu lỗi tiếp tục."
+                    )
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var errModal = new bootstrap.Modal(document.getElementById('uploadErrorModal'));
+            errModal.show();
+        });
+    </script>
+}
+
     <div class="cv-card">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">

@@ -1,10 +1,12 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Threading.Tasks;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO;
 using SEP490_SU25_G86_Client.Pages.Common;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace SEP490_SU25_G86_Client.Pages.Employer
 {
@@ -66,6 +68,35 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
 
             if (JobPostId > 0) Input.JobPostId = JobPostId;
             if (!ModelState.IsValid) return Page();
+            // Chuẩn hoá (STRING - chỉ những field text ngắn)
+            Input.RequiredSkills = StripHtml(Input.RequiredSkills);
+            Input.EducationLevel = StripHtml(Input.EducationLevel);
+            Input.RequiredJobTitles = StripHtml(Input.RequiredJobTitles);
+            Input.PreferredLanguages = StripHtml(Input.PreferredLanguages);
+            Input.Address = StripHtml(Input.Address);
+
+            // Rich text (nếu bạn bật TinyMCE cho các field này)
+            var rich = new HtmlSanitizer();
+            rich.AllowedTags.UnionWith(new[] { "p", "ul", "ol", "li", "strong", "em", "u", "br", "a" });
+            rich.AllowedAttributes.Add("href");
+            rich.AllowedSchemes.UnionWith(new[] { "http", "https" });
+
+            Input.Summary = rich.Sanitize(Input.Summary ?? "");
+            Input.WorkHistory = rich.Sanitize(Input.WorkHistory ?? "");
+            Input.PreferredCertifications = rich.Sanitize(Input.PreferredCertifications ?? "");
+            Input.Projects = rich.Sanitize(Input.Projects ?? "");
+
+            // (tuỳ chọn) validate độ dài
+            if (Input.RequiredExperience is < 0 or > 50)
+                ModelState.AddModelError("Input.RequiredExperience", "Kinh nghiệm phải từ 0–50 năm.");
+            if (Input.Summary?.Length > 5000) ModelState.AddModelError("Input.Summary", "Tối đa 5.000 ký tự.");
+            if (Input.WorkHistory?.Length > 10000) ModelState.AddModelError("Input.WorkHistory", "Tối đa 10.000 ký tự.");
+            if (Input.PreferredCertifications?.Length > 5000)
+                ModelState.AddModelError("Input.PreferredCertifications", "Tối đa 5.000 ký tự.");
+            if (Input.Projects?.Length > 5000)
+                ModelState.AddModelError("Input.Projects", "Tối đa 5.000 ký tự.");
+
+            if (!ModelState.IsValid) return Page();
 
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri("https://localhost:7004/");
@@ -123,6 +154,13 @@ namespace SEP490_SU25_G86_Client.Pages.Employer
             }
 
             return Page();
+        }
+        private static string StripHtml(string? html)
+        {
+            if (string.IsNullOrWhiteSpace(html)) return "";
+            var text = Regex.Replace(html, "<.*?>", string.Empty);
+            text = System.Net.WebUtility.HtmlDecode(text);
+            return text.Trim();
         }
     }
 }

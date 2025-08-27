@@ -32,12 +32,12 @@
             <!-- Tiêu đề & Địa điểm -->
             <div class="col-md-6">
                 <label class="form-label">Tiêu đề công việc *</label>
-                <input asp-for="JobPost.Title" class="form-control" placeholder="Nhập tiêu đề công việc" />
+                <textarea asp-for="JobPost.Title" class="form-control" rows="2" placeholder="Nhập tiêu đề công việc"></textarea>
                 <span asp-validation-for="JobPost.Title" class="text-danger"></span>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Địa điểm làm việc *</label>
-                <input asp-for="JobPost.WorkLocation" class="form-control" placeholder="Nhập địa điểm làm việc" />
+                <textarea asp-for="JobPost.WorkLocation" class="form-control" rows="2" placeholder="Nhập địa điểm làm việc"></textarea>
                 <span asp-validation-for="JobPost.WorkLocation" class="text-danger"></span>
             </div>
 
@@ -59,17 +59,17 @@
             <!-- Mô tả -->
             <div class="col-12">
                 <label class="form-label">Chi tiết công việc *</label>
-                <textarea asp-for="JobPost.Description" class="form-control" id="descEditor" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
+                <textarea asp-for="JobPost.Description" class="form-control tinymce" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
                 <span asp-validation-for="JobPost.Description" class="text-danger"></span>
             </div>
             <div class="col-12">
                 <label class="form-label">Yêu cầu ứng viên *</label>
-                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="3" placeholder="Những yêu cầu cần có của ứng viên"></textarea>
+                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control tinymce" rows="3" placeholder="Những yêu cầu cần có của ứng viên"></textarea>
                 <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
             </div>
             <div class="col-12">
                 <label class="form-label">Quyền lợi *</label>
-                <textarea asp-for="JobPost.Interest" class="form-control" rows="3" placeholder="Lợi ích ứng viên nhận được khi trúng tuyển"></textarea>
+                <textarea asp-for="JobPost.Interest" class="form-control tinymce" rows="3" placeholder="Lợi ích ứng viên nhận được khi trúng tuyển"></textarea>
                 <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
             </div>
 
@@ -206,20 +206,18 @@
     <script src="https://cdn.tiny.cloud/1/pn5ixbd7bpt9y62aygbqvcsxc1g4ih5dbq5e4ifdigp35f2z/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-          selector:'#descEditor',
-          height: 420,
-          menubar:false,
-          plugins:'lists link autoresize',
-          toolbar:'undo redo | bold italic underline | bullist numlist | link removeformat',
-          promotion:false,
-          branding:false,
-          statusbar:false,
-          // đẩy nội dung từ editor ngược lại textarea trước khi submit Razor
-          setup: (ed) => {
-            const form = document.querySelector('form');
-            if(form){ form.addEventListener('submit', () => ed.save()); }
-          }
+          selector: 'textarea.tinymce',
+          height: 380,
+          menubar: false,
+          statusbar: false,
+          promotion: false,
+          branding: false,
+          plugins: 'lists link autoresize',
+          toolbar: 'undo redo | bold italic underline | bullist numlist | link removeformat',
         });
+
+        document.querySelector('form')?.addEventListener('submit', () => tinymce.triggerSave());
+
     </script>
     <script>
         async function loadJobPositions() {

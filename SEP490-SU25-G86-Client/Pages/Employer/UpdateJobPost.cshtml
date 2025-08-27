@@ -52,17 +52,17 @@
                             </div>
                             <div class="col-12">
                                 <label asp-for="JobPost.Description" class="form-label fw-semibold">Mô tả công việc *</label>
-                                <textarea asp-for="JobPost.Description" class="form-control" rows="3" placeholder="Nhập mô tả chi tiết"></textarea>
+                                <textarea asp-for="JobPost.Description" class="form-control tinymce" rows="6" placeholder="Nhập mô tả chi tiết"></textarea>
                                 <span asp-validation-for="JobPost.Description" class="text-danger"></span>
                             </div>
                             <div class="col-12">
                                 <label asp-for="JobPost.CandidaterRequirements" class="form-label fw-semibold">Yêu cầu ứng viên *</label>
-                                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control" rows="2" placeholder="Nhập yêu cầu"></textarea>
+                                <textarea asp-for="JobPost.CandidaterRequirements" class="form-control tinymce" rows="5" placeholder="Nhập yêu cầu"></textarea>
                                 <span asp-validation-for="JobPost.CandidaterRequirements" class="text-danger"></span>
                             </div>
                             <div class="col-12">
                                 <label asp-for="JobPost.Interest" class="form-label fw-semibold">Quyền lợi *</label>
-                                <textarea asp-for="JobPost.Interest" class="form-control" rows="2" placeholder="Nhập quyền lợi"></textarea>
+                                <textarea asp-for="JobPost.Interest" class="form-control tinymce" rows="5" placeholder="Nhập quyền lợi"></textarea>
                                 <span asp-validation-for="JobPost.Interest" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
@@ -160,4 +160,19 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/pn5ixbd7bpt9y62aygbqvcsxc1g4ih5dbq5e4ifdigp35f2z/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+          selector: 'textarea.tinymce',
+          height: 380,
+          menubar: false,
+          statusbar: false,
+          promotion: false,
+          branding: false,
+          plugins: 'lists link autoresize',
+          toolbar: 'undo redo | bold italic underline | bullist numlist | link removeformat',
+        });
+        // Đẩy nội dung tất cả editor về textarea khi submit
+        document.querySelector('form')?.addEventListener('submit', () => tinymce.triggerSave());
+    </script>
 } 

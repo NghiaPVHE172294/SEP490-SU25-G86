@@ -54,7 +54,6 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                     if (JobPostDetail != null)
                     {
                         var sanitizer = new HtmlSanitizer();
-                        // whitelist các tag TinyMCE cơ bản
                         sanitizer.AllowedTags.Add("p");
                         sanitizer.AllowedTags.Add("ul");
                         sanitizer.AllowedTags.Add("ol");
@@ -69,6 +68,8 @@ namespace SEP490_SU25_G86_Client.Pages.Job
                         sanitizer.AllowedSchemes.Add("https");
 
                         JobPostDetail.Description = sanitizer.Sanitize(JobPostDetail.Description ?? "");
+                        JobPostDetail.CandidaterRequirements = sanitizer.Sanitize(JobPostDetail.CandidaterRequirements ?? "");
+                        JobPostDetail.Interest = sanitizer.Sanitize(JobPostDetail.Interest ?? "");
                     }
                 }
 
