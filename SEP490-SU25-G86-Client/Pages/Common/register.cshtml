@@ -93,7 +93,7 @@
                         </script>
                         <div class="checkbox-group">
                             <input asp-for="AcceptTerms" type="checkbox" id="terms" required>
-                            <label for="terms">Tôi đồng ý với <a href="?">Điều khoản dịch vụ</a></label>
+                            <label for="terms">Tôi đồng ý với <a href="/Common/TermsOfService">Điều khoản dịch vụ</a></label>
                         </div>
                         <div style="margin: 10px 0 0 24px;">
                             <a href="/Common/ResendConfirmation" style="font-size: 14px; color: #000; text-decoration: underline;">
@@ -117,15 +117,15 @@
                             <div class="register-redirect-message">Đang chuyển hướng đến trang đăng nhập...</div>
                         </div>
                     </div>
-<script>
-document.getElementById('register-form').addEventListener('submit', function(e) {
-    // Nếu đã có overlay thì show luôn (phòng trường hợp submit thành công)
-    setTimeout(function() {
-        var overlay = document.getElementById('register-success-overlay');
-        if (overlay) overlay.style.display = 'flex';
-    }, 100); // delay nhẹ để tránh show khi submit lỗi
-});
-</script>
+                        <script>
+                        document.getElementById('register-form').addEventListener('submit', function(e) {
+                            // Nếu đã có overlay thì show luôn (phòng trường hợp submit thành công)
+                            setTimeout(function() {
+                                var overlay = document.getElementById('register-success-overlay');
+                                if (overlay) overlay.style.display = 'flex';
+                            }, 100); // delay nhẹ để tránh show khi submit lỗi
+                        });
+                        </script>
 
                     <div class="divider">Hoặc đăng nhập bằng</div>
 
