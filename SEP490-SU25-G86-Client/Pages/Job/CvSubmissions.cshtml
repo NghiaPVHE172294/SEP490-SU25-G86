@@ -117,14 +117,8 @@
                                             {
                                                 <button type="button" class="btn btn-warning btn-sm" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
                                             }
-                                            <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
-                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-                                                <button type="submit" class="btn btn-success btn-sm">Duyệt CV</button>
-                                            </form>
-                                            <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
-                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
-                                            </form>
+                                            <button type="button" class="btn btn-success btn-sm" onclick="approveCV(@cv.SubmissionId, this)">Duyệt CV</button>
+<button type="button" class="btn btn-danger btn-sm" onclick="rejectCV(@cv.SubmissionId, this)">Từ chối CV</button>
                                         </div>
                                     }
                                 </td>
@@ -292,4 +286,62 @@ async function aiFilterAll() {
     setTimeout(() => location.reload(), 1200);
 }
 // --- END AI Filter logic ---
+
+// --- Duyệt/Từ chối CV không reload ---
+async function approveCV(submissionId, btn) {
+    if (!confirm('Bạn chắc chắn muốn DUYỆT CV này?')) return;
+    btn.disabled = true;
+    const row = btn.closest('tr');
+    try {
+        const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+        const resp = await fetch(`https://localhost:7004/api/cvsubmissions/${submissionId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+            },
+            body: '"ĐÃ DUYỆT"'
+        });
+        if (!resp.ok) throw new Error('Không thể duyệt CV');
+        // Cập nhật UI
+        row.querySelector('td:nth-child(5)').innerText = 'ĐÃ DUYỆT';
+        row.querySelectorAll('.actions-cell button').forEach(b => { b.disabled = true; });
+        row.querySelector('.actions-cell').innerHTML = `
+            <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
+            <button type="button" class="btn btn-success btn-sm" disabled>Duyệt CV</button>
+            <button type="button" class="btn btn-danger btn-sm" disabled>Từ chối CV</button>
+        `;
+    } catch (e) {
+        alert(e.message || 'Có lỗi khi duyệt CV!');
+        btn.disabled = false;
+    }
+}
+async function rejectCV(submissionId, btn) {
+    if (!confirm('Bạn chắc chắn muốn TỪ CHỐI CV này?')) return;
+    btn.disabled = true;
+    const row = btn.closest('tr');
+    try {
+        const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
+        const resp = await fetch(`https://localhost:7004/api/cvsubmissions/${submissionId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+            },
+            body: '"ĐÃ TỪ CHỐI"'
+        });
+        if (!resp.ok) throw new Error('Không thể từ chối CV');
+        // Cập nhật UI
+        row.querySelector('td:nth-child(5)').innerText = 'ĐÃ TỪ CHỐI';
+        row.querySelectorAll('.actions-cell button').forEach(b => { b.disabled = true; });
+        row.querySelector('.actions-cell').innerHTML = `
+            <button type="button" class="btn btn-warning btn-sm" disabled>Lọc CV bằng AI</button>
+            <button type="button" class="btn btn-success btn-sm" disabled>Duyệt CV</button>
+            <button type="button" class="btn btn-danger btn-sm" disabled>Từ chối CV</button>
+        `;
+    } catch (e) {
+        alert(e.message || 'Có lỗi khi từ chối CV!');
+        btn.disabled = false;
+    }
+}
 </script>
