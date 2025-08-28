@@ -93,12 +93,11 @@
                     <tbody>
                         @foreach (var job in Model.Jobs)
                         {
-                            var statusText = job.Status switch
-                            {
-                                "OPEN" => "Đang tuyển dụng",
-                                "CLOSED" => "Đã đóng",
-                                _ => "Không xác định"
-                            };
+                            var isExpired = job.EndDate.HasValue && job.EndDate.Value.Date < DateTime.Today; // VN server time
+                            var isClosed = string.Equals(job.Status, "CLOSED", StringComparison.OrdinalIgnoreCase) || isExpired;
+                            var statusText = isClosed ? "Đã đóng" : "Đang tuyển dụng";
+                            var statusClass = isClosed ? "closed" : "open";
+
                             <tr>
                                 <td class="fw-semibold text-primary">@job.Title</td>
                                 <td>@job.WorkLocation</td>
@@ -108,7 +107,7 @@
                                 <td class="fw-bold text-success">@(job.Salary ?? "Thỏa Thuận")</td>
                                 <td>@(job.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
                                 <td>
-                                    <span class="cv-status-badge @(job.Status == "OPEN" ? "open" : "closed")">@statusText</span>
+                                    <span class="cv-status-badge @statusClass">@statusText</span>
                                 </td>
                                 <td class="actions-cell">
                                     <a class="btn btn-sm btn-primary" href="/Job/DetailJobPost/@job.JobPostId">
@@ -117,12 +116,14 @@
                                     <a class="btn btn-sm btn-outline-secondary" href="/Job/CvSubmissions?jobPostId=@job.JobPostId">
                                         <i class="bi bi-person-lines-fill"></i> CV đã nộp
                                     </a>
-                                    @if (job.Status != "CLOSED")
+
+                                    @if (!isClosed)   // Hết hạn hoặc CLOSED thì ẩn nút Cập nhật
                                     {
                                         <a class="btn btn-sm btn-warning" href="/Employer/UpdateJobPost?jobPostId=@job.JobPostId">
                                             <i class="bi bi-pencil-square"></i> Cập nhật
                                         </a>
                                     }
+
                                     <form method="post" asp-page-handler="Delete" class="d-inline"
                                           onsubmit="return confirm('Bạn chắc chắn muốn xóa: @job.Title ?');">
                                         <input type="hidden" name="id" value="@job.JobPostId" />

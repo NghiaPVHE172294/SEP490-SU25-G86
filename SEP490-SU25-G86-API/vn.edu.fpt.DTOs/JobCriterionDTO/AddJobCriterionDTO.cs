@@ -27,8 +27,8 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO
         [MaxLength(200)]
         public string? PreferredLanguages { get; set; }
 
-        [StringLength(200, MinimumLength = 2, ErrorMessage = "Chứng chỉ ưu tiên phải từ 2 đến 200 ký tự.")]
-        [MaxLength(200)]
+        [StringLength(1000, MinimumLength = 2, ErrorMessage = "Chứng chỉ ưu tiên phải từ 2 đến 1000 ký tự.")]
+        [MaxLength(1000)]
         public string? PreferredCertifications { get; set; }
 
         [Required(ErrorMessage = "Địa chỉ không được để trống.")]
@@ -40,7 +40,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.DTOs.JobCriterionDTO
         [MaxLength(1000)]
         public string? Summary { get; set; }
 
-        [StringLength(1000, MinimumLength = 2, ErrorMessage = "Kinh nghiệm làm việc phải từ 2 đến 1000 ký tự.")]
+        [StringLength(1000, MinimumLength = 2, ErrorMessage = "Lịch sử công việc phải từ 2 đến 1000 ký tự.")]
         [MaxLength(1000)]
         public string? WorkHistory { get; set; }
 
