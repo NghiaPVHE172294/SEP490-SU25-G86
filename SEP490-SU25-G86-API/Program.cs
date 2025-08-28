@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -68,7 +69,6 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
-using vn.edu.fpt.Services.CvTemplateUpload;
 using SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub;
 using System.Net;
 using System.Net.Http.Headers;
@@ -76,6 +76,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Twilio;
+using vn.edu.fpt.Services.CvTemplateUpload;
 
 namespace SEP490_SU25_G86_API
 {
@@ -174,7 +175,24 @@ builder.Configuration.AddConfiguration(configuration);
                     RoleClaimType = ClaimTypes.Role
 
                 };
-			});
+                // >>> Thêm cấu hình cho SignalR
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // token từ query khi nâng cấp WS
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken)
+                            && path.StartsWithSegments("/hubs/notifications"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             // Dependency Injection
             // Account
@@ -371,7 +389,7 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
             app.MapControllers();
 
             //Map SignalR hub cho Notifications
-            app.MapHub<NotificationHub>("/hubs/notifications");
+            app.MapHub<NotificationHub>("/hubs/notifications").RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(async () =>
             {

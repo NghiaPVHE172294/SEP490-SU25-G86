@@ -301,9 +301,15 @@
 
           async function startHub(){
             const hub = new signalR.HubConnectionBuilder()
-              .withUrl(`${apiBase}/hubs/notifications?userId=${userId}`)
+                      .withUrl(`${apiBase}/hubs/notifications`, { accessTokenFactory: () => bearer })
+
               .withAutomaticReconnect()
               .build();
+
+            // debug trạng thái kết nối
+            hub.onreconnecting(err => console.warn('hub reconnecting', err));
+            hub.onreconnected(id => console.log('hub reconnected', id));
+            hub.onclose(err => console.warn('hub closed', err));
 
             hub.on("ReceiveNotification", (n) => {
               if(!n) return;
@@ -311,8 +317,15 @@
               elBellDot.classList.remove('d-none');
             });
 
+            hub.on("NotificationMarkedRead", (id) => {
+              const el = document.querySelector(`.notification-item[data-id="${id}"]`);
+              if (el) el.classList.remove('unread');
+              recalcDot(); // tính lại chấm đỏ dựa trên item .unread còn lại
+            });
             hub.start().catch(console.error);
           }
+             
+
 
           function updateDot(items){
             elBellDot.classList.toggle('d-none', !(items||[]).some(x => !x.isRead));

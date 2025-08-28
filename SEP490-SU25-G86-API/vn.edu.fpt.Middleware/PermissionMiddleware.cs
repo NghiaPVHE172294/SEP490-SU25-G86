@@ -28,6 +28,15 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Middleware
                 }
             }
 
+            // BỎ QUA SignalR hubs: để Hub tự authorize bằng JWT/Role
+            var path = context.Request.Path;
+            if (path.StartsWithSegments("/hubs"))
+            {
+                await _next(context);
+                return;
+            }
+
+            // AllowAnonymous thì bỏ qua
             var endpointMeta = context.GetEndpoint();
             if (endpointMeta?.Metadata?.GetMetadata<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>() != null)
             {
