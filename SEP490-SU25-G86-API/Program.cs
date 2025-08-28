@@ -79,6 +79,7 @@ using System.Text;
 using Twilio;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService;
+using vn.edu.fpt.Services.CvTemplateUpload;
 
 namespace SEP490_SU25_G86_API
 {
