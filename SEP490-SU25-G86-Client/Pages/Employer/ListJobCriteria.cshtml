@@ -46,7 +46,6 @@
                                             {
                                                 <li class="mb-3 border rounded p-3">
                                                     <div class="fw-semibold fs-6 text-primary mb-1">@item.RequiredJobTitles</div>
-                                                    <div class="text-muted small mb-2"><strong>Mục tiêu:</strong> @item.Summary</div>
                                                     <div class="row small">
                                                         <div class="col-md-6">
                                                             <p><strong>Kinh nghiệm:</strong> @item.RequiredExperience</p>
@@ -55,10 +54,10 @@
                                                             <p><strong>Ngôn ngữ:</strong> @item.PreferredLanguages</p>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <p><strong>Chứng chỉ:</strong> @item.PreferredCertifications</p>
-                                                            <p><strong>Địa chỉ:</strong> @item.Address</p>
-                                                            <p><strong>Lịch sử làm việc:</strong> @Html.Raw(item.WorkHistory?.Replace("\n", "<br/>") ?? "")</p>
-                                                            <p><strong>Dự án:</strong> @item.Projects</p>
+                                                            <p><strong>Mục tiêu:</strong> @Html.Raw(item.Summary ?? "")</p>
+                                                            <p><strong>Chứng chỉ:</strong> @Html.Raw(item.PreferredCertifications ?? "")</p>
+                                                            <p><strong>Lịch sử làm việc:</strong> @Html.Raw(item.WorkHistory ?? "")</p>
+                                                            <p><strong>Dự án:</strong> @Html.Raw(item.Projects ?? "")</p>
                                                         </div>
                                                     </div>
                                                 </li>
