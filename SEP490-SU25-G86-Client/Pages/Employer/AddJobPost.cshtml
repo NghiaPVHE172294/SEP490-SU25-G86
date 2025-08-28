@@ -58,7 +58,7 @@
 
             <!-- Mô tả -->
             <div class="col-12">
-                <label class="form-label">Chi tiết công việc *</label>
+                <label class="form-label">Mô tả công việc *</label>
                 <textarea asp-for="JobPost.Description" class="form-control tinymce" rows="4" placeholder="Mô tả chi tiết công việc"></textarea>
                 <span asp-validation-for="JobPost.Description" class="text-danger"></span>
             </div>
@@ -142,7 +142,7 @@
 
             <!-- Trình độ & Cấp bậc -->
             <div class="col-md-6">
-                <label class="form-label">Trình độ kinh nghiệm</label>
+                <label class="form-label">Trình độ kinh nghiệm(Năm)</label>
                 <select name="JobPost.ExperienceLevelId" class="form-select required-select"
                         data-error="#experienceLevelError">
                     <option value="" disabled selected hidden>-- Chọn trình độ --</option>
