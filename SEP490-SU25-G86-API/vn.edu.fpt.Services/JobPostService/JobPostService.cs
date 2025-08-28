@@ -438,8 +438,6 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.JobPostService
 
             return (result, totalItems);
         }
-
-
         public async Task<List<CvSubmissionForJobPostDTO>> GetCvSubmissionsByJobPostIdAsync(int jobPostId)
         {
             var submissions = await _jobPostRepo.GetCvSubmissionsByJobPostIdAsync(jobPostId);

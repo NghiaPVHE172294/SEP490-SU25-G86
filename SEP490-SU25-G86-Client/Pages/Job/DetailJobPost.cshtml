@@ -300,91 +300,99 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @section Scripts {
 <script>
-const jwtToken = '@HttpContext.Session.GetString("jwt_token")';
-let selectedCvId = null;
-let candidateId = '@HttpContext.Session.GetString("userId")';
+        const jwtToken = ('@HttpContext.Session.GetString("jwt_token")' || '').trim();
+        let selectedCvId = null;
+        const candidateId = ('@HttpContext.Session.GetString("userId")' || '').trim();
 
 //chiennk 23/07/2025 (saved job button)
         let isSaved = @(Model.IsSaved.ToString().ToLower());
             let jobPostId = @Model.JobPostDetail?.JobPostId;
-            let saveBtn = document.getElementById("saveButton");
+                    const saveBtn = document.getElementById("saveButton");
+            if (saveBtn) {
+                let isSaved = @(Model.IsSaved.ToString().ToLower());
+                saveBtn.addEventListener('click', function () {
+                    if (!candidateId) {
+                        window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                        return;
+                    }
 
-            saveBtn.addEventListener('click', function () {
-                if (!candidateId) {
-                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
-                    return;
-                }
-
-                if (!isSaved) {
-                    // Gọi API lưu công việc
-                    fetch('https://localhost:7004/api/SavedJobs/save', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + jwtToken
-                        },
-                        body: JSON.stringify({
-                            userId: candidateId,
-                            jobPostId: jobPostId
+                    if (!isSaved) {
+                        // Gọi API lưu công việc
+                        fetch('https://localhost:7004/api/SavedJobs/save', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + jwtToken
+                            },
+                            body: JSON.stringify({
+                                userId: candidateId,
+                                jobPostId: jobPostId
+                            })
                         })
-                    })
-                    .then(res => {
-                        if (res.ok) {
-                            isSaved = true;
-                            saveBtn.textContent = "Đã Lưu";
-                                    saveBtn.classList.remove("active");
-                                    saveBtn.classList.add("active");
-                        } else {
-                            alert("Không thể lưu công việc.");
-                        }
-                    });
-                } else {
-                    // Gọi API lấy danh sách đã lưu để tìm saveJobId
-                    fetch(`https://localhost:7004/api/SavedJobs/user/${candidateId}`, {
-                        headers: {
-                            'Authorization': 'Bearer ' + jwtToken
-                        }
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        let match = data.find(x => x.jobPostId === jobPostId);
-                        if (!match) {
-                            alert("Không tìm thấy công việc đã lưu.");
-                            return;
-                        }
-
-                        let saveJobId = match.saveJobId;
-
-                        // Gọi API xóa job đã lưu
-                        fetch(`https://localhost:7004/api/SavedJobs/${saveJobId}`, {
-                            method: 'DELETE',
+                        .then(res => {
+                            if (res.ok) {
+                                isSaved = true;
+                                saveBtn.textContent = "Đã Lưu";
+                                        saveBtn.classList.remove("active");
+                                        saveBtn.classList.add("active");
+                            } else {
+                                alert("Không thể lưu công việc.");
+                            }
+                        });
+                    } else {
+                        // Gọi API lấy danh sách đã lưu để tìm saveJobId
+                        fetch(`https://localhost:7004/api/SavedJobs/user/${candidateId}`, {
                             headers: {
                                 'Authorization': 'Bearer ' + jwtToken
                             }
                         })
-                        .then(res => {
-                            if (res.ok) {
-                                isSaved = false;
-                                saveBtn.textContent = "Lưu Tin";
-                                        saveBtn.classList.remove("active");
-                                        saveBtn.classList.add("active");
-                            } else {
-                                alert("Không thể hủy lưu công việc.");
+                        .then(res => res.json())
+                        .then(data => {
+                            let match = data.find(x => x.jobPostId === jobPostId);
+                            if (!match) {
+                                alert("Không tìm thấy công việc đã lưu.");
+                                return;
                             }
+
+                            let saveJobId = match.saveJobId;
+
+                            // Gọi API xóa job đã lưu
+                            fetch(`https://localhost:7004/api/SavedJobs/${saveJobId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': 'Bearer ' + jwtToken
+                                }
+                            })
+                            .then(res => {
+                                if (res.ok) {
+                                    isSaved = false;
+                                    saveBtn.textContent = "Lưu Tin";
+                                            saveBtn.classList.remove("active");
+                                            saveBtn.classList.add("active");
+                                } else {
+                                    alert("Không thể hủy lưu công việc.");
+                                }
+                            });
                         });
-                    });
-                }
-            });
+                    }
+                });
+            }
 //end chiennk edit
 
-document.getElementById('btnApplyNow').addEventListener('click', function() {
-    if (!candidateId) {
-        window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
-        return;
-    }
-    var modal = new bootstrap.Modal(document.getElementById('applyModal'));
-    modal.show();
-});
+        const btnApply = document.getElementById('btnApplyNow');
+        if (btnApply) {
+            btnApply.addEventListener('click', function () {
+                if (!candidateId) {
+                    window.location.href = '/Common/Login?returnUrl=' + encodeURIComponent(window.location.pathname + window.location.search);
+                    return;
+                }
+                const modalElement = document.getElementById('applyModal');
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                }
+            });
+        }
 
 window.selectCv = function(cvId) {
     selectedCvId = cvId;
@@ -394,62 +402,66 @@ window.selectCv = function(cvId) {
     var row = document.getElementById('cv-row-' + cvId);
     if (row) row.classList.add('selected');
 };
-
-document.getElementById('btnSubmitApplication').addEventListener('click', function() {
-    if (selectedCvId) {
-        // Nộp bằng CV có sẵn
-        fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: JSON.stringify({
-                jobPostId: @Model.JobPostDetail?.JobPostId,
-                cvId: selectedCvId,
-                candidateId: candidateId
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message || 'Ứng tuyển thành công!');
-            location.reload();
-        })
-        .catch(() => alert('Lỗi khi ứng tuyển!'));
-    } else {
-        // Nộp bằng CV upload mới
-        let file = document.getElementById('uploadCvInput').files[0];
-        let cvName = document.getElementById('uploadCvName').value;
-        let notes = document.getElementById('uploadCvNotes').value;
-        if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
-        if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
-        document.getElementById('uploadSpinner').style.display = 'flex'; // Hiện spinner
-        let formData = new FormData();
-        formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
-        formData.append('candidateId', candidateId);
-        formData.append('file', file);
-        formData.append('CVName', cvName);
-        if (notes) formData.append('Notes', notes);
-        fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
-            alert(data.message || 'Ứng tuyển thành công!');
-            setTimeout(function() {
-                location.reload();
-            }, 100);
-        })
-        .catch(() => {
-            document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
-            alert('Lỗi khi ứng tuyển!');
+        const btnSubmit = document.getElementById('btnSubmitApplication');
+                if (btnSubmit) {
+            btnSubmit.addEventListener('click', function () {
+                        document.getElementById('btnSubmitApplication').addEventListener('click', function() {
+            if (selectedCvId) {
+                // Nộp bằng CV có sẵn
+                fetch('https://localhost:7004/api/AppliedJobs/apply-existing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify({
+                        jobPostId: @Model.JobPostDetail?.JobPostId,
+                        cvId: selectedCvId,
+                        candidateId: candidateId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    location.reload();
+                })
+                .catch(() => alert('Lỗi khi ứng tuyển!'));
+            } else {
+                // Nộp bằng CV upload mới
+                let file = document.getElementById('uploadCvInput').files[0];
+                let cvName = document.getElementById('uploadCvName').value;
+                let notes = document.getElementById('uploadCvNotes').value;
+                if (!file) { alert('Vui lòng chọn hoặc upload CV!'); return; }
+                if (!cvName) { alert('Vui lòng nhập tên CV!'); return; }
+                document.getElementById('uploadSpinner').style.display = 'flex'; // Hiện spinner
+                let formData = new FormData();
+                formData.append('jobPostId', @Model.JobPostDetail?.JobPostId);
+                formData.append('candidateId', candidateId);
+                formData.append('file', file);
+                formData.append('CVName', cvName);
+                if (notes) formData.append('Notes', notes);
+                fetch('https://localhost:7004/api/AppliedJobs/apply-upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
+                    alert(data.message || 'Ứng tuyển thành công!');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 100);
+                })
+                .catch(() => {
+                    document.getElementById('uploadSpinner').style.display = 'none'; // Ẩn spinner
+                    alert('Lỗi khi ứng tuyển!');
+                });
+            }
         });
-    }
-});
+            });
+        }
 </script>
 } 
