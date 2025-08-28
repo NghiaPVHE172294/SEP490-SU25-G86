@@ -9,7 +9,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub
     {
         public override async Task OnConnectedAsync()
         {
-            var userIdStr = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdStr = Context.User?.FindFirst("uid")?.Value;
             if (!string.IsNullOrEmpty(userIdStr))
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"user-{userIdStr}");
             await base.OnConnectedAsync();
@@ -17,7 +17,7 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var userIdStr = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdStr = Context.User?.FindFirst("uid")?.Value;
             if (!string.IsNullOrEmpty(userIdStr))
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"user-{userIdStr}");
             await base.OnDisconnectedAsync(exception);

@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -309,7 +310,7 @@ builder.Configuration.AddConfiguration(configuration);
 
             // HandbookCategory
             builder.Services.AddScoped<IHandbookCategoryRepository, HandbookCategoryRepository>();
-            builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();
+            builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();    
 
             //Notification
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
