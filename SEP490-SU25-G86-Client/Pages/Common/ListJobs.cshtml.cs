@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SEP490_SU25_G86_API.Models;
 using SEP490_SU25_G86_API.vn.edu.fpt.DTOs.CvDTO;
@@ -127,6 +127,7 @@ namespace SEP490_SU25_G86_Client.Pages.Common
 
                 await LoadProvincesAsync();
                 await LoadIndustriesAsync();
+                await LoadExperienceLevelsAsync();
             }
             catch (Exception ex)
             {
@@ -155,6 +156,13 @@ namespace SEP490_SU25_G86_Client.Pages.Common
             using var client = new HttpClient();
             var industries = await client.GetFromJsonAsync<List<Industry>>("https://localhost:7004/api/industries");
             Industries = industries ?? new();
+        }
+
+        private async Task LoadExperienceLevelsAsync()
+        {
+            using var client = new HttpClient();
+            var expLevels = await client.GetFromJsonAsync<List<ExperienceLevel>>("https://localhost:7004/api/experiencelevels");
+            ExperienceLevels = expLevels ?? new();
         }
         public class JobDto
         {

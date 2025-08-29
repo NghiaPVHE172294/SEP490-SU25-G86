@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model SEP490_SU25_G86_Client.Pages.Common.ListJobsModel
 @{
     Layout = "_Layout";
@@ -60,26 +60,13 @@
                         <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="" id="exp-all">
                         <label class="form-check-label" for="exp-all">Tất cả</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="1" id="exp-none">
-                        <label class="form-check-label" for="exp-none">Không yêu cầu</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="2" id="exp-under1">
-                        <label class="form-check-label" for="exp-under1">Dưới 1 năm</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="3" id="exp-1y">
-                        <label class="form-check-label" for="exp-1y">1 năm</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="4" id="exp-2y">
-                        <label class="form-check-label" for="exp-2y">2 năm</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="5" id="exp-3y">
-                        <label class="form-check-label" for="exp-3y">3 năm</label>
-                    </div>
+                    @foreach (var exp in Model.ExperienceLevels)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="experienceLevelIds" value="@exp.ExperienceLevelId" id="exp-@exp.ExperienceLevelId">
+                            <label class="form-check-label" for="exp-@exp.ExperienceLevelId">@exp.ExperienceLevelName</label>
+                        </div>
+                    }
 
                 <!-- Date Posted -->
                 <h6 class="fw-bold">Ngày đăng</h6>
