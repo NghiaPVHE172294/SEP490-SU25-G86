@@ -160,11 +160,16 @@
                                     <img src="@job.CompanyLogoUrl"
                                          alt="@job.CompanyName"
                                          class="rounded"
-                                         style="width: 80px; height: 80px; object-fit: cover;">
+                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                         onclick="window.location.href='/Common/CompanyDetail?id=@job.CompanyId'">
 
                                     <!-- Thông tin công việc -->
                                     <div class="ms-3 flex-grow-1">
-                                        <h5 class="fw-bold mb-1">@job.Title</h5>
+                                        <h5 class="fw-bold mb-1">
+                                            <a href="/Job/DetailJobPost/@job.JobPostId" class="fw-bold mb-1">
+                                                @job.Title
+                                            </a>
+                                        </h5>
                                         <p class="mb-1">
                                             <a href="/Common/CompanyDetail?id=@job.CompanyId"
                                                class="text-muted text-decoration-none">
@@ -178,7 +183,7 @@
                                 <!-- Lương & nút Chi tiết -->
                                 <div class="d-flex align-items-center justify-content-between mt-3">
                                     <span class="text-custom fw-bold">@job.Salary</span>
-                                    <a class="btn btn-primary btn-sm" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
+                                    <a class="btn btn-custom btn-sm btn-fixed" href="/Job/DetailJobPost/@job.JobPostId">Chi tiết</a>
                                 </div>
                             </div>
                         </div>
@@ -425,7 +430,7 @@
         document.addEventListener("DOMContentLoaded", function () {
         const API_BASE = "https://localhost:7004/api/industries/with-jobcount";
         let currentPage = 1;
-        const pageSize = 6;
+        const pageSize = 8;
         let lastPage = false;
 
             function loadIndustryCategories(page) {

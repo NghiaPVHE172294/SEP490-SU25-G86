@@ -158,11 +158,16 @@
                         <img src="@job.CompanyLogoUrl"
                              alt="@job.CompanyName"
                              class="rounded"
-                             style="width: 110px; height: 110px; object-fit: cover;">
+                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                             onclick="window.location.href='/Common/CompanyDetail?id=@job.CompanyId'">
 
                         <!-- Phần thông tin job -->
                         <div class="ms-3">
-                            <h5 class="fw-bold mt-1 job-title">@job.Title</h5>
+                            <h5 class="fw-bold mb-1">
+                                <a href="/Job/DetailJobPost/@job.JobPostId" class="fw-bold mb-1 job-title">
+                                    @job.Title
+                                </a>
+                            </h5>
                             <div class="text-muted">
                                 <a href="/Common/CompanyDetail?id=@job.CompanyId" class="text-decoration-none text-muted">
                                     @job.CompanyName
