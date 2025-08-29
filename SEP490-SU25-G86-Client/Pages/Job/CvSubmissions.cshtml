@@ -117,8 +117,14 @@
                                             {
                                                 <button type="button" class="btn btn-warning btn-sm" onclick="aiFilter(@cv.SubmissionId, @Model.JobPostId, '@cv.CvParsedDataId', '@cv.JobCriteriaId')">Lọc CV bằng AI</button>
                                             }
-                                            <button type="button" class="btn btn-success btn-sm" onclick="approveCV(@cv.SubmissionId, this)">Duyệt CV</button>
-<button type="button" class="btn btn-danger btn-sm" onclick="rejectCV(@cv.SubmissionId, this)">Từ chối CV</button>
+                                            <form method="post" asp-page-handler="Approve" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+                                                <button type="submit" class="btn btn-success btn-sm">Duyệt CV</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="Reject" asp-route-id="@cv.SubmissionId" style="display:inline">
+                                                <input type="hidden" name="JobPostId" value="@Model.JobPostId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Từ chối CV</button>
+                                            </form>
                                         </div>
                                     }
                                 </td>
@@ -216,7 +222,7 @@
                 </div>
             </div>
         </form>
-
+        @section Scripts {
         @await Html.PartialAsync("_MissingCriteriaPopupPartial")
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -286,7 +292,7 @@ async function aiFilterAll() {
     setTimeout(() => location.reload(), 1200);
 }
 // --- END AI Filter logic ---
-
+@* 
 // --- Duyệt/Từ chối CV không reload ---
 async function approveCV(submissionId, btn) {
     if (!confirm('Bạn chắc chắn muốn DUYỆT CV này?')) return;
@@ -343,5 +349,6 @@ async function rejectCV(submissionId, btn) {
         alert(e.message || 'Có lỗi khi từ chối CV!');
         btn.disabled = false;
     }
-}
+} *@
 </script>
+}

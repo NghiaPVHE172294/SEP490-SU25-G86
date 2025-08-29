@@ -4223,3 +4223,1238 @@ Response: {
   "responseId": "H3KwaLmRI7aeqtsPieC62QI"
 }
 
+[8/29/2025 11:06:24 AM] CV: 2, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":2,"CvId":2,"FullName":"Dani Martinez                                                                                                                                                                                           ","Email":"hello@reallygreatsite.com","Phone":"\u002B123-456-7890123","YearsOfExperience":2.5,"Skills":"Software Developer, Programming Languages, Web Development, Database Management, Mobile Development, Cloud Platforms, Testing \u0026 Debugging","EducationLevel":"Bachelor of Science","JobTitles":"Software Developer, Junior Developer, Software Engineering Intern","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:39:31.467","Address":"Anywhere St., Any City","Summary":"Detail-oriented and solutions-driven programmer with a strongbackground in software development and problem-solving. Proficient in various programming languages and technologies. Seeking a challenging role where I can contribute to developinginnovative software solutions and advance my skills.","WorkHistory":"Borcelle Tech Solutions | July 2022 \u2013 Present\r\nSoftware Developer\r\nDesigned and developed scalable web applications,         resulting in improved user experience and performance.\r\nCollaborated with cross-functional teams to design and integrate          third-party services, reducing development time by 30%.\r\nConducted code reviews and optimized existing codebases,          leading to a 15% increase in system efficiency.\r\nBorcelle Software | September 2020 \u2013 June 2022\r\nJunior Developer\r\nAssisted in the development of mobile applications.js, enhancing user        engagement by 25%.\r\nImplemented database solutions, ensuring data integrity and system         reliability.\r\nWorked closely with senior developers to troubleshoot bugs and deliver          timely updates.\r\nBorcelle Corporation | June 2019 \u2013 August 2020\r\nSoftware Engineering Intern\r\nDeveloped and maintained internal tools , improving workflow         automation for the IT team.\r\nContributed to software testing and debugging, reducing error          rates and improving overall product quality.","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 4.56\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0054016474817619948
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1722,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1844,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1722
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "PyexaJuvNMyz1MkPw-SG-Qc"
+}
+
+[8/29/2025 11:06:32 AM] CV: 3, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":3,"CvId":3,"FullName":"MorganMaxwell                                                                                                                                                                                           ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"WebCoding, Front-endDevelopment, WireframeCreation, WebsiteDesign","EducationLevel":"BACHELOR OF TECHNOLOGY","JobTitles":"WEB DEVELOPER, Senior Web Developer, Web Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:40:45.75","Address":"123 Anywhere St., Any City","Summary":"I am a qualified andprofessional web developerwith five years of experiencein database administrationand website design. Strongcreative and analytical skills.Team player with attentionto detail.","WorkHistory":"October 2020-CurrentSenior Web Developer at Wardiere Inc.\r\nCreating, constructing, or maintainingwebsites and software applications.Using scripting or writing languages,management tools, content creation tools.\r\nFebruary 2015-September 2019Web Developer at Studio Shodwe","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 3.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 9.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 4.44\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.015022959865507533
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1500,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1622,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1500
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SCexaIKnCKia1MkP8MmXiAg"
+}
+
+[8/29/2025 11:06:34 AM] CV: 4, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":4,"CvId":4,"FullName":"RichardSanchezWeb Developer                                                                                                                                                                             ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"Web Design, Front-end coding, Custom databases, User Interface/User Experience, Design Thinking, Full Stack Web and Multiplatform Mobile App Development","EducationLevel":"MA","JobTitles":"WEBSITE DEVELOPER, SENIOR WEB DEVELOPER","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:45:19.443","Address":"Anywhere St., Any City, State, Country 12345","Summary":"I am a Computer Science graduate with a penchantfor design and storytelling. I am passionate aboutenhancing user experience and maximizing userinterface.","WorkHistory":"Thompson \u0026 Tate Digital Co. | 2017-present- Met with clients to discuss project requirements and workflow- Designed and coded websites, from layout to function, according to client specifications\r\nKyobi Digital Integration, Inc. | 2015-2017","Projects":"Interactive Website for Children with Disabilities (www.reallygreatsite.com)- QR Code Graffiti Art (in collaboration with the City Council)","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 3.0,\n  \"educationLevelScore\": 6.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 3.0,\n  \"workHistoryScore\": 5.0,\n  \"projectsScore\": 3.0,\n  \"totalScore\": 3.78\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.059285976847664255
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1538,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1660,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1538
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SSexaN-8EOKj1MkP4MSasAg"
+}
+
+[8/29/2025 11:06:35 AM] CV: 5, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":5,"CvId":5,"FullName":"Daniel Gallego                                                                                                                                                                                          ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":3,"Skills":"Programming Languages, Frameworks \u0026 Libraries, Tools \u0026 Platforms","EducationLevel":"Bachelor","JobTitles":"Software Developer, Junior Web Developer, Freelance Programmer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:47:37.823","Address":null,"Summary":"I\u2019m a curious andmotivated developer whoenjoys solving real-worldproblems through code. Ivalue collaboration, cleanarchitecture, and stayingup-to-date with the latesttech trends. I believe everychallenge is a chance togrow.","WorkHistory":"Detail-oriented and analytical software developer with 3\u002B years ofexperience in building scalable web applications, automatingprocesses, and solving complex technical problems. Proficient infull-stack development using modern technologies. Passionateabout writing clean, efficient code and continuously learning newtools and frameworks.","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10,\n  \"skillsScore\": 6,\n  \"educationLevelScore\": 10,\n  \"jobTitlesScore\": 7,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 0,\n  \"summaryScore\": 7,\n  \"workHistoryScore\": 9,\n  \"projectsScore\": 0,\n  \"totalScore\": 5.44\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.032146192946523988
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1510,
+    "candidatesTokenCount": 106,
+    "totalTokenCount": 1616,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1510
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 106
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SiexaJC4FvW11MkPyK6wiQg"
+}
+
+[8/29/2025 11:06:36 AM] CV: 6, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":6,"CvId":6,"FullName":"Noah Schumacher                                                                                                                                                                                         ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"ResponsiveWeb Design, DatabaseManagement, ProblemSolving, GraphicDesign","EducationLevel":"Master of Science","JobTitles":"Web Developer, Web Developer Intern","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:48:32.13","Address":null,"Summary":"Experienced web developerskilled in front-end and back-end development, passionateabout creating responsive, user-friendly websites that drivedigital success.","WorkHistory":"Timmerman IndustriesWeb Developer2018\u002BLed the team, optimized code, and ensuredresponsive, user-friendly website functionality.\r\n2023 I assisted in coding web applications, gaininghands-on experience in web development.\r\n2020Studio ShodweWeb Developer Intern","Projects":"2020Studio ShodweImplemented responsive design andenhancing user experience across alldevices.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 3.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 5.0,\n  \"totalScore\": 4.78\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0094315341261566668
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1503,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1625,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1503
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "SyexaPDJGc2Y1MkP8feKoAw"
+}
+
+[8/29/2025 11:06:37 AM] CV: 8, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":8,"CvId":8,"FullName":"Henrietta Mitchell                                                                                                                                                                                      ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":null,"Skills":"Front end development, Web coding, Wireframe creation, Website design, HTML, CSS, JavaScript, SQL, Ruby, PHP, C\u002B\u002B, XML","EducationLevel":"Bachelor of Science","JobTitles":"Website Developer, Freelancer, Front End Web Encoder","Languages":null,"Certifications":"Website Design \u0026 Development","ParsedAt":"2025-08-28T04:49:53.39","Address":"123 Anywhere Street, Any City, State, Country 12345","Summary":"A web developer with a strong interest in projects that requireboth conceptual and analytical thinking. I\u0027m always eager to learnfrom anyone and everyone.","WorkHistory":"Website DeveloperWorked for companies such as Portal Tech Hub, SiltonStrategies, and more, to do the following:Creates and improves on existing codeDesign websitesFreelancer (August 2014 - Present)Front End Web EncoderOptimized existing code to produce faster and moreconsistent resultsWrote new code to improve main websiteHelped troubleshoot customers\u0027 web problemsBeechtown Web Agency (June 2013 - August 2014)","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 0,\n  \"skillsScore\": 3,\n  \"educationLevelScore\": 8,\n  \"jobTitlesScore\": 7,\n  \"languagesScore\": 0,\n  \"certificationsScore\": 6,\n  \"summaryScore\": 6,\n  \"workHistoryScore\": 7,\n  \"projectsScore\": 0,\n  \"totalScore\": 4.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.061486771473517783
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1574,
+    "candidatesTokenCount": 104,
+    "totalTokenCount": 1678,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1574
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 104
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "TCexaM7UIPSc1MkPktuxUQ"
+}
+
+[8/29/2025 11:06:38 AM] CV: 9, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":9,"CvId":9,"FullName":"CLAUDIAALVES                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"Photoshop, Premium Pro, InDesign, After Effects","EducationLevel":null,"JobTitles":"Graphic Designer, Web Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:51:05.44","Address":"123 Anywhere St., Any City","Summary":"Creative and innovative Graphic Designer with a passion for visual storytelling and a proven track record of turning ideas into impactful designs. With 5 years of experience in the field, I bring a blend of artistic talent, technical proficiency, and strategic thinking to every project.","WorkHistory":"2014-2017 Graphic Designer Liceria \u0026 Co. Collaborated closely with cross-functional teams to ensure alignment of design concepts with brand guidelines and project objectives. Contributed to brainstorming sessions and provided creative insights to drive the evolution of design strategies and concepts. 2017-2020 Web Developer Studio Shodwe","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 2.0,\n  \"educationLevelScore\": 0.0,\n  \"jobTitlesScore\": 6.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 3.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.04955664619070585
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1518,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1640,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1518
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "TSexaODqJOmv1MkPhtqTwAw"
+}
+
+[8/29/2025 11:06:39 AM] CV: 11, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":11,"CvId":11,"FullName":"Adeline Palmerston                                                                                                                                                                                      ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"- C\u002B\u002B- HTML- Javascript- PHP- SQL- UNIX Scripting","EducationLevel":"Masters","JobTitles":"WEB DEVELOPER, SENIOR WEB DEVELOPER, FRONTEND WEB DEVELOPER","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T04:56:00.28","Address":"123 Anywhere Street, Any City, State, Country 12345","Summary":"I am an experienced web developer with a keen interest in making innovative, user-friendly web design. I amlooking to expand my knowledge in the industry.","WorkHistory":"SENIOR WEB DEVELOPERTomson and Tate | 2018 to present- Creating the web-based collaterals for campaigns- Optimising home and landing pages- Designing and developing email campaigns with PHP and JavascriptFRONTEND WEB DEVELOPERZimCore Web Solutions | 2017 to 2018- Combine design and programming elements to form a cohesive andresponsive website- Setting workflow, schedule, and deliverables for a variety of projects","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 8.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 4.78\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.034698869361252084
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1550,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1672,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1550
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "TiexaPiAM4WW1MkP6_ON8Aw"
+}
+
+[8/29/2025 11:06:55 AM] CV: 22, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":22,"CvId":22,"FullName":"SACHA DUBOIS                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"(123) 456-7890","YearsOfExperience":3.9166666666666665,"Skills":"System Analysis, User Research, Object-Oriented Design, Optimization, Machine Learning, Agile Methodology, Database Modelling, Software Testing and Debugging","EducationLevel":"Masters","JobTitles":"Senior Software Engineer, Software Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:07:30.927","Address":"123 Anywhere St.,Any City, State, Country 12345","Summary":"I am a software developer andsystems architect with experience indesigning, coding, and testingcomplex systems. I\u0027m highly proficientin C#, Java, and Ruby.","WorkHistory":"Senior Software Engineer\r\nMEERMASTER TECH | JAN 2019 - PRESENT\r\n- Analyze user needs and design software solutions\r\n- Code high-performance programs using different frameworks\r\n- Work with other teams for debugging\r\nSoftware Developer\r\nEILECOM SOLUTIONS | SEPT 2018 - DEC 2019\r\n- Built back-end services that crunched data to deliver businessinsights\r\n- Created automated release process tools\r\n- Continuously improved system architecture","Projects":"AI-Generated Diagnoses of Plant Disease onMobile Platforms","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 9.0,\n  \"skillsScore\": 7.0,\n  \"educationLevelScore\": 7.0,\n  \"jobTitlesScore\": 8.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 6.0,\n  \"totalScore\": 5.78\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.02730826862522813
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1609,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1731,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1609
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "XiexaOuGLauf1MkPrOXjkAg"
+}
+
+[8/29/2025 11:06:56 AM] CV: 23, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":23,"CvId":23,"FullName":"SURI SHARMA                                                                                                                                                                                             ","Email":"hello@reallygreatsite.com","Phone":null,"YearsOfExperience":3,"Skills":"Java, Python, C\u002B\u002B, Machine learning, Software testing","EducationLevel":"Bachelor\u2019s","JobTitles":"Senior Developer, Junior Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:08:04.877","Address":null,"Summary":"Experienced software developer with high proficiency in coding, software testing and designing.","WorkHistory":"Senior Developer\r\nDEEPAL TECHNOLOGIES | 2022 - PRESENT\r\nComplex coding\r\nSoftware debugging and testing\r\nJunior Developer\r\nAARYA TECHNOLOGIES | 2019 - 2022\r\nCoding for a mobile application","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 8.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 5.22\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.0047552982966105146
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1473,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 1596,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1473
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "XyexaM_fNM2s1MkP1PaD2Ac"
+}
+
+[8/29/2025 11:06:57 AM] CV: 24, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":24,"CvId":24,"FullName":"Donna Stroupe                                                                                                                                                                                           ","Email":null,"Phone":"\u002B123-456-7890","YearsOfExperience":2.5,"Skills":"Java, Kotlin, UI/UX Design, Debugging and Troubleshooting, Third-party Libraries and APIs Integration, Version Control, Attention to Detail, Agile Development Methodologies","EducationLevel":"Bachelor of Science","JobTitles":"Mobile Developer, Junior Mobile Developer","Languages":"English, French","Certifications":"Advanced Mobile App Development: Specializing in React Native | March 2022","ParsedAt":"2025-08-28T05:08:33.17","Address":null,"Summary":"Dedicated and skilled Mobile Developer with a passion for creating high-quality mobile applications. Committed to providing convenient and effective solutions.","WorkHistory":"Mobile Developer, Fradel and Spies Tech Solutions (2 years):\r\nDeveloped and maintained apps, ensuring optimal performance and user experience.\r\nCollaborated with cross-functional teams to design and implement new features.\r\nConducted code reviews and provided mentorship to junior developers.\r\nJunior Mobile Developer, Rimberio Mobile Apps (Internship, 6 months)\r\nAssisted in the development of mobile apps, focusing on UI/UX design and performance optimization.\r\nWorked closely with senior developers to troubleshoot and debug code.","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 6.0,\n  \"skillsScore\": 5.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 7.0,\n  \"certificationsScore\": 7.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 5.89\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.014607638609213908
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1566,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1688,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1566
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "YCexaLG4OPCn1MkPveC2gAg"
+}
+
+[8/29/2025 11:06:58 AM] CV: 25, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":25,"CvId":25,"FullName":"Kim Chun Hei                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"\u002B123-456-7890","YearsOfExperience":5,"Skills":"Front End DevelopmentExpert, WordpressExpert, Back End DevelopmentExpert","EducationLevel":null,"JobTitles":"Wordpress Developer, Elementor Designer, Website Designer, Wordpress Developer, Elementor Designer, Website Designer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:09:51.153","Address":"Anywhere, Any City","Summary":"Hello, I\u0027m Kim, I\u0027m a website developer expert with 5 yearsof experience in the field, I can quickly create websitesusing wordpress, but I can also create websites withnative coding","WorkHistory":"Wordpress Developer2019 - 2021Become a Wordpress Developer at asmall Startup in Anywhere, Any Citywho is in charge of building wordpressThemeElementor Designer2019 - 2021Become a Elementor Designer at aSoftware Hous in Anywhere, Any Citywho is in charge of building templatekitWebsite Designer2019 - 2021Become a Website Designer at aDesign Studio in Anywhere, Any Citywho is in charge of Building WebDesignWork ExperienceWordpress Developer2019 - 2021Become a Wordpress Developer at asmall Startup in Anywhere, Any Citywho is in charge of building wordpressThemeElementor Designer2019 - 2021Become a Elementor Designer at aSoftware Hous in Anywhere, Any Citywho is in charge of building templatekitWebsite Designer2019 - 2021Become a Website Designer at aDesign Studio in Anywhere, Any Citywho is in charge of Building WebDesign","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 2.0,\n  \"educationLevelScore\": 0.0,\n  \"jobTitlesScore\": 6.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 4.0,\n  \"workHistoryScore\": 5.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 2.67\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.017186055417920721
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1667,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1789,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1667
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "YiexaNmPA9uw1MkPq-jx8Q0"
+}
+
+[8/29/2025 11:07:00 AM] CV: 26, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":26,"CvId":26,"FullName":"Lorna Alvarado                                                                                                                                                                                          ","Email":"hello@reallygreatsite.com","Phone":"\u002B123-456-7890","YearsOfExperience":5,"Skills":"Logical thinking, Software debugging, Computer programming, Problem Solving, Conflict resolution, Oral and written communication, Problem Solving","EducationLevel":"BS Software Engineering","JobTitles":"Senior Software Engineer, Junior Software Engineer","Languages":"English (Fluent), French (Intermediate), Spanish (Basic)","Certifications":null,"ParsedAt":"2025-08-28T05:10:35.84","Address":"123 Anywhere St., Any City","Summary":"Experienced Software Engineer with a decade of expertise in full-stack development. Proven proficiency in designing, implementing, testing, and maintaining software solutions within the project timelines. Demonstrates mastery in programming languages including Java, Python, and JavaScript. Skilled in utilizing technologies like React, Spring Boot, and Node.js.","WorkHistory":"Senior Software Engineer   |   2035 - Present\r\nSpearheaded the development of a customerportal, streamlining user interactions andreducing response time.Implemented a real-time collaboration featurein a team project, enhancing communicationamong remote team members.\r\nJunior Software Engineer | 2030 - 2035 Collaborated with UX/UI designers toimplement responsive design principles,resulting in a more user-friendly interface.Contributed to daily stand-ups and sprintplanning sessions, fostering a collaborativeand productive team environment.","Projects":"Developed software solutions for theDepartment.Commended for implementing a new updateprocess that significantly improved theschool\u0027s database load.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 8.0,\n  \"languagesScore\": 4.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 6.0,\n  \"totalScore\": 5.89\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.035236909741260966
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1623,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1745,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1623
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "YyexaLXsC6ul1MkPo9fJqQg"
+}
+
+[8/29/2025 11:07:01 AM] CV: 27, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":27,"CvId":27,"FullName":"SHAWN GARCIA                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"\u002B123-456-7890","YearsOfExperience":6.58,"Skills":"Frontend \u0026 Backend Development, Coding Languages, Attention to detail, Logical Approach, Creative Ability","EducationLevel":"Masters","JobTitles":"Lead Web Developer, Senior Web Developer, Junior Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:11:06.95","Address":"123 Anywhere St., Any City","Summary":"Lorem ipsum dolor sit amet, consecteturadipiscing elit. Sed consequat est augue, utplacerat ex venenatis id. In hendrerit nibhvitae facilisis blandit. Fusce et vestibulumnunc.","WorkHistory":"Warner \u0026 Spencer Co.Lead Web DeveloperJanuary 2021- August 2022Lorem ipsum dolor sit amet, consecteturadipiscing elit. Sed consequat est augue, utplacerat ex venenatis id. In hendrerit nibh vitaefacilisis blandit...Warner \u0026 Spencer Co.Senior Web DeveloperMarch 2018- December 2020Lorem ipsum dolor sit amet, consecteturadipiscing elit. Sed consequat est augue, utplacerat ex venenatis id. In hendrerit nibh vitaefacilisis blandit.Warner \u0026 Spencer Co.Junior DeveloperMarch 2016- December 2017Lorem ipsum dolor sit amet, consecteturadipiscing elit. Sed consequat est augue, utplacerat ex venenatis id. In hendrerit nibh vitaefacilisis blandit..","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 7.0,\n  \"jobTitlesScore\": 7.5,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 5.06\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.047386975792365345
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1677,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 1800,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1677
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "ZCexaLbdG_Ol1MkP4r67gQ8"
+}
+
+[8/29/2025 11:07:02 AM] CV: 28, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":28,"CvId":28,"FullName":"ROSA MARIA AGUADO                                                                                                                                                                                       ","Email":"hello@reallygreatsite.com","Phone":"\u002B123-456-7890","YearsOfExperience":7,"Skills":"Front-end \u0026 back-end web development, Code structure \u0026 architecture, Web performance optimization, Programming languages, Agile software development, Agile leadership or scrum master, Source control, Test driven development","EducationLevel":"Bachelor of Computer Science - Software Engineering","JobTitles":"Web Developer, Junior Web Developer, Freelance Web Developer","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:12:08.45","Address":"123 Anywhere St., Any City, ST 12345","Summary":"Solution-oriented and problem solver with 7 years of experience building andmaintaining software and software architecture. Highly skilled in communication,collaboration, and technical documentation.","WorkHistory":"Salford \u0026 Co. Web Developer |  07 March, 2031 - Present Oversee and maintain core web services and websites Ensure user satisfaction and retention by providing responsive tech support Perform live demos to customers and nurture client relationships Collaborate with senior developers to update the website and create new features Keithston and Partners Junior Web Developer | 06 August, 2028 - 23 December, 2030 Built and maintained websites for clients through various online platforms Created and tested applications for websites Filed reports, gathered information, and performed research Created guides to document the processes and maintain business continuity Hanover and Tyke Built a high-performing website to increase traffic, sales, and subscribers Developed email marketing campaigns to gain more exposure and promote products Arowwai Industries Created a membership site to create, manage subscriptions, and sell digital products Improved the checkout process to ensure that customers purchase products easily Freelance Web Developer | 05 July, 2026 - 17 October, 2026 Freelance Web Developer | 09, September 2025 - 14 December, 2025","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 10.0,\n  \"skillsScore\": 6.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 5.11\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.022840497939567255
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1724,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 1847,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1724
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "ZSexaIetMJvQ1MkPuZKKsQg"
+}
+
+[8/29/2025 11:07:03 AM] CV: 29, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":29,"CvId":29,"FullName":"Sarah Amelia                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"Web Design, Design Thinking, Wireframe Creation, Front End Coding, Backend Tech, Problem-Solving, Computer Literacy, Project Management Tools, Strong Communication","EducationLevel":"BACHELOR OF TECHNOLOGY","JobTitles":"APPLICATIONS DEVELOPER, WEB CONTENT MANAGER, ANALYSIS CONTENT","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:12:42.27","Address":"123 Anywhere St., Any City","Summary":"I am a qualified and professional webdeveloper with five years of experiencein database administration andwebsite design. Strong creative andanalytical skills. Team player with aneye for detail.","WorkHistory":"Really Great Company 2016 - Present APPLICATIONS DEVELOPER Database administration and website design Built the logic for a streamlined ad-serving platform thatscaled Educational institutions and online classroommanagement, Really Great Company 2014 - 2016 WEB CONTENT MANAGER Database administration and website design Built the logic for a streamlined ad-serving platform thatscaled Educational institutions and online classroommanagement, Really Great Company 2010 - 2014 ANALYSIS CONTENT Database administration and website design Built the logic for a streamlined ad-serving platformthat scaled Educational institutions and online classroommanagement","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 4.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 6.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 6.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 4.22\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.007412808351829404
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1571,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1693,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1571
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "ZiexaLTvOp2y1MkPicqEgQk"
+}
+
+[8/29/2025 11:07:04 AM] CV: 30, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":30,"CvId":30,"FullName":"SARAH AMELIA                                                                                                                                                                                            ","Email":"hello@reallygreatsite.com","Phone":"123-456-7890","YearsOfExperience":5,"Skills":"Web Design, Design Thinking, Wireframe Creation, Front End Coding, Backend Tech, Problem-Solving, Computer Literacy, Project Management Tools, Strong Communication","EducationLevel":"BACHELOR OF TECHNOLOGY","JobTitles":"APPLICATIONS DEVELOPER, WEB CONTENT MANAGER, ANALYSIS CONTENT","Languages":null,"Certifications":null,"ParsedAt":"2025-08-28T05:13:11.353","Address":"123 Anywhere St., Any City","Summary":"I am a qualified and professional web developer with fiveyears of experience in database administration and websitedesign. Strong creative and analytical skills. Team playerwith an eye for detail.","WorkHistory":"Really Great Company 2016 - Present APPLICATIONS DEVELOPER Database administration and website designBuilt the logic for a streamlined ad-serving platform thatscaledEducational institutions and online classroom management\r\nReally Great Company 2014 - 2016 WEB CONTENT MANAGER Database administration and website designBuilt the logic for a streamlined ad-serving platform thatscaledEducational institutions and online classroom management\r\nReally Great Company 2010 - 2014 ANALYSIS CONTENT Database administration and website designBuilt the logic for a streamlined ad-serving platform thatscaledEducational institutions and online classroommanagement","Projects":null,"IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 7.0,\n  \"skillsScore\": 4.0,\n  \"educationLevelScore\": 8.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 0.0,\n  \"certificationsScore\": 0.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 7.0,\n  \"projectsScore\": 0.0,\n  \"totalScore\": 4.56\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.012356991650628263
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1581,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 1703,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1581
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "aCexaIDhA-av1MkPgOeHoAg"
+}
+
+[8/29/2025 11:07:05 AM] CV: 31, JobCriteria: 1
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":31,"CvId":31,"FullName":"Nguyen Van Ban                                                                                                                                                                                          ","Email":"vanban@gmail.com","Phone":"0987 654 321","YearsOfExperience":2,"Skills":"Java (Advanced), Spring Boot, Hibernate, Node.js (Intermediate), PostgreSQL, MySQL, MongoDB, RESTful API Design, Docker, Git, CI/CD (GitLab, Jenkins), Agile/Scrum, Jira","EducationLevel":"C\u1EED nh\u00E2n","JobTitles":"Back-end Programmer","Languages":"Vietnamese, English","Certifications":"Spring Framework \u2013 Udemy, Backend System Design \u2013 LinkedIn Learning, Docker \u0026 Kubernetes Essentials \u2013 Coursera","ParsedAt":"2025-08-28T05:13:57.237","Address":"45 Le Loi, District 1, Ho Chi Minh City","Summary":"L\u1EADp tr\u00ECnh vi\u00EAn backend h\u01B0\u1EDBng \u0111\u1EBFn k\u1EBFt qu\u1EA3 v\u1EDBi h\u01A1n 2 n\u0103m kinh nghi\u1EC7m th\u1EF1c t\u1EBF trong vi\u1EC7c thi\u1EBFt k\u1EBF v\u00E0 x\u00E2y d\u1EF1ng c\u00E1c API m\u1EA1nh m\u1EBD v\u00E0 h\u1EC7 th\u1ED1ng c\u00F3 kh\u1EA3 n\u0103ng m\u1EDF r\u1ED9ng. Th\u00E0nh th\u1EA1o Java, Spring Boot v\u00E0 PostgreSQL. Y\u00EAu th\u00EDch l\u00E0m vi\u1EC7c trong c\u00E1c nh\u00F3m Agile v\u00E0 \u0111am m\u00EA m\u00E3 ngu\u1ED3n s\u1EA1ch, hi\u1EC7u su\u1EA5t v\u00E0 b\u1EA3o m\u1EADt.","WorkHistory":"Backend Developer TechX Solutions, Ho Chi Minh City | Jul 2021 \u2013 Present \u2022 Ph\u00E1t tri\u1EC3n API RESTful cho n\u1EC1n t\u1EA3ng th\u01B0\u01A1ng m\u1EA1i \u0111i\u1EC7n t\u1EED quy m\u00F4 l\u1EDBn s\u1EED d\u1EE5ng Spring Boot. \u2022 T\u1ED1i \u01B0u h\u00F3a c\u00E1c truy v\u1EA5n PostgreSQL \u0111\u1EC3 gi\u1EA3m 30% th\u1EDDi gian ph\u1EA3n h\u1ED3i. \u2022 Tri\u1EC3n khai d\u1ECBch v\u1EE5 tr\u00EAn c\u00E1c pipeline CI/CD c\u1EE7a Docker \u0026 GitLab.","Projects":"Order Processing System \u2022 Thi\u1EBFt k\u1EBF v\u00E0 x\u00E2y d\u1EF1ng c\u00E1c module ph\u1EE5 tr\u1EE3 \u0111\u1EC3 qu\u1EA3n l\u00FD \u0111\u01A1n h\u00E0ng v\u00E0 theo d\u00F5i th\u1EDDi gian th\u1EF1c. Inventory Microservice \u2022 Di chuy\u1EC3n h\u1EC7 th\u1ED1ng ki\u1EC3m k\u00EA c\u0169 sang vi d\u1ECBch v\u1EE5, c\u1EA3i thi\u1EC7n hi\u1EC7u su\u1EA5t v\u00E0 kh\u1EA3 n\u0103ng b\u1EA3o tr\u00EC.","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":1,"JobPostId":24,"RequiredExperience":3,"RequiredSkills":"Java Core, Spring Boot, Spring Data JPA, Hibernate, RESTful APIs, MySQL, PostgreSQL, Oracle, Git, CI/CD (Jenkins, Docker, GitLab CI)","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc chuy\u00EAn ng\u00E0nh CNTT, To\u00E1n Tin ho\u1EB7c t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"L\u1EADp tr\u00ECnh vi\u00EAn Java cao c\u1EA5p, L\u1EADp tr\u00ECnh vi\u00EAn Backend","PreferredLanguages":"Java, SQL","PreferredCertifications":"\u003Cp\u003ECh\u1EE9ng ch\u1EC9 Oracle Java (\u01B0u ti\u00EAn n\u1EBFu c\u00F3)\u003C/p\u003E","CreatedAt":"2025-08-28T04:03:15.067","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003EK\u1EF9 s\u01B0 ph\u1EA7n m\u1EC1m cao c\u1EA5p, ch\u1ECBu tr\u00E1ch nhi\u1EC7m ph\u00E1t tri\u1EC3n v\u00E0 duy tr\u00EC h\u1EC7 th\u1ED1ng backend, ph\u00E2n t\u00EDch y\u00EAu c\u1EA7u, thi\u1EBFt k\u1EBF gi\u1EA3i ph\u00E1p, code review v\u00E0 t\u01B0 v\u1EA5n k\u1EF9 thu\u1EADt.\u003C/p\u003E","WorkHistory":"\u003Cp\u003ET\u1ED1i thi\u1EC3u 3 n\u0103m kinh nghi\u1EC7m l\u1EADp tr\u00ECnh Java, t\u1EEBng tham gia c\u00E1c d\u1EF1 \u00E1n l\u1EDBn, c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c tr\u1EF1c ti\u1EBFp v\u1EDBi kh\u00E1ch h\u00E0ng ho\u1EB7c onsite.\u003C/p\u003E","Projects":"\u003Cp\u003ED\u1EF1 \u00E1n ph\u00E1t tri\u1EC3n h\u1EC7 th\u1ED1ng backend, microservices, t\u00EDch h\u1EE3p h\u1EC7 th\u1ED1ng b\u00EAn th\u1EE9 3\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 6.0,\n  \"skillsScore\": 8.5,\n  \"educationLevelScore\": 10.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 9.0,\n  \"certificationsScore\": 8.0,\n  \"summaryScore\": 7.5,\n  \"workHistoryScore\": 8.0,\n  \"projectsScore\": 7.0,\n  \"totalScore\": 7.89\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.038323456678933242
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2408,
+    "candidatesTokenCount": 123,
+    "totalTokenCount": 2531,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2408
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 123
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "aSexaLyhCpa01MkP1dmTqQg"
+}
+
+[8/29/2025 11:08:10 AM] CV: 32, JobCriteria: 2
+Prompt: 
+Bạn là AI đánh giá mức độ phù hợp giữa CV ứng viên và tiêu chí tuyển dụng.
+
+Yêu cầu:
+- Đọc dữ liệu CV và Job Criteria bên dưới (dạng JSON).
+- So sánh từng tiêu chí tương ứng: kinh nghiệm (experience), kỹ năng (skills), học vấn (education level), chức danh (job titles), ngôn ngữ (languages), chứng chỉ (certifications), tóm tắt (summary), lịch sử làm việc (work history), dự án (projects).
+- Cho điểm từng mục từ 0 đến 10 (0: không phù hợp hoặc thiếu/null, 10: rất phù hợp, có thể dùng số thực).
+- Nếu trường trong CV bị thiếu/null, trả về điểm 0 cho trường đó.
+- Tổng điểm (totalScore) là trung bình cộng tất cả các mục trên (bao gồm cả các trường bị 0).
+- Chỉ trả về đúng format JSON như ví dụ, không thêm text ngoài JSON.
+
+Ví dụ format JSON:
+{
+  "experienceScore": 8.5,
+  "skillsScore": 7,
+  "educationLevelScore": 9,
+  "jobTitlesScore": 8,
+  "languagesScore": 7.5,
+  "certificationsScore": 6,
+  "summaryScore": 8,
+  "workHistoryScore": 9,
+  "projectsScore": 7,
+  "totalScore": 7.78
+}
+
+Dữ liệu:
+CV: {"CvparsedDataId":32,"CvId":32,"FullName":"Le Thi Linh                                                                                                                                                                                             ","Email":"Lelinh231@gmail.com","Phone":"0387566615","YearsOfExperience":1.5,"Skills":"Kotlin, Java Android Jetpack (Room, Navigation, LiveData) Firebase Auth, Firestore, Push Notification MVVM, Clean Architecture Retrofit, Glide, Coil GitHub Actions (CI/CD c\u01A1 b\u1EA3n)","EducationLevel":"C\u1EED nh\u00E2n","JobTitles":"Mobile Developer (Android)","Languages":"Ti\u1EBFng Vi\u1EC7t, Ti\u1EBFng Anh","Certifications":"Google Android Developer Training \u2013 CoderSchool Firebase Masterclass \u2013 Udemy Clean Architecture in Android \u2013 Pluralsight","ParsedAt":"2025-08-29T04:04:56.697","Address":"123 Tran Phu, Ha Dong, Ha Noi","Summary":"Mobile Developer chuy\u00EAn Android v\u1EDBi 1.5 n\u0103m kinh nghi\u1EC7m th\u1EF1c chi\u1EBFn trong ph\u00E1t tri\u1EC3n v\u00E0 t\u1ED1i \u01B0u \u1EE9ng d\u1EE5ng native cho ng\u01B0\u1EDDi d\u00F9ng cu\u1ED1i. Th\u00E0nh th\u1EA1o Kotlin, MVVM, Firebase v\u00E0 c\u00F3 kinh nghi\u1EC7m l\u00E0m vi\u1EC7c Agile/Scrum. \u0110\u00E3 tham gia c\u00E1c d\u1EF1 \u00E1n v\u1EC1 app qu\u1EA3n l\u00FD c\u00E1 nh\u00E2n, m\u1EA1ng x\u00E3 h\u1ED9i n\u1ED9i b\u1ED9, ch\u1EA5m c\u00F4ng v.v. Mong mu\u1ED1n tham gia v\u00E0o c\u00E1c d\u1EF1 \u00E1n quy m\u00F4 l\u1EDBn, ch\u00FA tr\u1ECDng ch\u1EA5t l\u01B0\u1EE3ng code v\u00E0 tr\u1EA3i nghi\u1EC7m ng\u01B0\u1EDDi d\u00F9ng.","WorkHistory":"1 n\u0103m 6 th\u00E1ng Mobile Developer Mobix Solutions | 01/2023 \u2013 Hi\u1EC7n t\u1EA1i \u2022 Ph\u00E1t tri\u1EC3n app ch\u1EA5m c\u00F4ng n\u1ED9i b\u1ED9, h\u1ED7 tr\u1EE3 QR scan \u002B GPS \u2022 S\u1EED d\u1EE5ng LiveData, Coroutines \u0111\u1EC3 x\u1EED l\u00FD d\u1EEF li\u1EC7u \u0111\u1ED3ng b\u1ED9 \u2022 Vi\u1EBFt Unit Test cho module check-in \u2022 L\u00E0m vi\u1EC7c theo m\u00F4 h\u00ECnh Agile, h\u1ECDp sprint \u0111\u1ECBnh k\u1EF3","Projects":"\u1EE8ng d\u1EE5ng M\u1EA1ng n\u1ED9i b\u1ED9 \u2013 MobixChat \u2022 D\u00F9ng Firebase Realtime DB cho chat real-time \u2022 T\u00EDch h\u1EE3p g\u1EEDi \u1EA3nh, xem profile, tr\u1EA1ng th\u00E1i ho\u1EA1t \u0111\u1ED9ng \u2022 \u0110\u1EA1t \u003E3.000 l\u01B0\u1EE3t c\u00E0i n\u1ED9i b\u1ED9, ph\u1EA3n h\u1ED3i t\u00EDch c\u1EF1c App Qu\u1EA3n l\u00FD h\u1ECDc t\u1EADp \u2013 MyStudy \u2022 L\u01B0u tr\u1EEF ti\u1EBFn \u0111\u1ED9 h\u1ECDc t\u1EADp offline \u2022 Giao di\u1EC7n Material Design \u0111\u1EB9p m\u1EAFt, d\u1EC5 d\u00F9ng \u2022 T\u1ED1i \u01B0u bundle size xu\u1ED1ng 22MB","IsDelete":false,"Cv":null,"MatchedCvandJobPosts":[]}
+JobCriteria: {"JobCriteriaId":2,"JobPostId":25,"RequiredExperience":1.5,"RequiredSkills":"React Native, JavaScript/TypeScript, RESTful API, JSON, Git, Xcode, Gradle, Debugging, UI/UX Integration","EducationLevel":"T\u1ED1t nghi\u1EC7p \u0110\u1EA1i h\u1ECDc/Cao \u0111\u1EB3ng ng\u00E0nh CNTT, ho\u1EB7c c\u00F3 k\u1EF9 n\u0103ng t\u01B0\u01A1ng \u0111\u01B0\u01A1ng","RequiredJobTitles":"Junior React Native Developer, Mobile Developer","PreferredLanguages":"ti\u1EBFng Anh, ti\u1EBFng Trung","PreferredCertifications":"\u003Cp\u003E\u003Cspan dir=\u0022LTR\u0022\u003ECh\u1EE9ng ch\u1EC9 React Native ho\u1EB7c Mobile Development (n\u1EBFu c\u00F3)\u003C/span\u003E\u003C/p\u003E","CreatedAt":"2025-08-29T04:03:51.337","CreatedByUserId":2,"Address":"H\u00E0 N\u1ED9i                                                                                                                                                                                                  ","Summary":"\u003Cp\u003E\u003Cspan dir=\u0022LTR\u0022\u003ETham gia ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng mobile \u0111a n\u1EC1n t\u1EA3ng b\u1EB1ng React Native, t\u1ED1i \u01B0u hi\u1EC7u su\u1EA5t, t\u00EDch h\u1EE3p API, tri\u1EC3n khai release v\u00E0 ph\u1ED1i h\u1EE3p v\u1EDBi team UI/UX, backend.\u003C/span\u003E\u003C/p\u003E","WorkHistory":"\u003Cp\u003E\u003Cspan dir=\u0022LTR\u0022\u003ET\u1ED1i thi\u1EC3u 1\u20132 n\u0103m kinh nghi\u1EC7m React Native, \u0111\u00E3 tham gia c\u00E1c d\u1EF1 \u00E1n mobile, hi\u1EC3u v\u1EC1 v\u00F2ng \u0111\u1EDDi \u1EE9ng d\u1EE5ng, CI/CD, tri\u1EC3n khai App Store/Google Play l\u00E0 l\u1EE3i th\u1EBF.\u003C/span\u003E\u003C/p\u003E","Projects":"\u003Cp\u003E\u003Cspan style=\u0022font-family: Arial\u0022\u003E\u1EE8ng d\u1EE5ng mobile \u0111a n\u1EC1n t\u1EA3ng (iOS/Android), t\u00EDch h\u1EE3p API, t\u1ED1i \u01B0u UX/UI, debug v\u00E0 release s\u1EA3n ph\u1EA9m.\u003C/span\u003E\u003C/p\u003E","IsDelete":false,"CreatedByUser":null,"MatchedCvandJobPosts":[]}
+Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"experienceScore\": 8.0,\n  \"skillsScore\": 5.0,\n  \"educationLevelScore\": 9.0,\n  \"jobTitlesScore\": 7.0,\n  \"languagesScore\": 8.0,\n  \"certificationsScore\": 6.0,\n  \"summaryScore\": 7.0,\n  \"workHistoryScore\": 7.5,\n  \"projectsScore\": 7.0,\n  \"totalScore\": 7.28\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.038225209126706981
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2747,
+    "candidatesTokenCount": 122,
+    "totalTokenCount": 2869,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2747
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 122
+      }
+    ]
+  },
+  "modelVersion": "gemini-2.0-flash",
+  "responseId": "qSexaKfAIdOl1MkPvaWG2A4"
+}
+
