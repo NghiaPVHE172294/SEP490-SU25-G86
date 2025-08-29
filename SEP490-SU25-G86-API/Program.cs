@@ -1,6 +1,8 @@
-    using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -68,7 +70,6 @@ using SEP490_SU25_G86_API.vn.edu.fpt.Services.SavedJobService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.SynonymService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserDetailOfAdminService;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.UserService;
-using vn.edu.fpt.Services.CvTemplateUpload;
 using SEP490_SU25_G86_API.vn.edu.fpt.SignalRHub.NotificationSignalRHub;
 using System.Net;
 using System.Net.Http.Headers;
@@ -78,6 +79,7 @@ using System.Text;
 using Twilio;
 using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository;
 using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService;
+using vn.edu.fpt.Services.CvTemplateUpload;
 
 namespace SEP490_SU25_G86_API
 {
@@ -176,7 +178,24 @@ builder.Configuration.AddConfiguration(configuration);
                     RoleClaimType = ClaimTypes.Role
 
                 };
-			});
+                // >>> Thêm cấu hình cho SignalR
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // token từ query khi nâng cấp WS
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken)
+                            && path.StartsWithSegments("/hubs/notifications"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             // Dependency Injection
             // Account
@@ -293,7 +312,7 @@ builder.Configuration.AddConfiguration(configuration);
 
             // HandbookCategory
             builder.Services.AddScoped<IHandbookCategoryRepository, HandbookCategoryRepository>();
-            builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();
+            builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();    
 
             // JobCriterion
             builder.Services.AddScoped<IJobCriterionRepository, JobCriterionRepository>();
@@ -373,7 +392,7 @@ builder.Services.AddScoped<Services.CvTemplateService.IFirebaseStorageService, S
             app.MapControllers();
 
             //Map SignalR hub cho Notifications
-            app.MapHub<NotificationHub>("/hubs/notifications");
+            app.MapHub<NotificationHub>("/hubs/notifications").RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(async () =>
             {

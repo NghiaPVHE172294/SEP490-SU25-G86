@@ -85,16 +85,31 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Controllers.AuthenticationController
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpireMinutes"]));
 
-            var claims = new[]
-            {
-                    new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
-                    new Claim(ClaimTypes.Role, roleName),
-            };
+            //var claims = new[]
+            //{
+            //        new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+            //        new Claim(ClaimTypes.Role, roleName),
+
+            //};
+
+            // Lấy UserId theo AccountId
+            var userId = _context.Users
+                .Where(u => u.AccountId == account.AccountId)
+                .Select(u => u.UserId)
+                .FirstOrDefault();
+
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+        new Claim(ClaimTypes.Role, roleName),
+    };
+            if (userId > 0) claims.Add(new Claim("uid", userId.ToString())); // thêm khi có
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
+                notBefore: DateTime.UtcNow,
                 expires: expires,
                 signingCredentials: creds
             );

@@ -49,7 +49,15 @@
                 ).ToList();
             }
 
-            public Task MarkReadAsync(long notificationId, long receiverUserId, CancellationToken ct = default)
-                => _repo.MarkReadAsync(notificationId, receiverUserId, ct);
+        public async Task MarkReadAsync(long notificationId, long receiverUserId, CancellationToken ct = default)
+        {
+            await _repo.MarkReadAsync(notificationId, receiverUserId, ct);
+            await _hub.Clients.Group($"user-{receiverUserId}")
+                              .NotificationMarkedRead(notificationId);
+
+            // (tuỳ chọn) tính lại số chưa đọc và bắn:
+            // var cnt = await _repo.UnreadCountAsync(receiverUserId, ct);
+            // await _hub.Clients.Group($"user-{receiverUserId}").UnreadCountChanged(cnt);
         }
+    }
     }
