@@ -1,4 +1,4 @@
-using AutoMapper;
+    using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
@@ -76,6 +76,8 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Twilio;
+using SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository;
+using SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService;
 
 namespace SEP490_SU25_G86_API
 {
@@ -293,10 +295,16 @@ builder.Configuration.AddConfiguration(configuration);
             builder.Services.AddScoped<IHandbookCategoryRepository, HandbookCategoryRepository>();
             builder.Services.AddScoped<IHandbookCategoryService, HandbookCategoryService>();
 
+            // JobCriterion
+            builder.Services.AddScoped<IJobCriterionRepository, JobCriterionRepository>();
+            builder.Services.AddScoped<IJobCriterionService, JobCriterionService>();
+
             //Notification
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
-
+            // Cv
+            builder.Services.AddScoped<ICvRepository, CvRepository>();
+            builder.Services.AddScoped<ICvService, CvService>();
             // DI-parsedCV
             builder.Services.AddScoped<IFileTextExtractor, FileTextExtractor>();
             builder.Services.AddScoped<PdfTextExtractor>();
@@ -327,12 +335,9 @@ builder.Configuration.AddConfiguration(configuration);
 			});
 
             // Đăng ký dịch vụ lưu trữ Firebase cho upload CV Template
-builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFirebaseStorageService, SEP490_SU25_G86_API.Services.CvTemplateService.FirebaseStorageService>();
+builder.Services.AddScoped<Services.CvTemplateService.IFirebaseStorageService, Services.CvTemplateService.FirebaseStorageService>();
             // Đăng ký dịch vụ upload CVTemplate cho admin
             builder.Services.AddScoped<ICvTemplateUploadService, CvTemplateUploadService>();
-            // New DI registrations
-            builder.Services.AddScoped<ICvRepository, CvRepository>();
-            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.ICvService, SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService.CvService>();
 
             // Named HttpClient độc lập cho Gemini "Gemini2"
             builder.Services.AddHttpClient("Gemini2", c =>
@@ -344,11 +349,8 @@ builder.Services.AddScoped<SEP490_SU25_G86_API.Services.CvTemplateService.IFireb
 
 
             // Gemini AI Matching
-            IServiceCollection serviceCollection = builder.Services.AddScoped<SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.IGeminiCvJobMatchingService, SEP490_SU25_G86_API.Services.GeminiCvJobMatchingService.GeminiCvJobMatchingService>();
-
-            // JobCriterion
-            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.IJobCriterionRepository, SEP490_SU25_G86_API.vn.edu.fpt.Repositories.JobCriterionRepository.JobCriterionRepository>();
-            builder.Services.AddScoped<SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.IJobCriterionService, SEP490_SU25_G86_API.vn.edu.fpt.Services.JobCriterionService.JobCriterionService>();
+            IServiceCollection serviceCollection = builder.Services.AddScoped<Services.GeminiCvJobMatchingService.IGeminiCvJobMatchingService, Services.GeminiCvJobMatchingService.GeminiCvJobMatchingService>();
+            builder.Services.AddHostedService<JobExpiryWorker>();
 
             var app = builder.Build();
 

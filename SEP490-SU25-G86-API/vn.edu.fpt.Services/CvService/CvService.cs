@@ -123,10 +123,12 @@ namespace SEP490_SU25_G86_API.vn.edu.fpt.Services.CvService
             // Tạo objectName duy nhất: "CV storage/{candidateId}_{yyyyMMddHHmmss}_{fileName}"
             var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             string objectName = $"{folderName}/{candidateId}_{timestamp}_{file.FileName}";
+            // Always set Content-Type to application/pdf for PDF files
+            var contentType = file.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) ? "application/pdf" : file.ContentType;
             var obj = await storage.UploadObjectAsync(
                 bucket: bucketName,
                 objectName: objectName,
-                contentType: file.ContentType,
+                contentType: contentType,
                 source: stream
             );
             // Trả về public URL đúng chuẩn Firebase
